@@ -1,0 +1,61 @@
+{
+  "apiVersion": "v2",
+  "command": "confluence.content.list",
+  "request": {
+    "contentType": "page",
+    "space": "DEMO",
+    "limit": "5"
+  },
+  "data": {
+    "type": "page",
+    "results": [
+      {
+        "id": "789479946",
+        "type": "page",
+        "title": "Fixture Page One",
+        "status": "current",
+        "spaceId": "789479829",
+        "snapshotToken": "v:22"
+      },
+      {
+        "id": "789479950",
+        "type": "page",
+        "title": "Fixture Page Two",
+        "status": "current",
+        "spaceId": "789479829",
+        "snapshotToken": "v:1"
+      },
+      {
+        "id": "789479953",
+        "type": "page",
+        "title": "Fixture Page Three",
+        "status": "current",
+        "spaceId": "789479829",
+        "snapshotToken": "v:1"
+      },
+      {
+        "id": "792822478",
+        "type": "page",
+        "title": "Fixture Page Four",
+        "status": "current",
+        "spaceId": "789479829",
+        "snapshotToken": "v:5"
+      },
+      {
+        "id": "792855091",
+        "type": "page",
+        "title": "Fixture Page Five",
+        "status": "current",
+        "spaceId": "789479829",
+        "snapshotToken": "v:2"
+      }
+    ],
+    "total": 5,
+    "nextCursor": "eyJpZCI6Ijc5Mjg1NTA5MSJ9"
+  },
+  "meta": {
+    "resourceClass": "projection",
+    "sourceMode": "native",
+    "resourceType": "confluence.content.page.list"
+  }
+}

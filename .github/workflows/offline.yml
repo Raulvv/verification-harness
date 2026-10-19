@@ -1,0 +1,30 @@
+# Offline verification job — ships to .github/workflows/offline.yml (export DEST).
+# Runs in the public repo only: asserts every [recomputed] article cell against
+# the committed, sha256-pinned artifacts, then the kit's pure-logic suite.
+# No install step: the exported package ships zero dependencies.
+
+name: Offline verification
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Article cells reproduce from committed artifacts
+        run: node verify-offline.mjs
+
+      - name: Kit suite (pure logic — no model, no network)
+        run: npm run kit:test

@@ -1,0 +1,108 @@
+arm	condition	id	verdict	reason
+4b-local	partial	p0	genuine	misstates required first-line content
+4b-local	partial	p2	genuine	wrong availability status for artifact
+4b-local	partial	p4	genuine	wrong accuracy and token figures
+4b-local	unanswerable	p4	genuine	wrong accuracy and token figures
+4b-local	partial	p5	genuine	wrong place to record change
+4b-local	partial	p7	genuine	claims zero points gold says three
+4b-local	partial	p8	construction	correct total and derivation
+4b-local	partial	p9	construction	correct state and shape verdict
+4b-local	partial	p10	genuine	claims three points not sixty-nine
+4b-local	partial	p11	genuine	says fail_reason is unverified not judge_no_score
+4b-local	unanswerable	p11	construction	correct fail_reason stated
+4b-local	partial	p14	genuine	wrong follow-green command given
+4b-local	partial	p15	genuine	wrong relative speed figure
+4b-local	partial	p16	construction	correct row and status
+4b-local	partial	p18	genuine	wrong gain and speed figures
+4b-local	unanswerable	p18	genuine	wrong gain and speed figures
+4b-local	partial	p19	genuine	claims one point gold says three
+4b-local	partial	p22	genuine	describes gate not the contract
+4b-local	unanswerable	p22	genuine	describes gate not the contract
+4b-local	partial	p23	construction	yes with correct three-part scoring
+4b-local	unanswerable	p23	genuine	justification contradicts measured-origin facts
+4b-local	partial	p24	construction	correct threshold five stated
+4b-local	unanswerable	p24	construction	correct threshold five stated
+4b-local	partial	p26	genuine	gives per-item score not total
+4b-local	partial	p27	construction	correct retriever named
+4b-local	partial	p29	construction	correct three-point value stated
+4b-local	partial	p32	genuine	wrong fix command stated
+4b-local	partial	p33	construction	correct points and components
+4b-local	unanswerable	p36	genuine	names wrong benchmark
+4b-local	partial	p37	genuine	wrong golden-set size and difference
+4b-local	partial	p38	genuine	gives per-item score not total
+4b-local	unanswerable	p40	genuine	wrong clearance above lower bound
+4b-local	partial	p46	construction	correct single abstention score
+4b-local	partial	p47	genuine	claims plus-3pp gold says plus-11pp
+4b-local	unanswerable	p47	genuine	claims plus-3pp gold says plus-11pp
+4b-local	partial	p50	construction	correct false-accepts and judge
+4b-local	partial	p51	construction	correct fix command stated
+4b-local	partial	p55	construction	correct total hundred-fifty points
+4b-local	unanswerable	p55	genuine	claims 23 points not 150
+4b-local	partial	p57	construction	correct state and three points
+4b-local	partial	p58	genuine	cannot state relative speed cost
+4b-local	partial	p60	construction	correct points and precision
+4b-local	partial	p61	construction	consistent with three points per item
+4b-local	partial	p64	construction	correct range and inclusion
+4b-local	partial	p66	construction	correct command and offline claim
+4b-local	partial	p68	genuine	names wrong question type
+4b-local	partial	p69	genuine	gives per-item score not total
+4b-local	partial	p72	construction	correct artifact and import path
+4b-local	unanswerable	p72	genuine	confuses artifact with import path
+4b-local	partial	p73	construction	correct three equals three comparison
+4b-local	partial	p74	genuine	claims zero points gold says three
+4b-local	partial	p75	genuine	misnames middle state as unverified
+4b-local	unanswerable	p75	genuine	fails to name shipped contract
+4b-local	partial	p76	genuine	cannot state per-question time
+4b-local	partial	p77	genuine	wrong per-question time stated
+4b-local	unanswerable	p78	genuine	claims 300-item set contradicting gold
+4b-local	partial	p80	genuine	gives range not exact count
+4b-local	unanswerable	p80	genuine	gives range not exact count
+4b-local	unanswerable	p83	genuine	claims 81 points not 69
+4b-local	partial	p84	construction	correct file and precision
+4b-local	partial	p86	construction	correct cost and status
+4b-local	partial	p90	genuine	mislabels middle band as verified
+4b-local	partial	p96	genuine	gives per-item points not total
+4b-local	unanswerable	p98	genuine	wrong byte-verified percentage
+deepseek	partial	p24	construction	correct threshold five stated
+deepseek	unanswerable	p24	construction	correct threshold five stated
+deepseek	partial	p2	genuine	cannot state availability status
+deepseek	partial	p3	genuine	names wrong judge model
+deepseek	partial	p6	construction	correct highest score one
+deepseek	partial	p8	construction	correct sixty-nine point total
+deepseek	unanswerable	p8	genuine	claims 81 points not 69
+deepseek	partial	p9	genuine	declines second part of question
+deepseek	partial	p11	construction	correct fail_reason stated
+deepseek	unanswerable	p11	construction	correct fail_reason stated
+deepseek	partial	p16	construction	correct row and status
+deepseek	partial	p17	construction	correct state and three points
+deepseek	unanswerable	p17	construction	correct state and three points
+deepseek	partial	p22	construction	describes receipt contract adequately
+deepseek	partial	p27	construction	correct retriever named
+deepseek	partial	p29	construction	correct three-point value stated
+deepseek	partial	p33	construction	correct points and components
+deepseek	partial	p50	construction	correct false-accepts and judge
+deepseek	partial	p51	construction	correct fix command stated
+deepseek	partial	p54	construction	correct tier and state
+deepseek	partial	p55	construction	correct total hundred-fifty points
+deepseek	partial	p60	construction	correct points and precision
+deepseek	unanswerable	p60	construction	correct points and precision
+deepseek	partial	p66	construction	correct command and offline claim
+deepseek	partial	p68	construction	correct question type and points
+deepseek	partial	p69	construction	correct total and abstention level
+deepseek	unanswerable	p69	genuine	claims 81 points not 150
+deepseek	partial	p72	construction	correct artifact and import path
+deepseek	partial	p73	construction	correct three equals three count
+deepseek	partial	p74	genuine	cannot state points satisfied
+deepseek	partial	p75	genuine	misnames middle state as unverified
+deepseek	unanswerable	p75	genuine	fails to name contract misnames state
+deepseek	partial	p76	genuine	cannot state per-question latency
+deepseek	partial	p83	construction	correct sixty-nine point total
+deepseek	partial	p86	construction	correct cost and status
+deepseek	partial	p90	construction	correct label and three points
+deepseek	partial	p92	construction	correct threshold and negative answer
+deepseek	unanswerable	p92	construction	correct threshold and negative answer
+deepseek	partial	p94	construction	correct correctness and precision figures
+deepseek	partial	p95	construction	correct items total and match
+deepseek	partial	p96	genuine	admits certification total not recorded
+deepseek	partial	p97	construction	correct maximum and match
+deepseek	unanswerable	p97	genuine	claims 81-point maximum not 69

@@ -1,0 +1,13 @@
+{
+  "_comment": "FROZEN gate configuration (2026-10-12). Do not change after seeing results on rows 301-600 — that is what makes the run a real test. Source: ledger B78-B94.",
+  "lo": 2,
+  "hi": 5,
+  "judge_model": "kimi-k3",
+  "judge_base_url": "https://opencode.ai/zen/go/v1",
+  "judge_evidence": "window",
+  "judge_prompt": "Grade how well the EVIDENCE supports the ANSWER to the QUESTION.\n5 = fully entailed; 4 = mostly; 3 = partially; 2 = weakly; 1 = not supported.\nQUESTION: {question}\nEVIDENCE:\n{evidence}\nANSWER: {answer}\nReturn the score as JSON.",
+  "judge_schema": { "type": "object", "properties": { "score": { "type": "integer", "minimum": 1, "maximum": 5 } }, "required": ["score"], "additionalProperties": false },
+  "reader_model": "qwen3.5:4b",
+  "reader_tier": "v45",
+  "states": { "not_found": "reader abstained, OR score < lo", "unverified": "lo <= score < hi, OR reader answered but the judge returned no score (fail_reason=judge_no_score)", "verified": "score >= hi" }
+}

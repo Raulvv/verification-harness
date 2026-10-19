@@ -1,0 +1,51 @@
+{
+  "file": "bench/results/hotpot-fresh-4b-27bjudge.jsonl",
+  "items": 200,
+  "generated": "2026-10-16T10:51:50.795Z",
+  "judges": [
+    {
+      "judge": "qwen3.5:4b",
+      "gb": 3.4,
+      "auroc": 0.781,
+      "s_rec": 2.37,
+      "nulls": 0,
+      "n": 127,
+      "prompt_tok_mean": 1483,
+      "completion_tok_mean": 11,
+      "tok_mean": 1494
+    },
+    {
+      "judge": "qwen3.5:9b",
+      "gb": 6.6,
+      "auroc": 0.835,
+      "s_rec": 4.47,
+      "nulls": 0,
+      "n": 127,
+      "prompt_tok_mean": 1483,
+      "completion_tok_mean": 11,
+      "tok_mean": 1494
+    },
+    {
+      "judge": "oamazonasgabriel/qwen3.8-27b:q4-km-32gbGPU",
+      "gb": 17.8,
+      "auroc": 0.86,
+      "s_rec": 17.25,
+      "nulls": 0,
+      "n": 127,
+      "prompt_tok_mean": 1572,
+      "completion_tok_mean": 11,
+      "tok_mean": 1583
+    },
+    {
+      "judge": "kimi-k3",
+      "gb": null,
+      "auroc": 0.855,
+      "s_rec": 3.04,
+      "nulls": 0,
+      "n": 127,
+      "prompt_tok_mean": 1592,
+      "completion_tok_mean": 177,
+      "tok_mean": 1769
+    }
+  ]
+}

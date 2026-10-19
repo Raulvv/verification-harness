@@ -1,0 +1,8 @@
+run_id	id	verdict
+b102-hotpot-fresh-deepseek	5a79f6ca554299029c4b5f90	YES
+b102-hotpot-fresh-deepseek	5abb30755542996cc5e49fd8	NO
+b102-hotpot-fresh-deepseek	5a84f7255542991dd0999e33	YES
+b104-hotpot-fresh-27b	5a85ab905542994c784ddb35	YES
+b104-hotpot-fresh-27b	5a79f6ca554299029c4b5f90	YES
+b104-hotpot-fresh-27b	5adf34d35542993a75d26425	YES
+b104-hotpot-fresh-27b	5adbda2755429944faac2385	YES

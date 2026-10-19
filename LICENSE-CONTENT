@@ -1,0 +1,39 @@
+# Content license
+
+Code in this repository (including the kit, the bench scripts, and the export
+machinery) is licensed under the MIT License — see [LICENSE](LICENSE).
+
+The prose and data artifacts — specifically:
+
+- `the-verification-harness.md` (the article),
+- `retrieval-claims-ledger.md` (the curated ledger excerpt),
+- `the-verification-harness-reviews.md` (the review record),
+- `reproduce.md` and `report.md`,
+- and the committed `bench/results/*.jsonl` / `bench/results/*.tsv`
+  provenance files,
+
+—are licensed under the **Creative Commons Attribution 4.0 International
+License (CC BY 4.0)**.
+
+You are free to:
+
+- **Share** — copy and redistribute the material in any medium or format.
+- **Adapt** — remix, transform, and build upon the material for any purpose,
+  even commercially.
+
+Under the following terms:
+
+- **Attribution** — You must give appropriate credit, provide a link to the
+  license, and indicate if changes were made. A reasonable form: "Raul Vega
+  del Valle, *The Verification Harness* (https://github.com/Raulvv/verification-harness),
+  CC BY 4.0."
+- **No additional restrictions** — You may not apply legal terms or
+  technological measures that legally restrict others from doing anything the
+  license permits.
+
+Full legal code: https://creativecommons.org/licenses/by/4.0/legalcode
+
+---
+
+The benchmark datasets referenced by the article (HotpotQA and friends) are
+not part of this repository and remain under their original licenses.

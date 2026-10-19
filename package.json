@@ -1,0 +1,13 @@
+{
+  "name": "verification-harness",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "The Verification Harness — article, kit, and public provenance. See LICENSE-CONTENT for the prose license (CC BY 4.0).",
+  "scripts": {
+    "kit:test": "node kit/bin/test.mjs",
+    "traceability": "node kit/demo/battery.mjs",
+    "verify:offline": "node verify-offline.mjs"
+  }
+}

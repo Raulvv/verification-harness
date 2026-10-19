@@ -1,0 +1,37 @@
+# Privacy lint job — ships to .github/workflows/privacy-lint.yml (export DEST).
+# The extraction epic's deny sweep over the whole tree, so a future PR that
+# reintroduces a private token fails the build the way the export gate would.
+#
+# Each token is written as a regex char-class (e.g. a[v]ios) so THIS file
+# passes its own scan — the literal token never appears in the pattern text.
+# Two passes mirror scripts/export-public.mjs exactly: the substring list is
+# case-folded, the two-letter word-bound token stays case-sensitive.
+
+name: Privacy lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Sweep the tree (exporter deny list + kit token + home paths)
+        run: |
+          set -euo pipefail
+          substrings='a[v]ios|aerl[i]ngus|i[a]gl|thought[w]orks|pro[m]oter|partner integra[t]ion|partner_integra[t]ion|partner[+]integra[t]ion|confluence-experimen[t]|test[i]go|/[U]sers/'
+          wordtoken='(^|[^A-Za-z0-9_])G[P]([^A-Za-z0-9_]|$)'
+          s=$(grep -RInIE --exclude-dir=.git -- "$substrings" . || true)
+          w=$(grep -RInE --exclude-dir=.git -- "$wordtoken" . || true)
+          if [ -n "$s" ] || [ -n "$w" ]; then
+            printf 'deny-token hits:\n%s\n%s\n' "$s" "$w"
+            exit 1
+          fi
+          echo "sweep clean"

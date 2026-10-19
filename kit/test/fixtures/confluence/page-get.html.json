@@ -1,0 +1,40 @@
+{
+  "apiVersion": "v2",
+  "command": "confluence.content.get",
+  "request": {
+    "urlOrId": "4761223179",
+    "site": "fixture.atlassian.net",
+    "detail": "full",
+    "contentFormat": "markdown",
+    "includeMetadata": true,
+    "draft": false
+  },
+  "data": {
+    "id": "4761223179",
+    "type": "page",
+    "title": "Fixture Experience Page",
+    "status": "current",
+    "spaceId": "789479829",
+    "snapshotToken": "v:6",
+    "detail": "full",
+    "body": {
+      "format": "html",
+      "value": "<h1 data-local-id=\"612bd2883120\">Fixture Heading One</h1>\n<p data-local-id=\"76e344d57c3b\"></p>\n<div data-local-id=\"0c14c1ab13dd\" data-type=\"panel-success\">\n  <p data-local-id=\"a30dc8930423\">Fixture panel text one.</p>\n</div>\n<h1 data-local-id=\"af4bbf536573\"><strong>Fixture Heading Two</strong></h1>\n<p data-local-id=\"7f41a5b70ec7\"></p>\n<div data-local-id=\"82e59fdbb246\" data-type=\"panel-note\">\n  <p data-local-id=\"8036db2619c3\">Fixture panel text two.</p>\n</div>\n<p data-local-id=\"d1093ea5-2f2c-4eef-a266-51385b798643\"></p>"
+    },
+    "metadata": {
+      "hasSpaceInstructions": false,
+      "totalViews": 487,
+      "authorId": "000000000000000000000000",
+      "version": {
+        "number": 6,
+        "createdAt": "2026-06-27T17:06:15.868Z",
+        "message": ""
+      }
+    }
+  },
+  "meta": {
+    "resourceClass": "entity",
+    "sourceMode": "native",
+    "resourceType": "confluence.content"
+  }
+}

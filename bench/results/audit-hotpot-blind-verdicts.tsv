@@ -1,0 +1,69 @@
+run_id	condition	id	verdict	reason
+b95-hotpot-fresh-4b-kimi	unanswerable	5a83aaeb5542996488c2e483	genuine	names different album than gold
+b95-hotpot-fresh-4b-kimi	unanswerable	5ab5f854554299637185c64e	construction	country answer matches gold
+b95-hotpot-fresh-4b-kimi	unanswerable	5ab6bf6d55429953192ad372	construction	correctly answers no with support
+b95-hotpot-fresh-4b-kimi	unanswerable	5a760faa5542994ccc9186a8	construction	matches gold album exactly
+b95-hotpot-fresh-4b-kimi	unanswerable	5a7a014a5542996c55b2dccf	construction	correctly names battleship
+b95-hotpot-fresh-4b-kimi	unanswerable	5ae77c245542997b22f6a795	genuine	gives year 1973 not gold 1977
+b95-hotpot-fresh-4b-kimi	unanswerable	5a738225554299623ed4abc3	construction	correctly identifies older film
+b95-hotpot-fresh-4b-kimi	unanswerable	5a77beae5542992a6e59dfae	construction	correctly names jazz singer
+b95-hotpot-fresh-4b-kimi	unanswerable	5abd12bb55429933744ab703	construction	correctly names the mountain
+b95-hotpot-fresh-4b-kimi	unanswerable	5abb1e1b5542992ccd8e7f19	construction	correctly names the award
+b95-hotpot-fresh-4b-kimi	unanswerable	5a8026a05542992e7d278df8	genuine	gives different release date than gold
+b95-hotpot-fresh-4b-kimi	unanswerable	5a798f8c5542994bb9457023	construction	city and nation match gold
+b95-hotpot-fresh-4b-kimi	unanswerable	5abe7eb05542993f32c2a12c	genuine	different founder date than gold
+b95-hotpot-fresh-4b-kimi	unanswerable	5a70f1685542994082a3e40f	genuine	names different piece than gold
+b95-hotpot-fresh-4b-kimi	unanswerable	5a74701655429979e2882952	construction	correctly picks band with most albums
+b102-hotpot-fresh-deepseek	unanswerable	5a7ec61a55429934daa2fc5f	genuine	admits cannot verify second item
+b102-hotpot-fresh-deepseek	unanswerable	5ab5f854554299637185c64e	construction	country answer matches gold
+b102-hotpot-fresh-deepseek	unanswerable	5ab5b6c1554299637185c5e5	construction	correctly names the band
+b102-hotpot-fresh-deepseek	unanswerable	5ab6bf6d55429953192ad372	construction	correctly answers no with support
+b102-hotpot-fresh-deepseek	unanswerable	5a760faa5542994ccc9186a8	construction	matches gold album exactly
+b102-hotpot-fresh-deepseek	unanswerable	5ab5057b5542991779162d56	genuine	only one of two movies answered
+b102-hotpot-fresh-deepseek	unanswerable	5a7a014a5542996c55b2dccf	construction	correctly names battleship
+b102-hotpot-fresh-deepseek	unanswerable	5ae77c245542997b22f6a795	genuine	gives year 1973 not gold 1977
+b102-hotpot-fresh-deepseek	unanswerable	5a77beae5542992a6e59dfae	construction	correctly names jazz singer
+b102-hotpot-fresh-deepseek	unanswerable	5abb1e1b5542992ccd8e7f19	construction	correctly names the award
+b102-hotpot-fresh-deepseek	unanswerable	5a8026a05542992e7d278df8	genuine	gives different release date than gold
+b102-hotpot-fresh-deepseek	unanswerable	5ae3f2395542995ad6573cc6	construction	yes both located in china
+b102-hotpot-fresh-deepseek	unanswerable	5a77c74155429967ab105291	construction	correctly names england-formed band
+b102-hotpot-fresh-deepseek	unanswerable	5a798f8c5542994bb9457023	construction	city and nation match gold
+b102-hotpot-fresh-deepseek	unanswerable	5ae3205c55429928c423961e	construction	correctly names poehler character
+b102-hotpot-fresh-deepseek	unanswerable	5abe7eb05542993f32c2a12c	genuine	different founder date than gold
+b102-hotpot-fresh-deepseek	unanswerable	5a70f1685542994082a3e40f	genuine	names different piece than gold
+b102-hotpot-fresh-deepseek	unanswerable	5a74701655429979e2882952	construction	correctly picks band with most albums
+b103b-deepseek-kimi-oracle	unanswerable	5a7ec61a55429934daa2fc5f	genuine	admits cannot verify second item
+b103b-deepseek-kimi-oracle	unanswerable	5ab5f854554299637185c64e	construction	country answer matches gold
+b103b-deepseek-kimi-oracle	unanswerable	5ab5b6c1554299637185c5e5	construction	correctly names the band
+b103b-deepseek-kimi-oracle	unanswerable	5ab6bf6d55429953192ad372	construction	correctly answers no with support
+b103b-deepseek-kimi-oracle	unanswerable	5a760faa5542994ccc9186a8	construction	matches gold album exactly
+b103b-deepseek-kimi-oracle	unanswerable	5ab5057b5542991779162d56	genuine	only one of two movies answered
+b103b-deepseek-kimi-oracle	unanswerable	5a7a014a5542996c55b2dccf	construction	correctly names battleship
+b103b-deepseek-kimi-oracle	unanswerable	5ae77c245542997b22f6a795	genuine	gives year 1973 not gold 1977
+b103b-deepseek-kimi-oracle	unanswerable	5a77beae5542992a6e59dfae	construction	correctly names jazz singer
+b103b-deepseek-kimi-oracle	unanswerable	5abb1e1b5542992ccd8e7f19	construction	correctly names the award
+b103b-deepseek-kimi-oracle	unanswerable	5a8026a05542992e7d278df8	genuine	gives different release date than gold
+b103b-deepseek-kimi-oracle	unanswerable	5ae3f2395542995ad6573cc6	construction	yes both located in china
+b103b-deepseek-kimi-oracle	unanswerable	5a77c74155429967ab105291	construction	correctly names england-formed band
+b103b-deepseek-kimi-oracle	unanswerable	5a798f8c5542994bb9457023	construction	city and nation match gold
+b103b-deepseek-kimi-oracle	unanswerable	5ae3205c55429928c423961e	construction	correctly names poehler character
+b103b-deepseek-kimi-oracle	unanswerable	5abe7eb05542993f32c2a12c	genuine	different founder date than gold
+b103b-deepseek-kimi-oracle	unanswerable	5a70f1685542994082a3e40f	genuine	names different piece than gold
+b103b-deepseek-kimi-oracle	unanswerable	5a74701655429979e2882952	construction	correctly picks band with most albums
+b104-hotpot-fresh-27b	unanswerable	5a83aaeb5542996488c2e483	genuine	names different album than gold
+b104-hotpot-fresh-27b	unanswerable	5ab5f854554299637185c64e	construction	country answer matches gold
+b104-hotpot-fresh-27b	unanswerable	5ab5b6c1554299637185c5e5	construction	correctly names the band
+b104-hotpot-fresh-27b	unanswerable	5ab6bf6d55429953192ad372	construction	correctly answers no with support
+b104-hotpot-fresh-27b	unanswerable	5a7a014a5542996c55b2dccf	construction	correctly names battleship
+b105-hotpot-fresh-4b-27bjudge	unanswerable	5ade15f35542997545bbbe47	genuine	denies commonality gold names
+b105-hotpot-fresh-4b-27bjudge	unanswerable	5a83aaeb5542996488c2e483	genuine	names different album than gold
+b105-hotpot-fresh-4b-27bjudge	unanswerable	5ab6bf6d55429953192ad372	construction	correctly answers no with support
+b105-hotpot-fresh-4b-27bjudge	unanswerable	5a760faa5542994ccc9186a8	construction	matches gold album exactly
+b105-hotpot-fresh-4b-27bjudge	unanswerable	5a7a014a5542996c55b2dccf	construction	correctly names battleship
+b109-hotpot-fresh-4b-9bjudge	unanswerable	5a83aaeb5542996488c2e483	genuine	names different album than gold
+b109-hotpot-fresh-4b-9bjudge	unanswerable	5ab5f854554299637185c64e	construction	country answer matches gold
+b109-hotpot-fresh-4b-9bjudge	unanswerable	5add67555542992ae4cec54e	construction	correctly identifies earlier battle
+b109-hotpot-fresh-4b-9bjudge	unanswerable	5ab85a1155429934fafe6d7c	construction	affirms both located in america
+b109-hotpot-fresh-4b-9bjudge	unanswerable	5ab6bf6d55429953192ad372	construction	correctly answers no with support
+b109-hotpot-fresh-4b-9bjudge	unanswerable	5a760faa5542994ccc9186a8	construction	matches gold album exactly
+b109-hotpot-fresh-4b-9bjudge	unanswerable	5a7a014a5542996c55b2dccf	construction	correctly names battleship

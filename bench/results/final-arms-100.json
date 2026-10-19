@@ -1,0 +1,3502 @@
+[
+  {
+    "id": "5a8b57f25542995d1e6f1371",
+    "gold": "yes",
+    "question": "Were Scott Derrickson and Ed Wood of the same nationality?",
+    "bare27": {
+      "id": "5a8b57f25542995d1e6f1371",
+      "answer": "yes",
+      "ms": 881,
+      "tok": 154,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5a8b57f25542995d1e6f1371",
+      "answer": "Yes, Scott Derrickson and Ed Wood were of the same nationality. Scott Derrickson is described as an American director, screenwriter, and producer, while Ed Wood (Edward Davis Wood Jr.) is identified as an American filmmaker, actor, writer, producer, and director.",
+      "ms": 22885,
+      "tok": 1961,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a8b57f25542995d1e6f1371",
+      "answer": "Yes, both Scott Derrickson and Ed Wood were of American nationality. Scott Derrickson is described as an American director, screenwriter, and producer who lives in Los Angeles, California. Ed Wood is identified as an American filmmaker, actor, writer, producer, and director.",
+      "ms": 5949,
+      "tok": 1706,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a8c7595554299585d9e36b6",
+    "gold": "Chief of Protocol",
+    "question": "What government position was held by the woman who portrayed Corliss Archer in the film Kiss and Tell?",
+    "bare27": {
+      "id": "5a8c7595554299585d9e36b6",
+      "answer": "United States Secretary of State",
+      "ms": 1099,
+      "tok": 167,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a8c7595554299585d9e36b6",
+      "answer": "The woman who portrayed Corliss Archer in the film Kiss and Tell was Shirley Temple, who held the government position of United States ambassador to Ghana and to Czechoslovakia, and also served as Chief of Protocol of the United States.",
+      "ms": 20782,
+      "tok": 2061,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a8c7595554299585d9e36b6",
+      "answer": "The woman who portrayed Corliss Archer in the film Kiss and Tell was Shirley Temple. According to the documents, she served as United States ambassador to Ghana and to Czechoslovakia, and also held the position of Chief of Protocol of the United States.",
+      "ms": 6804,
+      "tok": 1846,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a85ea095542994775f606a8",
+    "gold": "Animorphs",
+    "question": "What science fantasy young adult series, told in first person, has a set of companion books narrating the stories of enslaved worlds and alien species?",
+    "bare27": {
+      "id": "5a85ea095542994775f606a8",
+      "answer": "The Young Elites",
+      "ms": 1209,
+      "tok": 174,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5a85ea095542994775f606a8",
+      "answer": "Animorphs",
+      "ms": 33339,
+      "tok": 2389,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a85ea095542994775f606a8",
+      "answer": "The science fantasy young adult series told in the first person that has a set of companion books narrating the stories of enslaved worlds and alien species is Animorphs. The main series features six main characters who take turns narrating the books through their own perspectives. The companion book, The Hork-Bajir Chronicles, takes place before book #23 of the main series and tells the story of how the Yeerks enslaved the Hork-Bajir, an alien species.",
+      "ms": 9387,
+      "tok": 2103,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5adbf0a255429947ff17385a",
+    "gold": "no",
+    "question": "Are the Laleli Mosque and Esma Sultan Mansion located in the same neighborhood?",
+    "bare27": {
+      "id": "5adbf0a255429947ff17385a",
+      "answer": "yes",
+      "ms": 875,
+      "tok": 159,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5adbf0a255429947ff17385a",
+      "answer": "No, the Laleli Mosque and Esma Sultan Mansion are not located in the same neighborhood. The Laleli Mosque is located in the Laleli neighborhood of Fatih, Istanbul, while the Esma Sultan Mansion is located in the Ortaköy neighborhood of Istanbul.",
+      "ms": 34616,
+      "tok": 1809,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5adbf0a255429947ff17385a",
+      "answer": "No, the Laleli Mosque and the Esma Sultan Mansion are not located in the same neighborhood. The Laleli Mosque is situated in the Laleli neighborhood within the Fatih district of Istanbul, whereas the Esma Sultan Mansion is located in the Ortaköy neighborhood along the Bosphorus.",
+      "ms": 6520,
+      "tok": 1516,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a8e3ea95542995a26add48d",
+    "gold": "Greenwich Village, New York City",
+    "question": "The director of the romantic comedy \"Big Stone Gap\" is based in what New York city?",
+    "bare27": {
+      "id": "5a8e3ea95542995a26add48d",
+      "answer": "New York City",
+      "ms": 990,
+      "tok": 163,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a8e3ea95542995a26add48d",
+      "answer": "The director of the romantic comedy \"Big Stone Gap\" is Adriana Trigiani, who is based in Greenwich Village, New York City.",
+      "ms": 33353,
+      "tok": 2071,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a8e3ea95542995a26add48d",
+      "answer": "The director of the romantic comedy 'Big Stone Gap' is Adriana Trigiani, who is based in Greenwich Village, New York City.",
+      "ms": 6189,
+      "tok": 1828,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5abd94525542992ac4f382d2",
+    "gold": "YG Entertainment",
+    "question": "2014 S/S is the debut album of a South Korean boy group that was formed by who?",
+    "bare27": {
+      "id": "5abd94525542992ac4f382d2",
+      "answer": "JYP Entertainment",
+      "ms": 1151,
+      "tok": 167,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5abd94525542992ac4f382d2",
+      "answer": "YG Entertainment",
+      "ms": 29374,
+      "tok": 2087,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5abd94525542992ac4f382d2",
+      "answer": "The 2014 S/S album is the debut release of the South Korean boy group WINNER. According to the provided documents, WINNER was formed in 2013 by YG Entertainment.",
+      "ms": 6674,
+      "tok": 1882,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a85b2d95542997b5ce40028",
+    "gold": "Eenasul Fateh",
+    "question": "Who was known by his stage name Aladin and helped organizations improve their performance as a consultant?",
+    "bare27": {
+      "id": "5a85b2d95542997b5ce40028",
+      "answer": "Aladin",
+      "ms": 949,
+      "tok": 162,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a85b2d95542997b5ce40028",
+      "answer": "Eenasul Fateh was known by his stage name Aladin and was a former international management consultant, a field defined as helping organizations improve their performance.",
+      "ms": 33908,
+      "tok": 2605,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a85b2d95542997b5ce40028",
+      "answer": "Eenasul Fateh is known by his stage name Aladin and served as a former international management consultant who helped organizations improve their performance.",
+      "ms": 7442,
+      "tok": 2352,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a87ab905542996e4f3088c1",
+    "gold": "3,677 seated",
+    "question": "The arena where the Lewiston Maineiacs played their home games can seat how many people?",
+    "bare27": {
+      "id": "5a87ab905542996e4f3088c1",
+      "answer": "3,500",
+      "ms": 1138,
+      "tok": 165,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a87ab905542996e4f3088c1",
+      "answer": "The Lewiston Maineiacs played their home games at the Androscoggin Bank Colisée, which has a capacity of 4,000 people (with 3,677 seats).",
+      "ms": 45082,
+      "tok": 3773,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a87ab905542996e4f3088c1",
+      "answer": "The arena where the Lewiston Maineiacs played their home games is the Androscoggin Bank Colisée, which has a capacity of 4,000 people (with 3,677 seated).",
+      "ms": 10536,
+      "tok": 3506,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a7bbb64554299042af8f7cc",
+    "gold": "Terry Richardson",
+    "question": "Who is older, Annie Morton or Terry Richardson?",
+    "bare27": {
+      "id": "5a7bbb64554299042af8f7cc",
+      "answer": "Terry Richardson",
+      "ms": 1016,
+      "tok": 154,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5a7bbb64554299042af8f7cc",
+      "answer": "Terry Richardson is older than Annie Morton. Terry Richardson was born on August 14, 1965, while Annie Morton was born on October 8, 1970.",
+      "ms": 25025,
+      "tok": 2012,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a7bbb64554299042af8f7cc",
+      "answer": "Terry Richardson is older than Annie Morton. Terry Richardson was born on August 14, 1965, while Annie Morton was born on October 8, 1970.",
+      "ms": 6659,
+      "tok": 1819,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a8db19d5542994ba4e3dd00",
+    "gold": "yes",
+    "question": "Are Local H and For Against both from the United States?",
+    "bare27": {
+      "id": "5a8db19d5542994ba4e3dd00",
+      "answer": "yes",
+      "ms": 889,
+      "tok": 154,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5a8db19d5542994ba4e3dd00",
+      "answer": "Yes, both Local H and For Against are from the United States. Local H is described as an American rock band formed in Zion, Illinois, while For Against is identified as a United States post-punk/dream pop band from Lincoln, Nebraska.",
+      "ms": 27921,
+      "tok": 2079,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a8db19d5542994ba4e3dd00",
+      "answer": "Yes, both Local H and For Against are from the United States. Local H is an American rock band originally formed in Zion, Illinois, while For Against is a United States post-punk/dream pop band from Lincoln, Nebraska.",
+      "ms": 6997,
+      "tok": 1859,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a7166395542994082a3e814",
+    "gold": "Kansas Song",
+    "question": "What is the name of the fight song of the university whose main campus is in Lawrence, Kansas and whose branch campuses are in the Kansas City metropolitan area?",
+    "bare27": {
+      "id": "5a7166395542994082a3e814",
+      "answer": "Rock Chalk, Jayhawk",
+      "ms": 1320,
+      "tok": 178,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5a7166395542994082a3e814",
+      "answer": "The fight song is \"Kansas Song (We're From Kansas)\".",
+      "ms": 30995,
+      "tok": 2406,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a7166395542994082a3e814",
+      "answer": "The fight song of the University of Kansas, which has its main campus in Lawrence, Kansas and branch campuses in the Kansas City metropolitan area, is called 'Kansas Song' (also known as 'We're From Kansas').",
+      "ms": 7898,
+      "tok": 2202,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a877e5d5542993e715abf7d",
+    "gold": "David Weissman",
+    "question": "What screenwriter with credits for \"Evolution\" co-wrote a film starring Nicolas Cage and Téa Leoni?",
+    "bare27": {
+      "id": "5a877e5d5542993e715abf7d",
+      "answer": "Eric Berg",
+      "ms": 1136,
+      "tok": 167,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a877e5d5542993e715abf7d",
+      "answer": "David Weissman is the screenwriter with credits for \"Evolution\" who co-wrote the film \"The Family Man,\" which stars Nicolas Cage and Téa Leoni.",
+      "ms": 32715,
+      "tok": 2041,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a877e5d5542993e715abf7d",
+      "answer": "David Weissman is the screenwriter with credits for 'Evolution' who co-wrote 'The Family Man', a film starring Nicolas Cage and Téa Leoni.",
+      "ms": 6453,
+      "tok": 1762,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ab3b0bf5542992ade7c6e39",
+    "gold": "1999",
+    "question": "What year did Guns N Roses perform a promo for a movie starring Arnold Schwarzenegger as a former New York Police detective?",
+    "bare27": {
+      "id": "5ab3b0bf5542992ade7c6e39",
+      "answer": "1990",
+      "ms": 1266,
+      "tok": 170,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ab3b0bf5542992ade7c6e39",
+      "answer": "1999",
+      "ms": 37217,
+      "tok": 2313,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ab3b0bf5542992ade7c6e39",
+      "answer": "Guns N' Roses performed a promo for the movie 'End of Days' in November 1999. In this film, Arnold Schwarzenegger plays Jericho Cane, a former New York Police Department detective.",
+      "ms": 7525,
+      "tok": 2024,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ab56e32554299637185c594",
+    "gold": "no",
+    "question": "Are Random House Tower and 888 7th Avenue both used for real estate?",
+    "bare27": {
+      "id": "5ab56e32554299637185c594",
+      "answer": "yes",
+      "ms": 928,
+      "tok": 161,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5ab56e32554299637185c594",
+      "answer": "Yes, both buildings are used for real estate purposes. Random House Tower is a mixed-use tower that serves as the headquarters for the book publisher Random House and as a luxury apartment complex. 888 7th Avenue is an office skyscraper that currently houses the corporate headquarters of Vornado Realty Trust.",
+      "ms": 50634,
+      "tok": 3549,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ab56e32554299637185c594",
+      "answer": "Yes, both buildings are used for real estate purposes. The Random House Tower is a mixed-use tower in New York City that serves as the headquarters for the book publisher Random House and functions as a luxury apartment complex. Similarly, 888 7th Avenue is an office skyscraper in Midtown Manhattan that currently houses the corporate headquarters of Vornado Realty Trust.",
+      "ms": 11882,
+      "tok": 3250,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ab6d09255429954757d337d",
+    "gold": "from 1986 to 2013",
+    "question": "The football manager who recruited David Beckham managed Manchester United during what timeframe?",
+    "bare27": {
+      "id": "5ab6d09255429954757d337d",
+      "answer": "1986–2013",
+      "ms": 1372,
+      "tok": 164,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5ab6d09255429954757d337d",
+      "answer": "The football manager who recruited David Beckham was Alex Ferguson, who managed Manchester United from 1986 to 2013.",
+      "ms": 29032,
+      "tok": 1740,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ab6d09255429954757d337d",
+      "answer": "The football manager who recruited David Beckham was Alex Ferguson. According to the documents, he managed Manchester United from 1986 to 2013.",
+      "ms": 5150,
+      "tok": 1483,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a75e05c55429976ec32bc5f",
+    "gold": "9,984",
+    "question": "Brown State Fishing Lake is in a country that has a population of how many inhabitants ?",
+    "bare27": {
+      "id": "5a75e05c55429976ec32bc5f",
+      "answer": "331,002,651",
+      "ms": 1493,
+      "tok": 169,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a75e05c55429976ec32bc5f",
+      "answer": "NOT FOUND — the corpus does not state the population of the United States.",
+      "ms": 21972,
+      "tok": 2211,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ourssrc": {
+      "id": "5a75e05c55429976ec32bc5f",
+      "answer": "NOT FOUND — the corpus does not state the population of the United States.",
+      "ms": 6741,
+      "tok": 2065,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    }
+  },
+  {
+    "id": "5ab3e45655429976abd1bcd4",
+    "gold": "the North Atlantic Conference",
+    "question": "The Vermont Catamounts men's soccer team currently competes in a conference that was formerly known as what from 1988 to 1996?",
+    "bare27": {
+      "id": "5ab3e45655429976abd1bcd4",
+      "answer": "Atlantic 10 Conference",
+      "ms": 1372,
+      "tok": 180,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ab3e45655429976abd1bcd4",
+      "answer": "The Vermont Catamounts men's soccer team currently competes in the America East Conference, which was formerly known as the North Atlantic Conference from 1988 to 1996.",
+      "ms": 31986,
+      "tok": 2122,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ab3e45655429976abd1bcd4",
+      "answer": "The Vermont Catamounts men's soccer team currently competes in the America East Conference, which was formerly known as the North Atlantic Conference from 1988 to 1996.",
+      "ms": 6494,
+      "tok": 1883,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ab29c24554299449642c932",
+    "gold": "yes",
+    "question": "Are Giuseppe Verdi and Ambroise Thomas both Opera composers ?",
+    "bare27": {
+      "id": "5ab29c24554299449642c932",
+      "answer": "yes",
+      "ms": 960,
+      "tok": 154,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5ab29c24554299449642c932",
+      "answer": "Yes, both Giuseppe Verdi and Ambroise Thomas are opera composers. Giuseppe Verdi is explicitly described as an Italian opera composer, while Ambroise Thomas is identified as a French composer best known for his operas.",
+      "ms": 35383,
+      "tok": 2107,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ab29c24554299449642c932",
+      "answer": "Yes, both Giuseppe Verdi and Ambroise Thomas are opera composers. Giuseppe Verdi is explicitly identified as an Italian opera composer, while Ambroise Thomas is described as a French composer best known for his operas.",
+      "ms": 6752,
+      "tok": 1822,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ae0d4c9554299603e418468",
+    "gold": "1969 until 1974",
+    "question": "Roger O. Egeberg was Assistant Secretary for Health and Scientific Affairs during the administration of a president that served during what years?",
+    "bare27": {
+      "id": "5ae0d4c9554299603e418468",
+      "answer": "1977-1981",
+      "ms": 1581,
+      "tok": 176,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ae0d4c9554299603e418468",
+      "answer": "Richard Nixon served as the 37th President of the United States from 1969 until 1974.",
+      "ms": 36412,
+      "tok": 2492,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae0d4c9554299603e418468",
+      "answer": "Roger O. Egeberg served as Assistant Secretary for Health and Scientific Affairs during the Nixon administration. Richard Nixon served as President of the United States from 1969 until his resignation in 1974.",
+      "ms": 7957,
+      "tok": 2238,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a8133725542995ce29dcbdb",
+    "gold": "Robert Erskine Childers DSC",
+    "question": "Which writer was from England, Henry Roth or Robert Erskine Childers?",
+    "bare27": {
+      "id": "5a8133725542995ce29dcbdb",
+      "answer": "Robert Erskine Childers",
+      "ms": 1230,
+      "tok": 163,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5a8133725542995ce29dcbdb",
+      "answer": "Robert Erskine Childers was from England, as he is described as an \"English-born writer\" in the documents. Henry Roth, by contrast, was an American novelist and short story writer.",
+      "ms": 27248,
+      "tok": 1690,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a8133725542995ce29dcbdb",
+      "answer": "Robert Erskine Childers was from England, as he is described as a British writer in the documents. Henry Roth was an American novelist and short story writer.",
+      "ms": 5799,
+      "tok": 1470,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ae7a8175542993210983ed8",
+    "gold": "Pedro Rodríguez",
+    "question": "Which other Mexican Formula One race car driver has held the podium besides the Force India driver born in 1990?",
+    "bare27": {
+      "id": "5ae7a8175542993210983ed8",
+      "answer": "Pedro de la Rosa",
+      "ms": 1361,
+      "tok": 171,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ae7a8175542993210983ed8",
+      "answer": "Pedro Rodríguez is the other Mexican Formula One race car driver who has held the podium, as he is the only Mexican driver to have won a grand prix, while Sergio Pérez is the only other Mexican to finish on the podium.",
+      "ms": 37431,
+      "tok": 2070,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae7a8175542993210983ed8",
+      "answer": "Besides Sergio Pérez, the other Mexican Formula One race car driver who has held the podium is Pedro Rodríguez, who is noted as the only Mexican driver to have won a Grand Prix.",
+      "ms": 6343,
+      "tok": 1765,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ae6050f55429929b0807a5e",
+    "gold": "Sonic",
+    "question": "This singer of A Rather Blustery Day also voiced what hedgehog?",
+    "bare27": {
+      "id": "5ae6050f55429929b0807a5e",
+      "answer": "Sonic",
+      "ms": 1010,
+      "tok": 158,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5ae6050f55429929b0807a5e",
+      "answer": "Jim Cummings, who sang \"A Rather Blustery Day\" as Pooh, also voiced Dr. Robotnik from \"Sonic the Hedgehog\".",
+      "ms": 33010,
+      "tok": 2291,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae6050f55429929b0807a5e",
+      "answer": "The singer of 'A Rather Blustery Day' is Jim Cummings, who voiced Winnie the Pooh. However, the documents do not state that Jim Cummings voiced a hedgehog. While one document mentions another voice actor, Kate Higgins, voicing Miles 'Tails' Prower in the Sonic the Hedgehog video game series, there is no information linking Jim Cummings to any hedgehog character.",
+      "ms": 9333,
+      "tok": 2105,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5adddccd5542997dc7907069",
+    "gold": "keyboard function keys",
+    "question": "Aside from the Apple Remote, what other device can control the program Apple Remote was originally designed to interact with?",
+    "bare27": {
+      "id": "5adddccd5542997dc7907069",
+      "answer": "Apple TV",
+      "ms": 1005,
+      "tok": 165,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5adddccd5542997dc7907069",
+      "answer": "The keyboard function keys can also control Front Row, the program Apple Remote was originally designed to interact with.",
+      "ms": 29638,
+      "tok": 2423,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5adddccd5542997dc7907069",
+      "answer": "Aside from the Apple Remote, the keyboard function keys can also control the Front Row media program.",
+      "ms": 6633,
+      "tok": 2218,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ae2070a5542994d89d5b313",
+    "gold": "Badly Drawn Boy",
+    "question": "Which performance act has a higher instrument to person ratio, Badly Drawn Boy or Wolf Alice? ",
+    "bare27": {
+      "id": "5ae2070a5542994d89d5b313",
+      "answer": "Badly Drawn Boy",
+      "ms": 1175,
+      "tok": 166,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5ae2070a5542994d89d5b313",
+      "answer": "NOT FOUND — the corpus does not state the instrument to person ratio for Badly Drawn Boy or Wolf Alice.",
+      "ms": 18560,
+      "tok": 1678,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae2070a5542994d89d5b313",
+      "answer": "NOT FOUND — the corpus does not state which performance act has a higher instrument to person ratio.",
+      "ms": 5153,
+      "tok": 1520,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    }
+  },
+  {
+    "id": "5ae22b8d554299234fd0440f",
+    "gold": "World's Best Goalkeeper",
+    "question": "What was the father of Kasper Schmeichel voted to be by the IFFHS in 1992?",
+    "bare27": {
+      "id": "5ae22b8d554299234fd0440f",
+      "answer": "World's Best Goalkeeper",
+      "ms": 1363,
+      "tok": 171,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5ae22b8d554299234fd0440f",
+      "answer": "The father of Kasper Schmeichel, Peter Schmeichel, was voted the IFFHS World's Best Goalkeeper in 1992.",
+      "ms": 32694,
+      "tok": 2012,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae22b8d554299234fd0440f",
+      "answer": "Peter Schmeichel was voted the IFFHS World's Best Goalkeeper in 1992.",
+      "ms": 5716,
+      "tok": 1734,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a722b8655429971e9dc9329",
+    "gold": "Barton Lee Hazlewood",
+    "question": "Who was the writer of These Boots Are Made for Walkin' and who died in 2007?",
+    "bare27": {
+      "id": "5a722b8655429971e9dc9329",
+      "answer": "Nancy Sinatra",
+      "ms": 1243,
+      "tok": 167,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a722b8655429971e9dc9329",
+      "answer": "The writer of 'These Boots Are Made for Walkin'' was Lee Hazlewood, who died in 2007.",
+      "ms": 31283,
+      "tok": 1876,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a722b8655429971e9dc9329",
+      "answer": "The writer of 'These Boots Are Made for Walkin'' was Lee Hazlewood, who died on August 4, 2007.",
+      "ms": 5791,
+      "tok": 1628,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5adf37a95542995ec70e8f97",
+    "gold": "1838",
+    "question": "The 2011–12 VCU Rams men's basketball team, led by third year head coach Shaka Smart, represented Virginia Commonwealth University which was founded in what year?",
+    "bare27": {
+      "id": "5adf37a95542995ec70e8f97",
+      "answer": "1838",
+      "ms": 1294,
+      "tok": 183,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5adf37a95542995ec70e8f97",
+      "answer": "Virginia Commonwealth University was founded in 1838.",
+      "ms": 29201,
+      "tok": 2575,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5adf37a95542995ec70e8f97",
+      "answer": "The 2011–12 VCU Rams men's basketball team represented Virginia Commonwealth University, which was founded in 1838 as the medical department of Hampden–Sydney College.",
+      "ms": 8043,
+      "tok": 2413,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5abd259d55429924427fcf1a",
+    "gold": "yes",
+    "question": "Are both Dictyosperma, and Huernia described as a genus?",
+    "bare27": {
+      "id": "5abd259d55429924427fcf1a",
+      "answer": "yes",
+      "ms": 952,
+      "tok": 159,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5abd259d55429924427fcf1a",
+      "answer": "Yes, both Dictyosperma and Huernia are described as a genus. Dictyosperma is explicitly called a monotypic genus of flowering plant, while Huernia is identified as a genus of stem succulents first described as such in 1810.",
+      "ms": 24468,
+      "tok": 1036,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5abd259d55429924427fcf1a",
+      "answer": "Yes, both Dictyosperma and Huernia are described as genera. Dictyosperma is identified as a monotypic genus of flowering plant in the palm family, while Huernia is identified as a genus within the family Apocynaceae.",
+      "ms": 4905,
+      "tok": 811,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a828c8355429966c78a6a50",
+    "gold": "Henry J. Kaiser",
+    "question": "Kaiser Ventures corporation was founded by an American industrialist who became known as the father of modern American shipbuilding?",
+    "bare27": {
+      "id": "5a828c8355429966c78a6a50",
+      "answer": "William Crapo",
+      "ms": 1064,
+      "tok": 166,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a828c8355429966c78a6a50",
+      "answer": "Yes, Kaiser Ventures corporation was founded by Henry J. Kaiser, an American industrialist who became known as the father of modern American shipbuilding.",
+      "ms": 29287,
+      "tok": 1976,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a828c8355429966c78a6a50",
+      "answer": "Kaiser Ventures corporation was founded by Henry J. Kaiser, an American industrialist who became known as the father of modern American shipbuilding.",
+      "ms": 5649,
+      "tok": 1726,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a8a3e745542996c9b8d5e70",
+    "gold": "Arena of Khazan",
+    "question": "What is the name for the adventure in \"Tunnels and Trolls\", a game designed by Ken St. Andre?",
+    "bare27": {
+      "id": "5a8a3e745542996c9b8d5e70",
+      "answer": "Tunnels and Trolls",
+      "ms": 1420,
+      "tok": 172,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a8a3e745542996c9b8d5e70",
+      "answer": "The name for the adventure in \"Tunnels and Trolls\" is \"Arena of Khazan\".",
+      "ms": 23744,
+      "tok": 1892,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a8a3e745542996c9b8d5e70",
+      "answer": "The adventure is called Arena of Khazan.",
+      "ms": 4998,
+      "tok": 1680,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ac23ff0554299636651994d",
+    "gold": "2000",
+    "question": "When was Poison's album \"Shut Up, Make Love\" released?",
+    "bare27": {
+      "id": "5ac23ff0554299636651994d",
+      "answer": "1992",
+      "ms": 1130,
+      "tok": 160,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ac23ff0554299636651994d",
+      "answer": "NOT FOUND — the corpus does not state the release date of Poison's album \"Shut Up, Make Love\".",
+      "ms": 19541,
+      "tok": 2065,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ourssrc": {
+      "id": "5ac23ff0554299636651994d",
+      "answer": "Poison's album 'Crack a Smile...and More!', which features the single 'Shut Up, Make Love', was released in 2000.",
+      "ms": 5660,
+      "tok": 1937,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ae4a3265542995ad6573de5",
+    "gold": "Fujioka, Gunma",
+    "question": "Hayden is a singer-songwriter from Canada, but where does Buck-Tick hail from?",
+    "bare27": {
+      "id": "5ae4a3265542995ad6573de5",
+      "answer": "Japan",
+      "ms": 980,
+      "tok": 160,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ae4a3265542995ad6573de5",
+      "answer": "Buck-Tick hails from Fujioka, Gunma, Japan.",
+      "ms": 21097,
+      "tok": 1818,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae4a3265542995ad6573de5",
+      "answer": "Buck-Tick hails from Fujioka, Gunma, Japan.",
+      "ms": 5201,
+      "tok": 1636,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ae0361155429925eb1afc2c",
+    "gold": "Charles Eugène",
+    "question": "Which  French ace pilot and adventurer fly L'Oiseau Blanc",
+    "bare27": {
+      "id": "5ae0361155429925eb1afc2c",
+      "answer": "Dieudonné Costes",
+      "ms": 1180,
+      "tok": 158,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ae0361155429925eb1afc2c",
+      "answer": "Charles Nungesser",
+      "ms": 27895,
+      "tok": 1963,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ourssrc": {
+      "id": "5ae0361155429925eb1afc2c",
+      "answer": "The French ace pilot and adventurer who flew L'Oiseau Blanc were Charles Nungesser and François Coli.",
+      "ms": 5436,
+      "tok": 1771,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5abc0a5d5542993f40c73c64",
+    "gold": "no",
+    "question": "Are Freakonomics and In the Realm of the Hackers both American documentaries?",
+    "bare27": {
+      "id": "5abc0a5d5542993f40c73c64",
+      "answer": "no",
+      "ms": 968,
+      "tok": 158,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5abc0a5d5542993f40c73c64",
+      "answer": "No, they are not both American documentaries. Freakonomics: The Movie is a 2010 American documentary film, but In the Realm of the Hackers is a 2003 Australian documentary.",
+      "ms": 28558,
+      "tok": 2395,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5abc0a5d5542993f40c73c64",
+      "answer": "No, they are not both American documentaries. 'Freakonomics: The Movie' is an American documentary film released in 2010. In contrast, 'In the Realm of the Hackers' is an Australian documentary directed by Kevin Anderson about a hacker community in Melbourne, Australia.",
+      "ms": 7726,
+      "tok": 2216,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a7cc50e554299452d57ba3e",
+    "gold": "Letters to Cleo",
+    "question": "Which band, Letters to Cleo or Screaming Trees, had more members?",
+    "bare27": {
+      "id": "5a7cc50e554299452d57ba3e",
+      "answer": "Screaming Trees",
+      "ms": 1125,
+      "tok": 161,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a7cc50e554299452d57ba3e",
+      "answer": "Letters to Cleo had more members. The documents list six members for Letters to Cleo: Kay Hanley, Greg McKenna, Michael Eisenstein, Stacy Jones, Scott Riebling, and Tom Polce. For Screaming Trees, the documents identify four founding members (Mark Lanegan, Gary Lee Conner, Van Conner, and Mark Pickerel) and one replacement drummer (Barrett Martin), totaling five named members.",
+      "ms": 38574,
+      "tok": 2268,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a7cc50e554299452d57ba3e",
+      "answer": "Letters to Cleo had more members than Screaming Trees. Letters to Cleo consisted of six members: Kay Hanley, Greg McKenna, Michael Eisenstein, Stacy Jones, Scott Riebling, and Tom Polce. In contrast, Screaming Trees was formed by four members—Mark Lanegan, Gary Lee Conner, Van Conner, and Mark Pickerel—and later replaced one drummer with Barrett Martin, but the documents do not indicate that the band ever exceeded four members.",
+      "ms": 9067,
+      "tok": 2015,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5abf63f15542997ec76fd3ea",
+    "gold": "October 1922",
+    "question": "Alexander Kerensky was defeated and destroyed by the Bolsheviks in the course of a civil war that ended when ?",
+    "bare27": {
+      "id": "5abf63f15542997ec76fd3ea",
+      "answer": "1922",
+      "ms": 1312,
+      "tok": 168,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5abf63f15542997ec76fd3ea",
+      "answer": "The Russian Civil War, in which the anti-Bolshevik faction loyal to Alexander Kerensky was defeated and destroyed, ended in 1923 in the sense that Red control of the Soviet Union was assured, although minor skirmishes continued into 1923 and armed resistance in Central Asia was not completely crushed until 1934.",
+      "ms": 43807,
+      "tok": 2748,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ourssrc": {
+      "id": "5abf63f15542997ec76fd3ea",
+      "answer": "The Russian Civil War ended in 1923, when Red control of the newly formed Soviet Union was assured, although minor skirmishes with remnants of White forces continued into that year.",
+      "ms": 7135,
+      "tok": 2431,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    }
+  },
+  {
+    "id": "5a8ef2a75542995a26add583",
+    "gold": "2000",
+    "question": "Seven Brief Lessons on Physics was written by an Italian physicist that has worked in France since what year?",
+    "bare27": {
+      "id": "5a8ef2a75542995a26add583",
+      "answer": "1998",
+      "ms": 1122,
+      "tok": 165,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a8ef2a75542995a26add583",
+      "answer": "Seven Brief Lessons on Physics was written by Carlo Rovelli, an Italian physicist who has worked in France since 2000.",
+      "ms": 27184,
+      "tok": 1998,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a8ef2a75542995a26add583",
+      "answer": "Seven Brief Lessons on Physics was written by Carlo Rovelli, an Italian physicist who has worked in France since the year 2000.",
+      "ms": 5966,
+      "tok": 1779,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a80721b554299485f5985ef",
+    "gold": "World War II",
+    "question": "The Livesey Hal War Memorial commemorates the fallen of which war, that had over 60 million casualties?",
+    "bare27": {
+      "id": "5a80721b554299485f5985ef",
+      "answer": "World War I",
+      "ms": 1271,
+      "tok": 167,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a80721b554299485f5985ef",
+      "answer": "The Livesey Hall War Memorial commemorates the fallen of World War I and World War II. The war that had over 60 million casualties was World War II.",
+      "ms": 27447,
+      "tok": 1741,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a80721b554299485f5985ef",
+      "answer": "The Livesey Hall War Memorial commemorates the fallen of World War II, which is identified as the deadliest military conflict in history with over 60 million casualties.",
+      "ms": 5277,
+      "tok": 1507,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ab51dae5542991779162d82",
+    "gold": "no",
+    "question": "Are both Elko Regional Airport and Gerald R. Ford International Airport located in Michigan?",
+    "bare27": {
+      "id": "5ab51dae5542991779162d82",
+      "answer": "no",
+      "ms": 968,
+      "tok": 159,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5ab51dae5542991779162d82",
+      "answer": "No, they are not both located in Michigan. Gerald R. Ford International Airport is located in Michigan, but Elko Regional Airport is located in Nevada.",
+      "ms": 35904,
+      "tok": 2224,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ab51dae5542991779162d82",
+      "answer": "No, both airports are not located in Michigan. According to the documents, Elko Regional Airport is located in Elko County, Nevada, while Gerald R. Ford International Airport is located in Cascade Township, approximately 13 miles southeast of Grand Rapids, Michigan.",
+      "ms": 7076,
+      "tok": 1964,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a7571135542992d0ec05f98",
+    "gold": "New York City",
+    "question": "Ralph Hefferline was a psychology professor at a university that is located in what city?",
+    "bare27": {
+      "id": "5a7571135542992d0ec05f98",
+      "answer": "Los Angeles",
+      "ms": 1021,
+      "tok": 161,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a7571135542992d0ec05f98",
+      "answer": "Ralph Hefferline was a psychology professor at Columbia University, which is located in New York City.",
+      "ms": 35130,
+      "tok": 2108,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a7571135542992d0ec05f98",
+      "answer": "Ralph Hefferline was a psychology professor at Columbia University, which is located in New York City.",
+      "ms": 5750,
+      "tok": 1829,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a7a0e1e5542990783324e1a",
+    "gold": "Scotch Collie",
+    "question": "Which dog's ancestors include Gordon and Irish Setters: the Manchester Terrier or the Scotch Collie?",
+    "bare27": {
+      "id": "5a7a0e1e5542990783324e1a",
+      "answer": "Scotch Collie",
+      "ms": 1128,
+      "tok": 166,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5a7a0e1e5542990783324e1a",
+      "answer": "The Scotch Collie's ancestors include Gordon and Irish Setters.",
+      "ms": 21951,
+      "tok": 2323,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a7a0e1e5542990783324e1a",
+      "answer": "The Scotch Collie is the breed whose ancestors include Gordon and Irish Setters, as it is generally believed to have descended from ancient herding dogs that included these breeds. The Manchester Terrier does not have these breeds listed among its ancestors in the provided documents.",
+      "ms": 7135,
+      "tok": 2203,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a74106b55429979e288289e",
+    "gold": "Mumbai",
+    "question": "Where is the company that Sachin Warrier worked for as a software engineer headquartered? ",
+    "bare27": {
+      "id": "5a74106b55429979e288289e",
+      "answer": "Bengaluru",
+      "ms": 1134,
+      "tok": 162,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a74106b55429979e288289e",
+      "answer": "The company Sachin Warrier worked for as a software engineer, Tata Consultancy Services, is headquartered in Mumbai, Maharashtra.",
+      "ms": 27090,
+      "tok": 1925,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a74106b55429979e288289e",
+      "answer": "Sachin Warrier worked as a software engineer at Tata Consultancy Services, which is headquartered in Mumbai, Maharashtra.",
+      "ms": 5522,
+      "tok": 1688,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a79311755429970f5fffe67",
+    "gold": "1962",
+    "question": "A Japanese manga series based on a 16 year old high school student Ichitaka Seto, is written and illustrated by someone born in what year?",
+    "bare27": {
+      "id": "5a79311755429970f5fffe67",
+      "answer": "1978",
+      "ms": 1332,
+      "tok": 177,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a79311755429970f5fffe67",
+      "answer": "The manga series described is \"I's\", which is written and illustrated by Masakazu Katsura. According to the documents, Masakazu Katsura was born in 1962.",
+      "ms": 36093,
+      "tok": 2550,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a79311755429970f5fffe67",
+      "answer": "The Japanese manga series featuring the 16-year-old high school student Ichitaka Seto is titled 'I's'. This series was written and illustrated by Masakazu Katsura. According to the provided documents, Masakazu Katsura was born in 1962.",
+      "ms": 7966,
+      "tok": 2319,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ab2d3df554299194fa9352c",
+    "gold": "sovereignty",
+    "question": "The battle in which Giuseppe Arimondi lost his life secured what for Ethiopia?",
+    "bare27": {
+      "id": "5ab2d3df554299194fa9352c",
+      "answer": "Independence",
+      "ms": 1026,
+      "tok": 159,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ab2d3df554299194fa9352c",
+      "answer": "The battle in which Giuseppe Arimondi lost his life was the Battle of Adwa. This battle secured Ethiopian sovereignty and freedom from colonization.",
+      "ms": 39148,
+      "tok": 2725,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ab2d3df554299194fa9352c",
+      "answer": "The battle in which Giuseppe Arimondi lost his life secured Ethiopian sovereignty.",
+      "ms": 6912,
+      "tok": 2433,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a760ab65542994ccc918697",
+    "gold": "Nelson Rockefeller",
+    "question": "Alfred Balk served as the secretary of the Committee on the Employment of Minority Groups in the News Media under which United States Vice President?",
+    "bare27": {
+      "id": "5a760ab65542994ccc918697",
+      "answer": "Hubert Humphrey",
+      "ms": 1316,
+      "tok": 171,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a760ab65542994ccc918697",
+      "answer": "NOT FOUND — the corpus does not state the SLA duration.",
+      "ms": 27457,
+      "tok": 3303,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ourssrc": {
+      "id": "5a760ab65542994ccc918697",
+      "answer": "Alfred Balk served as the secretary of the Committee on the Employment of Minority Groups in the News Media under Vice President Nelson Rockefeller.",
+      "ms": 8788,
+      "tok": 3177,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a7d54165542995f4f402256",
+    "gold": "Yellowcraig",
+    "question": "A medieval fortress in Dirleton, East Lothian, Scotland borders on the south side of what coastal area?",
+    "bare27": {
+      "id": "5a7d54165542995f4f402256",
+      "answer": "North Sea",
+      "ms": 1228,
+      "tok": 166,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a7d54165542995f4f402256",
+      "answer": "A medieval fortress in Dirleton, East Lothian, Scotland borders on the south side of the Firth of Forth.",
+      "ms": 27575,
+      "tok": 1833,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a7d54165542995f4f402256",
+      "answer": "Dirleton Castle, a medieval fortress in Dirleton, East Lothian, Scotland, borders on the south side of the Yellowcraigs nature reserve, which is situated along the coast near the Firth of Forth.",
+      "ms": 5485,
+      "tok": 1609,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ab859a955429934fafe6d7b",
+    "gold": "Phil Spector",
+    "question": "Who is the writer of this song that was inspired by words on a tombstone and was the first track on the box set Back to Mono?",
+    "bare27": {
+      "id": "5ab859a955429934fafe6d7b",
+      "answer": "Paul McCartney",
+      "ms": 1212,
+      "tok": 172,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ab859a955429934fafe6d7b",
+      "answer": "The writer of the song is Phil Spector. The song, \"To Know Him Is to Love Him,\" was inspired by words on his father's tombstone and was the first track on the box set Back to Mono (1958–1969).",
+      "ms": 45797,
+      "tok": 3252,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ab859a955429934fafe6d7b",
+      "answer": "The writer of the song is Phil Spector. The track 'To Know Him Is to Love Him,' which he wrote and inspired by words on his father's tombstone, was the first track on the box set Back to Mono (1958–1969).",
+      "ms": 9658,
+      "tok": 2996,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5add61d65542995b365fab21",
+    "gold": "Organizations could come together to address global issues",
+    "question": "What type of forum did a former Soviet statesman initiate?",
+    "bare27": {
+      "id": "5add61d65542995b365fab21",
+      "answer": "International",
+      "ms": 953,
+      "tok": 154,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5add61d65542995b365fab21",
+      "answer": "A former Soviet statesman, Mikhail Gorbachev, initiated the World Summit of Nobel Peace Laureates, which is described as a forum for Nobel Peace Laureates and their organizations to address global issues and promote peace and human well-being.",
+      "ms": 43863,
+      "tok": 2874,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5add61d65542995b365fab21",
+      "answer": "Mikhail Gorbachev initiated the World Summit of Nobel Peace Laureates in the 1990s as a forum for Nobel Peace Laureates and their organizations to address global issues.",
+      "ms": 7849,
+      "tok": 2597,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a8e068b5542995085b37384",
+    "gold": "yes",
+    "question": "Are Ferocactus and Silene both types of plant?",
+    "bare27": {
+      "id": "5a8e068b5542995085b37384",
+      "answer": "yes",
+      "ms": 953,
+      "tok": 154,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5a8e068b5542995085b37384",
+      "answer": "Yes, both Ferocactus and Silene are types of plants. Ferocactus is a genus of cacti, and Silene is a genus of flowering plants.",
+      "ms": 27710,
+      "tok": 2045,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a8e068b5542995085b37384",
+      "answer": "Yes, both Ferocactus and Silene are types of plants. Silene is described as a genus of flowering plants in the family Caryophyllaceae, with multiple species detailed across various documents. Ferocactus is described as a genus of large barrel-shaped cacti found in the southwestern United States and northwestern Mexico.",
+      "ms": 8065,
+      "tok": 1867,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5abbf698554299114383a0b5",
+    "gold": "English Electric Canberra",
+    "question": "Which British first-generation jet-powered medium bomber was used in the South West Pacific theatre of World War II?",
+    "bare27": {
+      "id": "5abbf698554299114383a0b5",
+      "answer": "Avro Lancaster",
+      "ms": 1081,
+      "tok": 165,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5abbf698554299114383a0b5",
+      "answer": "The English Electric Canberra was the British first-generation jet-powered medium bomber used in the South West Pacific theatre of World War II. It was developed in the mid-to-late 1940s and introduced to service with the Royal Air Force in May 1951, becoming the service's first jet-powered bomber aircraft. No. 2 Squadron RAAF, which saw action as a bomber unit in the South West Pacific theatre of World War II, was equipped with English Electric Canberra jets during the Malayan Emergency and the Vietnam War.",
+      "ms": 44932,
+      "tok": 2447,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5abbf698554299114383a0b5",
+      "answer": "NOT FOUND — the corpus does not state which British first-generation jet-powered medium bomber was used in the South West Pacific theatre of World War II.",
+      "ms": 5824,
+      "tok": 2087,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a8e1027554299653c1aa15f",
+    "gold": "2009 Big 12 Conference",
+    "question": "Which year and which conference was the 14th season for this conference as part of the NCAA Division that the Colorado Buffaloes played in with a record of 2-6 in conference play?",
+    "bare27": {
+      "id": "5a8e1027554299653c1aa15f",
+      "answer": "2019-20 Big 12 Conference",
+      "ms": 1812,
+      "tok": 194,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a8e1027554299653c1aa15f",
+      "answer": "The 14th season was the 2009 Big 12 Conference football season, which was part of the 2009 NCAA Division I FBS football season. The Colorado Buffaloes played in the Big 12 Conference during the 2009 season with a record of 2–6 in conference play.",
+      "ms": 36094,
+      "tok": 2151,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a8e1027554299653c1aa15f",
+      "answer": "The 14th season for the conference was the 2009 Big 12 Conference football season, during which the Colorado Buffaloes finished with a record of 2–6 in conference play.",
+      "ms": 6208,
+      "tok": 1865,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ab84bf555429916710eb01f",
+    "gold": "1,462",
+    "question": "In 1991 Euromarché was bought by a chain that operated how any hypermarkets at the end of 2016?",
+    "bare27": {
+      "id": "5ab84bf555429916710eb01f",
+      "answer": "100",
+      "ms": 1323,
+      "tok": 175,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ab84bf555429916710eb01f",
+      "answer": "In 1991, Euromarché was bought by Carrefour, which operated 1,462 hypermarkets at the end of 2016.",
+      "ms": 27752,
+      "tok": 2096,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ab84bf555429916710eb01f",
+      "answer": "In June 1991, Euromarché was bought by Carrefour. At the end of 2016, Carrefour operated 1,462 hypermarkets.",
+      "ms": 6271,
+      "tok": 1881,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a77724455429972597f153e",
+    "gold": "Indianapolis Motor Speedway",
+    "question": "What race track in the midwest hosts a 500 mile race eavery May?",
+    "bare27": {
+      "id": "5a77724455429972597f153e",
+      "answer": "Indianapolis Motor Speedway",
+      "ms": 1158,
+      "tok": 164,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5a77724455429972597f153e",
+      "answer": "NOT FOUND — the corpus does not state the SLA duration.",
+      "ms": 19079,
+      "tok": 2044,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a77724455429972597f153e",
+      "answer": "NOT FOUND — the corpus does not state which midwest race track hosts a 500 mile race every May.",
+      "ms": 5917,
+      "tok": 1901,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a87c13f5542996e4f30890c",
+    "gold": "Rome",
+    "question": "In what city did the \"Prince of tenors\" star in a film based on an opera by Giacomo Puccini?",
+    "bare27": {
+      "id": "5a87c13f5542996e4f30890c",
+      "answer": "Hollywood",
+      "ms": 1226,
+      "tok": 168,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a87c13f5542996e4f30890c",
+      "answer": "Rome",
+      "ms": 29486,
+      "tok": 2107,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a87c13f5542996e4f30890c",
+      "answer": "Franco Corelli, known as the 'Prince of tenors', starred in the 1956 film Tosca, which is based on the opera by Giacomo Puccini. This film was made at Cinecittà in Rome.",
+      "ms": 6230,
+      "tok": 1888,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ab96ab755429970cfb8eacd",
+    "gold": "Max Martin, Savan Kotecha and Ilya Salmanzadeh",
+    "question": "Ellie Goulding worked with what other writers on her third studio album, Delirium?",
+    "bare27": {
+      "id": "5ab96ab755429970cfb8eacd",
+      "answer": "Max Martin, Shellback, Savan Kotecha, Tove Lo, Sia, Benny Blanco, Stargate, Ryan Tedder, Emile Haynie, Ryan Stewart, Jacob Kasher, and others",
+      "ms": 3441,
+      "tok": 202,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ab96ab755429970cfb8eacd",
+      "answer": "NOT FOUND — the corpus does not state the other writers Ellie Goulding worked with on her third studio album, Delirium.",
+      "ms": 20112,
+      "tok": 2023,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ab96ab755429970cfb8eacd",
+      "answer": "Ellie Goulding worked with writers including Max Martin, Savan Kotecha, and Ilya Salmanzadeh on her third studio album, Delirium. These collaborations are evidenced by the songs 'Love Me like You Do' and 'On My Mind', both of which feature these individuals as co-writers.",
+      "ms": 8420,
+      "tok": 1918,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a8a43eb5542996c9b8d5e82",
+    "gold": "Marion, South Australia",
+    "question": "Which Australian city founded in 1838 contains a boarding school opened by a Prime Minister of Australia and named after a school in London of the same name.",
+    "bare27": {
+      "id": "5a8a43eb5542996c9b8d5e82",
+      "answer": "Melbourne",
+      "ms": 1376,
+      "tok": 176,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a8a43eb5542996c9b8d5e82",
+      "answer": "The Australian city is Adelaide (specifically the suburb of Marion). The boarding school is Westminster School, which was opened by Prime Minister Robert Menzies in 1961 and is named after Westminster School in London. Marion was founded in 1838.",
+      "ms": 41583,
+      "tok": 2570,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a8a43eb5542996c9b8d5e82",
+      "answer": "The Australian city founded in 1838 that contains such a boarding school is Marion, South Australia. According to the documents, Marion was founded as a rural village in 1838. The Westminster School, located in Marion, was opened by Prime Minister Robert Menzies in 1961 and is named after Westminster School in London.",
+      "ms": 8744,
+      "tok": 2301,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ae73acb5542991e8301cc07",
+    "gold": "Drifting",
+    "question": "D1NZ is a series based on what oversteering technique?",
+    "bare27": {
+      "id": "5ae73acb5542991e8301cc07",
+      "answer": "Drift",
+      "ms": 1069,
+      "tok": 157,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5ae73acb5542991e8301cc07",
+      "answer": "D1NZ is a production car drifting series based on the driving technique of drifting, where the driver intentionally oversteers with loss of traction in the rear wheels or all tires while maintaining control through a corner.",
+      "ms": 29833,
+      "tok": 2020,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae73acb5542991e8301cc07",
+      "answer": "D1NZ is a drifting series based on the oversteering technique known as drifting, where drivers intentionally lose traction in the rear wheels while maintaining control through a corner.",
+      "ms": 5594,
+      "tok": 1802,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a7320565542991f9a20c61d",
+    "gold": "Keith Bostic",
+    "question": "who is younger Keith Bostic or Jerry Glanville ?",
+    "bare27": {
+      "id": "5a7320565542991f9a20c61d",
+      "answer": "Keith Bostic",
+      "ms": 1126,
+      "tok": 158,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5a7320565542991f9a20c61d",
+      "answer": "Jerry Glanville is younger than Keith Bostic. Jerry Glanville was born on October 14, 1941, while Keith Bostic was born on January 17, 1961.",
+      "ms": 33843,
+      "tok": 2233,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a7320565542991f9a20c61d",
+      "answer": "Jerry Glanville is younger than Keith Bostic. Jerry Glanville was born on October 14, 1941, while Keith Bostic was born on January 17, 1961.",
+      "ms": 7607,
+      "tok": 2010,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ae32e125542991a06ce9946",
+    "gold": "35,124",
+    "question": "According to the 2001 census, what was the population of the city in which Kirton End is located?",
+    "bare27": {
+      "id": "5ae32e125542991a06ce9946",
+      "answer": "10,000",
+      "ms": 1427,
+      "tok": 172,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ae32e125542991a06ce9946",
+      "answer": "According to the 2001 census, the population of the city of Boston, in which Kirton End is located, was 35,124.",
+      "ms": 28752,
+      "tok": 2137,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae32e125542991a06ce9946",
+      "answer": "NOT FOUND — the corpus does not state the population of the city in which Kirton End is located.",
+      "ms": 5801,
+      "tok": 1913,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    }
+  },
+  {
+    "id": "5adc53f75542996e6852530a",
+    "gold": "no",
+    "question": "Are both Cypress and Ajuga genera?",
+    "bare27": {
+      "id": "5adc53f75542996e6852530a",
+      "answer": "yes",
+      "ms": 950,
+      "tok": 150,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5adc53f75542996e6852530a",
+      "answer": "Yes, both are genera. Ajuga is explicitly described as a genus of flowering plants in the mint family. Cypress is a common name for conifers in the family Cupressaceae, which includes several genera, such as Cupressus, Fokienia, Libocedrus, and Pilgerodendron.",
+      "ms": 47649,
+      "tok": 1861,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5adc53f75542996e6852530a",
+      "answer": "Yes, both Cypress and Ajuga are genera. The term 'Cypress' refers to a genus (or group of genera) within the family Cupressaceae, while Ajuga is a distinct genus of flowering plants in the mint family Lamiaceae.",
+      "ms": 6611,
+      "tok": 1546,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a8b20335542996c9b8d5fb3",
+    "gold": "shortest player ever to play in the National Basketball Association",
+    "question": "What distinction is held by the former NBA player who was a member of the Charlotte Hornets during their 1992-93 season and was head coach for the WNBA team Charlotte Sting?",
+    "bare27": {
+      "id": "5a8b20335542996c9b8d5fb3",
+      "answer": "First woman to coach in the NBA",
+      "ms": 1513,
+      "tok": 188,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a8b20335542996c9b8d5fb3",
+      "answer": "The former NBA player who was a member of the Charlotte Hornets during the 1992-93 season and served as head coach for the WNBA team Charlotte Sting is Muggsy Bogues. The distinction he holds is being the shortest player ever to play in the National Basketball Association.",
+      "ms": 44114,
+      "tok": 2698,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a8b20335542996c9b8d5fb3",
+      "answer": "Muggsy Bogues is the former NBA player who was a member of the Charlotte Hornets during their 1992-93 season and later served as head coach for the WNBA team Charlotte Sting.",
+      "ms": 7397,
+      "tok": 2385,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a85fb085542994775f606de",
+    "gold": "Ronald Shusett",
+    "question": "What is the name of the executive producer of the film that has a score composed by Jerry Goldsmith?",
+    "bare27": {
+      "id": "5a85fb085542994775f606de",
+      "answer": "Unknown",
+      "ms": 983,
+      "tok": 163,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5a85fb085542994775f606de",
+      "answer": "NOT FOUND — the corpus does not state the name of the executive producer of the film that has a score composed by Jerry Goldsmith.",
+      "ms": 19011,
+      "tok": 1978,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ourssrc": {
+      "id": "5a85fb085542994775f606de",
+      "answer": "The documents do not provide a single definitive name for an executive producer of a film with a score by Jerry Goldsmith, as multiple films are described with different production roles and individuals. For instance, in the film 'Innerspace', Steven Spielberg served as executive producer while Jerry Goldsmith composed the score. In 'Alien', Shusett is identified as the executive producer with Goldsmith's score. In 'Lionheart', Francis Ford Coppola and Jack Schwartzman were executive producers alongside Talia Shire, who also had a score by Goldsmith. Additionally, 'Christus Apollo' was composed by Jerry Goldsmith but does not mention an executive producer, only that it was commissioned by the California Chamber Symphony.",
+      "ms": 10691,
+      "tok": 1970,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a7be2595542997c3ec972ac",
+    "gold": "Adeline Virginia Woolf",
+    "question": "Who was born earlier, Emma Bull or Virginia Woolf?",
+    "bare27": {
+      "id": "5a7be2595542997c3ec972ac",
+      "answer": "Virginia Woolf",
+      "ms": 1119,
+      "tok": 156,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5a7be2595542997c3ec972ac",
+      "answer": "Virginia Woolf was born earlier. She was born on 25 January 1882, while Emma Bull was born on December 13, 1954.",
+      "ms": 27761,
+      "tok": 1845,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a7be2595542997c3ec972ac",
+      "answer": "Virginia Woolf was born earlier than Emma Bull. Virginia Woolf was born on January 25, 1882, while Emma Bull was born on December 13, 1954.",
+      "ms": 5506,
+      "tok": 1620,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a77152355429966f1a36c2e",
+    "gold": "821",
+    "question": "What was the Roud Folk Song Index of the nursery rhyme inspiring What Are Little Girls Made Of?",
+    "bare27": {
+      "id": "5a77152355429966f1a36c2e",
+      "answer": "150",
+      "ms": 1115,
+      "tok": 164,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a77152355429966f1a36c2e",
+      "answer": "The nursery rhyme inspiring the episode 'What Are Little Girls Made Of?' is 'What Are Little Boys Made Of?', which has a Roud Folk Song Index number of 821.",
+      "ms": 29073,
+      "tok": 1583,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a77152355429966f1a36c2e",
+      "answer": "The Roud Folk Song Index number for the nursery rhyme 'What Are Little Boys Made Of?', which inspired the title of the episode 'What Are Little Girls Made Of?', is 821.",
+      "ms": 5076,
+      "tok": 1327,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a8f4c8d554299458435d5a3",
+    "gold": "more than 70 countries",
+    "question": "Scott Parkin has been a vocal critic of Exxonmobil and another corporation that has operations in how many countries ?",
+    "bare27": {
+      "id": "5a8f4c8d554299458435d5a3",
+      "answer": "190",
+      "ms": 1082,
+      "tok": 166,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a8f4c8d554299458435d5a3",
+      "answer": "Scott Parkin has been a vocal critic of ExxonMobil and Halliburton. Halliburton has operations in more than 70 countries.",
+      "ms": 26618,
+      "tok": 1788,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a8f4c8d554299458435d5a3",
+      "answer": "Scott Parkin has been a vocal critic of ExxonMobil and Halliburton. According to the documents, Halliburton has operations in more than 70 countries.",
+      "ms": 5475,
+      "tok": 1570,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a80840f554299485f59863b",
+    "gold": "Charmed",
+    "question": "What WB supernatrual drama series was Jawbreaker star Rose Mcgowan best known for being in?",
+    "bare27": {
+      "id": "5a80840f554299485f59863b",
+      "answer": "Buffy the Vampire Slayer",
+      "ms": 1192,
+      "tok": 167,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5a80840f554299485f59863b",
+      "answer": "Rose McGowan, a star of the film Jawbreaker, was best known for playing Paige Matthews in the WB supernatural drama series Charmed.",
+      "ms": 32399,
+      "tok": 2193,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a80840f554299485f59863b",
+      "answer": "Rose McGowan, who starred in the 1999 film Jawbreaker, is best known for playing Paige Matthews in The WB supernatural drama series Charmed.",
+      "ms": 6715,
+      "tok": 1951,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a8361b65542992ef85e22a0",
+    "gold": "International Boxing Hall of Fame",
+    "question": "Vince Phillips held a junior welterweight title by an organization recognized by what larger Hall of Fame?",
+    "bare27": {
+      "id": "5a8361b65542992ef85e22a0",
+      "answer": "International Boxing Hall of Fame",
+      "ms": 1198,
+      "tok": 166,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5a8361b65542992ef85e22a0",
+      "answer": "Vince Phillips held the IBF junior welterweight title, and the International Boxing Federation (IBF) is recognized by the International Boxing Hall of Fame (IBHOF).",
+      "ms": 33369,
+      "tok": 2754,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a8361b65542992ef85e22a0",
+      "answer": "Vince Phillips held the IBF junior welterweight title from 1997 to 1999. The International Boxing Federation (IBF) is one of four major organizations recognized by the International Boxing Hall of Fame.",
+      "ms": 8158,
+      "tok": 2559,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ae7ba7a5542993210983f12",
+    "gold": "Usher",
+    "question": "What is the name of the singer who's song was released as the lead single from the album \"Confessions\", and that had popular song stuck behind for eight consecutive weeks?",
+    "bare27": {
+      "id": "5ae7ba7a5542993210983f12",
+      "answer": "Usher",
+      "ms": 1253,
+      "tok": 178,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5ae7ba7a5542993210983f12",
+      "answer": "Usher",
+      "ms": 29366,
+      "tok": 2721,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae7ba7a5542993210983f12",
+      "answer": "The singer is Usher. His song \"Yeah!\" was released as the lead single from his album \"Confessions.\" This song reached number one on the Billboard Hot 100 and remained there for eight consecutive weeks.",
+      "ms": 8240,
+      "tok": 2579,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ac2acff55429921a00ab02b",
+    "gold": "Bill Murray",
+    "question": "who is the younger brother of The episode guest stars of The Hard Easy ",
+    "bare27": {
+      "id": "5ac2acff55429921a00ab02b",
+      "answer": "Unknown",
+      "ms": 982,
+      "tok": 156,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ac2acff55429921a00ab02b",
+      "answer": "Bill Murray",
+      "ms": 22400,
+      "tok": 1977,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ac2acff55429921a00ab02b",
+      "answer": "NOT FOUND — the corpus does not state the younger brother of the episode guest stars of The Hard Easy.",
+      "ms": 5575,
+      "tok": 1796,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    }
+  },
+  {
+    "id": "5aba7cfe554299232ef4a2fd",
+    "gold": "Carabao Cup",
+    "question": "The 2017–18 Wigan Athletic F.C. season will be a year in which the team competes in the league cup known as what for sponsorship reasons?",
+    "bare27": {
+      "id": "5aba7cfe554299232ef4a2fd",
+      "answer": "Carabao Cup",
+      "ms": 1344,
+      "tok": 182,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5aba7cfe554299232ef4a2fd",
+      "answer": "The 2017–18 Wigan Athletic F.C. season will be a year in which the team competes in the league cup known as the Carabao Cup for sponsorship reasons.",
+      "ms": 32027,
+      "tok": 2060,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5aba7cfe554299232ef4a2fd",
+      "answer": "For the 2017–18 season, Wigan Athletic competed in the league cup known as the Carabao Cup for sponsorship reasons.",
+      "ms": 5466,
+      "tok": 1819,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ae5aba0554299546bf82f17",
+    "gold": "Teen Titans Go!",
+    "question": "Which of Tara Strong major voice role in animated series is an American animated television series based on the DC Comics fictional superhero team, the \"Teen Titans\"?",
+    "bare27": {
+      "id": "5ae5aba0554299546bf82f17",
+      "answer": "Starfire",
+      "ms": 1232,
+      "tok": 173,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ae5aba0554299546bf82f17",
+      "answer": "Teen Titans",
+      "ms": 36395,
+      "tok": 2121,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae5aba0554299546bf82f17",
+      "answer": "Tara Strong's major voice role in 'Teen Titans', an American animated television series based on the DC Comics fictional superhero team of the same name, is that of Raven.",
+      "ms": 6268,
+      "tok": 1863,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ae1f4cb554299234fd0436d",
+    "gold": "276,170 inhabitants",
+    "question": "What is the inhabitant of the city where  122nd SS-Standarte was formed in2014",
+    "bare27": {
+      "id": "5ae1f4cb554299234fd0436d",
+      "answer": "German",
+      "ms": 1176,
+      "tok": 168,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ae1f4cb554299234fd0436d",
+      "answer": "The 122nd SS-Standarte was formed in the city of Strasbourg. In 2014, the city proper of Strasbourg had 276,170 inhabitants.",
+      "ms": 30045,
+      "tok": 1831,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae1f4cb554299234fd0436d",
+      "answer": "The 122nd SS-Standarte was formed in Strasbourg. In 2014, the city proper of Strasbourg had 276,170 inhabitants.",
+      "ms": 5582,
+      "tok": 1587,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ae7e1fc55429952e35ea9cc",
+    "gold": "orange",
+    "question": "What color clothing do people of the Netherlands wear during Oranjegekte or to celebrate the national holiday Koningsdag? ",
+    "bare27": {
+      "id": "5ae7e1fc55429952e35ea9cc",
+      "answer": "Orange",
+      "ms": 1174,
+      "tok": 166,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5ae7e1fc55429952e35ea9cc",
+      "answer": "People in the Netherlands wear orange clothing, such as T-shirts, caps, and scarves, during Oranjegekte and Koningsdag.",
+      "ms": 25777,
+      "tok": 2079,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae7e1fc55429952e35ea9cc",
+      "answer": "During Oranjegekte or Koningsdag, people in the Netherlands wear orange clothing such as T-shirts, caps, and scarfs.",
+      "ms": 6008,
+      "tok": 1889,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ae37c765542992f92d822d4",
+    "gold": "Tromeo and Juliet",
+    "question": "What was the name of the 1996 loose adaptation of William Shakespeare's \"Romeo & Juliet\" written by James Gunn?",
+    "bare27": {
+      "id": "5ae37c765542992f92d822d4",
+      "answer": "Ten Things I Hate About You",
+      "ms": 1462,
+      "tok": 176,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ae37c765542992f92d822d4",
+      "answer": "The name of the 1996 loose adaptation of William Shakespeare's \"Romeo & Juliet\" written by James Gunn is Tromeo and Juliet.",
+      "ms": 34531,
+      "tok": 2322,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae37c765542992f92d822d4",
+      "answer": "The 1996 loose adaptation of William Shakespeare's 'Romeo & Juliet' written by James Gunn is titled 'Tromeo and Juliet'. This film was directed by Lloyd Kaufman from a screenplay co-written by Kaufman and Gunn, produced by Troma Entertainment.",
+      "ms": 7316,
+      "tok": 2095,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ae33c4d5542992f92d82262",
+    "gold": "William Jefferson Clinton",
+    "question": "Robert Suettinger was the national intelligence officer under which former Governor of Arkansas?",
+    "bare27": {
+      "id": "5ae33c4d5542992f92d82262",
+      "answer": "Mike Huckabee",
+      "ms": 1031,
+      "tok": 160,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ae33c4d5542992f92d82262",
+      "answer": "Bill Clinton",
+      "ms": 28836,
+      "tok": 1753,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae33c4d5542992f92d82262",
+      "answer": "Robert Suettinger served as the national intelligence officer under Bill Clinton, who was the Governor of Arkansas from 1979 to 1981 and again from 1983 to 1992.",
+      "ms": 5660,
+      "tok": 1529,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a77cb335542997042120b3a",
+    "gold": "John John Florence",
+    "question": "What American professional Hawaiian surfer born 18 October 1992 won the Rip Curl Pro Portugal?",
+    "bare27": {
+      "id": "5a77cb335542997042120b3a",
+      "answer": "John John Florence",
+      "ms": 1288,
+      "tok": 167,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5a77cb335542997042120b3a",
+      "answer": "John John Florence",
+      "ms": 20967,
+      "tok": 1563,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a77cb335542997042120b3a",
+      "answer": "John John Florence, an American professional Hawaiian surfer born on October 18, 1992, won the Rip Curl Pro Portugal in 2016.",
+      "ms": 5151,
+      "tok": 1385,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a8979f4554299669944a52e",
+    "gold": "Ann",
+    "question": "What is the middle name of the actress who plays Bobbi Bacha in Suburban Madness?",
+    "bare27": {
+      "id": "5a8979f4554299669944a52e",
+      "answer": "Unknown",
+      "ms": 977,
+      "tok": 161,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a8979f4554299669944a52e",
+      "answer": "The actress who plays Bobbi Bacha in Suburban Madness is Sela Ward, and her middle name is Ann.",
+      "ms": 26606,
+      "tok": 1757,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a8979f4554299669944a52e",
+      "answer": "NOT FOUND — the corpus does not state the middle name of the actress who plays Bobbi Bacha in Suburban Madness.",
+      "ms": 5016,
+      "tok": 1532,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    }
+  },
+  {
+    "id": "5a713ea95542994082a3e6e4",
+    "gold": "Apalachees",
+    "question": "Alvaro Mexia had a diplomatic mission with which tribe of indigenous people?",
+    "bare27": {
+      "id": "5a713ea95542994082a3e6e4",
+      "answer": "Mapuche",
+      "ms": 1042,
+      "tok": 158,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a713ea95542994082a3e6e4",
+      "answer": "Alvaro Mexia had a diplomatic mission with the Ais tribe of indigenous people.",
+      "ms": 25101,
+      "tok": 2161,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a713ea95542994082a3e6e4",
+      "answer": "Alvaro Mexia was given a diplomatic mission to the Ais native population, which resulted in a 'Period of Friendship' between the Spanish and this tribe.",
+      "ms": 6074,
+      "tok": 2007,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a78bd9b554299078472774a",
+    "gold": "British",
+    "question": "What nationality were social anthropologists Alfred Gell and Edmund Leach?",
+    "bare27": {
+      "id": "5a78bd9b554299078472774a",
+      "answer": "British",
+      "ms": 986,
+      "tok": 156,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5a78bd9b554299078472774a",
+      "answer": "Both Alfred Gell and Edmund Leach were British social anthropologists.",
+      "ms": 33268,
+      "tok": 2112,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a78bd9b554299078472774a",
+      "answer": "Alfred Gell was British, having been trained by Edmund Leach at Cambridge University. Edmund Leach was also British.",
+      "ms": 5886,
+      "tok": 1866,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a7625e8554299109176e66a",
+    "gold": "1865",
+    "question": "In which year was the King who made the 1925 Birthday Honours born?",
+    "bare27": {
+      "id": "5a7625e8554299109176e66a",
+      "answer": "1865",
+      "ms": 1169,
+      "tok": 164,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5a7625e8554299109176e66a",
+      "answer": "The King who made the 1925 Birthday Honours was King George V, who was born in 1865.",
+      "ms": 26859,
+      "tok": 1843,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a7625e8554299109176e66a",
+      "answer": "The King who made the 1925 Birthday Honours was George V, who was born in 1865.",
+      "ms": 5830,
+      "tok": 1612,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ae2dd2055429928c423950d",
+    "gold": "Newport",
+    "question": "What is the county seat of the county where East Lempster, New Hampshire is located?",
+    "bare27": {
+      "id": "5ae2dd2055429928c423950d",
+      "answer": "Keene",
+      "ms": 1046,
+      "tok": 162,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ae2dd2055429928c423950d",
+      "answer": "The county seat of Sullivan County, where East Lempster, New Hampshire is located, is Newport.",
+      "ms": 26955,
+      "tok": 1971,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae2dd2055429928c423950d",
+      "answer": "East Lempster is an unincorporated community located in the town of Lempster, which is situated in Sullivan County, New Hampshire. The county seat of Sullivan County is Newport.",
+      "ms": 5876,
+      "tok": 1772,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5abdf12255429976d4830a2f",
+    "gold": "Bob Seger",
+    "question": "The Album Against the Wind was the 11th Album of a Rock singer Robert C Seger born may 6 1945. What was the Rock singers stage name ?",
+    "bare27": {
+      "id": "5abdf12255429976d4830a2f",
+      "answer": "Bob Seger",
+      "ms": 1241,
+      "tok": 180,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5abdf12255429976d4830a2f",
+      "answer": "The rock singer's stage name was Bob Seger.",
+      "ms": 28183,
+      "tok": 2118,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5abdf12255429976d4830a2f",
+      "answer": "The rock singer's stage name is Bob Seger.",
+      "ms": 5963,
+      "tok": 1884,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a88658955429938390d3f47",
+    "gold": "Conscription",
+    "question": "Rostker v. Goldberg held that the practice of what way of filling armed forces vacancies was consitutional?",
+    "bare27": {
+      "id": "5a88658955429938390d3f47",
+      "answer": "lottery",
+      "ms": 1223,
+      "tok": 166,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a88658955429938390d3f47",
+      "answer": "Rostker v. Goldberg held that the practice of requiring only men to register for the draft was constitutional.",
+      "ms": 33361,
+      "tok": 2681,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a88658955429938390d3f47",
+      "answer": "Rostker v. Goldberg held that the practice of requiring only men to register for the draft was constitutional.",
+      "ms": 7029,
+      "tok": 2462,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a86ebac55429960ec39b6d6",
+    "gold": "Mondelez International, Inc.",
+    "question": "Handi-Snacks are a snack food product line sold by what American multinational confectionery, food, and beverage company that is based in Illinois?",
+    "bare27": {
+      "id": "5a86ebac55429960ec39b6d6",
+      "answer": "Kellogg's",
+      "ms": 1289,
+      "tok": 175,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a86ebac55429960ec39b6d6",
+      "answer": "Handi-Snacks are sold by Mondelez International, an American multinational confectionery, food, and beverage company based in Illinois.",
+      "ms": 29292,
+      "tok": 1885,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a86ebac55429960ec39b6d6",
+      "answer": "Handi-Snacks are a snack food product line sold by Mondelez International, which is an American multinational confectionery, food, and beverage company based in Illinois.",
+      "ms": 5368,
+      "tok": 1657,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5aba5d2e55429901930fa799",
+    "gold": "Monica Lewinsky",
+    "question": "What was the name of a woman from the book titled \"Their Lives: The Women Targeted by the Clinton Machine \" and was also a former white house intern?",
+    "bare27": {
+      "id": "5aba5d2e55429901930fa799",
+      "answer": "Monica Lewinsky",
+      "ms": 1344,
+      "tok": 178,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5aba5d2e55429901930fa799",
+      "answer": "Monica Lewinsky",
+      "ms": 34632,
+      "tok": 2404,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5aba5d2e55429901930fa799",
+      "answer": "Monica Lewinsky was a former White House intern and one of the women featured in the book 'Their Lives: The Women Targeted by the Clinton Machine' by Candice E. Jackson.",
+      "ms": 7011,
+      "tok": 2184,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ae5736e5542990ba0bbb2b3",
+    "gold": "April 1, 1949",
+    "question": "When was the American lawyer, lobbyist and political consultant who was a senior member of the presidential campaign of Donald Trump born?",
+    "bare27": {
+      "id": "5ae5736e5542990ba0bbb2b3",
+      "answer": "1960",
+      "ms": 1346,
+      "tok": 169,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ae5736e5542990ba0bbb2b3",
+      "answer": "The American lawyer, lobbyist and political consultant who was a senior member of the presidential campaign of Donald Trump is Paul Manafort, who was born on April 1, 1949.",
+      "ms": 36835,
+      "tok": 2347,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae5736e5542990ba0bbb2b3",
+      "answer": "Paul Manafort, an American lawyer, lobbyist, and political consultant who served as a senior member of Donald Trump's presidential campaign, was born on April 1, 1949.",
+      "ms": 6655,
+      "tok": 2128,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ae005b555429942ec259bec",
+    "gold": "1866",
+    "question": "In what year was the novel that Lourenço Mutarelli based \"Nina\" on based first published?",
+    "bare27": {
+      "id": "5ae005b555429942ec259bec",
+      "answer": "1900",
+      "ms": 1359,
+      "tok": 168,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ae005b555429942ec259bec",
+      "answer": "1866",
+      "ms": 28935,
+      "tok": 1783,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae005b555429942ec259bec",
+      "answer": "NOT FOUND — the corpus does not state the year the novel that Lourenço Mutarelli based 'Nina' on was first published.",
+      "ms": 5089,
+      "tok": 1554,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a7759fc5542993569682d60",
+    "gold": "Canary Islands, Spain",
+    "question": "Where are Teide National Park and Garajonay National Park located?",
+    "bare27": {
+      "id": "5a7759fc5542993569682d60",
+      "answer": "Canary Islands",
+      "ms": 1127,
+      "tok": 159,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a7759fc5542993569682d60",
+      "answer": "Teide National Park is located in Tenerife, while Garajonay National Park is located in the center and north of the island of La Gomera; both are in the Canary Islands, Spain.",
+      "ms": 32560,
+      "tok": 1877,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a7759fc5542993569682d60",
+      "answer": "Teide National Park is located in Tenerife, which is part of the Canary Islands in Spain. Garajonay National Park is located on the island of La Gomera, also within the Canary Islands in Spain.",
+      "ms": 5642,
+      "tok": 1619,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a835478554299123d8c20ed",
+    "gold": "250 million",
+    "question": "How many copies of Roald Dahl's variation on a popular anecdote sold?",
+    "bare27": {
+      "id": "5a835478554299123d8c20ed",
+      "answer": "100,000",
+      "ms": 1341,
+      "tok": 164,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a835478554299123d8c20ed",
+      "answer": "NOT FOUND — the corpus does not state the number of copies sold of Roald Dahl's variation on a popular anecdote.",
+      "ms": 14894,
+      "tok": 1490,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ourssrc": {
+      "id": "5a835478554299123d8c20ed",
+      "answer": "The document does not state how many copies of Roald Dahl's variation on a popular anecdote sold.",
+      "ms": 4571,
+      "tok": 1345,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    }
+  },
+  {
+    "id": "5aba749055429901930fa7d8",
+    "gold": "director",
+    "question": "What occupation do Chris Menges and Aram Avakian share?",
+    "bare27": {
+      "id": "5aba749055429901930fa7d8",
+      "answer": "cinematographer",
+      "ms": 1129,
+      "tok": 158,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5aba749055429901930fa7d8",
+      "answer": "Chris Menges and Aram Avakian are both film directors.",
+      "ms": 23368,
+      "tok": 1527,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5aba749055429901930fa7d8",
+      "answer": "Chris Menges and Aram Avakian share the occupation of film director. Chris Menges is also a cinematographer, while Aram Avakian is also a film editor.",
+      "ms": 4645,
+      "tok": 1326,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5abfb3425542990832d3a1c0",
+    "gold": "The Conversation",
+    "question": "Andrew Jaspan was the co-founder of what not-for-profit media outlet?",
+    "bare27": {
+      "id": "5abfb3425542990832d3a1c0",
+      "answer": "The Intercept",
+      "ms": 1051,
+      "tok": 158,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5abfb3425542990832d3a1c0",
+      "answer": "Andrew Jaspan was the co-founder of The Conversation, an independent not-for-profit media outlet.",
+      "ms": 31048,
+      "tok": 1818,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5abfb3425542990832d3a1c0",
+      "answer": "Andrew Jaspan was the co-founder of The Conversation, an independent not-for-profit media outlet that sources content from the academic and research community.",
+      "ms": 5207,
+      "tok": 1593,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ac3165c5542995ef918c10a",
+    "gold": "John Waters",
+    "question": "Which American film director hosted the 18th Independent Spirit Awards in 2002?",
+    "bare27": {
+      "id": "5ac3165c5542995ef918c10a",
+      "answer": "Robert Rodriguez",
+      "ms": 1032,
+      "tok": 163,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ac3165c5542995ef918c10a",
+      "answer": "John Waters",
+      "ms": 19417,
+      "tok": 1513,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ac3165c5542995ef918c10a",
+      "answer": "The 18th Independent Spirit Awards, held in 2002 to honor independent filmmaking from that year, were hosted by the American film director John Waters.",
+      "ms": 5651,
+      "tok": 1355,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ae53b545542990ba0bbb23c",
+    "gold": "Las Vegas Strip in Paradise",
+    "question": "Where does the hotel and casino located in which Bill Cosby's third album was recorded?",
+    "bare27": {
+      "id": "5ae53b545542990ba0bbb23c",
+      "answer": "Las Vegas",
+      "ms": 1026,
+      "tok": 160,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5ae53b545542990ba0bbb23c",
+      "answer": "The hotel and casino is located on the Las Vegas Strip in Paradise, Nevada.",
+      "ms": 25164,
+      "tok": 1501,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae53b545542990ba0bbb23c",
+      "answer": "The hotel and casino where Bill Cosby's third album was recorded is the Flamingo Hotel in Las Vegas, Nevada.",
+      "ms": 4320,
+      "tok": 1270,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    }
+  },
+  {
+    "id": "5ae224da554299234fd043ee",
+    "gold": "no",
+    "question": "Do the drinks Gibson and Zurracapote both contain gin?",
+    "bare27": {
+      "id": "5ae224da554299234fd043ee",
+      "answer": "no",
+      "ms": 976,
+      "tok": 155,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5ae224da554299234fd043ee",
+      "answer": "No, they do not both contain gin. The Gibson is a mixed drink made with gin and vermouth, but Zurracapote is a Spanish alcoholic mixed drink consisting of red wine mixed with fruit, sugar, and cinnamon, with no mention of gin as an ingredient.",
+      "ms": 29900,
+      "tok": 1794,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae224da554299234fd043ee",
+      "answer": "Yes, the Gibson contains gin as it is defined as a mixed drink made with gin and vermouth. However, Zurracapote does not contain gin; it is described as a Spanish alcoholic mixed drink consisting of red wine mixed with fruit such as peaches and lemons, sugar, and cinnamon.",
+      "ms": 6273,
+      "tok": 1579,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ae2b770554299495565db0f",
+    "gold": "March and April",
+    "question": "In what month is the annual documentary film festival, that is presented by the fortnightly published British journal of literary essays, held? ",
+    "bare27": {
+      "id": "5ae2b770554299495565db0f",
+      "answer": "October",
+      "ms": 1170,
+      "tok": 168,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ae2b770554299495565db0f",
+      "answer": "The annual documentary film festival presented by the London Review of Books, which is a British journal of literary essays published fortnightly, is held in the months of March and April.",
+      "ms": 34239,
+      "tok": 1811,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ae2b770554299495565db0f",
+      "answer": "The annual documentary film festival presented by the fortnightly published British journal of literary essays is held in March and April.",
+      "ms": 4762,
+      "tok": 1526,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a80b3a9554299485f5986cc",
+    "gold": "Fairfax County",
+    "question": "Tysons Galleria is located in what county?",
+    "bare27": {
+      "id": "5a80b3a9554299485f5986cc",
+      "answer": "Fairfax County",
+      "ms": 1081,
+      "tok": 153,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5a80b3a9554299485f5986cc",
+      "answer": "Tysons Galleria is located in Fairfax County, Virginia.",
+      "ms": 30647,
+      "tok": 1965,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a80b3a9554299485f5986cc",
+      "answer": "Tysons Galleria is located in Fairfax County, Virginia.",
+      "ms": 5052,
+      "tok": 1692,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5a8e0a005542995085b373a1",
+    "gold": "IT products and services",
+    "question": "Bordan Tkachuk was the CEO of a company that provides what sort of products?",
+    "bare27": {
+      "id": "5a8e0a005542995085b373a1",
+      "answer": "software",
+      "ms": 976,
+      "tok": 160,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a8e0a005542995085b373a1",
+      "answer": "Bordan Tkachuk was the former CEO of Viglen, a company that provides IT products and services, including storage systems, servers, workstations, and data/voice communications equipment and services.",
+      "ms": 30767,
+      "tok": 2311,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a8e0a005542995085b373a1",
+      "answer": "Bordan Tkachuk was the former CEO of Viglen, a company that provides IT products and services. These offerings include storage systems, servers, workstations, and data/voice communications equipment and services.",
+      "ms": 6567,
+      "tok": 2110,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5ac1b8ee5542994d76dccedc",
+    "gold": "Levni Yilmaz",
+    "question": "Which filmmaker was known for animation, Lev Yilmaz or Pamela B. Green?",
+    "bare27": {
+      "id": "5ac1b8ee5542994d76dccedc",
+      "answer": "Lev Yilmaz",
+      "ms": 1209,
+      "tok": 163,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5ac1b8ee5542994d76dccedc",
+      "answer": "Lev Yilmaz was known for animation, as he is best known for his “Tales of Mere Existence” animated comic series. Pamela B. Green is known for her work in feature film titles and motion graphics, not specifically animation.",
+      "ms": 33260,
+      "tok": 2642,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5ac1b8ee5542994d76dccedc",
+      "answer": "Lev Yilmaz is known for animation, specifically his animated comic series 'Tales of Mere Existence'. Pamela B. Green is a film producer and director known for feature films and motion graphics, but the documents do not state that she is known for animation.",
+      "ms": 8345,
+      "tok": 2461,
+      "error": null,
+      "contains": 0,
+      "qwen": 1,
+      "granite": 1
+    }
+  },
+  {
+    "id": "5adccd795542990d50227d2c",
+    "gold": "Beijing",
+    "question": "In which city is the ambassador of the Rabat-Salé-Kénitra administrative region to China based?",
+    "bare27": {
+      "id": "5adccd795542990d50227d2c",
+      "answer": "Beijing",
+      "ms": 1047,
+      "tok": 165,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ours27": {
+      "id": "5adccd795542990d50227d2c",
+      "answer": "Beijing",
+      "ms": 18044,
+      "tok": 1806,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5adccd795542990d50227d2c",
+      "answer": "NOT FOUND — the corpus does not state the city where the ambassador of the Rabat-Salé-Kénitra administrative region to China is based.",
+      "ms": 5142,
+      "tok": 1656,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    }
+  },
+  {
+    "id": "5a84c4135542994c784dda31",
+    "gold": "no",
+    "question": "Are Yingkou and Fuding the same level of city?",
+    "bare27": {
+      "id": "5a84c4135542994c784dda31",
+      "answer": "yes",
+      "ms": 996,
+      "tok": 154,
+      "error": null,
+      "contains": 0,
+      "qwen": 0,
+      "granite": 0
+    },
+    "ours27": {
+      "id": "5a84c4135542994c784dda31",
+      "answer": "No, Yingkou and Fuding are not the same level of city. Yingkou is a prefecture-level city, while Fuding is a county-level city.",
+      "ms": 19892,
+      "tok": 1325,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    },
+    "ourssrc": {
+      "id": "5a84c4135542994c784dda31",
+      "answer": "No, Yingkou and Fuding are not the same level of city. According to the documents, Yingkou is a prefecture-level city in Liaoning province, whereas Fuding is a county-level city located within Ningde prefecture-level city in Fujian Province.",
+      "ms": 5004,
+      "tok": 1143,
+      "error": null,
+      "contains": 1,
+      "qwen": 1,
+      "granite": 1
+    }
+  }
+]
