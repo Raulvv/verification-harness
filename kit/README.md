@@ -33,7 +33,7 @@ run** — and the answer contract carries receipts a machine can re-check.
 The one command is `config` once, then `ask` as often as you like:
 
 ```sh
-node kit/bin/retrieval-kit.mjs config --corpus ./docs   # seal the workspace
+node kit/bin/retrieval-kit.mjs config --corpus ./corpus   # seal the workspace
 node kit/bin/retrieval-kit.mjs ask "What is the refund window?"
 # Q: …  /  Source: …  /  gate: verified
 ```

@@ -12,7 +12,8 @@ with one measured carve-out: on partial support, the same strong reader's
 gate score still separates correct from incorrect answers ~6.6× (§3.6). A fully local stack (4B reader + 9B judge, ~10 GB resident,
 ~8.5 s/question — eval-loop means, §5) lands within **3–4.5pp** of a 27B reader's verified precision —
 directional, the Wilson intervals overlap — at **~2.4× the speed end to end**
-(~4.7× on reader time alone) and **56% of the memory** (eval loop, §5). A
+(~4.7× on reader time alone; one run — sibling judges span 3.6–6.8× on
+byte-identical rows, §3.4) and **56% of the memory** (eval loop, §5). A
 private, non-memorizable control closes the loop: questions generated from
 this repository's own documentation — a corpus no model can have memorized,
 written after the gate was frozen (§2.5) — with the same matrix run on it:
@@ -205,8 +206,10 @@ HotpotQA answers may be recalled. The control is a corpus no model has seen:
 benchmarks note, and the claims-ledger excerpt), a set written
 after the gate was frozen and never used for its tuning (clean-room),
 published after the training cutoff of every tested model. The exact file list
-and per-file sha256 are pinned in `corpus/manifest.json`, frozen before any
-question is generated — numbers never precede their corpus. Each question
+and per-file sha256 are pinned in `corpus/manifest.json`; the manifest is
+re-pinned at export, so the shipped pins describe the files as published. The
+stored b119/b120 runs quote the pre-round-18 wording (14 + 12 rows; disclosed
+in `reproduce.md`) — no measurement was regenerated. Each question
 stores both gold documents (`factA`/`factB`) and passes a grounding filter
 (≥60% of the gold answer's content words must appear in the two docs — a
 generator that hallucinates beyond its own truncation window is caught), under

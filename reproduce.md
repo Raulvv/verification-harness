@@ -93,7 +93,9 @@ exports if present:
 node bench/end-to-end.mjs
 ```
 
-Output matches B108 (partial: not_found 53 / verified 16 / verified_acc 0) and
+Output matches B108 (partial: not_found 53 / verified 16 / verified_acc 0 —
+as labeled, forced-0, unaudited; the audited unanswerable cell reads 4/6
+gold-correct in the ledger) and
 all four of B109's rows (§3.4's fifth row — the deepseek reader, 88 / 92 /
 92.6 / 7 — is a `b103b-` slice checked by the same arithmetic, not printed by
 this script):
@@ -159,11 +161,17 @@ rows in the published tree. The fresh private arm the article §3.6 publishes
 
 **Gold-drift disclosure:** the frozen b119/b120 question golds predate the
 2026-10-19 wording fix — 4 gold rows in `bench/results/private-questions.jsonl`
-still read "~25% more tokens" where the article and `bench/BENCHMARKS.md` now
-say "~32.5% more tokens". The stored runs above were graded against the golds
-as frozen; a rerun today would pit corrected readers against those same frozen
-golds. The golds are hash-pinned and never edited — disclosed here, not
-rewritten.
+still read "~25% more tokens" where `bench/BENCHMARKS.md` and `kit/README.md`
+now say "~32.5% more tokens". The stored runs above were graded against the
+golds as frozen; a rerun today would pit corrected readers against those same
+frozen golds. The golds are frozen in the repo and never edited — disclosed
+here, not rewritten.
+
+**Manifest re-pin disclosure:** `corpus/manifest.json` is rebuilt at export,
+so its 8 pins describe the published files after the round-18 wording fixes
+(6 of the 8 were edited then). The stored b119/b120 rows that quote the
+pre-edit wording — 14 b119 and 12 b120 — are the only place it survives; no
+measurement was regenerated.
 
 ```js
 import { readFileSync } from 'node:fs'
@@ -201,13 +209,13 @@ be used for the current numbers.
 | value | cell from the artifact | match to ledger |
 |---|---|---|
 | B113 4B answerable | shown 91 / verified 86 / shown_acc **81%** (74/91), verified_acc 83.7% (72/86) | ✅ ledger quotes 81% of shown (74/91) |
-| B113 4B partial | verified 34 (0 correct) | ✅ |
-| B113 4B unanswerable | raw abstain **42%** → not_found 69 / verified 14 (0 correct) | ✅ |
+| B113 4B partial | verified 34 (0 correct — as labeled, forced-0, unaudited) | ✅ |
+| B113 4B unanswerable | raw abstain **42%** → not_found 69 / verified 14 (0 correct — as labeled, forced-0, unaudited) | ✅ |
 | B114 4B answerable | raw answer **98%** → shown 93 / verified 79 → **84.8%** (67/79), verified-wrong 12 | ✅ |
-| B114 4B partial | verified 51 (0 correct) | ✅ |
+| B114 4B partial | verified 51 (0 correct — as labeled, forced-0, unaudited) | ✅ |
 | B114 4B unanswerable | raw abstain **28%** → not_found 57 | ✅ |
 | B114 deepseek answerable | raw answer **96%** → shown 96 / verified 95 → **98.9%** (94/95), verified-wrong 1 | ✅ |
-| B114 deepseek partial | verified 17 (0 correct) | ✅ |
+| B114 deepseek partial | verified 17 (0 correct — as labeled, forced-0, unaudited) | ✅ |
 | B114 deepseek unanswerable | raw abstain **98%** → not_found 98 | ✅ |
 
 (B113 is quoted at its shown-denominator — 74/91 = 81% — per the round-4 pin;

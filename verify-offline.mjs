@@ -500,7 +500,7 @@ claim('b121-fidelity-mismatch', b1219b.filter((r) => r.window_fidelity === 0).le
 // artifact pin: the shipped file must match its committed sha256 line
 const actual = createHash('sha256').update(readFileSync(ARTIFACT_PATH)).digest('hex')
 const pinned = readFileSync(PIN_PATH, 'utf8').trim().split(/\s+/)[0]
-claim('artifact-pin', actual, pinned, '0adc142ca0380dfc8b00f7def12ee1a7eef8125fec7f7ba214ab0bca94b9eb3f')
+claim('artifact-pin', actual, pinned, '88165f6fd26af787edc66fef4348cbb4c1e945c10918b6d8d1dd4697aed3ea33')
 claim('b121-pin', createHash('sha256').update(readFileSync(B121_PATH)).digest('hex'),
   readFileSync(B121_PIN, 'utf8').trim().split(/\s+/)[0])
 claim('b121-9b-pin', createHash('sha256').update(readFileSync(B121_9B_PATH)).digest('hex'),

@@ -13,8 +13,8 @@
     },
     {
       "path": "corpus/the-verification-harness.md",
-      "sha256": "85b1e6ef158a29ba3d2c7f756b5b2eb2f610fbf979f6f8cb30d4e8ecd063487f",
-      "bytes": 64131
+      "sha256": "12de6015088b2486b77fa7cee59da937d0a7e54fdfaf8d7a4225955f1e541981",
+      "bytes": 64353
     },
     {
       "path": "kit/AGENTS.md",
@@ -33,13 +33,13 @@
     },
     {
       "path": "kit/README.md",
-      "sha256": "1b002248cc21867155567f5cc7c32fca6800ba2abcfc2705a2b59245e9682a9c",
-      "bytes": 15190
+      "sha256": "8e9562415cf4f59479289bbf98214e1d2d5d8fa671d5a19a7e9ff134289808ca",
+      "bytes": 15192
     },
     {
       "path": "retrieval-claims-ledger.md",
-      "sha256": "e5ee9ea35ce308b06f528856535b0a433ecfff5208460983048207025fbcb07c",
-      "bytes": 28520
+      "sha256": "5c48ff82fbf80498c5c4f5345964ca7faa53dbdca8b1bd55fc6f51620d3f0494",
+      "bytes": 28521
     }
   ]
 }

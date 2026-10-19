@@ -45,6 +45,7 @@ clone of the shipped tree (score 8.5, publication not blocked).
 | 16 † | — | 6.5 † | — | `a0e03b3` (round-16 fixes), `5555c8e` (pointer) |
 | 17 † | — | 8.5 † | — | `d20cd99` (round-17 fixes) |
 | 18 | 8.7 | 7.0 | 9.0 | `f7e13e3` (round-18 fixes), `dc57a18` (label batch) |
+| 19 | 8.5 | 7.8 | 9.0 | `56080af` (round-19 fixes) |
 
 First unanimous round on both axes: same score (9.5) from all three, and the
 first time every persona answered `Publication blocked: no`. Rounds 9–11 kept
@@ -110,6 +111,39 @@ ported as claims, baseline fallback, forced-0 parens; **225 claims** via a
 new ledger-anchor path, each new guard drilled red-and-back) and
 `dc57a18` (ten label/scope fixes, the gold-drift disclosure — disclosed,
 never edited — and the VRAM cross-ref).
+
+Round 19 (three-persona panel, first on the `-free`-tagged ids:
+mimo-v2.6-flash-free RAG practitioner 8.5, deepseek-v4.1-flash skeptic 7.8 —
+the free deepseek id hung twice at the provider limit, so the session model
+ran the skeptic — glm-5.3-flash-free production/infra 9.0) kept publication
+**unblocked** from all three and confirmed all nine round-18 fixes LANDED with
+executed proof. The skeptic independently re-derived the B115 split through
+the composite (run_id,id,condition) join (90/65/25 → 72.2%/27.8%), B108's
+6-unanswerable/4-construction (2/6 = 33.3%), the whole b121 gate block,
+§3.6's private cells and B97's 55.3/83.5/71.7/64.2 sweep exactly. Its two
+should-fixes were new honesty finds: `reproduce.md:162` credited the
+corrected ~32.5% token figure to the article, which carries zero occurrences
+(real sites: `bench/BENCHMARKS.md:148`, `kit/README.md:27`); and the shipped
+`corpus/manifest.json` is a post-run re-pin — 6 of 8 docs were edited in the
+round-18 batch while 14 b119 + 12 b120 stored rows still quote the pre-edit
+wording, so §2.5's freeze claim was literally false for the shipped pins. The
+RAG practitioner (8.5, not blocked) found three should-fixes the honesty pass
+missed: `reproduce.md` printed B108's partial `verified_acc 0` and four
+"(0 correct)" cells with no forced-0 note (`forced-0`: 0 hits);
+`npm run kit:coverage` was documented in `kit/README.md:295` +
+`kit/CHANGELOG.md:56` but missing from the generated shipped `package.json`;
+and the artifact pin was anchored on the canonical (never shipped) hash
+instead of the published one. Production/infra (9.0, not blocked) found two
+nits only — the b121 `.sha256` sidecars were bare hex (`shasum -c` failed;
+digests correct) and `bench/RESULTS.md` is referenced-not-shipped (disclosed)
+— and praised determinism (three byte-identical verify runs, clean tree,
+~15 s CI budget). Everything applied in `56080af`: reproduce's forced-0
+labels and the 32.5% attribution; the manifest re-pin disclosure with its
+14 + 12 counts (§2.5 + `reproduce.md`); the published artifact pin (225
+claims stay green; editing the printed hash goes red); `kit:coverage` in the
+generated `package.json`; `config --corpus ./corpus`; the B99 ledger pipe
+escaped (excerpt rebuilt); both b121 pins in standard `hash  path` form so
+the article's "same `.sha256` check" is literally true.
 
 Convergence note: in round 4 all three reviewers independently found the same
 defect (the unbacked `127/140` gpt-oss count surviving in §2.2 after being cut
@@ -560,6 +594,36 @@ anchor tamper → red) and `dc57a18` (labels, disclosure, mirrors +
 manifest). Infra's determinism probe ran three byte-identical verify runs
 (~0.06 s each) with a clean git status; RAG re-derived the headline cells
 and the skeptic re-derived the sweep and both audit splits independently.
+
+## Round 19
+
+**Round 19** (three-persona panel on the `-free`-tagged ids, scores 8.5 / 7.8
+/ 9.0, `56080af`): all three answered `Publication blocked: no` and verified
+the nine round-18 fixes landed. The skeptic's `Survived recomputation` section
+reproduced every headline number it attacked — B115 (90/65/25 via the
+composite key), B108's audited unanswerable cell (4/6), b121's gate block,
+§3.6 (87.8/43.8/12.5; 97.8/79.4/55.6), B97's sweep — and its two should-fixes
+were the round's new honesty finds: `reproduce.md:162` misattributed
+"~32.5% more tokens" to the article (zero occurrences; real sites
+`bench/BENCHMARKS.md:148` and `kit/README.md:27`), and the shipped
+`corpus/manifest.json` is a post-run re-pin (6/8 docs edited in round 18;
+14 b119 + 12 b120 stored rows still carry the pre-edit wording — §2.5's
+"frozen before any question is generated" was false for the shipped pins).
+RAG's three should-fixes: reproduce's missing forced-0 labels (B108 partial
+`verified_acc 0` + four "(0 correct)" cells; `forced-0`: 0 hits), the
+generated `package.json` missing `kit:coverage` (documented at
+`kit/README.md:295` + `kit/CHANGELOG.md:56`), and `verify-offline`'s artifact
+pin anchored on the canonical `0adc142c…` hash rather than the published
+`88165f6f…` one the article prints. Infra's two nits: b121 `.sha256` sidecars
+were bare hex (`shasum -c` failed; digests correct — `verify-offline:504-507`
+tolerated it) and `bench/RESULTS.md` referenced-not-shipped (disclosed).
+Applied: forced-0 labels ×5, the 32.5% attribution, the manifest re-pin
+disclosure (14 + 12), the published-hash anchor (claim count unchanged at
+225), `kit:coverage` in `prunedPackageJson()`, `./docs` → `./corpus`, B99's
+pipe escaped (excerpt rebuilt), and both b121 pins reformatted to
+`hash  path`. Skipped and recorded: the `window_fidelity` guard's vacuity
+(274×1 / 0×0 / 26 null — no claim asserts the 274), no in-tree
+`corpus/manifest.json` checker, and `RESULTS.md` (disclosed).
 
 ## Round 4 — the three most powerful things (their answers)
 
