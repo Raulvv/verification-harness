@@ -41,6 +41,7 @@ clone of the shipped tree (score 8.5, publication not blocked).
 | 12 | 9.5 | 9.5 | 9.5 | `155a935` (round-12 fixes) |
 | 13 | 9.75 | 9.5 | 9.8 | `bf58c47` (round-13 nits) |
 | 14 † | — | 8.5 † | — | `b7dc3df` (round-14 fixes) |
+| 15 † | — | 9.0 † | — | `5670a8a` (round-15 fixes) |
 
 First unanimous round on both axes: same score (9.5) from all three, and the
 first time every persona answered `Publication blocked: no`. Rounds 9–11 kept
@@ -51,7 +52,13 @@ panel — kept publication unblocked with two should-fixes, both applied. Round
 nits, three applied). Round 14 († solo session) scored 8.5 with publication
 not blocked — the first evaluation of the shipped export itself, a fresh
 clone executed end to end — and returned three should-fixes and two nits,
-all applied in `b7dc3df`.
+all applied in `b7dc3df`. Round 15 († solo session) scored 9.0 with
+publication not blocked: all five round-14 fixes verified landed, and it
+returned one should-fix — the corpus manifest pinning the stale staging
+copies of the two kit files round 14 had edited — plus four nits (stale
+"not yet public" residue, the `ci.yml` badge, kit's 101-test comment, two
+unlabeled canonical citations), all applied in `5670a8a`, the should-fix
+now guarded by a shipped-tree pin test.
 
 Convergence note: in round 4 all three reviewers independently found the same
 defect (the unbacked `127/140` gpt-oss count surviving in §2.2 after being cut
@@ -379,6 +386,26 @@ the shipped pin `88165f6f…` (G2) and the 21%–87.5% range — both already
 carried §3.5/§3.6 measured cells; everything else was path/pointer/label
 rewording.
 
+**Round 15** (solo session, score 9.0, `5670a8a`): a confirming pass over the
+shipped tree after round 14 — all five round-14 fixes verified LANDED on a
+fresh clone (188/188, kit 153, traceability 9/9, privacy 0; every cited fix
+present at its exact location). The one should-fix was the shipped-tree
+check's `manifest pins OK: 6 bad: 2`: `b7dc3df`'s manifest rebuild had
+pinned the *staging* copies of `kit/README.md` and `kit/CHANGELOG.md` (frozen
+since the corpus freeze) while the export ships the root `kit/` files — the
+two trees had been identical before round 14 and diverged with its edits.
+Fixed in `5670a8a` (staging re-synced, manifest rebuilt — 8/8 pins resolve
+against the built candidate) and guarded: `export-public.test.js` now hashes
+every manifest entry against the shipped candidate (non-vacuity proven — a
+mutated pin goes red, reverted green). Four nits applied as well: the lede's,
+§2.7's and this record's standing-gap "not yet public" residue reworded to
+the shipped-subset reality (the full canonical `unified.jsonl` stays private
+by design), the README's CI badge repointed at the workflow that actually
+ships (`offline.yml`, not the canonical-only `ci.yml`), kit/README's
+101-test comment updated to 153, and `report.md`'s article citation plus the
+article's `docs/v4-read-system` citation labeled canonical-tree-not-published.
+No new outward numbers; publication not blocked.
+
 ## Round 4 — the three most powerful things (their answers)
 
 Consensus across all three: **§4 self-audit, §3.3 judge determinism, and
@@ -424,7 +451,8 @@ deletion unlocks the next score"), which `6d10150` applied.
 ## Standing deferred gaps (honestly disclosed in the article, by design)
 
 No p95/throughput/concurrency/$/query/CUDA numbers (§5 fenced as eval-loop,
-M4 Max, batch-1, single-user); artifact not public (§2.7); models pinned by
+M4 Max, batch-1, single-user); full artifact not public — its public subset
+ships (§2.7); models pinned by
 tag, not digest (§6.8); same-family local judging unresolved — no ≥9B
 cross-family model available (§6.4); private corpus not held out from tuning
 (§6.3); partial-support unsolved, mechanical fix priced both ways (§3.5/§6.1).

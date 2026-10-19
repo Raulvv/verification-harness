@@ -3,8 +3,8 @@
   "files": [
     {
       "path": "README.md",
-      "sha256": "2e1472240f028147c3a639504168f2f93e4c03747f03896d4f8e01c37dc8de78",
-      "bytes": 4917
+      "sha256": "cf47b5f7559d028b346977ac21d31926f6a17b71ae5cbc84b69b4a321be69057",
+      "bytes": 4922
     },
     {
       "path": "bench/BENCHMARKS.md",
@@ -13,8 +13,8 @@
     },
     {
       "path": "corpus/the-verification-harness.md",
-      "sha256": "0d622c07db05e4b34accd2b7993d8ec5f9780e4a6c708278f62173bde0ec0f67",
-      "bytes": 62727
+      "sha256": "823fa8eac0ee6e887143b0dc5aa17926c1a68bf8ab2ef98a93af7b46bfef149c",
+      "bytes": 62897
     },
     {
       "path": "kit/AGENTS.md",
@@ -23,8 +23,8 @@
     },
     {
       "path": "kit/CHANGELOG.md",
-      "sha256": "02b10f1a71b615e35b661b7ea82475fbc38ab20fa448e9d74590cbb5bb449300",
-      "bytes": 3299
+      "sha256": "25757eabd478cb79fda9dc39ab47134b104c58010e5f5b90f59eba08a8398ae2",
+      "bytes": 4124
     },
     {
       "path": "kit/GOLDEN.md",
@@ -33,8 +33,8 @@
     },
     {
       "path": "kit/README.md",
-      "sha256": "35bb098ac506afca0c8611427d2156e3d0d21b26893d8d8d9a21513385e007b0",
-      "bytes": 14815
+      "sha256": "22d7fb49161bae96a548b449c4dc8325914de5f5d7ceda583079ae6c08d288c5",
+      "bytes": 15025
     },
     {
       "path": "retrieval-claims-ledger.md",

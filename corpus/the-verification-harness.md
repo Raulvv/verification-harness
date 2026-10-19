@@ -20,7 +20,8 @@ with memorization removed, the weak reader gives up ~9pp of answerable
 accuracy and the strong reader gives up nothing (§3.6). And every
 **[recomputed]** number in this
 article derives offline, byte-for-byte, from a single sha256-pinned artifact
-(not yet public — §2.7): `unified.jsonl`.
+— the shipped `bench/results/unified-public.jsonl`, the public subset of the
+canonical `unified.jsonl` (§2.7).
 
 The product this article describes is two things: a **read-system** (the
 retrieval-kit: receipt contract, mechanical citation gate, tri-state
@@ -246,8 +247,9 @@ rate, count, and reader timing below is recomputable with a forty-line script
 and **zero model calls** (judge timings come from the characterization sweep,
 §3.3) —
 the stored outputs *are* the measurement; recomputation is arithmetic. The
-artifact ships with this repo's internal record and is not yet public; until it
-is, this section and `reproduce.md` are the spec for rebuilding the same
+full artifact stays in the canonical tree and never ships; this repo ships
+its public subset `bench/results/unified-public.jsonl` (sha256-pinned), and
+this section and `reproduce.md` are the spec for rebuilding the same
 discipline over your own outputs. Where a number requires re-grading (the
 judge-characterization AUROCs — they were produced by
 re-calling judges on stored answers), it is marked **[ledger]**, and the
@@ -848,7 +850,7 @@ precision 92.8% pooled / 97.8% answerable [recomputed]. What you still get
 from the system is the mechanical receipt — the verbatim citation the gate
 re-checks — which is the traceability layer, not an accuracy layer, and is
 model-size-free (verified quotes survive from 0.8B readers up
-[docs/v4-read-system.md §6]).
+[docs/v4-read-system.md §6] — canonical tree, not published).
 Choose the 27B reader when accuracy per question matters more than questions
 per second.
 

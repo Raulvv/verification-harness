@@ -2,8 +2,9 @@
 
 > **Supersession notice (2026-10-18).** This document is the round-13 audit
 > record (2026-10-15), preserved as written. Two families of its cells have
-> since been corrected or replaced in the article `articles/the-verification-harness.md`,
-> which is the source of record for every published claim:
+> since been corrected or replaced in the article `articles/the-verification-harness.md`
+> (canonical path; the shipped copy is `the-verification-harness.md` at the
+> repo root), which is the source of record for every published claim:
 >
 > 1. **Private corpus.** The B113/B114 sections describe the old
 >    Confluence-derived corpus; those rows (`b113`–`b118`) never ship

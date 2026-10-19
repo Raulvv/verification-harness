@@ -56,7 +56,7 @@ The full command list and the offline recomputation snippets live in
 
 ## CI
 
-![CI](https://github.com/Raulvv/verification-harness/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/Raulvv/verification-harness/actions/workflows/offline.yml/badge.svg)
 
 Two jobs, both free-tier: the **offline verify** battery (Tier 0, cell-exact
 against the article) and a **privacy lint** (fails the build if private-corpus

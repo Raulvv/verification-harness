@@ -289,7 +289,7 @@ Quote: <verbatim line(s)>
 ## Tests — the whole safety net, one command
 
 ```sh
-node kit/bin/test.mjs         # 101 tests + the gate drill
+node kit/bin/test.mjs         # 153 tests + the gate drill
 node kit/bin/coverage.mjs     # the same suite under V8 coverage (npm run kit:coverage)
 ```
 
