@@ -44,6 +44,7 @@ clone of the shipped tree (score 8.5, publication not blocked).
 | 15 † | — | 9.0 † | — | `5670a8a` (round-15 fixes) |
 | 16 † | — | 6.5 † | — | `a0e03b3` (round-16 fixes), `5555c8e` (pointer) |
 | 17 † | — | 8.5 † | — | `d20cd99` (round-17 fixes) |
+| 18 | 8.7 | 7.0 | 9.0 | `f7e13e3` (round-18 fixes), `dc57a18` (label batch) |
 
 First unanimous round on both axes: same score (9.5) from all three, and the
 first time every persona answered `Publication blocked: no`. Rounds 9–11 kept
@@ -80,6 +81,35 @@ recomputation of *every* BENCHMARKS cell over a five-artifact HotpotQA
 backing; the "~25% more tokens" figure reading 32.5% off its own
 2044/1543) and five labeling nits, all applied in `d20cd99`;
 `verify-offline` now guards the corrected figure (212 claims).
+Round 18 (three-persona panel — the free-tier credentials restored, the
+first full panel since round 13: qwen3.8-flash RAG practitioner 8.7,
+deepseek-v4.1-flash skeptic 7.0, glm-5.3-flash production/infra 9.0)
+returned the skeptic's publication **blocked** — the first blocked round
+since round 16 — on four findings it proved against the shipped tree: the
+ledger's own B115 headline had inverted its split ("72% are fabrications"
+when construction = gold-correct — 65/90 = 72.2%
+gold-correct-but-window-unbacked, 27.8% genuine fabrications); B108's
+unanswerable cell still read bare "(0% acc)" (the partial cell got its
+audited treatment in round 16; the unanswerable split is 4/6 gold-correct,
+2/6 = 33.3% false-verify); the article's "single artifact"/"every run in
+unified.jsonl" provenance held at four sites while §4's b121 tables live in
+the pinned pair (0 b121 rows in the shipped artifact); and B97's sentence
+had no machine claim while `bench/hotpot-baselines.mjs` exited 1 ENOENT on
+a fresh clone behind its own "fresh clone: works" comment. The RAG
+practitioner (8.7, not blocked) found two labeling nits (the dangling
+`pokemon-experiment/` python example ×2; BENCHMARKS' "all local, $0" head
+vs its hosted rows) plus the gitignore/`ci.yml`/RESULTS/N=300 label set;
+production/infra (9.0, not blocked) found the should-fix — 4 stale "~25%
+more tokens" golds frozen in `private-questions.jsonl` — plus the 32 GB
+VRAM cross-ref. All three unanimously verified the eight round-17 fixes
+landed and re-ran every gate green (212/212 claims, kit 153, traceability
+9/9, manifest 8/8, privacy 0; infra: three byte-identical verify runs,
+zero flakiness, clean status). Everything applied in `f7e13e3`
+(honesty + guards — B115, B108's cell, four provenance sites, B97 sweep
+ported as claims, baseline fallback, forced-0 parens; **225 claims** via a
+new ledger-anchor path, each new guard drilled red-and-back) and
+`dc57a18` (ten label/scope fixes, the gold-drift disclosure — disclosed,
+never edited — and the VRAM cross-ref).
 
 Convergence note: in round 4 all three reviewers independently found the same
 defect (the unbacked `127/140` gpt-oss count surviving in §2.2 after being cut
@@ -493,6 +523,43 @@ the excerpt's B95–B118 scope; and the BENCHMARKS 24→31→36 bullet naming
 its three source runs (crossover-100, tier-b head-100, final-arms-100 —
 ids verified 100/100 shared) instead of implying one table. RN-V01
 re-walked in G1; no article number changed.
+
+**Round 18** (three-persona panel after the free-tier key restore, scores
+8.7 / 7.0 / 9.0, `f7e13e3` + `dc57a18`): publication **blocked** from the
+skeptic until the batch landed. Blocker-class, each proved against the
+shipped tree: (a) B115's headline polarity — "72% are fabrications" against
+the committed construction split (construction = gold-correct: 65/90 =
+72.2% leaky-gold, 27.8% genuine), headline and body sentence both
+reversed; (b) B108's bare unanswerable "(0% acc)" — audited, 4/6
+gold-correct, 2/6 = 33.3% false-verify, now worded like the round-16
+partial cell; (c) the article's single-artifact provenance at lede / §2.7 /
+§7 / closing note — 0 b121 rows exist in `unified-public.jsonl`; §4's
+tables come from the pinned pair, now stated at all four sites with §2.7's
+heading and contract updated; (d) B97's sentence had no machine claim, and
+`bench/hotpot-baselines.mjs` exited 1 ENOENT on a fresh clone behind its
+own "fresh clone: works" comment — the `unified-public.jsonl` fallback
+restores exit 0 and the exact sweep (gate 55.3/83.5, top-1 71.7@41.5,
+logprob 64.2@52.2), ported into `verify-offline` as four claims. RAG nits:
+dangling `pokemon-experiment/ld-detect.py` example ×2 (labelled
+canonical-tree-only), "all local, $0" head vs the hosted judge/oracle rows,
+both gitignore clauses scoped to the canonical tree, `ci.yml` →
+`offline.yml` ×2, `bench/RESULTS.md` labeled, N=300 added to the cost cell.
+Skeptic nits: the ~4.7× latency tagged one-run with the sibling span
+(3.6–6.8× on byte-identical rows, from B109's own carried values);
+B113/B114's forced-0 "every one wrong" cells marked "as labeled —
+unaudited" (private arm, no oracle audit exists). Infra: the four stale
+"~25% more tokens" golds in the frozen `private-questions.jsonl` are now
+**disclosed** in `reproduce.md` — golds hash-pinned, never edited (a Tier-1
+rerun would grade corrected readers against frozen golds — stated, not
+fixed); "manifest 16462808" left alone (frozen run-note id inside a
+hash-pinned artifact — fixing it would break the pin for no value); README's
+32 GB VRAM cross-referenced to the measured 17.8 GB q4. Applied across
+`f7e13e3` (honesty + guards; 212 → 225 claims via a new `lclaim`
+ledger-anchor path; two new non-vacuity drills — ledger tamper → red, B97
+anchor tamper → red) and `dc57a18` (labels, disclosure, mirrors +
+manifest). Infra's determinism probe ran three byte-identical verify runs
+(~0.06 s each) with a clean git status; RAG re-derived the headline cells
+and the skeptic re-derived the sweep and both audit splits independently.
 
 ## Round 4 — the three most powerful things (their answers)
 

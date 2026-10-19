@@ -82,9 +82,14 @@ const BENCHDOC_PATH = firstExisting(
   join(ROOT, 'bench/BENCHMARKS.md'),
   join(ROOT, 'BENCHMARKS.md'),
 )
+const LEDGER_PATH = firstExisting(
+  join(ROOT, 'retrieval-claims-ledger.md'),
+  join(ROOT, 'docs/epicas/retrieval-claims-ledger.md'),
+)
 
 const article = readFileSync(ARTICLE_PATH, 'utf8')
 const benchDoc = readFileSync(BENCHDOC_PATH, 'utf8')
+const ledger = readFileSync(LEDGER_PATH, 'utf8')
 const all = readFileSync(ARTIFACT_PATH, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))
 const b121 = readFileSync(B121_PATH, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))
 const b1219b = readFileSync(B121_9B_PATH, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))
@@ -172,6 +177,7 @@ function claimIn (text, where, id, computed, expected, anchor) {
 }
 const claim = (id, computed, expected, anchor) => claimIn(article, 'article', id, computed, expected, anchor)
 const bclaim = (id, computed, expected, anchor) => claimIn(benchDoc, 'bench/BENCHMARKS.md', id, computed, expected, anchor)
+const lclaim = (id, computed, expected, anchor) => claimIn(ledger, 'retrieval-claims-ledger.md', id, computed, expected, anchor)
 
 // §1 + §2.1 — the middle band and the missing-score bucket (B95)
 const b95 = snap(load('b95-'))
@@ -343,6 +349,66 @@ const fvPartial = [
 ]
 claim('partial-fv-floor', Math.min(...fvPartial).toFixed(1), '12.5', 'audited cells measure 12.5%–56%')
 claim('partial-fv-ceil', Math.max(...fvPartial).toFixed(0), '56', '12.5%–56% of those verifications are wrong')
+
+// ── round-18 — B115's polarity, the B108 unanswerable cell, the B97 sweep ──
+// B115's own enumeration: audit rows whose joined artifact row is
+// state=verified on partial|unanswerable, across the seven public runs.
+const artState = new Map(all.map((x) => [`${x.run_id}|${x.id}|${x.condition}`, x]))
+let b115n = 0
+let b115cons = 0
+for (const f of ['b95', 'b102', 'b103b', 'b104', 'b105', 'b108', 'b109']) {
+  for (const r of readJsonl(`bench/results/audit-hotpot-${f}.jsonl`)) {
+    const a = artState.get(`${r.run_id}|${r.id}|${r.condition}`)
+    if (a && a.state === 'verified' && (r.condition === 'partial' || r.condition === 'unanswerable')) {
+      b115n += 1
+      if (r.class === 'construction') b115cons += 1
+    }
+  }
+}
+const b115gen = b115n - b115cons
+lclaim('b115-audit-n', b115n, 90, 'All 90 rows carrying')
+lclaim('b115-construction', b115cons, 65, '**65 construction / 25 genuine** — 72.2%')
+lclaim('b115-gold-pct', ((b115cons / b115n) * 100).toFixed(1), '72.2', "72.2% of the gate's forced-verified shown-nonanswers are gold-correct yet unbacked")
+lclaim('b115-genuine-n', b115gen, 25)
+lclaim('b115-genuine-pct', ((b115gen / b115n) * 100).toFixed(1), '27.8', 'the other 25/90 = 27.8% are genuine fabrications')
+// B108 unanswerable cell — the audited split behind the "(0% acc)" label
+const b108all = readJsonl('bench/results/audit-hotpot-b108.jsonl')
+const b108un = b108all.filter((x) => x.condition === 'unanswerable')
+const b108unCons = b108un.filter((x) => x.class === 'construction').length
+lclaim('b108-un-n', b108un.length, 6, '4/6 gold-correct')
+lclaim('b108-un-correct', b108unCons, 4, 'audited: 4/6 gold-correct')
+lclaim('b108-un-false-pct', (((b108un.length - b108unCons) / b108un.length) * 100).toFixed(1), '33.3', '2/6 = 33.3% false-verify')
+// B97 — port of bench/hotpot-baselines.mjs: the gate point and the
+// best-accuracy-under-the-gate's-coverage-cap sweep over each baseline.
+const b97 = all.filter((x) => String(x.run_id ?? '').startsWith('b95'))
+const b97lab = (x) => x.oracle_correct ?? x.reader_correct
+const b97acc = (decide) => {
+  let ok = 0
+  let ans = 0
+  for (const x of b97) {
+    const a = decide(x)
+    if (a) ans++
+    const good = a ? (x.condition === 'answerable' && b97lab(x) === 1) : (x.condition === 'unanswerable')
+    if (good) ok++
+  }
+  return { coverage: ans / b97.length, accuracy: ok / b97.length }
+}
+const b97gate = b97acc((x) => x.state !== 'not_found')
+claim('b97-gate-cov', (100 * b97gate.coverage).toFixed(1), '55.3', '55.3% shown-or-flagged coverage')
+claim('b97-gate-acc', (100 * b97gate.accuracy).toFixed(1), '83.5', "against the gate's **83.5%**")
+const b97best = (key) => {
+  const vals = b97.map((x) => x[key]).filter((v) => v != null).sort((a, b) => a - b)
+  let best = { accuracy: -1 }
+  for (const tau of vals) {
+    const m = b97acc((x) => (x[key] ?? -Infinity) >= tau)
+    if (m.coverage <= b97gate.coverage + 0.005 && m.accuracy > best.accuracy) best = m
+  }
+  return best
+}
+claim('b97-top1', (100 * b97best('top1_retrieval_score').accuracy).toFixed(1), '71.7', 'only 71.7% decision accuracy')
+claim('b97-logprob', (100 * b97best('mean_logprob').accuracy).toFixed(1), '64.2', 'cutoff 64.2% — against the gate')
+// The provenance exception is real: §4's pair is not inside the main artifact.
+claim('b121-not-in-unified', all.filter((x) => String(x.run_id ?? '').startsWith('b121')).length, 0, "plus §4's pinned `b121-e2eir-4b*.jsonl` pair")
 
 // §3.6 reading 1 — contamination inflation, both sides
 const b109ans = stateCell(load('b109-'), 'answerable')

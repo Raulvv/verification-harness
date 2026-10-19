@@ -96,14 +96,15 @@ detector like it (LettuceDetect, MiniCheck, or an NLI cross-encoder) is the
 local-first path with no 27B and no trained head. Measured: **LettuceDetect-base
 (ModernBERT 150M, MIT, local) 7/8 — equal to the 27B and hosted judges**, and it
 handles the "pre-evolution" = "Evolves from" paraphrase that MiniCheck
-over-refuses (`pokemon-experiment/ld-detect.py`, a small Python shim;
-`bespoke-minicheck` needs none — it is Ollama).
+over-refuses (`pokemon-experiment/ld-detect.py`, a small Python shim —
+canonical tree, not published; `bespoke-minicheck` needs none — it is Ollama).
 
 `--judge-cmd "<command>"` runs any **external grounding detector** as the judge:
 JSON `{question,evidence,answer}` on stdin → `SUFFICIENT`/`INSUFFICIENT` on
 stdout. Example (LettuceDetect, 7/8 via the CLI — equal to the 27B):
 
 ```sh
+# pokemon-experiment/ ships in the canonical tree only (needs python3 + LettuceDetect)
 node kit/bin/retrieval-kit.mjs ask "…" --sufficient \
   --judge-cmd "python3 pokemon-experiment/ld-detect.py --stdin"
 ```
@@ -284,7 +285,8 @@ Quote: <verbatim line(s)>
   layer resolves the question to ONE named file (the window is already just
   that file); fallback/multi-file windows keep the vet. External benchmarks,
   the latency profile and every probe live in
-  [`bench/BENCHMARKS.md`](../bench/BENCHMARKS.md) and `bench/RESULTS.md`.
+  [`bench/BENCHMARKS.md`](../bench/BENCHMARKS.md) and `bench/RESULTS.md`
+  (canonical tree — not published).
 
 ## Tests — the whole safety net, one command
 
@@ -296,7 +298,7 @@ node kit/bin/coverage.mjs     # the same suite under V8 coverage (npm run kit:co
 Covers every pure layer (answer parsing, evidence matching, citation
 integrity, title/date resolution, source adapters with stubbed fetch,
 config) and the battery's frozen contract. No model, no network. Runs in the
-pre-commit hook **and in CI** (`.github/workflows/ci.yml`).
+pre-commit hook **and in CI** (`.github/workflows/offline.yml`).
 
 Coverage baseline (2026-10-06, `npm run kit:coverage`): **97.4% statements /
 80.7% branches / 95.0% functions** overall, with a CI-enforced floor of 95%

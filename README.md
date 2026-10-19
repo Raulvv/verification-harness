@@ -48,7 +48,7 @@ Numbers, methodology and boundaries live in the
 | Tier | What it does | Cost |
 |---|---|---|
 | **0. Offline verify** | `node verify-offline.mjs` re-derives every `[recomputed]` cell in the article from `bench/results/unified-public.jsonl` and the b121 pair, and the `bench/BENCHMARKS.md` cells **backed by** its five pinned artifacts — all sha256-pinned — checking each value against its doc's own text. No network, no keys, no models. | Free |
-| **1. Local fresh inference** | Re-run the readers/judges on your own machine with Ollama (4B + 9B ≈ 10 GB resident; optional 27B ≈ 32 GB VRAM). Start from the commands in [`reproduce.md`](reproduce.md). | Free (disk + electricity) |
+| **1. Local fresh inference** | Re-run the readers/judges on your own machine with Ollama (4B + 9B ≈ 10 GB resident; optional 27B ≈ 32 GB VRAM — the article's measured q4 tag: 17.8 GB resident). Start from the commands in [`reproduce.md`](reproduce.md). | Free (disk + electricity) |
 | **2. Hosted fresh inference** | The same runs against hosted models (DeepSeek, Kimi). Needs API keys. | Keys + a few dollars |
 
 The full command list and the offline recomputation snippets live in

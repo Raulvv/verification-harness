@@ -1,6 +1,7 @@
 # Reproduce — headline numbers from stored outputs
 
-The per-run side files are gitignored (`bench/results/**`); the recompute
+The per-run side files are gitignored in the canonical tree
+(`bench/results/**`); the recompute
 snippets below read the committed, sha256-pinned artifacts instead —
 `bench/results/unified-public.jsonl` (the published partition; the canonical
 tree's root `unified.jsonl` holds the same rows plus the never-published runs)
@@ -85,7 +86,8 @@ console.log('B105 27Bjudge', 'gate', f1(j27.gateUnk), f1(j27.gateFA), f1(j27.gat
 ## End-to-end table (B108/B109) — read-only script
 
 The script reads `unified.jsonl` first, then the published partition
-`bench/results/unified-public.jsonl`, then the gitignored exports if present:
+`bench/results/unified-public.jsonl`, then the canonical tree's gitignored
+exports if present:
 
 ```sh
 node bench/end-to-end.mjs
@@ -154,6 +156,14 @@ gate `{coverage:'90.3', verPrec:'88.2', verN:263, verWrong:31}` · agreement
 `b117-` and `b118-` are private and never ship, so the snippet below reads zero
 rows in the published tree. The fresh private arm the article §3.6 publishes
 (`b119`/`b120`) recomputes from `bench/results/unified-public.jsonl`.
+
+**Gold-drift disclosure:** the frozen b119/b120 question golds predate the
+2026-10-19 wording fix — 4 gold rows in `bench/results/private-questions.jsonl`
+still read "~25% more tokens" where the article and `bench/BENCHMARKS.md` now
+say "~32.5% more tokens". The stored runs above were graded against the golds
+as frozen; a rerun today would pit corrected readers against those same frozen
+golds. The golds are hash-pinned and never edited — disclosed here, not
+rewritten.
 
 ```js
 import { readFileSync } from 'node:fs'

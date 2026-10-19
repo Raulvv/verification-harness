@@ -13,6 +13,11 @@ const src = (() => {
     const b95 = rows.filter((x) => String(x.run_id ?? '').startsWith('b95-'))
     if (b95.length) return { r: b95, from: 'unified.jsonl (b95-)' }
   } catch {}
+  try {
+    const rows = readFileSync('bench/results/unified-public.jsonl', 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))
+    const b95 = rows.filter((x) => String(x.run_id ?? '').startsWith('b95'))
+    if (b95.length) return { r: b95, from: 'unified-public.jsonl (b95)' }
+  } catch {}
   return { r: readFileSync('bench/results/hotpot-fresh-301-600.jsonl', 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)), from: 'export (reader_correct)' }
 })()
 const r = src.r

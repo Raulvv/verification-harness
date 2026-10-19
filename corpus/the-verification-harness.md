@@ -19,9 +19,9 @@ written after the gate was frozen (§2.5) — with the same matrix run on it:
 with memorization removed, the weak reader gives up ~9pp of answerable
 accuracy and the strong reader gives up nothing (§3.6). And every
 **[recomputed]** number in this
-article derives offline, byte-for-byte, from a single sha256-pinned artifact
+article derives offline, byte-for-byte, from sha256-pinned artifacts
 — the shipped `bench/results/unified-public.jsonl`, the public subset of the
-canonical `unified.jsonl` (§2.7).
+canonical `unified.jsonl`, plus §4's pinned `b121-e2eir-4b*.jsonl` pair (§2.7).
 
 The product this article describes is two things: a **read-system** (the
 retrieval-kit: receipt contract, mechanical citation gate, tri-state
@@ -237,11 +237,14 @@ parse failures into abstention, and the corrected export is how we found it
 (`report §8.5`). The fresh private run's parse-failure counts sit in §3.6's
 table [recomputed: **0** for the 4B, **10/300** for deepseek].
 
-### 2.7 Verifiability: one artifact, one checksum, offline recomputation
+### 2.7 Verifiability: pinned artifacts, one checksum each, offline recomputation
 
 Every run the article cites is in **`unified.jsonl`** — one JSON object per
 (question × condition) with the reader's answer, the judge's
-score, the tri-state, the oracle label, timings, and the condition's gold. The
+score, the tri-state, the oracle label, timings, and the condition's gold —
+with one documented exception: §4's b121 open-pool transfer tables live in
+the pinned `bench/results/b121-e2eir-4b*.jsonl` pair, same one-object-per-row
+shape, same `.sha256` check. The
 file is pinned by `unified.jsonl.sha256` (hash in the closing note), and every
 rate, count, and reader timing below is recomputable with a forty-line script
 and **zero model calls** (judge timings come from the characterization sweep,
@@ -497,9 +500,10 @@ Comparable coverage (97 vs 93) and unknown-abstention (89 vs 91); the 27B is
 ahead on verified precision by 3.0pp answerable-only (97.8 vs 94.8) and 4.5pp
 pooled (92.8 vs 88.3) — directional on N=200 (the Wilson intervals overlap:
 27B pooled 85.8–96.5 vs 4B+9B 80.7–93.2), so read it as a consistent edge, not
-a settled magnitude — while the 4B stack is **~4.7× faster on reader time
-(~2.4× end to end; the stack total includes the judge the ungated 27B row
-skips) at 56% of the resident memory**, and carries the tri-state
+a settled magnitude — while the 4B stack is **~4.7× faster on reader time (one
+run; the same 4B reader under the B109 matrix's other judges spans 3.6–6.8×
+on byte-identical rows; ~2.4× end to end; the stack total includes the judge
+the ungated 27B row skips) at 56% of the resident memory**, and carries the tri-state
 flag the raw 27B reader does not produce. The 4B + hosted-kimi stack *exceeds* the 27B's coverage (97 vs 93)
 at 1/7 the reader latency, conceding unknown-abstention (85 vs 91) and
 reproducibility (§3.3) for the best verified precision the 4B can reach.
@@ -991,7 +995,8 @@ method, not the models. The full loop, as run here:
 5. **Recompute every headline number offline, from the stored artifact, and
    ship the artifact with a checksum.** `reproduce.md` is the worked example:
    every **[recomputed]** table in this article was regenerated from
-   `bench/results/unified-public.jsonl` with arithmetic only, zero model calls
+   the shipped artifacts (`unified-public.jsonl`; §4's tables from the b121
+   pair) with arithmetic only, zero model calls
    ([ledger] tables re-grade stored answers with a named script — §2.7);
    `shasum -a 256 -c bench/results/unified-public.jsonl.sha256`
    (or `sha256sum -c` on Linux) is the one-line provenance check, run from the
@@ -1019,7 +1024,9 @@ artifact — in this repo, `bench/results/unified-public.jsonl` (sha256
 `bench/results/unified-public.jsonl.sha256`), the public subset of the
 canonical `unified.jsonl` (sha256
 `0adc142ca0380dfc8b00f7def12ee1a7eef8125fec7f7ba214ab0bca94b9eb3f`, canonical
-tree — not published); [ledger] numbers resolve to rows B95–B118
+tree — not published); §4's b121 tables derive from
+`bench/results/b121-e2eir-4b.jsonl` and `bench/results/b121-e2eir-4b-ours9b.jsonl`
+(each pinned by its own `.sha256`); [ledger] numbers resolve to rows B95–B118
 of `retrieval-claims-ledger.md`, the ledger excerpt shipped with this repo;
 report sections cited are `report.md`. From the repo root,
 `shasum -a 256 -c bench/results/unified-public.jsonl.sha256` (macOS;

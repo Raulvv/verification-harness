@@ -54,7 +54,7 @@ no answer, receipt, gate verdict or measured number changes.
 - `kit/index.mjs` — the public facade (the only supported import), frozen by
   `kit/test/structure/exports-surface.test.mjs`.
 - `npm run kit:coverage`; the offline suite now runs in CI
-  (`.github/workflows/ci.yml`).
+  (`.github/workflows/offline.yml`).
 - Characterization tests for the default path: dense/fuse/union selection,
   the router/iterative second hop, the model boundary and embeddings.
 

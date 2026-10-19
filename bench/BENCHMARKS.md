@@ -1,7 +1,9 @@
 # Benchmarks — how the kit compares to a bare call and naive RAG
 
-Tracked cross-benchmark view of every run (2026-09-30 → 2026-10-18), all
-**local** (Ollama), **$0**. Per-run detail and method: the canonical tree's
+Tracked cross-benchmark view of every run (2026-09-30 → 2026-10-18); every
+run's reader is **local** (Ollama), **$0** — rows that run a hosted judge or
+oracle name it (kimi-k3, deepseek-v4.1-flash). Per-run detail and method: the
+canonical tree's
 `bench/RESULTS.md` (not published — this file carries the published cells; the
 offline-recomputable subset ships as `reproduce.md`).
 This file answers one question: on each benchmark, **ours** vs a **bare**
@@ -143,7 +145,7 @@ note below.
 ## Cost (the honest part)
 
 Ours is **not** faster or cheaper than naive one-call RAG: the receipt/quote
-contract costs ~2× latency and ~32.5% more tokens (HotpotQA: 9.8 vs 4.8 s/q,
+contract costs ~2× latency and ~32.5% more tokens (HotpotQA, N=300: 9.8 vs 4.8 s/q,
 2044 vs 1543 tok). On the product corpus the machine is hardware-bound
 (decode ~21.7 ms/tok; latency profile in `bench/RESULTS.md`, canonical tree —
 not published). The differentiator is **accuracy + verifiable citations**, not speed.
