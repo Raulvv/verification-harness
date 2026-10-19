@@ -1,6 +1,7 @@
 # retrieval-kit
 
-> **Ship-state reference:** [`../docs/v4-read-system.md`](../docs/v4-read-system.md)
+> **Ship-state reference (canonical tree — not published):**
+> [`../docs/v4-read-system.md`](../docs/v4-read-system.md)
 > — the single technical description of the current read-system (layers,
 > contract, config, measured numbers, known limits).
 
@@ -77,10 +78,13 @@ Cost: ~+0.8 s (9B) to ~+12 s (27B) per answer. The residual failure is
 **architectural** (counting across documents is beyond a single window), not the
 reader or the judge — see
 [`../docs/epicas/retrieval-claims-ledger.md`](../docs/epicas/retrieval-claims-ledger.md)
+(canonical tree — not published; in the shipped copy the excerpt is
+[`../retrieval-claims-ledger.md`](../retrieval-claims-ledger.md))
 B57. A non-authoritative lexical hint ("the answer names X, not in the window")
 always prints; `--no-grounding` turns it off. The next lever is a **trained small
 local head** (Laya/ModernBERT-class) to drop the 27B/hosted judge — see
-[`../docs/hypotheses/2026-09-24_self-improving-decision-seat.md`](../docs/hypotheses/2026-09-24_self-improving-decision-seat.md).
+[`../docs/hypotheses/2026-09-24_self-improving-decision-seat.md`](../docs/hypotheses/2026-09-24_self-improving-decision-seat.md)
+(canonical tree — not published).
 
 **Pretrained grounding judges (no training needed).** Small fact-checking models
 plug in the same way: `--judge bespoke-minicheck` (Ollama) is auto-detected and

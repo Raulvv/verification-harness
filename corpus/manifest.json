@@ -3,8 +3,8 @@
   "files": [
     {
       "path": "README.md",
-      "sha256": "7a12cf6bafb85a0e2c4cbca5689802f43323ba3aac1ea6aca3a6f8e18c8b9cad",
-      "bytes": 4875
+      "sha256": "2e1472240f028147c3a639504168f2f93e4c03747f03896d4f8e01c37dc8de78",
+      "bytes": 4917
     },
     {
       "path": "bench/BENCHMARKS.md",
@@ -13,8 +13,8 @@
     },
     {
       "path": "corpus/the-verification-harness.md",
-      "sha256": "a76421ee95797224323415ab36a1e62b3e9034b439c1b6fa392a5df611b1c635",
-      "bytes": 62237
+      "sha256": "0d622c07db05e4b34accd2b7993d8ec5f9780e4a6c708278f62173bde0ec0f67",
+      "bytes": 62727
     },
     {
       "path": "kit/AGENTS.md",

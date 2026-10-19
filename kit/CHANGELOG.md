@@ -4,6 +4,11 @@
 
 ### Changed
 
+- README pointers into the parent repo's `docs/` are now labeled
+  **canonical tree — not published** (ship-state reference, claims-ledger
+  link, hypotheses link); the ledger link also names the excerpt that ships
+  in the published copy (`../retrieval-claims-ledger.md`), so no pointer
+  breaks silently on a fresh clone of the published repo.
 - Confluence fixtures and test corpora sanitized for publication: the
   space key, the CQL title term (including URL-encoded forms in
   `next`/`self` links), and every project/client codename and real

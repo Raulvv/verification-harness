@@ -1,6 +1,8 @@
 # The Verification Harness — Review Record
 
-External review rounds for [`articles/the-verification-harness.md`](../../articles/the-verification-harness.md),
+External review rounds for `articles/the-verification-harness.md` (canonical
+tree — in this shipped copy the article is
+[`the-verification-harness.md`](the-verification-harness.md) at the repo root),
 run 2026-10-15. Kept because the reviews are more than a score: the
 fix-finding rounds shaped the article, and round 4's adoption answers are
 product signal for the kit and the philosophy.
@@ -16,7 +18,10 @@ fresh sessions, max 3 concurrent subagents:
 
 Models: qwen3.8-flash, glm-5.3-flash, deepseek-v4.1-flash (one session each
 per round). Each round audits the previous round's fixes before scoring, so
-scores only move when the fix landed.
+scores only move when the fix landed. Round 14 broke the format: the
+opencode-go credentials had lapsed, so the owner commissioned a single
+standalone session — one reviewer carrying all three lenses against a fresh
+clone of the shipped tree (score 8.5, publication not blocked).
 
 ## Score trajectory
 
@@ -35,6 +40,7 @@ scores only move when the fix landed.
 | 11 | 9.75 | 9.75 | 9.75 | — (zero-finding confirming round) |
 | 12 | 9.5 | 9.5 | 9.5 | `155a935` (round-12 fixes) |
 | 13 | 9.75 | 9.5 | 9.8 | `bf58c47` (round-13 nits) |
+| 14 † | — | 8.5 † | — | `b7dc3df` (round-14 fixes) |
 
 First unanimous round on both axes: same score (9.5) from all three, and the
 first time every persona answered `Publication blocked: no`. Rounds 9–11 kept
@@ -42,7 +48,10 @@ the second axis: four consecutive all-clear rounds; rounds 10 and 11 the first
 with zero blockers and zero should-fixes. Round 12 — the amendment's belated
 panel — kept publication unblocked with two should-fixes, both applied. Round
 13 returned to zero blockers and zero should-fixes from every persona (eight
-nits, three applied).
+nits, three applied). Round 14 († solo session) scored 8.5 with publication
+not blocked — the first evaluation of the shipped export itself, a fresh
+clone executed end to end — and returned three should-fixes and two nits,
+all applied in `b7dc3df`.
 
 Convergence note: in round 4 all three reviewers independently found the same
 defect (the unbacked `127/140` gpt-oss count surviving in §2.2 after being cut
@@ -340,6 +349,36 @@ check-ignore's tracked-file behavior (methodology, not a defect), the
 B107-scoped N=200 (the original equivalence scope, clarified by the new
 pool clause), and the two lexical fidelity nits. No [recomputed] cell or
 manifest file touched.
+
+**Round 14** (solo session, score 8.5, `b7dc3df`): the first evaluation of the
+*shipped* tree — a fresh clone of the export candidate (single root commit
+`23346f7`) executed end to end: `verify-offline` 188/188 with the artifact
+pin matching, kit tests 153 green, traceability 9/9, six path-formatted
+pins checked by hand, both article copies byte-identical to each other and
+to the canonical source, privacy grep (task gate + CI pattern) zero hits,
+and 15 hand spot-checks of article cells against the pinned artifacts
+(B95/B108/B109/b119/b120/b121/sweep/cost) all resolving. Run in place of
+the planned three-persona panel after the opencode-go credentials lapsed
+(owner redirected); one reviewer carried all three lenses; publication not
+blocked. Three should-fixes, all applied in `b7dc3df`: the lede's, §6.1's
+and the README's superseded "all of them are wrong" quantifier replaced
+with the audited 21%–87.5% false-verify range (§3.5 measures 87.5% on the
+audited B108 arm, §3.6 measures 56% and 21% — the body had already
+retracted the forced-0 phrasing, the headlines kept it); kit/README's three
+`../docs/` pointers labeled canonical-tree-not-published (the ledger link
+also names the shipped excerpt `../retrieval-claims-ledger.md`); and the
+closing provenance note plus §7 step 5 repointed at the shipped artifact
+(`bench/results/unified-public.jsonl` + `.sha256`, `88165f6f…`) with the
+one-line ritual runnable from the repo root and the stale "not yet public"
+clause dropped — the canonical `0adc142c…` stays named-and-labeled (it is
+verify-offline's artifact-pin anchor). Two nits applied as well: this
+record's header link now resolves in the shipped copy, and the article's
+five audit side-file citations carry their `bench/results/` prefix. RN-V01
+re-walked on the fixed tree (G1): the batch's only new outward numbers are
+the shipped pin `88165f6f…` (G2) and the 21%–87.5% range — both already
+carried §3.5/§3.6 measured cells; everything else was path/pointer/label
+rewording.
+
 ## Round 4 — the three most powerful things (their answers)
 
 Consensus across all three: **§4 self-audit, §3.3 judge determinism, and

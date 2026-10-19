@@ -40,7 +40,8 @@ a hosted model's opinion, validated on short golds — and the headline gate
 numbers are a single pass of a judge we ourselves measure as nondeterministic
 (§6.5). The partial-support blind spot (one hop of a two-hop question removed) is
 **unsolved**: every configuration, at every size, verifies some partial items,
-and all of them are wrong. We mark every number **[recomputed]** (derivable
+and of the items each stack marks `verified`, audited cells measure 21%–87.5%
+wrong (§3.5–§3.6). We mark every number **[recomputed]** (derivable
 from `unified.jsonl`), **[ledger]** (recorded in the claims ledger, reproduced
 by a named script or a documented re-grade), or **[opinion]**.
 
@@ -322,7 +323,7 @@ topic-related remaining sentence), puts the split at **10 supported /
 actor) plus 3 fact-contradicting answers the looser pass had counted as
 supported (wrong song/release for Solheim, wrong birth date for Morel, wrong
 piece for Beethoven) [report:
-`audit-hotpot-b95.jsonl`, blind second pass]. Direction unchanged — the
+`bench/results/audit-hotpot-b95.jsonl`, blind second pass]. Direction unchanged — the
 false-accept row is still an upper bound — magnitude not: the audited pooled
 precision is **93.9%**, and the table above prints both.
 
@@ -358,7 +359,7 @@ answers is actually wrong**: the two answerable flags carry live oracle labels
 independent blind pass agree (7/7) that **6 are gold-correct** — correct
 answers whose gold the window by construction did not contain (B96's leak
 shape: remaining text or memory, not resolved per row here)
-[report: `audit-hotpot-b102.jsonl`, `audit-hotpot-b104.jsonl`]. So the flag
+[report: `bench/results/audit-hotpot-b102.jsonl`, `bench/results/audit-hotpot-b104.jsonl`]. So the flag
 is an evidence check — *this window does not back that answer* — not an error
 detector; on a strong reader it almost never coincides with a factual
 mistake. The flag fires
@@ -571,7 +572,7 @@ other, and ask the gate to judge what comes back. On HotpotQA (B108,
 (`not_found`), 31% flagged, and **16% marked `verified` — and after a strict
 oracle audit of those 16, 14 are wrong: only 2 of 16 (12.5%) are
 gold-correct, so the gate false-verifies partial support at 87.5% on this
-arm** [report: `audit-hotpot-b108.jsonl`, blind second pass 22/22 (16/16
+arm** [report: `bench/results/audit-hotpot-b108.jsonl`, blind second pass 22/22 (16/16
 on the shown-partial subset)]. An earlier version of this cell
 read "every one of them wrong (0% verified accuracy)" — that was a
 by-construction label, not a measurement: the run's oracle pass was never
@@ -618,8 +619,8 @@ Every state cell below is [recomputed] from `unified.jsonl`. Every
 **accuracy** cell on the partial and unanswerable rows is [report]: those
 rows' `oracle_correct` was forced to 0 at run time (the oracle pass was
 never asked on answered partials — §3.5), and the true labels live in the
-committed audit side-files (`audit-classify.jsonl`,
-`audit-partial-unverified.jsonl`), joined by (arm, id, condition, state),
+committed audit side-files (`bench/results/audit-classify.jsonl`,
+`bench/results/audit-partial-unverified.jsonl`), joined by (arm, id, condition, state),
 each label blind-pass-confirmed (disagreement rate: 5/107 adjudicated on the
 private pre-audit, 0/65 on its partial rows, 0/68 + 0/22 + 0/7 on the
 HotpotQA audits; the b108 pass is the 22-row condition-keyed re-key of an
@@ -876,7 +877,8 @@ to a discrete-GPU or CPU-only server without re-measuring.
 Stated before you adopt, in the order they will bite you:
 
 1. **Partial support is unsolved.** Every stack verifies some one-hop-removed
-   items, and every one of those verifications is wrong (§3.5). The mechanical
+   items, and 21%–87.5% of those verifications are wrong (audited cells,
+   §3.5–§3.6). The mechanical
    two-doc check closes the class at a large false-abstention cost for weak
    readers; the decomposition problem (which docs does this question *need*?)
    is open. If your corpus's questions are predominantly multi-hop and your
@@ -978,10 +980,11 @@ method, not the models. The full loop, as run here:
 5. **Recompute every headline number offline, from the stored artifact, and
    ship the artifact with a checksum.** `reproduce.md` is the worked example:
    every **[recomputed]** table in this article was regenerated from
-   `unified.jsonl` with arithmetic only, zero model calls ([ledger] tables
-   re-grade stored answers with a named script — §2.7);
-   `sha256sum -c unified.jsonl.sha256`
-   (or `shasum -a 256 -c` on macOS) is the one-line provenance check. If a
+   `bench/results/unified-public.jsonl` with arithmetic only, zero model calls
+   ([ledger] tables re-grade stored answers with a named script — §2.7);
+   `shasum -a 256 -c bench/results/unified-public.jsonl.sha256`
+   (or `sha256sum -c` on Linux) is the one-line provenance check, run from the
+   repo root. If a
    number in your report does not recompute
    from your artifact, the number is wrong or the artifact is — either way you
    want to know before your users do (§4).
@@ -999,12 +1002,16 @@ has no universal answer, which is the entire reason the harness exists.
 
 ---
 
-*Every [recomputed] number in this article derives from `unified.jsonl`
-(sha256 `0adc142ca0380dfc8b00f7def12ee1a7eef8125fec7f7ba214ab0bca94b9eb3f`,
-pinned in `unified.jsonl.sha256`); [ledger] numbers resolve to rows B95–B114
+*Every [recomputed] number in this article derives from the experiment's
+artifact — in this repo, `bench/results/unified-public.jsonl` (sha256
+`88165f6fd26af787edc66fef4348cbb4c1e945c10918b6d8d1dd4697aed3ea33`, pinned in
+`bench/results/unified-public.jsonl.sha256`), the public subset of the
+canonical `unified.jsonl` (sha256
+`0adc142ca0380dfc8b00f7def12ee1a7eef8125fec7f7ba214ab0bca94b9eb3f`, canonical
+tree — not published); [ledger] numbers resolve to rows B95–B114
 of `retrieval-claims-ledger.md`, the ledger excerpt shipped with this repo;
-report sections cited are `report.md`. The artifact is not yet public; when the repo publishes,
-`shasum -a 256 -c unified.jsonl.sha256` (macOS; `sha256sum -c` on Linux) is
-the one-line provenance check, and `reproduce.md` regenerates every
-[recomputed] table from the artifact with arithmetic alone. Corrections and the full experiment inventory: `report.md`
+report sections cited are `report.md`. From the repo root,
+`shasum -a 256 -c bench/results/unified-public.jsonl.sha256` (macOS;
+`sha256sum -c` on Linux) is the one-line provenance check, and `reproduce.md`
+regenerates every [recomputed] table from the artifact with arithmetic alone. Corrections and the full experiment inventory: `report.md`
 §2–§5.*
