@@ -759,7 +759,9 @@ withdrawn results — a "+18 accuracy" that was a prompt/label artifact (B14),
 a 27B score inflated by a `response\n` prefix (B68/B71), an abstention rate
 measured by regexing receipt strings instead of reading the flag (B70), a
 "judge" with 16.7% human agreement (B11). None were silently deleted: each is
-struck in the claims ledger with its replacement. The private-corpus first
+struck in the claims ledger with its replacement (the five rows sit
+outside the published excerpt's B95–B118 scope — canonical tree, not
+published). The private-corpus first
 pass (answerable verified accuracy 90.5%) was corrected to 81% of shown
 answers (74/91) when the
 grounding filter exposed a generator hallucinating beyond its truncation

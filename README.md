@@ -10,8 +10,8 @@ independent oracle for ground truth, and a frozen-config discipline that keeps
 tuning out of the measurement. The repo ships the full article, the
 retrieval-kit (the read-system the harness measures), the bench scripts, and
 sha256-pinned record artifacts — so every number marked **[recomputed]**
-in the article, and every cell in [`bench/BENCHMARKS.md`](bench/BENCHMARKS.md),
-can be re-derived on your machine, offline, byte-for-byte. The
+in the article, and every cell in [`bench/BENCHMARKS.md`](bench/BENCHMARKS.md)
+backed by its five pinned artifacts, can be re-derived on your machine, offline, byte-for-byte. The
 audit along the way caught its own mistakes — a clobbered output file
 mislabeled as a weak-reader row, a provenance column that lied, three drifting
 definitions of one metric, and a judge that could not repeat itself (§4).
@@ -47,7 +47,7 @@ Numbers, methodology and boundaries live in the
 
 | Tier | What it does | Cost |
 |---|---|---|
-| **0. Offline verify** | `node verify-offline.mjs` re-derives every `[recomputed]` cell in the article from `bench/results/unified-public.jsonl` and the b121 pair, and every `bench/BENCHMARKS.md` cell from its five pinned artifacts — all sha256-pinned — checking each value against its doc's own text. No network, no keys, no models. | Free |
+| **0. Offline verify** | `node verify-offline.mjs` re-derives every `[recomputed]` cell in the article from `bench/results/unified-public.jsonl` and the b121 pair, and the `bench/BENCHMARKS.md` cells **backed by** its five pinned artifacts — all sha256-pinned — checking each value against its doc's own text. No network, no keys, no models. | Free |
 | **1. Local fresh inference** | Re-run the readers/judges on your own machine with Ollama (4B + 9B ≈ 10 GB resident; optional 27B ≈ 32 GB VRAM). Start from the commands in [`reproduce.md`](reproduce.md). | Free (disk + electricity) |
 | **2. Hosted fresh inference** | The same runs against hosted models (DeepSeek, Kimi). Needs API keys. | Keys + a few dollars |
 

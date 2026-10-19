@@ -24,7 +24,7 @@ run** — and the answer contract carries receipts a machine can re-check.
 > alone). They are **not** a claim of speed/cost over naive RAG. On external
 > benchmarks the honest result is in [`bench/BENCHMARKS.md`](../bench/BENCHMARKS.md):
 > the kit is the **most accurate** local arm with the only machine-verifiable
-> quotes, but it is **~2× slower and ~25% more tokens** than one-call naive
+> quotes, but it is **~2× slower and ~32.5% more tokens** than one-call naive
 > RAG — the receipt contract is the cost, and the differentiator is accuracy +
 > verifiable citations, not speed.
 

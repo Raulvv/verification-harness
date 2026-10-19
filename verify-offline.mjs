@@ -493,6 +493,10 @@ bclaim('bench-cost-naive-tok',
   Math.round(tierb.reduce((s, r) => s + r.naive.tok, 0) / tierb.length), 1543, '2044 vs 1543 tok')
 bclaim('bench-cost-ours-tok',
   Math.round(tierb.reduce((s, r) => s + r.ours.tok, 0) / tierb.length), 2044)
+const naiveTok = Math.round(tierb.reduce((s, r) => s + r.naive.tok, 0) / tierb.length)
+const oursTok = Math.round(tierb.reduce((s, r) => s + r.ours.tok, 0) / tierb.length)
+bclaim('bench-cost-tok-pct',
+  (((oursTok - naiveTok) / naiveTok) * 100).toFixed(1), '32.5', '~32.5% more tokens')
 
 // model-size sweep — per-arm judged % and s/q over the shared 100-item set
 const sweepCell = (rows, arm) => [

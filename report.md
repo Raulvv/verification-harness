@@ -27,15 +27,16 @@
 > `bench/results/unified-public.jsonl.sha256` (that artifact's published
 > partition).
 
-Read-only audit of the B95–B114 arc. Sources: the canonical tree's
-`bench/README.md` and `bench/RESULTS.md` (internal — not published),
+Read-only audit of the B95–B114 arc. Sources:
 `docs/epicas/retrieval-claims-ledger.md` (published here as
 `retrieval-claims-ledger.md`), the harness scripts under `bench/*.mjs`
 and `kit/lib/**`, the frozen `bench/gate-config.json`, and the
 artifacts in `bench/results/*.jsonl` — the published partition ships as
 `unified-public.jsonl` plus the b121 pair, while the generator filenames cited
 below (`hotpot-fresh-*`, `private-*`) are canonical-tree
-records and do not ship. No code, config, or threshold was
+records and do not ship. From the canonical tree only — named here,
+absent from this tree by design — `bench/README.md` and
+`bench/RESULTS.md` (internal — not published). No code, config, or threshold was
 changed; no generation run was launched. All recomputation below is from stored
 outputs only.
 

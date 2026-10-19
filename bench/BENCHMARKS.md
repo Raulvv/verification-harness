@@ -143,7 +143,7 @@ note below.
 ## Cost (the honest part)
 
 Ours is **not** faster or cheaper than naive one-call RAG: the receipt/quote
-contract costs ~2× latency and ~25% more tokens (HotpotQA: 9.8 vs 4.8 s/q,
+contract costs ~2× latency and ~32.5% more tokens (HotpotQA: 9.8 vs 4.8 s/q,
 2044 vs 1543 tok). On the product corpus the machine is hardware-bound
 (decode ~21.7 ms/tok; latency profile in `bench/RESULTS.md`, canonical tree —
 not published). The differentiator is **accuracy + verifiable citations**, not speed.
@@ -165,7 +165,7 @@ not published). The differentiator is **accuracy + verifiable citations**, not s
 | naive RAG | 27B | 89.0 | 88.0 | 20.3 |
 | ours (full) | 27B | 87.0 | 93.0 | 30.4 |
 
-- **Size doesn't replace retrieval**: bare climbs only 24→31→36% across 4B→27B.
+- **Size doesn't replace retrieval**: bare climbs only 24→31→36% across 4B→9B→27B — composed across three runs over the same 100 ids (24% `crossover-100.json` bare4, 31% `tier-b-hotpot-300-judged.jsonl` head-100 bare, 36% `final-arms-100.json` bare27), not one three-arm table.
 - **The architecture, not the model, is the ceiling**: ours-full is 86/93 (4B),
   87/93 (9B), 87/93 (27B) — statistically flat. Accuracy is model-size-free.
 - **The receipt ladder grounds at every size**: naive → source → full is

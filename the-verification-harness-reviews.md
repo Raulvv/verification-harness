@@ -43,6 +43,7 @@ clone of the shipped tree (score 8.5, publication not blocked).
 | 14 † | — | 8.5 † | — | `b7dc3df` (round-14 fixes) |
 | 15 † | — | 9.0 † | — | `5670a8a` (round-15 fixes) |
 | 16 † | — | 6.5 † | — | `a0e03b3` (round-16 fixes), `5555c8e` (pointer) |
+| 17 † | — | 8.5 † | — | `d20cd99` (round-17 fixes) |
 
 First unanimous round on both axes: same score (9.5) from all three, and the
 first time every persona answered `Publication blocked: no`. Rounds 9–11 kept
@@ -71,6 +72,14 @@ cells despite shipping the audit files — plus the stale closing pointer
 were applied in `a0e03b3`/`5555c8e`: every prose surface restored, the
 excerpt extended to B95–B118, and `verify-offline` grown to 211 claims (23
 audited-share joins, non-vacuity proven by re-inverting the article).
+Round 17 († solo session) scored 8.5 with publication **not blocked** —
+all three gates green on a fresh clone (211/211 claims pre-batch, kit 153,
+traceability 9/9, 8/8 pins, privacy pass) plus ~40 independent
+hand-recomputes — and returned two should-fixes (README promising offline
+recomputation of *every* BENCHMARKS cell over a five-artifact HotpotQA
+backing; the "~25% more tokens" figure reading 32.5% off its own
+2044/1543) and five labeling nits, all applied in `d20cd99`;
+`verify-offline` now guards the corrected figure (212 claims).
 
 Convergence note: in round 4 all three reviewers independently found the same
 defect (the unbacked `127/140` gpt-oss count surviving in §2.2 after being cut
@@ -450,8 +459,40 @@ backings repoint (test expectations 20 → 24 rows), and 23 new
 `[report] audited shares` claims in `verify-offline` (188 → 211) joining the
 shipped side-files — non-vacuity proven twice (re-inverted article → 3
 claims red → green; a tamper test flipping one audit row → red).
-`5555c8e` fixed the article's closing B95–B114 pointer. RN-V01 re-walk
-below; publication blocked pending this batch.
+`5555c8e` fixed the article's closing B95–B114 pointer. RN-V01 re-walked
+in the canonical ledger's G1 (canonical tree — not published);
+publication was blocked at round 16 pending this batch — cleared by
+round 17 below.
+
+**Round 17** (solo session, score 8.5, `d20cd99`): a confirmation round
+over the round-16 batch — publication **not blocked**; every gate, pin and
+privacy check passed on a fresh clone (211/211 claims pre-batch, kit 153,
+traceability 9/9, 8/8 `.sha256` + 8/8 manifest, both article copies
+byte-identical to the canonical source, privacy 0-hit under a
+stricter-than-lint sweep), and ~40 independent hand-recomputes matched
+every probed value — including the new audit-file joins, Wilson intervals
+and the B97 threshold sweep. Two should-fixes, applied in `d20cd99`:
+(a) README:12-14 and README:50 promised offline byte-for-byte
+re-derivation of *every* `bench/BENCHMARKS.md` cell while naming five
+HotpotQA-only pinned artifacts — the SciFact/Qasper/Confluence/v4.5/
+selector/sub-4B cells have no shipped backing (BENCHMARKS itself discloses
+this at its head; the tool's own header was already correctly scoped
+"backed by") — both sentences now carry the scope clause; (b) "~25% more
+tokens" was arithmetically 32.5% ((2044−1543)/1543 — with 2044/1543 and
+the 2× latency machine-checked from `tier-b-hotpot-300.jsonl`) — corrected
+at all five sites (BENCHMARKS, kit/README, this record; canonical
+`bench/RESULTS.md` + `docs/v4-read-system.md`) and now guarded by the new
+`bench-cost-tok-pct` claim (212 claims; non-vacuity by anchor: reverting
+the figure drops the claim red). Five labeling nits applied as well:
+B108's non-shipping backing file marked canonical-only in the canonical
+ledger (excerpt regenerated — its preamble promises exactly this);
+`report.md`'s Sources sentence split into shipped vs named-absent-by-design;
+this record's round-16 tail repointed at G1 with "blocked pending" resolved
+by this round; §4's five struck rows (B11/B14/B68/B70/B71) labeled outside
+the excerpt's B95–B118 scope; and the BENCHMARKS 24→31→36 bullet naming
+its three source runs (crossover-100, tier-b head-100, final-arms-100 —
+ids verified 100/100 shared) instead of implying one table. RN-V01
+re-walked in G1; no article number changed.
 
 ## Round 4 — the three most powerful things (their answers)
 
@@ -485,7 +526,7 @@ question generator hallucinates golds at the same 14/100 rate.
    flat yes; for a frontier-hosted synthesis pipeline, keep the harness, leave
    the kit."*
 2. **Stack.** `.mjs`/Ollama-first; the eval harness (`bench/`, `reproduce.md`,
-   ledger) is not packaged. The README's own tax: ~2× slower, ~25% more tokens
+   ledger) is not packaged. The README's own tax: ~2× slower, ~32.5% more tokens
    than naive one-call RAG. One reviewer: *"steal the receipt idea tonight;
    rewrite the implementation."*
 3. **Not public.** The artifact not shipping blocks forking the reproduction
