@@ -37,7 +37,7 @@ Numbers, methodology and boundaries live in the
   individually, so you can pick the cost/quality point knowingly (§3.3).
 - **The partial-support blind spot is measured and unsolved.** Remove one hop
   of a two-hop question and every configuration at every size still verifies
-  some partial items — audited cells measure 21%–87.5% of those verifications
+  some partial items — audited cells measure 12.5%–56% of those verifications
   wrong (§3.5–§3.6).
 - **The pattern holds on a private, non-memorizable corpus.** Questions are
   generated from this repo's own docs, which no model has memorized; §3.6

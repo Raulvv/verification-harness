@@ -42,6 +42,7 @@ clone of the shipped tree (score 8.5, publication not blocked).
 | 13 | 9.75 | 9.5 | 9.8 | `bf58c47` (round-13 nits) |
 | 14 † | — | 8.5 † | — | `b7dc3df` (round-14 fixes) |
 | 15 † | — | 9.0 † | — | `5670a8a` (round-15 fixes) |
+| 16 † | — | 6.5 † | — | `a0e03b3` (round-16 fixes), `5555c8e` (pointer) |
 
 First unanimous round on both axes: same score (9.5) from all three, and the
 first time every persona answered `Publication blocked: no`. Rounds 9–11 kept
@@ -58,7 +59,18 @@ returned one should-fix — the corpus manifest pinning the stale staging
 copies of the two kit files round 14 had edited — plus four nits (stale
 "not yet public" residue, the `ci.yml` badge, kit's 101-test comment, two
 unlabeled canonical citations), all applied in `5670a8a`, the should-fix
-now guarded by a shipped-tree pin test.
+now guarded by a shipped-tree pin test. Round 16 († solo session) scored
+6.5 with publication **blocked** — the first blocked round since round 1 —
+on one blocker it proved against the shipped tree: §3.5's B108 headline had
+inverted the audit's polarity (claiming 14 of 16 wrong / 87.5% false-verify
+against the committed 14 gold-correct / 2 wrong = 12.5%), which also
+poisoned the round-14 range (21%–87.5% → honest **12.5%–56%**),
+`report.md`'s erratum, the shipped ledger's B108 cell and B111's
+parenthetical. Its should-fix — zero machine joins on the audited [report]
+cells despite shipping the audit files — plus the stale closing pointer
+were applied in `a0e03b3`/`5555c8e`: every prose surface restored, the
+excerpt extended to B95–B118, and `verify-offline` grown to 211 claims (23
+audited-share joins, non-vacuity proven by re-inverting the article).
 
 Convergence note: in round 4 all three reviewers independently found the same
 defect (the unbacked `127/140` gpt-oss count surviving in §2.2 after being cut
@@ -405,6 +417,41 @@ ships (`offline.yml`, not the canonical-only `ci.yml`), kit/README's
 101-test comment updated to 153, and `report.md`'s article citation plus the
 article's `docs/v4-read-system` citation labeled canonical-tree-not-published.
 No new outward numbers; publication not blocked.
+
+**Round 16** (solo session, score 6.5, `a0e03b3`, `5555c8e`): the first
+*blocked* verdict since round 1, run against the shipped tree. Privacy,
+labels, kit and recomputation checks all passed (the evaluator's 34/35
+ad-hoc recomputes matched, privacy 0-hit throughout), but the blocker held:
+§3.5's headline cell read "after a strict oracle audit of those 16, 14 are
+wrong … false-verifies partial support at 87.5%" — the committed
+`audit-hotpot-b108.jsonl` partial rows are **14 `construction`
+(gold-correct) / 2 `genuine`**, the blind TSV confirms 16/16 on that subset,
+the classifier defines construction = correct, and the run's own commit
+message said "14/16 were correct"; the true cell is "14 gold-correct, 2
+wrong = 12.5% false-verify". The flip was born at `dfde55a` (report erratum
+`e900781`) and had been carried — never re-joined against the file —
+through the round-14/15 walks. Inheritance: the lede/§7/README range
+"21%–87.5%" (honest audited range over the three partial cells is
+**12.5%–56%**: b108 12.5%, b119 56.3%, b120 20.6% — a genuine 87.5% exists
+only as b119's *unanswerable* accuracy cell, out of the lede's partial
+scope), `report.md`'s erratum restatement ("is 14/16 wrong (not 16/16)"),
+the shipped ledger's B108 partial row and B111's "(all still wrong)", plus
+two §3.5 narrative lines ("worse for the gate than the forced label
+claimed", "moves 2 of the 16 out"). The should-fix: `verify-offline`
+asserted the 53/31/16 state counts but performed **zero joins** on the
+article's audited [report] citations — the process gap that let the flip
+ship. The nit: the shipped excerpt stopped at B114, so the erratum's own
+backing rows B115–B118 never traveled and the shipped B108/B111 cells went
+unretracted. Applied in `a0e03b3`: §3.5 rewritten with the correct polarity
+plus a self-disclosure of the inversion (no canonical hashes), B111 scoped
+to pre-audit labels, the honest 12.5%–56% range at all three sites, the
+report erratum, ledger B108/B111, excerpt scope → B95–B118 with a B118
+backings repoint (test expectations 20 → 24 rows), and 23 new
+`[report] audited shares` claims in `verify-offline` (188 → 211) joining the
+shipped side-files — non-vacuity proven twice (re-inverted article → 3
+claims red → green; a tamper test flipping one audit row → red).
+`5555c8e` fixed the article's closing B95–B114 pointer. RN-V01 re-walk
+below; publication blocked pending this batch.
 
 ## Round 4 — the three most powerful things (their answers)
 

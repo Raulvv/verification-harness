@@ -15,7 +15,9 @@
 >    cell in this record (R8, §4, and the tables built on them) is the
 >    run-time forced-0 label — by construction, not measurement. The
 >    committed oracle audits re-grade those rows: B108's shown-partial cell
->    is 14/16 wrong (not 16/16), the pooled B95 precision is 93.9% audited
+>    is 2/16 wrong — 14 of the 16 verified partial answers are gold-correct
+>    (an earlier restatement of this correction had the polarity inverted),
+>    the pooled B95 precision is 93.9% audited
 >    (90.1% labeled), and the strong-reader flags are 1-of-9 actually wrong
 >    (article §3.1, §3.2, §3.5; backing rows B115–B118 of the canonical
 >    ledger; audit side-files `bench/results/audit-*.jsonl`).

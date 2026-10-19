@@ -41,7 +41,7 @@ a hosted model's opinion, validated on short golds — and the headline gate
 numbers are a single pass of a judge we ourselves measure as nondeterministic
 (§6.5). The partial-support blind spot (one hop of a two-hop question removed) is
 **unsolved**: every configuration, at every size, verifies some partial items,
-and of the items each stack marks `verified`, audited cells measure 21%–87.5%
+and of the items each stack marks `verified`, audited cells measure 12.5%–56%
 wrong (§3.5–§3.6). We mark every number **[recomputed]** (derivable
 from `unified.jsonl`), **[ledger]** (recorded in the claims ledger, reproduced
 by a named script or a documented re-grade), or **[opinion]**.
@@ -262,7 +262,10 @@ run-time labels forever, the correction lives beside it, never inside it —
 so a re-derivation joins the two files, and the blind second-pass verdicts
 travel with each audit. [report] numbers are not offline-arithmetic like
 [recomputed] ones; they are reproducible *file joins* over recorded model
-verdicts, one model call per row already paid for and stored.
+verdicts, one model call per row already paid for and stored — and
+`verify-offline` performs those joins on the audited share cells (the §3.5
+and §3.6 splits), so every audited polarity is machine-checked against the
+shipped side-files; the verdicts themselves remain recorded model calls.
 
 This is the receipt discipline applied to the experiment record itself: an
 article number that does not recompute from the artifact is a bug in the
@@ -572,26 +575,30 @@ reader a two-hop question, put **one** gold hop in the window and remove the
 other, and ask the gate to judge what comes back. On HotpotQA (B108,
 4B+kimi, N=100/condition) [recomputed]: 53% of partial items are rejected
 (`not_found`), 31% flagged, and **16% marked `verified` — and after a strict
-oracle audit of those 16, 14 are wrong: only 2 of 16 (12.5%) are
-gold-correct, so the gate false-verifies partial support at 87.5% on this
+oracle audit of those 16, 14 are gold-correct: only 2 of 16 (12.5%) are
+actually wrong, so the gate false-verifies partial support at 12.5% on this
 arm** [report: `bench/results/audit-hotpot-b108.jsonl`, blind second pass 22/22 (16/16
 on the shown-partial subset)]. An earlier version of this cell
 read "every one of them wrong (0% verified accuracy)" — that was a
 by-construction label, not a measurement: the run's oracle pass was never
-asked on answered partial rows, so `oracle_correct` was forced to 0. The
-audit asked the question; the answer is worse for the gate than the forced
-label claimed, which is why the audit exists.) The private arm's partial
-rows, audited the same way, land in §3.6: same failure class, both readers,
-with a measured split the gate's own score actually tracks for the stronger
-one.
+asked on answered partial rows, so `oracle_correct` was forced to 0. A
+restatement of the correction then inverted the audit's polarity, reading
+the 14 gold-correct rows as 14 wrong; the committed split is 14/16
+gold-correct (blind-confirmed 16/16 on this subset), and the audit is
+*better* for the gate than the forced label claimed — on this public arm
+most removed hops turned out unnecessary (the question stayed answerable
+from the surviving window, the artifact B96 documents). The severe
+false-verification lives on the private arm: those partial rows, audited
+the same way, land in §3.6 — same failure class, both readers, with a
+measured split the gate's own score actually tracks for the stronger one.
 
 The mechanism is mechanical: the surviving hop *is* real evidence for a related
 claim, and a judge scoring "does the window support the answer?" against one
 true hop says yes. Asking the judge to enumerate required facts does not fix
 it: the hop-coverage judge reclassifies partials from `verified` to
-`unverified` but leaves 13 of the 16 items `verified` (the audit's correction
-moves 2 of the 16 out of the false-verify class; the 13/16 split itself was
-measured on the pre-audit labels) — and at 9B the judge
+`unverified` but leaves 13 of the 16 items `verified` (measured on the
+pre-audit labels: the audit found only 2 of the original 16 answers
+genuinely wrong, so at most 2 of those 13 can be false-verifies) — and at 9B the judge
 rubber-stamps the missing hop as supported [ledger B111]. The only check that
 closes the class is **mechanical**: require the receipt to cite *both* source
 documents. Run in best case (the two gold docs handed to the checker), it takes
@@ -879,7 +886,7 @@ to a discrete-GPU or CPU-only server without re-measuring.
 Stated before you adopt, in the order they will bite you:
 
 1. **Partial support is unsolved.** Every stack verifies some one-hop-removed
-   items, and 21%–87.5% of those verifications are wrong (audited cells,
+   items, and 12.5%–56% of those verifications are wrong (audited cells,
    §3.5–§3.6). The mechanical
    two-doc check closes the class at a large false-abstention cost for weak
    readers; the decomposition problem (which docs does this question *need*?)
@@ -1010,7 +1017,7 @@ artifact — in this repo, `bench/results/unified-public.jsonl` (sha256
 `bench/results/unified-public.jsonl.sha256`), the public subset of the
 canonical `unified.jsonl` (sha256
 `0adc142ca0380dfc8b00f7def12ee1a7eef8125fec7f7ba214ab0bca94b9eb3f`, canonical
-tree — not published); [ledger] numbers resolve to rows B95–B114
+tree — not published); [ledger] numbers resolve to rows B95–B118
 of `retrieval-claims-ledger.md`, the ledger excerpt shipped with this repo;
 report sections cited are `report.md`. From the repo root,
 `shasum -a 256 -c bench/results/unified-public.jsonl.sha256` (macOS;

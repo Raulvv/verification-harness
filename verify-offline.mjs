@@ -299,6 +299,51 @@ claim('b120-part-ver', c120part.ver, 34)
 claim('b120-un-shown', c120un.shownPct, '12.0', '| unanswerable | 12% | 9 (75.0% of shown)')
 claim('b120-un-ver', c120un.ver, 9)
 
+// ── [report] audited shares — file joins over the shipped audit side-files ──
+// Polarity class (bench/audit-classify.mjs:33-35): construction = the shown
+// answer is actually gold-correct; genuine = actually wrong. These claims are
+// the machine check that caught the round-16 B108 polarity inversion.
+const readJsonl = (rel) => readFileSync(join(ROOT, rel), 'utf8').trim().split('\n').map((l) => JSON.parse(l))
+const b108p = readJsonl('bench/results/audit-hotpot-b108.jsonl').filter((x) => x.condition === 'partial')
+const b108correct = b108p.filter((x) => x.class === 'construction').length
+claim('b108-audit-partial-n', b108p.length, 16, 'oracle audit of those 16, 14 are gold-correct')
+claim('b108-audit-correct', b108correct, 14, '14 are gold-correct: only 2 of 16 (12.5%) are')
+claim('b108-audit-wrong', b108p.length - b108correct, 2)
+claim('b108-false-verify', (((b108p.length - b108correct) / b108p.length) * 100).toFixed(1), '12.5', 'false-verifies partial support at 12.5% on this')
+const b108blind = readFileSync(join(ROOT, 'bench/results/audit-hotpot-b108-blind-verdicts.tsv'), 'utf8').trim().split('\n').slice(1).map((l) => l.split('\t'))
+claim('b108-blind-rows', b108blind.length, 22, 'blind second pass 22/22 (16/16')
+claim('b108-blind-agree', b108blind.filter((r) => r[4] === 'true').length, 22)
+claim('b108-blind-partial-agree', b108blind.filter((r) => r[2] === 'partial' && r[4] === 'true').length, 16)
+
+const b95audit = readJsonl('bench/results/audit-hotpot-b95.jsonl')
+claim('b95-audit-supported', b95audit.filter((x) => x.class === 'construction').length, 10, '5 genuinely wrong**')
+claim('b95-audit-wrong', b95audit.filter((x) => x.class === 'genuine').length, 5)
+
+const ac = readJsonl('bench/results/audit-classify.jsonl')
+const acCell = (arm, cond, cls) => ac.filter((x) => x.arm === arm && x.condition === cond && (cls == null || x.class === cls)).length
+claim('b119-part-audited-n', acCell('4b-local', 'partial'), 48, '43.8%** (21/48, CI 30.7')
+claim('b119-part-audited-correct', acCell('4b-local', 'partial', 'construction'), 21, '21/48, CI 30.7')
+claim('b120-part-audited-n', acCell('deepseek', 'partial'), 34, '79.4%** (27/34, CI 63.2')
+claim('b120-part-audited-correct', acCell('deepseek', 'partial', 'construction'), 27, '27/34, CI 63.2')
+claim('b119-un-audited-n', acCell('4b-local', 'unanswerable'), 16, '12.5%** (2/16, CI 3.5')
+claim('b119-un-audited-correct', acCell('4b-local', 'unanswerable', 'construction'), 2, '(2/16, CI 3.5')
+claim('b120-un-audited-n', acCell('deepseek', 'unanswerable'), 9, '55.6%** (5/9, CI 26.7')
+claim('b120-un-audited-correct', acCell('deepseek', 'unanswerable', 'construction'), 5, '(5/9, CI 26.7')
+const pu = readJsonl('bench/results/audit-partial-unverified.jsonl')
+claim('b119-unver-n', pu.filter((x) => x.arm === '4b-local').length, 40, '(7/40, CI 8.7')
+claim('b119-unver-correct', pu.filter((x) => x.arm === '4b-local' && x.judge_correct === 1).length, 7, '17.5% (7/40, CI 8.7')
+claim('b120-unver-n', pu.filter((x) => x.arm === 'deepseek').length, 25, '(3/25, CI 4.2')
+claim('b120-unver-correct', pu.filter((x) => x.arm === 'deepseek' && x.judge_correct === 1).length, 3, '12.0% (3/25, CI 4.2')
+
+// the lede/§7 audited range over the three partial false-verify cells
+const fvPartial = [
+  ((b108p.length - b108correct) / b108p.length) * 100,
+  (acCell('4b-local', 'partial', 'genuine') / acCell('4b-local', 'partial')) * 100,
+  (acCell('deepseek', 'partial', 'genuine') / acCell('deepseek', 'partial')) * 100,
+]
+claim('partial-fv-floor', Math.min(...fvPartial).toFixed(1), '12.5', 'audited cells measure 12.5%–56%')
+claim('partial-fv-ceil', Math.max(...fvPartial).toFixed(0), '56', '12.5%–56% of those verifications are wrong')
+
 // §3.6 reading 1 — contamination inflation, both sides
 const b109ans = stateCell(load('b109-'), 'answerable')
 const b102ans = stateCell(load('b102-'), 'answerable')
