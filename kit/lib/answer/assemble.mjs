@@ -5,7 +5,7 @@
 // An abstention carries NO receipts (2026-09-30: the neighbor mechanism is
 // gone — a NOT FOUND never names or quotes related material; any leg the
 // model supplies alongside an abstention is dropped, never surfaced).
-import { evidenceMatches, liftEvidence, abstainLine } from '../receipts/text.mjs'
+import { evidenceMatches, liftEvidence, liftSpan, abstainLine } from '../receipts/text.mjs'
 import { monthYear } from '../receipts/cite.mjs'
 import { resolveMeta } from '../corpus/meta.mjs'
 
@@ -21,13 +21,13 @@ export function rehomeLegs(docs, quotes) {
     const claimed = docs[Number(q.doc) - 1]
     if (claimed) {
       const lifted = liftEvidence(claimed.content, q.quote)
-      if (lifted) { kept.push({ ...q, doc: Number(q.doc), quote: lifted }); continue }
-      if (evidenceMatches(claimed.content, q.quote)) { kept.push({ ...q, doc: Number(q.doc) }); continue }
+      if (lifted) { kept.push({ ...q, doc: Number(q.doc), quote: lifted, span: liftSpan(claimed.content, q.quote) ?? lifted }); continue }
+      if (evidenceMatches(claimed.content, q.quote)) { kept.push({ ...q, doc: Number(q.doc), span: liftSpan(claimed.content, q.quote) ?? q.quote }); continue }
     }
     const liftIdx = docs.findIndex((d) => liftEvidence(d.content, q.quote))
-    if (liftIdx >= 0) { kept.push({ ...q, doc: liftIdx + 1, quote: liftEvidence(docs[liftIdx].content, q.quote), rehomed: true }); continue }
+    if (liftIdx >= 0) { const lifted = liftEvidence(docs[liftIdx].content, q.quote); kept.push({ ...q, doc: liftIdx + 1, quote: lifted, span: liftSpan(docs[liftIdx].content, q.quote) ?? lifted, rehomed: true }); continue }
     const trueIdx = docs.findIndex((d) => evidenceMatches(d.content, q.quote))
-    if (trueIdx >= 0) kept.push({ ...q, doc: trueIdx + 1, rehomed: true })
+    if (trueIdx >= 0) kept.push({ ...q, doc: trueIdx + 1, rehomed: true, span: liftSpan(docs[trueIdx].content, q.quote) ?? q.quote })
     else dropped.push(String(q.quote).slice(0, 60))
   }
   return { kept, dropped }

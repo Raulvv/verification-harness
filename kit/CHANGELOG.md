@@ -4,6 +4,11 @@
 
 ### Changed
 
+- `rehomeLegs` now records the minimal claim **span** (the sentence/table
+  cell containing the anchor) beside the full-line `quote`; `liftSpan` handles
+  wrapped lines and table cells. The reference-first path passes spans to the
+  binder/verifier and keeps full lines for the receipt.
+
 - README pointers into the parent repo's `docs/` are now labeled
   **canonical tree — not published** (ship-state reference, claims-ledger
   link, hypotheses link); the ledger link also names the excerpt that ships

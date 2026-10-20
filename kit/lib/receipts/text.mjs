@@ -31,7 +31,56 @@ export function liftEvidence(content, anchor) {
   return null
 }
 
-// The one evidence matcher, shared by gate and scorer: does this content
+// The minimal claim span: the sentence (or table cell group) containing the
+// anchor, not the whole line. For prose, the shortest contiguous sentence
+// range; for a table row, the row label plus the cell sentence that carries
+// the anchor. The full line stays available via liftEvidence for the receipt.
+const sentenceSpan = (text, a) => {
+  const sentences = String(text ?? '').split(/(?<=[.!?;])\s+/).filter(Boolean)
+  const idxs = sentences.map((s, i) => (norm(s).includes(a) ? i : -1)).filter((i) => i >= 0)
+  if (!idxs.length) return null
+  return sentences.slice(idxs[0], idxs[idxs.length - 1] + 1).join(' ')
+}
+
+export function liftSpan(content, anchor) {
+  const a = norm(anchor)
+  if (!a) return null
+  let best = null
+  const consider = (s) => {
+    const t = String(s ?? '').trim()
+    if (!t) return
+    const complete = /[.!?;]$/.test(t)
+    if (!best || (complete && !best.complete) || (complete === best.complete && t.length < best.t.length)) best = { t, complete }
+  }
+  const lines = String(content ?? '').split('\n')
+  for (let i = 0; i < lines.length; i++) {
+    const trimmed = lines[i].trim()
+    if (norm(trimmed).includes(a)) {
+      if (trimmed.includes('|')) {
+        const cells = trimmed.split('|').map((c) => c.trim()).filter(Boolean)
+        if (cells.length) {
+          const label = cells[0]
+          const hits = cells.filter((c) => norm(c).includes(a))
+          if (hits.length) {
+            const picked = hits.map((c) => sentenceSpan(c, a) ?? c)
+            consider([label, ...picked].filter((v, i2, arr) => arr.indexOf(v) === i2).join(' | '))
+          } else {
+            consider(trimmed)
+          }
+        }
+      } else {
+        consider(sentenceSpan(trimmed, a) ?? trimmed)
+      }
+    }
+    if (!/[.!?;|]$/.test(trimmed) && i + 1 < lines.length) {
+      const pair = trimmed + ' ' + lines[i + 1].trim()
+      if (norm(pair).includes(a)) consider(sentenceSpan(pair, a) ?? pair)
+    }
+  }
+  return best?.t ?? null
+}
+
+// The one evidence matcher// The one evidence matcher, shared by gate and scorer: does this content
 // contain this quote verbatim — tolerating emphasis, " / " joins (whole or
 // by segments), and whitespace? File-side truth only.
 export function evidenceMatches(content, quote) {

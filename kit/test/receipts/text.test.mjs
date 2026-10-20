@@ -1,7 +1,7 @@
 // The number anchor: the answer/quote binding, mechanical and model-free.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { numbersIn, claimNumbers, derivedNumbers, unanchoredNumbers } from '../../lib/receipts/text.mjs'
+import { numbersIn, claimNumbers, derivedNumbers, unanchoredNumbers, liftSpan } from '../../lib/receipts/text.mjs'
 
 test('numbersIn: comma grouping and a trailing .0 normalize, percent is kept as its number', () => {
   assert.deepEqual(numbersIn('10,500 units; 3.0 s; 95.6%'), ['10500', '3', '95.6'])
@@ -44,4 +44,24 @@ test('unanchoredNumbers: shown arithmetic is anchored; a wrong result is not', (
 test('unanchoredNumbers: a number given by the question is not a corpus claim', () => {
   assert.deepEqual(unanchoredNumbers('The total is 120 points.', ['3 points per item'], { ignore: 'a 40-question set' }), ['120'])
   assert.deepEqual(unanchoredNumbers('The total is 120 points.', ['3 points per item'], { ignore: 'a 40-question set', allow: [120] }), [])
+})
+
+test('liftSpan: the minimal sentence, not the whole line', () => {
+  assert.equal(liftSpan('The facade is frozen. A user-visible change gets a kit/CHANGELOG.md entry.', 'CHANGELOG'), 'A user-visible change gets a kit/CHANGELOG.md entry.')
+  assert.equal(liftSpan('intro. The 80/81 goldens line. outro.', '80/81'), 'The 80/81 goldens line.')
+})
+
+test('liftSpan: a table row returns the label plus the matching cell sentence', () => {
+  assert.equal(liftSpan('| B96 | Of the 15 false-accepts, 11 are supported. 2 are memorized. |', '11 are supported'), 'B96 | Of the 15 false-accepts, 11 are supported.')
+  assert.equal(liftSpan('| A | B |', 'B'), 'A | B')
+})
+
+test('liftSpan: no anchor and no match return null', () => {
+  assert.equal(liftSpan('real content only', 'fabricated passage'), null)
+  assert.equal(liftSpan('', 'anything'), null)
+})
+
+test('liftSpan: a wrapped sentence keeps the continuation (the changelog case)', () => {
+  const wrapped = 'A user-visible change gets a\n  `kit/CHANGELOG.md` entry.'
+  assert.equal(liftSpan(wrapped, 'user-visible'), 'A user-visible change gets a `kit/CHANGELOG.md` entry.')
 })

@@ -639,3 +639,10 @@ test('askOneShot evidenceFirst + evidenceFallback false: the evidence boundary i
     assert.match(r.final.text, /Q: NOT FOUND/)
   } finally { rmSync(dir, { recursive: true, force: true }) }
 })
+
+test('rehomeLegs: the span is minimal while the quote keeps the full line for the receipt', () => {
+  const docs = [{ rel: 'a.md', content: 'The facade is frozen. A user-visible change gets a kit/CHANGELOG.md entry.' }]
+  const { kept } = rehomeLegs(docs, [{ doc: 1, quote: 'A user-visible change gets a kit/CHANGELOG.md entry.' }])
+  assert.equal(kept[0].quote, 'The facade is frozen. A user-visible change gets a kit/CHANGELOG.md entry.')
+  assert.equal(kept[0].span, 'A user-visible change gets a kit/CHANGELOG.md entry.')
+})
