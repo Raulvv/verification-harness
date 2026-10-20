@@ -293,3 +293,19 @@ The no-target single-read experiment was a regression: 30 rows, **3 right, 1
 wrong** (p72: 93.9% vs the gold 95.6%), 23 abstain, 3 null. It was reverted to
 the target version. The target version is frozen; the full-hosted 43
 comparison is next; the 300 runs only if the 43 stays at 0 wrong.
+
+## 8. Full-hosted 43 comparison (2026-10-21)
+
+The full-hosted arm (deepseek reader + kimi-k3 judge + hosted oracle) ran the
+same 43 rows: **36 right, 1 wrong (p86), 6 abstain**; 35 verified all correct;
+0 verified false accepts; **0 × 429/5xx**; 86% coverage; 68 min. The local
+target was 20 right / 0 wrong / 23 abstain.
+
+The p86 wrong is the known gold ambiguity: the answer says **2** (15 − 11
+supported − 2 memorized-correct) while the gold says **4** (15 − 11); the
+93.9% audited figure matches. p86 is unverified, so the 0-verified-wrong
+property holds. p78 is correct but `judge_no_score`; p21 and p72 were right in
+the local target but abstain under the full hosted.
+
+The 300 was **not started**: the 1 wrong p86 triggers the stop rule. Next
+priority: resolve the p86 gold/ambiguity, then the full-hosted 300.
