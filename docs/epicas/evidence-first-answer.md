@@ -280,3 +280,16 @@ Two-pass becomes the default, stays opt-in, or is reverted.
 touched), no vacuous tests, `CHANGELOG.md` for user-visible changes. The public
 repo stays private; no private run rows, tokens, or corpora enter it. No
 third-party queries are needed for this work.
+
+## 7. Target-version 43 result (2026-10-21)
+
+The target version (top-3 + base + lexical candidates, verifier-all) was run on
+the 43 hard rows: **20 right, 0 wrong, 23 abstain**; 7 oracle-null rows (p1,
+p21, p42, p47, p74, p79 re-checked true; p91 pending); 0 verified false
+accepts. The summary's "4 false accepts" are verified rows whose oracle call
+returned 429, not wrong answers.
+
+The no-target single-read experiment was a regression: 30 rows, **3 right, 1
+wrong** (p72: 93.9% vs the gold 95.6%), 23 abstain, 3 null. It was reverted to
+the target version. The target version is frozen; the full-hosted 43
+comparison is next; the 300 runs only if the 43 stays at 0 wrong.
