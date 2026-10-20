@@ -173,10 +173,37 @@ targeted set before any full arm:
    unanchored (the 20 flagged-correct rows) run Pass B over the single-pass
    quotes. Leaves the 57 anchored/easy rows untouched.
 3. **Stronger quote pass**: 9B quote pass → 4B answer pass; or a quote prompt
-   that asks for every number/unit the answer will need.
+   that asks for every number/unit the answer will need. *Not tested: the owner
+   excluded an additional quote-pass model.*
 
 **Kill criterion**: if a candidate does not beat 22/43 on the targeted set
 without breaking an anchored-correct row, stop; the single pass ships.
+
+**Result (2026-10-20, 4B only, no extra quote-pass model, same 43):**
+
+| variant | correct | reader abstained | verified | verified correct | shown |
+|---|---:|---:|---:|---:|---:|
+| single-pass baseline | 22/43 | 0 | 29 | 18 | 41/43 |
+| hybrid | 11/43 | 12 | 20 | 10 | 28/43 |
+| selective | 10/43 | 11 | 19 | 9 | 30/43 |
+| hybrid + anchor abstain | 8/43 | — | — | — | 20/43 |
+| selective + anchor abstain | 7/43 | — | — | — | 23/43 |
+
+Transitions vs baseline: hybrid **5 fixed, 16 broken**; selective **3 fixed,
+15 broken**. The selective trigger fired on **33/43** rows (10 shipped from the
+first pass; 2 of those correct), so the "only the hard rows pay" saving is real
+but the repair is not.
+
+**Not cleared.** Neither candidate beats 22/43 or meets the kill criterion.
+The p82 case is the boundary in one row: the single pass's 144 is correct but
+unanchored (the quote has 48/48 and 3 points, no shown arithmetic); both
+hybrid and selective rewrite it as 48. The anchor flags the receipt; the
+answer pass cannot recover the computation. Quote/answer composition alone
+does not fix the derived class.
+
+**Decision:** the single pass ships; the two-pass/hybrid/selective modes stay
+opt-in. The anchor remains a post-hoc receipt audit (13/21 wrong caught;
+20/79 correct flagged on b119), used in report mode, not as a hard gate.
 
 ### I3 — A/B on the private clean-room arms
 
@@ -214,8 +241,9 @@ regression on the rest.
 With the 57 non-targeted b119 rows already correct, the two-pass's full-arm
 upper bound is **57 + 4 = 61/100**, below the 79 single-pass baseline, even if
 no easy row breaks. The sign cannot reverse, so the 300-row run is not worth
-its cost. The single pass stays the default; the two-pass stays opt-in. I2b is
-the next experiment, not a full arm.
+its cost. The single pass stays the default; the two-pass stays opt-in. I2b
+ran and also failed (hybrid 11/43, selective 10/43); I3 remains stopped before
+the full arm.
 
 **Done when**: the numbers are in the ledger with a run id, and the net effect
 (accuracy vs coverage vs cost) is stated. *(Superseded by the gate result:
@@ -223,6 +251,14 @@ I3 is stopped before the full arm; the targeted rows are recorded, not
 ledgered as a shipped run.)*
 
 ### I4 — Default decision
+
+**Decided (2026-10-20): the single pass stays the default.** The
+two-pass/hybrid/selective modes remain opt-in (`EVIDENCE_MODE`), and the
+number anchor ships as a report-mode receipt audit, not a hard gate. No full
+300-row arm is run: all 21 b119 misses are in the 43-row targeted set, and the
+best candidate fixed 5 while breaking 16. A formal ADR is the remaining
+bookkeeping; it should record this negative result and the p82 derived-value
+boundary.
 
 Two-pass becomes the default, stays opt-in, or is reverted.
 
