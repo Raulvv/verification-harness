@@ -5,11 +5,13 @@
 **The result first.** On held-out HotpotQA rows the frozen gate lifts a local
 4B reader's unknown-abstention from **70.7% to 81.7%** for **+3pp** answerable
 false-abstention — everything it keeps under `verified` is right **95.6%** of
-the time (verified precision: the share of shown answers the independent oracle
+the time on answerable items (**90.1%** pooled as labeled, **93.9%** audited;
+the pooled figure is the share of all shown answers the independent oracle
 confirms) — and it is **inert** for strong readers on the public arm
 (deepseek, 27B: raw = gate on the answerable and unknown-abstention axes) —
 with one measured carve-out: on partial support, the same strong reader's
-gate score still separates correct from incorrect answers ~6.6× (§3.6). A fully local stack (4B reader + 9B judge, ~10 GB resident,
+gate score separates `verified` from unverified-shown answers ~6.6× (**1.56×**
+over all shown; §3.6). A fully local stack (4B reader + 9B judge, ~10 GB resident,
 ~8.5 s/question — eval-loop means, §5) lands within **3–4.5pp** of a 27B reader's verified precision —
 directional, the Wilson intervals overlap — at **~2.4× the speed end to end**
 (~4.7× on reader time alone; one run — sibling judges span 3.6–6.8× on
@@ -147,7 +149,12 @@ the item `unverified`, visible, rather than silently removing it from the
 denominator (B95 had 14 such items; two were correct) [recomputed]. **The
 bands are frozen before the run**: `lo=2, hi=5` was committed to
 `gate-config.json` *before* the held-out run that validates it — the operating
-point was not tuned on the rows it is scored on. The kit ships this as
+point was not tuned on the rows it is scored on. This is a process claim, not a
+shipped proof: the canonical ledger B78–B94 records the pre-registration, and
+the published tree carries a single initial commit with both config and
+results, so the chronological order cannot be re-derived from the clone. The
+artifact is *consistent* with the bands (0 state mismatches over 3300 rows),
+which is compatibility, not chronology. The kit ships this as
 `ask --sufficient --unverified`; the harness runs the identical mapping
 (`stateOf` in `bench/hotpot-fresh.mjs`), so the experiment *is* the product
 policy, not an approximation of it.
@@ -207,9 +214,16 @@ benchmarks note, and the claims-ledger excerpt), a set written
 after the gate was frozen and never used for its tuning (clean-room),
 published after the training cutoff of every tested model. The exact file list
 and per-file sha256 are pinned in `corpus/manifest.json`; the manifest is
-re-pinned at export, so the shipped pins describe the files as published. The
-stored b119/b120 runs quote the pre-round-18 wording (14 + 12 rows; disclosed
-in `reproduce.md`) — no measurement was regenerated. Each question
+re-pinned at export, so the shipped pins describe the files **as published**,
+not the bytes the stored runs read. Six of the eight files were edited in round
+18 and three again in round 19 (this article among them), so the corpus is
+partly self-referential: editing the article edits the corpus of the experiment
+that measures it. The b119/b120 runs are frozen at an earlier revision — 12
+rows (7 b119 + 5 b120; 9 verified) quote text absent from every shipped file,
+and 9 artifact rows per arm (3 questions) carry the pre-edit `~25% more tokens`
+gold wording; the phrase `not yet public`
+survives only in the pre-round-18 history. No measurement was regenerated
+(`reproduce.md` §Corpus drift). Each question
 stores both gold documents (`factA`/`factB`) and passes a grounding filter
 (≥60% of the gold answer's content words must appear in the two docs — a
 generator that hallucinates beyond its own truncation window is caught), under
@@ -232,13 +246,17 @@ visible).
 
 Small models fail JSON decode: a constrained JSON answer can stall mid-object,
 and the parser rejects the partial. The fix is the kit's own production
-behavior — one tight re-ask on a truncated decode — and parse failures are now
-their own bucket (`fail_reason: parse_failure`), never folded into abstention:
-a decode failure is an infrastructure event, not an honest "the docs don't
-say." The record had to learn this the hard way: an earlier export folded
-parse failures into abstention, and the corrected export is how we found it
-(`report §8.5`). The fresh private run's parse-failure counts sit in §3.6's
-table [recomputed: **0** for the 4B, **10/300** for deepseek].
+behavior — one tight re-ask on a truncated decode — and parse failures carry
+their own bucket (`fail_reason: parse_failure`) and stay in the `not_found`
+state. They are not a correct abstention and not a correct answer: under v4
+they are **unscored** (`oracle_correct = null`). A decode failure is an
+infrastructure event, not an honest "the docs don't say." The record had to
+learn this the hard way: an earlier export scored parse failures as `1` on the
+non-answerable conditions; the stored b120 rows still carry that old label,
+and `reproduce.md` discloses it. The corrected runner does not reproduce it
+(`report §8.5`; the audit re-labels those rows). The fresh private run's
+parse-failure counts sit in §3.6's table [recomputed: **0** for the 4B,
+**10/300** for deepseek].
 
 ### 2.7 Verifiability: pinned artifacts, one checksum each, offline recomputation
 
@@ -311,7 +329,10 @@ rows 301–600, N=600 [recomputed]:
 
 The trade is the point: **+11 points of unknown-abstention for +3 points of
 answerable false-abstention**, and everything the gate keeps under `verified`
-is right 95.6% of the time (Wilson 95% CI 92.2–97.5) [ledger B95] — one
+is right **95.6% of the time on answerable items** (Wilson 95% CI 92.2–97.5;
+**90.1%** pooled as labeled, **93.9%** audited — the pooled number is the share
+of all shown answers the oracle confirms, and the unanswerable slice is where
+the 15 false-accepts live) [ledger B95] — one
 hosted-judge pass, so read the gate-state rates as ±1–2pp — a heuristic, not a
 measured bound (§6.5). The gate is
 not free — it ends with 23 of 300 answerable questions hidden (7.7%; the raw
@@ -343,8 +364,11 @@ The gate also beats the cheap alternatives at matched coverage. At the gate's
 answerable-only), the best top-1-retrieval-score cutoff under that same
 coverage cap reaches only 71.7% decision accuracy, and the best mean-log-prob
 cutoff 64.2% — against the gate's **83.5%** (a correct decision = right answer
-shown or correct refusal; a show-nothing rule scores 50% by construction)
-[recomputed, B97]. The judge adds information that
+shown or correct refusal; a show-nothing rule scores 50% by construction on this
+50/50 answerable/unanswerable mix) [recomputed, B97]. The mix sets the floor:
+a different answerable share shifts every absolute number here, so compare the
+gate to the baselines at the *same* mix, never to 50% as a universal baseline.
+The judge adds information that
 neither retrieval similarity nor reader confidence carries; it is not a
 threshold on a signal you already had.
 
@@ -547,8 +571,9 @@ window: retrieval buys the 25→80, and the harness's contribution on top is the
 flag, not the score [recomputed].
 
 The gate itself, both judges, over byte-identical reader answers (the 9B arm
-re-judges the stored answers against recomputed windows — 0 window mismatches)
-[recomputed]:
+re-judges the stored answers against recomputed windows — **0 mismatches among
+the 274 compared rows**; 26 are null, 21 `not_found` + 5 `verified`, and the
+guard checks non-null values only) [recomputed]:
 
 | b121 stack | shown coverage | pooled ver-prec | ver-wrong | same stack, gold windows |
 |---|---|---|---|---|
@@ -629,19 +654,28 @@ under the local 9B judge — 600 rows, runs `b119-cleanroom-4b` and
 also the oracle (§2.3's self-oracle caveat applies to the deepseek row).
 Parse-failure buckets (§2.7's pointer): **0** for the 4B, **10 of 300**
 (3.3%) for deepseek — 2 answerable, 6 partial, 2 unanswerable — each a
-recorded `parse_failure`, never folded into abstention.
+recorded `parse_failure`, all in the `not_found` bucket, and under v4
+**unscored** (`oracle_correct=null`). The stored b120 rows predate that fix and
+carry the old forced-`1` label on the 8 non-answerable cases; `reproduce.md`
+discloses it and the audit re-labels them. They are not counted as correct
+abstentions here.
 
 Every state cell below is [recomputed] from `unified.jsonl`. Every
-**accuracy** cell on the partial and unanswerable rows is [report]: those
-rows' `oracle_correct` was forced to 0 at run time (the oracle pass was
+**accuracy** cell on the partial and unanswerable rows is [report]: on **shown**
+rows the `oracle_correct` label was forced to 0 at run time (the oracle pass was
 never asked on answered partials — §3.5), and the true labels live in the
 committed audit side-files (`bench/results/audit-classify.jsonl`,
 `bench/results/audit-partial-unverified.jsonl`), joined by (arm, id, condition, state),
-each label blind-pass-confirmed (disagreement rate: 5/107 adjudicated on the
-private pre-audit, 0/65 on its partial rows, 0/68 + 0/22 + 0/7 on the
+each label blind-pass-confirmed (disagreement rate: 5/107 — **102/107
+agreement** — on the private pre-audit, 0/65 on its partial rows, 0/68 + 0/22 + 0/7 on the
 HotpotQA audits; the b108 pass is the 22-row condition-keyed re-key of an
 earlier 18-row id-keyed pass). The
-cells are written after the corpus that produced them, never before.
+cells are written after the corpus that produced them, never before. Refused
+rows run the opposite convention: on B95 the 245 unanswerable `not_found` rows
+carry `oracle_correct=1` in 212 cases and `0` in 33 — the label describes the
+reader's *answer*, not the *decision*, so refusing an answer that would have
+been wrong is still a correct abstention. The baseline script keys decisions on
+`state` and `condition`, never on the refused row's label.
 
 **4B reader (`b119-cleanroom-4b`).**
 
@@ -649,7 +683,7 @@ cells are written after the corpus that produced them, never before.
 |---|---|---|---|---|
 | answerable | 96% | 82 (85.4% of shown) | **87.8%** (72/82, CI 79.0–93.2) [recomputed] | — |
 | partial | 88% | 48 (54.5% of shown) | **43.8%** (21/48, CI 30.7–57.7) [report] | 17.5% (7/40, CI 8.7–32.0) [report] |
-| unanswerable | 64% | 16 (25.0% of shown) | **12.5%** (2/16, CI 3.5–36.0) [report] | not audited |
+| unanswerable | 64% | 16 (25.0% of shown) | **12.5%** (2/16, CI 3.5–36.0) **correct** [report] | not audited |
 
 **deepseek reader (`b120-cleanroom-deepseek`).**
 
@@ -685,7 +719,8 @@ incorrect partial answers — deepseek 79.4% vs 12.0% (the Wilson intervals
 do not overlap), 4B 43.8% vs 17.5% (they barely touch). So §3.2's "inert
 for a strong reader" survives on answerable rows but needs its carve-out
 here: on partial support, trusting `verified` alone buys the strong reader
-a 6.6× selective-precision lift over taking everything it shows — the gate
+a 6.6× selective-precision lift over the **unverified-shown** set (79.4% vs
+12.0%); over **all** shown answers the lift is 1.56× (79.4% vs 50.9%) — the gate
 is not inert on this class, it is *the one place on the private corpus its
 score earns its keep*. For the weak reader the separation exists and still
 lands `verified` below a coin flip: the blind spot's home turf. One in
@@ -874,8 +909,9 @@ per second.
 HotpotQA (judge times are not recorded on those rows), **8.1 s reader /
 13.9 s end to end** on the private corpus's wider windows (§3.6); inert under
 the gate on the public arm — and on the private arm's partial rows its
-`verified` flag buys a 6.6× selective-precision lift (§3.6, reading 2),
-the one place its score earns its keep. The cost is egress: the corpus
+`verified` flag buys a 6.6× lift over the unverified-shown set (1.56× over all
+shown; §3.6, reading 2), the one place its score earns its keep. The cost is
+egress: the corpus
 window leaves the machine on every query. For regulated corpora this
 disqualifies the stack regardless of its numbers — the local 9B-judge stack
 exists precisely for that case.
@@ -907,7 +943,8 @@ Stated before you adopt, in the order they will bite you:
    check can estimate the oracle *under*- or *over*-stating correctness, but
    that estimate is itself a model's opinion until a human checks it (the
    private arm's audits — 107 + 65 rows, model-judged, blind second pass,
-   5/107 and 0/65 agreement — landed with the runs; §3.6's [report] cells
+   5/107 disagreements (**102/107 agreement**) and 0/65 (65/65 agreement) —
+   landed with the runs; §3.6's [report] cells
    rest on them; §4 keeps the earlier one visible). Treat every "accuracy" here as
     oracle-relative; the state distributions (abstention, verification rates)
     do not depend on it. The golds are a second machine-written instrument:
@@ -1028,8 +1065,11 @@ artifact — in this repo, `bench/results/unified-public.jsonl` (sha256
 canonical `unified.jsonl` (sha256
 `0adc142ca0380dfc8b00f7def12ee1a7eef8125fec7f7ba214ab0bca94b9eb3f`, canonical
 tree — not published); §4's b121 tables derive from
-`bench/results/b121-e2eir-4b.jsonl` and `bench/results/b121-e2eir-4b-ours9b.jsonl`
-(each pinned by its own `.sha256`); [ledger] numbers resolve to rows B95–B118
+`bench/results/b121-e2eir-4b.jsonl` (sha256
+`856e4e8a3aaa7785d12f607c1100473b3537e815e898f7ffdb27d526b77eff29`) and
+`bench/results/b121-e2eir-4b-ours9b.jsonl` (sha256
+`db2dfad1b7d519c5b7b27a8894e5e52af48dd4f9bd9d312a8b69ffb6dc1bded6`), each
+pinned by its own `.sha256` and re-asserted by `verify-offline.mjs`; [ledger] numbers resolve to rows B95–B118
 of `retrieval-claims-ledger.md`, the ledger excerpt shipped with this repo;
 report sections cited are `report.md`. From the repo root,
 `shasum -a 256 -c bench/results/unified-public.jsonl.sha256` (macOS;

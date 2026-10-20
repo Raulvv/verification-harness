@@ -21,6 +21,15 @@
 >    (90.1% labeled), and the strong-reader flags are 1-of-9 actually wrong
 >    (article §3.1, §3.2, §3.5; backing rows B115–B118 of the canonical
 >    ledger; audit side-files `bench/results/audit-*.jsonl`).
+> 3. **The refused-row convention.** `oracle_correct` labels the reader's
+>    *answer*, not the *decision*: on B95 the 245 unanswerable `not_found` rows
+>    carry `1` in 212 cases and `0` in 33 — refusing an answer that would have
+>    been wrong is still a correct abstention. The baseline script keys on
+>    `state` and `condition`, never on a refused row's label.
+> 4. **Parse failures are unscored.** A `parse_failure` stays in `not_found`
+>    but carries `oracle_correct=null` under v4; the stored b120 rows carry the
+>    old forced-`1` label on the 8 non-answerable cases (article §2.6, §3.6;
+>    `reproduce.md`).
 >
 > The B95–B109 public-arm reproductions in §4 still stand; the pin for the
 > artifact this audit recomputed from lives in
@@ -372,7 +381,7 @@ data.
 | "partial-support blind spot is mechanical, not judge" (B108/B111/B113) | **supported** | partial verified-acc 0% in both HotpotQA (16%) and private (34%/18%); the coverage judge (B111) does not close it. |
 | "judge_model column is the frozen judge" (implicit in exports) | **contradicted** | `judge_model` hardcoded to `kimi-k3` in the 27B/9B-judge files (§7.3). |
 | "4B reader + kimi (hosted): 88/92/92.6/7" (B109) | **contradicted** | the row is deepseek-reader data (§5.3). |
-| "false-accept 15/300" (B95 headline) | **partly** (measurement inflates) | the *count* is right, but B96's hand-audit shows ~11 of the 15 are supported by remaining distractor text and only ~2 are genuinely wrong. |
+| "false-accept 15/300" (B95 headline) | **partly** (measurement inflates) | the *count* is right, but B96's hand-audit shows ~11 of the 15 are supported by remaining distractor text and only ~2 are genuinely wrong; a stricter per-fact re-audit of the same 15 puts the genuine count at 5/15 (10 supported) — 2/15 is superseded (B118/§3.1). |
 | "the gate adds information beyond retrieval score and reader confidence" (B97) | **supported** | gate accuracy 83.5% at 55.3% coverage vs 71.7% (top-1 retrieval) / 64.2% (logprob). |
 
 ---
@@ -587,7 +596,9 @@ adds ~4.3 s). Local-judge GB/s figures are from `judge-sweep.mjs:11-14`.
 - ~~Judge cost per-record~~ — `seconds_judge` is now recorded (reader `seconds_reader`
   already was). Judge *tokens* are still not recorded.
 - ~~Reader-decode failures folded into abstention~~ — `parse_failure` is now a
-  distinct flag (10/300 = 3.3% on the private 4B run).
+  distinct flag (10/300 = 3.3% on the private 4B run) and is unscored
+  (`oracle_correct=null`); a parse failure stays in `not_found` but is not a
+  correct abstention.
 - ~~Mechanical per-hop check unbuilt~~ — built (`bench/lib/hopcheck.mjs`) and
   measured (§8.5), but **over-strict**: it demotes most answerable "verified" and
   still needs the hop decomposition.
@@ -718,8 +729,11 @@ roughly accurate, not inflating by 29pp** — that earlier reading is retracted.
    and it cites both docs 91% vs 70% of the time. The v1 "HotpotQA inflated both
    readers" confound is now measured cleanly.
 3. **Parse failures are a decode artifact, now fixed.** The compact retry removed
-   ~80% of them; the remainder is reported as its own bucket (`parse_failure`),
-   never folded into `not_found`.
+   ~80% of them; the remainder is reported in its own `fail_reason` bucket
+   (`parse_failure`). They stay in the `not_found` state but are **not scored**
+   (`oracle_correct=null` under v4) — not folded into a *correct* abstention. The
+   stored b120 rows predate the fix and carry the old forced-`1` label on the 8
+   non-answerable cases; `reproduce.md` discloses it.
 
 The harness's accuracy/abstention benefit is and was always the weak-reader crutch;
 what it gives a strong reader is the verbatim receipt (traceability) and the

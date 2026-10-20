@@ -88,7 +88,7 @@ for (const q of Q) {
       const noAnswer = abstained || parseFailed
       const citedDocs = [...new Set((asm?.legs ?? []).map((l) => l.rel))]
       const hops_missing = noAnswer ? null : hopsMissing([q.docA, q.docB], citedDocs)
-      const correct = noAnswer ? (condition === 'answerable' ? 0 : 1) : (condition === 'answerable' ? ((await accJudge(q.question, q.answer, answer)) ? 1 : 0) : 0)
+      const correct = parseFailed ? null : noAnswer ? (condition === 'answerable' ? 0 : 1) : (condition === 'answerable' ? ((await accJudge(q.question, q.answer, answer)) ? 1 : 0) : 0)
       let score = null, judgeMs = null
       if (!noAnswer) { const jt0 = Date.now(); score = await judgeGrade(JUDGE, q.question, docs.map((d) => d.content).join('\n\n'), answer); judgeMs = Date.now() - jt0 }
       const state = stateOf(noAnswer, score)

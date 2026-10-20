@@ -167,11 +167,28 @@ golds as frozen; a rerun today would pit corrected readers against those same
 frozen golds. The golds are frozen in the repo and never edited — disclosed
 here, not rewritten.
 
-**Manifest re-pin disclosure:** `corpus/manifest.json` is rebuilt at export,
-so its 8 pins describe the published files after the round-18 wording fixes
-(6 of the 8 were edited then). The stored b119/b120 rows that quote the
-pre-edit wording — 14 b119 and 12 b120 — are the only place it survives; no
+**Corpus drift & manifest re-pin:** `corpus/manifest.json` is rebuilt at export,
+so its 8 pins describe the published files after the wording fixes — 6 of the 8
+were edited in round 18 and 3 again in round 19. The corpus is therefore partly
+self-referential (it includes the article that quotes these numbers). The stored
+b119/b120 runs are frozen at an earlier revision: **12 rows (7 b119 + 5 b120;
+9 verified) quote text absent from every shipped file** — the phrase `not yet
+public` survives only in the pre-round-18 history — and **9 artifact rows per
+arm (3 questions) carry the pre-edit `~25% more tokens` gold wording**. The
+shipped pins describe the published bytes, not the bytes the runs read; no
 measurement was regenerated.
+
+**`oracle_correct` on refused rows:** the label describes the reader's *answer*,
+not the *decision*. On B95, the 245 unanswerable `not_found` rows carry
+`oracle_correct=1` in 212 cases and `0` in 33. The baseline script keys its
+decisions on `state` and `condition`, never on the refused row's label.
+
+**Parse-failure labels:** an earlier export scored parse failures as `1` on the
+non-answerable conditions. The canonical runner now writes `reader_correct=null`
+for a parse failure (it stays in `not_found`, unscored). The stored b120 rows
+carry the old forced-`1` label on the 8 non-answerable cases; the audit side-file
+re-labels them, and the article is explicit that they are not correct
+abstentions.
 
 ```js
 import { readFileSync } from 'node:fs'

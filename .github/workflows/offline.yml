@@ -17,14 +17,35 @@ jobs:
   offline:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: 22
 
-      - name: Article cells reproduce from committed artifacts
+      - name: Article cells + corpus manifest reproduce from committed artifacts
         run: node verify-offline.mjs
 
       - name: Kit suite (pure logic — no model, no network)
+        run: npm run kit:test
+
+      - name: Traceability (the battery's published-number map)
+        run: npm run traceability
+
+      - name: Baselines (gate vs cheap alternatives at matched coverage)
+        run: node bench/hotpot-baselines.mjs
+
+      - name: Kit coverage (floor enforced)
+        run: npm run kit:coverage
+
+  kit-node18:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 18
+
+      - name: Kit suite on Node 18 (the package's engines floor)
         run: npm run kit:test

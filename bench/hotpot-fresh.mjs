@@ -90,15 +90,20 @@ for (const r of items) {
     const docs = win.map((rel) => ({ rel, content: readFileSync(join(dir, rel), 'utf8') }))
     const parts = docs.map((d, i) => `=== DOC ${i + 1}: ${d.rel} ===\n${d.content}`)
     // reader (with logprobs)
-    const read = await readAnswer(PROMPT_V45(r.question, parts))
+    let read = await readAnswer(PROMPT_V45(r.question, parts))
     let parsed = null, abstained = false, answer = 'NOT FOUND', quote = '', parseFailed = false
-    try { parsed = parseOneShot(read.content); abstained = Boolean(parsed.notFound); answer = parsed.answer; const asm = assembleOneShot(dir, r.question, docs, parsed); quote = (asm.legs ?? []).map((l) => l.quote).join(' | ') } catch { parseFailed = true; answer = 'NOT FOUND' }
+    const parse = () => { try { parsed = parseOneShot(read.content); abstained = Boolean(parsed.notFound); answer = parsed.answer; const asm = assembleOneShot(dir, r.question, docs, parsed); quote = (asm.legs ?? []).map((l) => l.quote).join(' | '); return true } catch { return false } }
+    if (!parse()) {
+      // one tight retry (the kit's pattern — a constrained decode can stall mid-JSON)
+      read = await readAnswer(PROMPT_V45(r.question, parts, true))
+      if (!parse()) { parseFailed = true; answer = 'NOT FOUND' }
+    }
     const noAnswer = abstained || parseFailed
     // retrieval top-1 score (dense cosine)
     let top1 = null
     try { const qv = normalize((await embedTexts([`search_query: ${r.question}`]))[0]); const dv = normalize((await embedTexts([`search_document: ${docs[0]?.content ?? ''}`]))[0]); top1 = dot(qv, dv) } catch {}
     // reader correct (accuracy judge)
-    const correct = noAnswer ? ((condition === 'unanswerable' || condition === 'partial') ? 1 : 0) : (condition === 'answerable' ? (await accJudge(r.question, r.answer, answer) ? 1 : 0) : 0)
+    const correct = parseFailed ? null : noAnswer ? ((condition === 'unanswerable' || condition === 'partial') ? 1 : 0) : (condition === 'answerable' ? (await accJudge(r.question, r.answer, answer) ? 1 : 0) : 0)
     // quote in gold?
     const goldText = norm(paras.filter((p) => gold.has(String(p.title).toLowerCase())).map((p) => p.text).join(' '))
     const quote_in_gold = quote ? (goldText.includes(norm(quote.slice(0, 60))) ? 1 : 0) : 0

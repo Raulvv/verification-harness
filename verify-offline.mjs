@@ -495,16 +495,46 @@ const judgeN = (rows) => rows.filter((r) => r.sec_judge != null).length
 claim('b121-judge-kimi-s', judgeMs(b121Ours), '3.76', 'kimi 3.76 s/rec vs 9B 3.32 s/rec')
 claim('b121-judge-local-s', judgeMs(b1219b), '3.32', 'kimi 3.76 s/rec vs 9B 3.32 s/rec')
 claim('b121-judge-n', `${judgeN(b121Ours)}/${judgeN(b1219b)}`, '279/279', 'over the 279 answered rows')
-claim('b121-fidelity-mismatch', b1219b.filter((r) => r.window_fidelity === 0).length, 0, '0 window mismatches')
+claim('b121-fidelity-mismatch', b1219b.filter((r) => r.window_fidelity === 0).length, 0, '0 mismatches among')
+claim('b121-fidelity-compared', b1219b.filter((r) => r.window_fidelity != null).length, 274, '274 compared rows')
+// corpus drift: the stored private runs read an earlier revision than the shipped files
+const driftQuote = (rows) => rows.filter((r) => /not yet public/.test(r.quote ?? '')).length
+const driftGold = (rows) => rows.filter((r) => /25% more/.test(r.gold_answer ?? '')).length
+claim('corpus-drift-quote-b119', driftQuote(load('b119')), 7, '7 b119 + 5 b120')
+claim('corpus-drift-quote-b120', driftQuote(load('b120')), 5)
+claim('corpus-drift-quote-verified', load('b119').concat(load('b120')).filter((r) => /not yet public/.test(r.quote ?? '') && r.state === 'verified').length, 9, '9 verified')
+claim('corpus-drift-gold-b119', driftGold(load('b119')), 9, '9 artifact rows per arm (3 questions)')
+claim('corpus-drift-gold-b120', driftGold(load('b120')), 9)
 
 // artifact pin: the shipped file must match its committed sha256 line
 const actual = createHash('sha256').update(readFileSync(ARTIFACT_PATH)).digest('hex')
 const pinned = readFileSync(PIN_PATH, 'utf8').trim().split(/\s+/)[0]
 claim('artifact-pin', actual, pinned, '88165f6fd26af787edc66fef4348cbb4c1e945c10918b6d8d1dd4697aed3ea33')
 claim('b121-pin', createHash('sha256').update(readFileSync(B121_PATH)).digest('hex'),
-  readFileSync(B121_PIN, 'utf8').trim().split(/\s+/)[0])
+  readFileSync(B121_PIN, 'utf8').trim().split(/\s+/)[0],
+  '856e4e8a3aaa7785d12f607c1100473b3537e815e898f7ffdb27d526b77eff29')
 claim('b121-9b-pin', createHash('sha256').update(readFileSync(B121_9B_PATH)).digest('hex'),
-  readFileSync(B121_9B_PIN, 'utf8').trim().split(/\s+/)[0])
+  readFileSync(B121_9B_PIN, 'utf8').trim().split(/\s+/)[0],
+  'db2dfad1b7d519c5b7b27a8894e5e52af48dd4f9bd9d312a8b69ffb6dc1bded6')
+
+// corpus manifest: every shipped file must match its pinned sha256 and size
+// (optional — a reduced test fixture may omit it; the published repo and the
+// canonical tree both carry it)
+const MANIFEST_PATH = existsSync(join(ROOT, 'corpus/manifest.json'))
+  ? join(ROOT, 'corpus/manifest.json')
+  : existsSync(join(ROOT, 'public-repo/corpus/manifest.json'))
+    ? join(ROOT, 'public-repo/corpus/manifest.json') : null
+if (MANIFEST_PATH) {
+  const manifest = JSON.parse(readFileSync(MANIFEST_PATH, 'utf8'))
+  const MANIFEST_ROOT = resolve(dirname(MANIFEST_PATH), '..')
+  for (const f of manifest.files) {
+    const p = join(MANIFEST_ROOT, f.path)
+    if (!existsSync(p)) { claim(`manifest-${f.path}`, 'MISSING', f.sha256); continue }
+    const buf = readFileSync(p)
+    claim(`manifest-${f.path}`, createHash('sha256').update(buf).digest('hex'), f.sha256)
+    claim(`manifest-bytes-${f.path}`, buf.length, f.bytes)
+  }
+}
 
 // R-2 — bench/BENCHMARKS.md: five pinned artifacts, headline/cost/sweep cells
 const sha = (p) => createHash('sha256').update(readFileSync(p)).digest('hex')

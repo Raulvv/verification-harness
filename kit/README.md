@@ -1,7 +1,7 @@
 # retrieval-kit
 
 > **Ship-state reference (canonical tree — not published):**
-> [`../docs/v4-read-system.md`](../docs/v4-read-system.md)
+> `docs/v4-read-system.md`
 > — the single technical description of the current read-system (layers,
 > contract, config, measured numbers, known limits).
 
@@ -37,6 +37,11 @@ node kit/bin/retrieval-kit.mjs config --corpus ./corpus   # seal the workspace
 node kit/bin/retrieval-kit.mjs ask "What is the refund window?"
 # Q: …  /  Source: …  /  gate: verified
 ```
+
+> In **this** repo `./corpus` is the article's own 2-file corpus
+> (`corpus/manifest.json` + the article), a provenance demo — the questions it
+> can answer are about the harness, not a real knowledge base. Point `--corpus`
+> at your own docs for real use.
 
 - Resolution is **flags → env → the nearest sealed workspace** (found by walking
   up from the cwd) **→ defaults**; `ask <dir> "<question>"` is a one-off with no
@@ -77,13 +82,13 @@ measured on the PokéAPI corpus (N=8, 5 unanswerable traps; 4B reader):
 Cost: ~+0.8 s (9B) to ~+12 s (27B) per answer. The residual failure is
 **architectural** (counting across documents is beyond a single window), not the
 reader or the judge — see
-[`../docs/epicas/retrieval-claims-ledger.md`](../docs/epicas/retrieval-claims-ledger.md)
+`docs/epicas/retrieval-claims-ledger.md`
 (canonical tree — not published; in the shipped copy the excerpt is
 [`../retrieval-claims-ledger.md`](../retrieval-claims-ledger.md))
 B57. A non-authoritative lexical hint ("the answer names X, not in the window")
 always prints; `--no-grounding` turns it off. The next lever is a **trained small
 local head** (Laya/ModernBERT-class) to drop the 27B/hosted judge — see
-[`../docs/hypotheses/2026-09-24_self-improving-decision-seat.md`](../docs/hypotheses/2026-09-24_self-improving-decision-seat.md)
+`docs/hypotheses/2026-09-24_self-improving-decision-seat.md`
 (canonical tree — not published).
 
 **Pretrained grounding judges (no training needed).** Small fact-checking models
@@ -300,7 +305,7 @@ integrity, title/date resolution, source adapters with stubbed fetch,
 config) and the battery's frozen contract. No model, no network. Runs in the
 pre-commit hook **and in CI** (`.github/workflows/offline.yml`).
 
-Coverage baseline (2026-10-06, `npm run kit:coverage`): **97.4% statements /
-80.7% branches / 95.0% functions** overall, with a CI-enforced floor of 95%
+Coverage baseline (2026-10-20, `npm run kit:coverage`): **96.99% statements /
+79.52% branches / 93.71% functions** overall, with a CI-enforced floor of 95%
 statements / 75% branches — the floor ratchets, never regresses (RN-K07).
 
