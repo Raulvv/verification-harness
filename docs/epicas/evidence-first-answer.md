@@ -159,6 +159,25 @@ canonical and the published copy. The single pass remains the default. The
 anchor guard was proven non-vacuous by stubbing `unanchoredNumbers` to `[]`
 and watching the new tests go red.
 
+### I2b — Quote selection first (the gate failed on composition)
+
+The targeted gate showed the quote pass, not the answer pass, is the bottleneck:
+the 4B quote-only call abstained or under-selected on the hard rows, so the
+answer pass had nothing to compose. Three candidates, all on the same 43-row
+targeted set before any full arm:
+
+1. **Hybrid**: reuse the single-pass read's own quotes (already byte-verified),
+   discard its answer, then run Pass B. Tests composition without a new quote
+   selector; keeps the model's stronger joint quote behavior.
+2. **Selective two-pass**: run the single pass first; only when its answer is
+   unanchored (the 20 flagged-correct rows) run Pass B over the single-pass
+   quotes. Leaves the 57 anchored/easy rows untouched.
+3. **Stronger quote pass**: 9B quote pass → 4B answer pass; or a quote prompt
+   that asks for every number/unit the answer will need.
+
+**Kill criterion**: if a candidate does not beat 22/43 on the targeted set
+without breaking an anchored-correct row, stop; the single pass ships.
+
 ### I3 — A/B on the private clean-room arms
 
 4B and the hosted reader, same questions, single-pass vs two-pass. Report
@@ -174,11 +193,34 @@ measurements; I3 replaces them.
 
 **Targeted re-run set (only if I3 is approved):** fully local 4B, answerable
 condition only, only the 21 b119 misses + the 4 b120 misses + the 20 b119
-flagged-correct rows (45 questions, one condition each), not the 300-row
-matrix. No arm is re-run before that decision.
+flagged-correct rows (**43 unique**; p82 and p86 overlap), not the 300-row
+matrix.
+
+**Gate result (2026-10-20, targeted local 4B, 43 unique rows, answerable
+condition, report mode; anchor-abstain computed post-hoc):**
+
+| variant | correct | reader abstained | verified | verified correct | shown |
+|---|---:|---:|---:|---:|---:|
+| single-pass baseline (b119) | 22/43 | 0 | 29 | 18 | 41/43 (95.3%) |
+| two-pass, report | 9/43 | 15 | 17 | 9 | 24/43 (55.8%) |
+| two-pass + anchor abstain | 5/43 | 27 | 11 | 5 | 13/43 (30.2%) |
+
+Transitions: **4 fixed** (p3, p40, p67, p81), **17 of 22 correct broken**
+(16 flagged-correct + p85), 5 kept correct, 5 wrong→abstain, 12 still wrong.
+The two-pass is a receipt improvement on a few rows and a large accuracy
+regression on the rest.
+
+**Not cleared; the full arm is not run.** All 21 b119 misses are in this set.
+With the 57 non-targeted b119 rows already correct, the two-pass's full-arm
+upper bound is **57 + 4 = 61/100**, below the 79 single-pass baseline, even if
+no easy row breaks. The sign cannot reverse, so the 300-row run is not worth
+its cost. The single pass stays the default; the two-pass stays opt-in. I2b is
+the next experiment, not a full arm.
 
 **Done when**: the numbers are in the ledger with a run id, and the net effect
-(accuracy vs coverage vs cost) is stated.
+(accuracy vs coverage vs cost) is stated. *(Superseded by the gate result:
+I3 is stopped before the full arm; the targeted rows are recorded, not
+ledgered as a shipped run.)*
 
 ### I4 — Default decision
 
