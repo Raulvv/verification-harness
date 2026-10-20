@@ -518,12 +518,10 @@ claim('b121-9b-pin', createHash('sha256').update(readFileSync(B121_9B_PATH)).dig
   'db2dfad1b7d519c5b7b27a8894e5e52af48dd4f9bd9d312a8b69ffb6dc1bded6')
 
 // corpus manifest: every shipped file must match its pinned sha256 and size
-// (optional — a reduced test fixture may omit it; the published repo and the
-// canonical tree both carry it)
+// (optional — the private tree ships no manifest; the public checkout and any
+// exported candidate carry it)
 const MANIFEST_PATH = existsSync(join(ROOT, 'corpus/manifest.json'))
-  ? join(ROOT, 'corpus/manifest.json')
-  : existsSync(join(ROOT, 'public-repo/corpus/manifest.json'))
-    ? join(ROOT, 'public-repo/corpus/manifest.json') : null
+  ? join(ROOT, 'corpus/manifest.json') : null
 if (MANIFEST_PATH) {
   const manifest = JSON.parse(readFileSync(MANIFEST_PATH, 'utf8'))
   const MANIFEST_ROOT = resolve(dirname(MANIFEST_PATH), '..')
