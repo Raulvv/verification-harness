@@ -16,3 +16,12 @@ export function parseOneShot(out) {
   const sources = rawSources.map((s) => (s && typeof s === 'object' ? Number(s.doc) : s)).filter((s) => Number.isInteger(s) && s > 0)
   return { answer: v.answer.trim(), quotes, sources, notFound: v.not_found === true || /^not found/i.test(v.answer) }
 }
+
+// The evidence-first first pass: quotes only, no prose. Same loud contract.
+export function parseQuote(out) {
+  let v
+  try { v = JSON.parse(String(out ?? '').trim().replace(/^```(?:json)?\s*([\s\S]*?)\s*```$/i, '$1')) } catch { throw new Error('quote parse: not JSON (' + String(out ?? '').slice(0, 60) + ')') }
+  if (!v || typeof v !== 'object' || Array.isArray(v)) throw new Error('quote parse: not an object')
+  const quotes = Array.isArray(v.quotes) ? v.quotes.filter((q) => q && typeof q.quote === 'string' && q.quote.trim()) : []
+  return { quotes, notFound: v.not_found === true || quotes.length === 0 }
+}

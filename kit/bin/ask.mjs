@@ -14,7 +14,7 @@ import { makeArgs } from '../lib/cli.mjs'
 // and streams line-by-line as each item lands — the run is visible while it runs.
 const log = (s) => process.stderr.write(String(s) + '\n')
 
-const { arg } = makeArgs(process.argv.slice(2))
+const { arg, has } = makeArgs(process.argv.slice(2))
 const cfg = loadConfig(arg('config') ?? 'retrieval.config.json')
 const corpusRoot = cfg.corpusRoot
 if (!cfg.models?.retriever) {
@@ -29,11 +29,13 @@ const label = arg('label') ?? (arg('prompt') === 'lean' ? 'lean' : 'one-shot')
 // numbers, no quote) plus the v4.5 structural scaffold. The older tiers stay
 // opt-in: `--prompt source` (no scaffold), `--prompt v45` (full verbatim quote
 // + scaffold), `--prompt full` (full quote, no scaffold).
-const run = (question) => askOneShot(model, corpusRoot, question, { corpus: cfg.corpus, promptStyle: arg('prompt') ?? 'source-v45', retriever: arg('retriever') ?? cfg.retriever ?? 'router' })
+const evidenceFirst = has('evidence-first')
+const evidenceAnchor = arg('evidence-anchor') ?? undefined
+const run = (question) => askOneShot(model, corpusRoot, question, { corpus: cfg.corpus, promptStyle: arg('prompt') ?? 'source-v45', retriever: arg('retriever') ?? cfg.retriever ?? 'router', evidenceFirst, evidenceAnchor })
 
 const N = golden.items.length
 const nCorpus = (cfg.corpus ?? []).length
-log(`\nbattery: ${N} items · model ${model.model ?? label} · corpus ${nCorpus ? nCorpus + ' files' : 'all files'}\n`)
+log(`\nbattery: ${N} items · model ${model.model ?? label} · corpus ${nCorpus ? nCorpus + ' files' : 'all files'}${evidenceFirst ? ' · evidence-first' : ''}\n`)
 const results = []
 const t0 = Date.now()
 for (let i = 0; i < golden.items.length; i++) {

@@ -19,6 +19,15 @@
 
 ### Added
 
+- **Evidence-first answering (opt-in)**: `askOneShot(..., { evidenceFirst: true })`
+  runs two calls — a quote-only pass, then an answer pass whose context holds
+  the quotes and no documents — so the answer/quote binding is a one-way
+  dependency instead of a same-call request. `unanchoredNumbers` flags answer
+  numbers the quotes do not contain (versions, dates, sections, ledger row ids
+  and number words normalized; arithmetic over quoted operands anchored), and
+  `evidenceAnchor: 'abstain'` turns an unanchored answer into an honest NOT
+  FOUND. The default stays single-pass.
+
 - **Graded tri-state gate** (default for `--sufficient`): the judge scores
   quote→answer support 1–5 (schema-constrained) and the score is banded —
   `score < lo` abstains (`not_found`), `lo..hi-1` is shown flagged

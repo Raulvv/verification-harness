@@ -541,3 +541,101 @@ test('askOneShot: the composition carries era splits and forbids related-materia
     assert.ok(!/neighbors/i.test(p), 'the neighbor mechanism must be gone')
   } finally { rmSync(dir, { recursive: true, force: true }) }
 })
+
+test('askOneShot evidenceFirst: pass B sees the quotes, never the documents', async () => {
+  const dir = corpus({ 'a.md': '# Doc A\nthe fee is 10 USD\nsecret detail lives here' })
+  try {
+    const prompts = []
+    const _chat = async (msgs) => {
+      prompts.push(msgs[0].content)
+      return prompts.length === 1
+        ? { content: '{"quotes":[{"doc":1,"quote":"the fee is 10 USD"}],"not_found":false}', usage: { prompt_tokens: 10, completion_tokens: 5 } }
+        : { content: '{"answer":"The fee is 10 USD.","not_found":false}', usage: { prompt_tokens: 3, completion_tokens: 4 } }
+    }
+    const r = await askOneShot({}, dir, 'What is the fee?', { corpus: ['a.md'], _chat, evidenceFirst: true })
+    assert.equal(prompts.length, 2) // pass A then pass B — not one combined call
+    assert.match(prompts[0], /=== DOC 1: a\.md ===/)
+    assert.match(prompts[1], /=== EVIDENCE 1 \(DOC 1\) ===/)
+    assert.ok(!prompts[1].includes('secret detail lives here'), 'pass B must not see the document')
+    assert.match(r.final.text, /Q: The fee is 10 USD\./)
+    assert.deepEqual(r.unanchored, [])
+    assert.equal(r.tokens, 22) // the two calls' usage is summed, not overwritten
+  } finally { rmSync(dir, { recursive: true, force: true }) }
+})
+
+test('askOneShot evidenceFirst: an answer number absent from the quotes is reported', async () => {
+  const dir = corpus({ 'a.md': '# Doc A\nthe fee is 10 USD' })
+  try {
+    let calls = 0
+    const _chat = async () => {
+      calls++
+      return calls === 1
+        ? { content: '{"quotes":[{"doc":1,"quote":"the fee is 10 USD"}],"not_found":false}', usage: {} }
+        : { content: '{"answer":"The fee is 12 USD.","not_found":false}', usage: {} }
+    }
+    const r = await askOneShot({}, dir, 'What is the fee?', { corpus: ['a.md'], _chat, evidenceFirst: true })
+    assert.deepEqual(r.unanchored, ['12'])
+    assert.match(r.final.text, /Q: The fee is 12 USD\./)
+  } finally { rmSync(dir, { recursive: true, force: true }) }
+})
+
+test('askOneShot evidenceFirst: an explicit derived value is not unanchored', async () => {
+  const dir = corpus({ 'a.md': '# Doc A\neach unit costs 50 USD' })
+  try {
+    let calls = 0
+    const _chat = async () => {
+      calls++
+      return calls === 1
+        ? { content: '{"quotes":[{"doc":1,"quote":"each unit costs 50 USD"}],"not_found":false}', usage: {} }
+        : { content: '{"answer":"The total is 150 USD.","not_found":false}', usage: {} }
+    }
+    const r = await askOneShot({}, dir, 'What do three units cost?', { corpus: ['a.md'], _chat, evidenceFirst: true, evidenceAllow: [150] })
+    assert.deepEqual(r.unanchored, [])
+  } finally { rmSync(dir, { recursive: true, force: true }) }
+})
+
+test('askOneShot evidenceFirst + evidenceAnchor abstain: an unanchored answer becomes NOT FOUND', async () => {
+  const dir = corpus({ 'a.md': '# Doc A\nthe fee is 10 USD' })
+  try {
+    let calls = 0
+    const _chat = async () => {
+      calls++
+      return calls === 1
+        ? { content: '{"quotes":[{"doc":1,"quote":"the fee is 10 USD"}],"not_found":false}', usage: {} }
+        : { content: '{"answer":"The fee is 12 USD.","not_found":false}', usage: {} }
+    }
+    const r = await askOneShot({}, dir, 'What is the fee?', { corpus: ['a.md'], _chat, evidenceFirst: true, evidenceAnchor: 'abstain' })
+    assert.match(r.final.text, /^Q: NOT FOUND/)
+    assert.match(r.final.text, /Quote: NOT FOUND/)
+    assert.ok(!r.final.text.includes('12 USD'), 'an unanchored claim must not surface')
+  } finally { rmSync(dir, { recursive: true, force: true }) }
+})
+
+test('askOneShot evidenceFirst: a quote-pass abstention falls back to the single pass by default', async () => {
+  const dir = corpus({ 'a.md': '# Doc A\nthe fee is 10 USD' })
+  try {
+    let calls = 0
+    const _chat = async () => {
+      calls++
+      if (calls === 1) return { content: '{"quotes":[],"not_found":true}', usage: {} }
+      return { content: '{"answer":"The fee is 10 USD.","quotes":[{"doc":1,"quote":"the fee is 10 USD"}],"not_found":false}', usage: {} }
+    }
+    const r = await askOneShot({}, dir, 'What is the fee?', { corpus: ['a.md'], _chat, evidenceFirst: true })
+    assert.equal(calls, 2) // the quote pass abstained; the ordinary read ran once
+    assert.match(r.final.text, /Q: The fee is 10 USD\./)
+  } finally { rmSync(dir, { recursive: true, force: true }) }
+})
+
+test('askOneShot evidenceFirst + evidenceFallback false: the evidence boundary is absolute', async () => {
+  const dir = corpus({ 'a.md': '# Doc A\nthe fee is 10 USD' })
+  try {
+    let calls = 0
+    const _chat = async () => {
+      calls++
+      return { content: '{"quotes":[],"not_found":true}', usage: {} }
+    }
+    const r = await askOneShot({}, dir, 'What is the fee?', { corpus: ['a.md'], _chat, evidenceFirst: true, evidenceFallback: false })
+    assert.equal(calls, 1) // no ordinary read behind the evidence boundary
+    assert.match(r.final.text, /Q: NOT FOUND/)
+  } finally { rmSync(dir, { recursive: true, force: true }) }
+})

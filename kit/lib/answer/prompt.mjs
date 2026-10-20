@@ -144,4 +144,48 @@ const PROMPT_SOURCE_V45 = (question, parts, compact = false) =>
 // measured: three answers degenerated to "51.487", a Jags_LOPS timecode
 const transcriptish = (content) => (content.match(/\d{1,2}:\d{2}:\d{2}/g) ?? []).length >= 3
 
-export { ONESHOT_SCHEMA, ONESHOT_SCHEMA_NOQUOTE, ONESHOT_SCHEMA_SENTENCE, ONESHOT_SCHEMA_SOURCE, PROMPT, PROMPT_NOQUOTE, PROMPT_SENTENCE, PROMPT_SOURCE, PROMPT_SOURCE_V45, PROMPT_V45, transcriptish }
+// Evidence-first (two-pass) contract: pass A selects quotes with no prose,
+// pass B writes prose from those quotes alone. Separating them is what makes
+// the answer/quote binding enforceable — the prompt rule becomes a checkable
+// one-way dependency (answer sees only the evidence) instead of a same-call
+// request the model can quietly violate.
+const QUOTE_SCHEMA = {
+  type: 'object',
+  properties: {
+    quotes: { type: 'array', items: { type: 'object', properties: { doc: { type: 'integer' }, quote: { type: 'string' } }, required: ['doc', 'quote'] } },
+    not_found: { type: 'boolean' },
+  },
+  required: ['quotes', 'not_found'],
+}
+
+const ANSWER_EVIDENCE_SCHEMA = {
+  type: 'object',
+  properties: {
+    answer: { type: 'string' },
+    not_found: { type: 'boolean' },
+  },
+  required: ['answer', 'not_found'],
+}
+
+const PROMPT_QUOTE = (question, parts, compact = false) => [
+  'Select the evidence needed to answer ONE question from the documents below.',
+  'Return ONLY a JSON object: {"quotes": [{"doc": <document number>, "quote": "<supporting passage copied VERBATIM from that document>"}], "not_found": <true|false>}',
+  'Copy every passage needed to answer, EXACTLY, never paraphrased. One quote per fact.',
+  compact ? 'KEEP IT SHORT: at most 3 quotes, one line each.' : 'Include every passage the answer will need — nothing more.',
+  'If the documents do not answer the question, set not_found true and return no quotes.',
+  'Question: ' + question,
+  ...parts,
+].join('\n')
+
+const PROMPT_ANSWER_EVIDENCE = (question, quotes, compact = false) => [
+  'Answer ONE question using ONLY the evidence quotes below. Never use outside knowledge.',
+  'Every number in your answer must appear in a quote, or be computed from quoted numbers; if computed, show the arithmetic.',
+  compact ? 'KEEP IT SHORT: at most 3 lines.' : 'Answer in prose, then stop.',
+  'If the quotes do not answer the question, the "answer" field must be EXACTLY: NOT FOUND — the corpus does not state <the fact the question asks>.',
+  'Return ONLY a JSON object: {"answer": "<your answer in prose — or NOT FOUND>", "not_found": <true|false>}',
+  'Question: ' + question,
+  'Evidence:',
+  ...quotes.map((q, i) => `=== EVIDENCE ${i + 1} (DOC ${q.doc}) ===\n${q.quote}`),
+].join('\n')
+
+export { ONESHOT_SCHEMA, ONESHOT_SCHEMA_NOQUOTE, ONESHOT_SCHEMA_SENTENCE, ONESHOT_SCHEMA_SOURCE, PROMPT, PROMPT_NOQUOTE, PROMPT_SENTENCE, PROMPT_SOURCE, PROMPT_SOURCE_V45, PROMPT_V45, transcriptish, QUOTE_SCHEMA, ANSWER_EVIDENCE_SCHEMA, PROMPT_QUOTE, PROMPT_ANSWER_EVIDENCE }

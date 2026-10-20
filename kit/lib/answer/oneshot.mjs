@@ -14,9 +14,10 @@ import { chatWithUsage } from '../model.mjs'
 import { selectByReference } from '../retrieval/window.mjs'
 import { selectByDense, selectUnion, selectFuse } from '../retrieval/dense.mjs'
 import { pruneByRelevance } from '../retrieval/vet.mjs'
-import { PROMPT, PROMPT_NOQUOTE, PROMPT_SENTENCE, PROMPT_SOURCE, PROMPT_SOURCE_V45, PROMPT_V45, ONESHOT_SCHEMA, ONESHOT_SCHEMA_NOQUOTE, ONESHOT_SCHEMA_SENTENCE, ONESHOT_SCHEMA_SOURCE, transcriptish } from './prompt.mjs'
-import { parseOneShot } from './parse.mjs'
-import { assembleOneShot, assembleSource } from './assemble.mjs'
+import { PROMPT, PROMPT_NOQUOTE, PROMPT_SENTENCE, PROMPT_SOURCE, PROMPT_SOURCE_V45, PROMPT_V45, ONESHOT_SCHEMA, ONESHOT_SCHEMA_NOQUOTE, ONESHOT_SCHEMA_SENTENCE, ONESHOT_SCHEMA_SOURCE, QUOTE_SCHEMA, ANSWER_EVIDENCE_SCHEMA, PROMPT_QUOTE, PROMPT_ANSWER_EVIDENCE, transcriptish } from './prompt.mjs'
+import { parseOneShot, parseQuote } from './parse.mjs'
+import { assembleOneShot, assembleSource, rehomeLegs } from './assemble.mjs'
+import { unanchoredNumbers } from '../receipts/text.mjs'
 
 // The one place a tier is named (It. 3). The prompt builder, its schema and
 // the receipt assembler are chosen TOGETHER, so adding a tier can no longer
@@ -93,6 +94,59 @@ async function runRead(chat, tier, question, docs) {
   return { parsed: null, usage, failures }
 }
 
+// Evidence-first pass A: quotes only, no prose, over the same window.
+async function runQuote(chat, question, docs) {
+  const parts = docs.map((d, i) => `=== DOC ${i + 1}: ${d.rel} ===\n${d.content}`)
+  const call = (compact) => chat([{ role: 'user', content: PROMPT_QUOTE(question, parts, compact) }], { maxTokens: 4000, think: false, format: QUOTE_SCHEMA })
+  let usage = {}
+  const failures = []
+  for (const compact of [false, true]) {
+    try {
+      const res = await call(compact)
+      usage = res.usage ?? usage
+      return { parsed: parseQuote(res.content), usage, failures }
+    } catch (e) {
+      failures.push(String(e?.message ?? e))
+    }
+  }
+  return { parsed: null, usage, failures }
+}
+
+// Evidence-first pass B: prose from the quotes alone. The documents are NOT in
+// this context — the only way a fact reaches the answer is through a quote.
+async function runAnswerEvidence(chat, question, quotes) {
+  const call = (compact) => chat([{ role: 'user', content: PROMPT_ANSWER_EVIDENCE(question, quotes, compact) }], { maxTokens: 4000, think: false, format: ANSWER_EVIDENCE_SCHEMA })
+  let usage = {}
+  const failures = []
+  for (const compact of [false, true]) {
+    try {
+      const res = await call(compact)
+      usage = res.usage ?? usage
+      return { parsed: parseOneShot(res.content), usage, failures }
+    } catch (e) {
+      failures.push(String(e?.message ?? e))
+    }
+  }
+  return { parsed: null, usage, failures }
+}
+
+async function runEvidenceFirst(chat, question, docs, allow = []) {
+  const q = await runQuote(chat, question, docs)
+  if (!q.parsed || q.parsed.notFound || !q.parsed.quotes.length) return { parsed: null, usage: q.usage, failures: q.failures }
+  const { kept } = rehomeLegs(docs, q.parsed.quotes)
+  if (!kept.length) return { parsed: null, usage: q.usage, failures: q.failures }
+  const evidence = kept.map((l) => ({ doc: l.doc, quote: l.quote }))
+  const a = await runAnswerEvidence(chat, question, evidence)
+  const usage = {
+    prompt_tokens: (q.usage.prompt_tokens ?? 0) + (a.usage.prompt_tokens ?? 0),
+    completion_tokens: (q.usage.completion_tokens ?? 0) + (a.usage.completion_tokens ?? 0),
+  }
+  const failures = [...q.failures, ...a.failures]
+  if (!a.parsed || a.parsed.notFound) return { parsed: null, usage, failures }
+  const unanchored = unanchoredNumbers(a.parsed.answer, evidence.map((e) => e.quote), { allow })
+  return { parsed: { ...a.parsed, quotes: evidence }, usage, failures, evidence, unanchored }
+}
+
 export async function askOneShot(m, corpusRoot, question, opts = {}) {
   const t0 = Date.now()
   const retriever = opts.retriever ?? 'reference'
@@ -125,7 +179,32 @@ export async function askOneShot(m, corpusRoot, question, opts = {}) {
   let docs = pickDocs(corpusRoot, loc, opts)
   const tLocate = Date.now() - t0
   const t1 = Date.now()
-  let { parsed, usage, failures } = await runRead(chat, tier, question, docs)
+  let parsed = null
+  let usage = {}
+  let failures = []
+  let evidence = null
+  let unanchored = []
+  if (opts.evidenceFirst === true) {
+    const r = await runEvidenceFirst(chat, question, docs, opts.evidenceAllow ?? [])
+    usage = r.usage
+    failures = r.failures
+    evidence = r.evidence ?? null
+    unanchored = r.unanchored ?? []
+    parsed = r.parsed
+    if (parsed && opts.evidenceAnchor === 'abstain' && unanchored.length) {
+      parsed = { answer: `NOT FOUND — the corpus does not state ${question}`, quotes: [], sources: [], notFound: true }
+      evidence = null
+      unanchored = []
+    }
+    // A failed quote pass (or an answer pass that abstained) falls back to the
+    // single-pass read by default, so coverage never drops silently; pass
+    // evidenceFallback:false to make the evidence boundary absolute.
+    if (!parsed && opts.evidenceFallback !== false) {
+      ({ parsed, usage, failures } = await runRead(chat, tier, question, docs))
+    }
+  } else {
+    ({ parsed, usage, failures } = await runRead(chat, tier, question, docs))
+  }
 
   // Router (default): dense first; the abstention IS the router — only when the
   // first read says NOT FOUND do we take the second hop and re-read. A
@@ -169,6 +248,7 @@ export async function askOneShot(m, corpusRoot, question, opts = {}) {
     question, attempts: docs.map((d) => ({ rel: d.rel })), docs, parsed,
     final: { text: assembled.text }, legs: assembled.legs,
     droppedLegs: assembled.dropped, windowDropped: vetted.dropped, window: docs.map((d) => d.rel),
+    evidence, unanchored, evidenceFirst: opts.evidenceFirst === true,
     parseFailures: [], timings: { select_ms: tSelect, vet_ms: tVet, locate_ms: tLocate, model_ms: tModel, total_ms: Date.now() - t0 }, tokens,
   }
 }

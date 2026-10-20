@@ -62,6 +62,64 @@ export function quoteInText(text, quote) {
   return segs.length > 1 && segs.every((s) => a.includes(s))
 }
 
+// The one number tokenizer: every number in a text, comma-grouping removed and
+// a trailing .0 dropped, so 10,500 / 10.500 / 10500 compare equal.
+export const numbersIn = (text) =>
+  [...String(text ?? '').matchAll(/\d+(?:[.,]\d+)*/g)].map((m) => m[0].replace(/,/g, '').replace(/\.0+$/, ''))
+
+const WORD_NUM = {
+  one: '1', two: '2', three: '3', four: '4', five: '5', six: '6', seven: '7', eight: '8', nine: '9',
+  ten: '10', eleven: '11', twelve: '12', thirteen: '13', fourteen: '14', fifteen: '15', sixteen: '16',
+  seventeen: '17', eighteen: '18', nineteen: '19', twenty: '20', thirty: '30', forty: '40', fifty: '50',
+  sixty: '60', seventy: '70', eighty: '80', ninety: '90', hundred: '100',
+}
+
+// The claim-number view: strips labels that are not claims (versions, dotted
+// release numbers, ISO dates, §-sections, ledger row ids), maps number words to
+// digits, and drops the trivial count 1 (a determiner in prose, not a fact).
+export function claimNumbers (text) {
+  let s = String(text ?? '')
+  s = s.replace(/\bv\d+(?:\.\d+)*/gi, ' ')
+  s = s.replace(/\b\d+(?:\.\d+){2,}\b/g, ' ')
+  s = s.replace(/\b\d{4}-\d{2}-\d{2}\b/g, ' ')
+  s = s.replace(/§\s*\d+(?:\.\d+)*/g, ' ')
+  s = s.replace(/\bB\d+\b/g, ' ')
+  for (const [w, n] of Object.entries(WORD_NUM)) s = s.replace(new RegExp(`\\b${w}\\b`, 'gi'), n)
+  return numbersIn(s).filter((n) => n !== '1')
+}
+
+// Results the answer itself shows as arithmetic over numbers the evidence
+// already contains: 26 × 3 = 78 is anchored, 26 × 3 = 80 is not.
+export function derivedNumbers (answer, evidence = [], { ignore = '' } = {}) {
+  const text = Array.isArray(evidence) ? evidence.join(' ') : String(evidence ?? '')
+  const quoted = new Set([...numbersIn(text), ...numbersIn(ignore)])
+  const out = new Set()
+  const re = /(\d+(?:[.,]\d+)?)\D{0,30}?(×|\bx\b|\*|\+|-|\/)\s*(\d+(?:[.,]\d+)?)\D{0,30}?=\s*(\d+(?:[.,]\d+)?)/gi
+  for (const m of String(answer ?? '').matchAll(re)) {
+    const a = Number(m[1].replace(/,/g, ''))
+    const b = Number(m[3].replace(/,/g, ''))
+    const c = Number(m[4].replace(/,/g, ''))
+    if (!quoted.has(String(a)) || !quoted.has(String(b))) continue
+    const op = m[2]
+    const v = op === '×' || op === 'x' || op === '*' ? a * b : op === '+' ? a + b : op === '-' ? a - b : b ? a / b : NaN
+    if (Number.isFinite(v) && Math.abs(v - c) <= 0.01 * Math.max(1, Math.abs(c))) out.add(String(c))
+  }
+  return [...out]
+}
+
+// The one number anchor: numbers stated in an answer that do NOT appear in its
+// evidence quotes (nor in the question, an explicit derived-value allowlist, or
+// arithmetic the answer shows over quoted operands) are unanchored — the
+// answer/quote binding the prompt declares but never enforced. Pure, no model:
+// usable as a post-hoc detector over stored answers or as a gate.
+export function unanchoredNumbers (answer, evidence = [], { allow = [], ignore = '' } = {}) {
+  const text = Array.isArray(evidence) ? evidence.join(' ') : String(evidence ?? '')
+  const derived = derivedNumbers(answer, evidence, { ignore })
+  const allowed = new Set([...allow.map((n) => String(n).replace(/,/g, '').replace(/\.0+$/, '')), ...derived])
+  const quoted = new Set([...claimNumbers(text), ...claimNumbers(ignore)])
+  return [...new Set(claimNumbers(answer))].filter((n) => !quoted.has(n) && !allowed.has(n))
+}
+
 // The abstention is ONE sentence (the taught shape). Any trailing clause
 // naming what else the documents mention is the neighbor mechanism
 // leaking through the model's prose — the receipt drops it, exactly like
