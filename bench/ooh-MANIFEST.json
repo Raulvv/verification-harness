@@ -1,6 +1,6 @@
 {
   "name": "ooh-citation-first-benchmark",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "frozen_at": "2026-10-26",
   "status": "public-package-private-test",
   "corpus": {
@@ -357,8 +357,8 @@
     },
     {
       "path": "bench/ooh-README.md",
-      "bytes": 10814,
-      "sha256": "935cbd6a3a8c6f11bba5f44bb5d7824685a710e798f0bbb93b7eb23aa1e251af"
+      "bytes": 11098,
+      "sha256": "021e3f99d849557127e2d79146d6288a7dbb1f88f4dc516219de1d268410a673"
     },
     {
       "path": "bench/ooh-score.py",
@@ -423,7 +423,7 @@
     {
       "path": "bench/ooh-BENCHMARK.md",
       "bytes": 7955,
-      "sha256": "abc28abb2c2af76b70c60db5712a70a5391f39a7d9e7526f808ac7d37e76522c"
+      "sha256": "47bce1a8993d9559564f145beb5b4763f1851c39997dc076f2da4e02942c37d1"
     },
     {
       "path": "bench/ooh-score-v2.py",
@@ -437,8 +437,8 @@
     },
     {
       "path": "bench/ARM-COMPARE.md",
-      "bytes": 2202,
-      "sha256": "e1e02f7f7fe0470b573e0dd9b664edd50160ef69dda18406b531147d46758c6b"
+      "bytes": 2804,
+      "sha256": "8fd7001510baee9a01ba09c6f86643f8b2186a871ffec0634ed19e9afcf9885e"
     },
     {
       "path": "bench/arm-compare.mjs",

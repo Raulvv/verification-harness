@@ -33,9 +33,25 @@ D now receives the exact B/C window and applies `verify()` before scoring.
 - Wilson intervals here pool seeds, which are not independent questions. Treat them as optimistic.
 - The pilot has 20 items. Use the held-out 100 for any claim.
 
-## Pilot observation (public 20, qwen3.5:4b, one seed)
+## Results
 
-A 20-item public pilot run after the boundary fix produced D-gate **45% false
-accepts**, versus **5% for B and C**, with D at 63% answerable, 63% unanswerable
-abstention, and 25% partial. This is a warning, not a held-out claim; it does not
-support gate superiority. The held-out result is maintained privately.
+### Weak-reader pilot (qwen3.5:4b, public 20, one seed)
+
+D-gate **45%** false accepts vs B/C **5%**. This is a weak-reader warning, not
+product evidence; the 4B does not follow the contract well enough for the gate
+to matter.
+
+### Strong-reader held-out (DeepSeek V4.1 Flash, 100, one seed, K=3)
+
+| Arm | Answerable | Unanswerable abstain | Partial correct | False accept |
+|---|---:|---:|---:|---:|
+| A naive | 8/40 | 8/40 | 0/20 | **94%** |
+| B RAG-cite | 21/40 | 38/40 | 16/20 | **14%** |
+| C RAG-cite + MiniCheck | 15/40 | 38/40 | 3/20 | **8%** |
+| D harness + gate | 21/40 | 40/40 | 11/20 | **10%** |
+
+D is comparable to B and close to C; it is **not** clearly superior to C.
+D's advantage is receipts and complete-candidate aggregation, not a lower
+false-accept rate than entailment. C is the stronger standard solution on
+false accepts and partials; D is stronger on answerable accuracy and
+unanswerable abstention. Raw held-out outputs stay private.
