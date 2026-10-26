@@ -12,12 +12,10 @@
 - README now states the corpus-agnostic path explicitly (**bring your own
   corpus**: `config --corpus <dir>` / `retrieval.config.json` `source`), and
   the demo-corpus note no longer points at a `corpus/manifest.json` — the
-  harness's own eval reads a frozen snapshot (`bench/corpus/harness-docs-v1/`).
-- README pointers into the parent repo's `docs/` are now labeled
-  **canonical tree — not published** (ship-state reference, claims-ledger
-  link, hypotheses link); the ledger link also names the excerpt that ships
-  in the published copy (`../retrieval-claims-ledger.md`), so no pointer
-  breaks silently on a fresh clone of the published repo.
+  OOH benchmark reads a frozen snapshot (`bench/corpus/ooh-v1/`).
+- README now keeps kit usage and private-corpus guidance only; historical
+  historical pointers and the old claims ledger are not part of this
+  benchmark-only package.
 - Confluence fixtures and test corpora sanitized for publication: the
   space key, the CQL title term (including URL-encoded forms in
   `next`/`self` links), and every project/client codename and real

@@ -125,7 +125,7 @@ const SCAFFOLD = 'Before answering, reason structurally: if the question compare
 // v4.5 — structured reasoning + the same receipt contract. A structural
 // instruction scaffolds the reasoning (compare / chain) while every claim
 // still carries a byte-verbatim quote. Measured (HotpotQA, big window, qwen3.5
-// 4B/9B): +12.5pp over PROMPT with 0 regressions (bench/RESULTS.md §Recovery
+// 4B/9B): +12.5pp over PROMPT with 0 regressions (historical research notes
 // pass → §Precision-preserving). Opt-in via `--prompt v45`; the answer schema
 // is PROMPT's (answer + quotes + not_found).
 const PROMPT_V45 = (question, parts, compact = false) =>

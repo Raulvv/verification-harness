@@ -4,7 +4,7 @@
 // ({ candidates, matches, method }) so the vet and the receipt are untouched.
 //
 // Why: on an open corpus the naming selector found both gold paragraphs 26% of
-// the time vs 90% for dense (bench/RESULTS.md §Rung 1); end-to-end 50% vs 84%.
+// the time vs 90% for dense (historical research notes); end-to-end 50% vs 84%.
 // The index lives under <corpusRoot>/.retrieval-index/<key>.json and is keyed by
 // the file list + mtimes, so a changed corpus re-embeds and an unchanged one is
 // never re-asked.

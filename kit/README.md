@@ -2,7 +2,7 @@
 
 > **This is the kit component of the OOH citation-first benchmark.**
 > The OOH results are in `README.md` and `bench/ooh-BENCHMARK.md`; the old
-> verification-harness tables live in the research tree, not this repo.
+> historical verification-harness tables are not part of this repo.
 
 **Layered retrieval with receipts.** Declared metadata → flash-tier
 select-and-extract under a verbatim-quote contract → a free mechanical gate
@@ -79,12 +79,10 @@ measured on the PokéAPI corpus (N=8, 5 unanswerable traps; 4B reader):
 
 Cost: ~+0.8 s (9B) to ~+12 s (27B) per answer. The residual failure is
 **architectural** (counting across documents is beyond a single window), not the
-reader or the judge — see the canonical claims ledger
-(the full ledger lives in the research tree; this repo ships the
-benchmark package, not the old claims ledger) B57. A non-authoritative lexical hint ("the answer names X, not in the window")
-always prints; `--no-grounding` turns it off. The next lever is a **trained small
-local head** (Laya/ModernBERT-class) to drop the 27B/hosted judge — see the research tree’s hypotheses
-directory (not part of this benchmark-only repo).
+reader or the judge; the old claims ledger is not part of this benchmark-only
+package. A non-authoritative lexical hint ("the answer names X, not in the window")
+always prints; `--no-grounding` turns it off. A trained small local head
+(Laya/ModernBERT-class) is a research direction, not part of this package.
 
 **Pretrained grounding judges (no training needed).** Small fact-checking models
 plug in the same way: `--judge bespoke-minicheck` (Ollama) is auto-detected and
@@ -97,7 +95,7 @@ local-first path with no 27B and no trained head. Measured: **LettuceDetect-base
 (ModernBERT 150M, MIT, local) 7/8 — equal to the 27B and hosted judges**, and it
 handles the "pre-evolution" = "Evolves from" paraphrase that MiniCheck
 over-refuses (`pokemon-experiment/ld-detect.py`, a small Python shim —
-canonical tree, not published; `bespoke-minicheck` needs none — it is Ollama).
+not part of this benchmark-only package; `bespoke-minicheck` needs none — it is Ollama).
 
 `--judge-cmd "<command>"` runs any **external grounding detector** as the judge:
 JSON `{question,evidence,answer}` on stdin → `SUFFICIENT`/`INSUFFICIENT` on
@@ -283,10 +281,9 @@ Quote: <verbatim line(s)>
   available (`system-2.x` tag) for corpora we own and label.
 - **Speed note (2026-10-01):** `askOneShot` skips the vet when the reference
   layer resolves the question to ONE named file (the window is already just
-  that file); fallback/multi-file windows keep the vet. External benchmarks,
-  the latency profile and every probe live in
-  the research tree’s `bench/BENCHMARKS.md` and `bench/RESULTS.md`
-  (canonical tree — not published).
+  that file); fallback/multi-file windows keep the vet. Historical
+  verification-harness benchmarks and probes are not part of this
+  benchmark-only package.
 
 ## Tests — the whole safety net, one command
 

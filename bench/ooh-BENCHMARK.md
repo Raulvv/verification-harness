@@ -1,6 +1,6 @@
-# OOH benchmark specification — v1.1.2
+# OOH benchmark specification — v1.1.3
 
-Date: 2026-10-24. Package: v1.1.2, 2026-10-26. Status: frozen public package; private held-out test.
+Date: 2026-10-24. Package: v1.1.3, 2026-10-26. Status: frozen public package; private held-out test.
 This is the single document that defines the benchmark’s scope, labels,
 metrics, scoring, aggregation contract, baselines, and limits. If a number is
 published, this spec plus the README caveats must back it.
@@ -136,7 +136,7 @@ Citation **title/row support**: harness 60/60 table, 59/60 pages; baselines
 segments (37/60 contiguous) and pages 38/60 segments (26/60 contiguous).
 The v1.1 page run is **99/100**: `test-030` false-abstained; the old v1.0 page
 100 was a single run. Public dev: 14/14 table and pages. Held-out two-document
-sum: 2/2. These are **not** an accuracy leadership claim; see
+sums: three questions (`test-019`, `test-081`, `test-089`); private audit. These are **not** an accuracy leadership claim; see
 The benchmark is not an accuracy leaderboard.
 
 ## 10. Reproducibility
@@ -172,7 +172,7 @@ maintainer-audited, not reproducible from this tree.
 
 ## 13. Version and provenance
 
-- Version: **1.1.2**, benchmark frozen 2026-10-24; package 2026-10-26.
+- Version: **1.1.3**, benchmark frozen 2026-10-24; package 2026-10-26.
 - Manifest: `bench/ooh-MANIFEST.json` (public files + hashes; private test
   boundary).
 - Prior art / positioning: The benchmark is not an accuracy leaderboard.
