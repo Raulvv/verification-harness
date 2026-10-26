@@ -7,9 +7,10 @@ Runner: `bench/arm-compare.mjs`. Offline plumbing check: `node bench/arm-compare
 | A | naive: question only |
 | B | RAG, shared top-k window, "cite the file / NOT FOUND" prompt |
 | C | B + entailment check (MiniCheck-style `--judge-model`, or any detector via `--judge-cmd`); INSUFFICIENT => abstain |
-| D | the harness (`askOneShot`, contract reader + mechanical receipts) |
+| D | the harness on the same K-doc window (`askOneShot`, contract reader + mechanical gate); gate rejection = abstention |
 
-Same reader, corpus and retrieval window in every arm (`--k`, reference retriever).
+Same reader, corpus and retrieval window in every arm (`--k`, reference retriever);
+D now receives the exact B/C window and applies `verify()` before scoring.
 
 ## Protocol (fix before running)
 
@@ -31,3 +32,10 @@ Same reader, corpus and retrieval window in every arm (`--k`, reference retrieve
 
 - Wilson intervals here pool seeds, which are not independent questions. Treat them as optimistic.
 - The pilot has 20 items. Use the held-out 100 for any claim.
+
+## Pilot observation (public 20, qwen3.5:4b, one seed)
+
+A 20-item public pilot run after the boundary fix produced D-gate **45% false
+accepts**, versus **5% for B and C**, with D at 63% answerable, 63% unanswerable
+abstention, and 25% partial. This is a warning, not a held-out claim; it does not
+support gate superiority. The held-out result is maintained privately.

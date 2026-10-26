@@ -11,6 +11,11 @@
 
 ### Fixed
 
+- Root-level `Source: Title (date) · file.md` receipts now parse as one
+  locator; the gate no longer splits the title on words like “and”.
+- `askOneShot(..., { docs })` accepts a pre-selected window, so arm D can use
+  the exact B/C documents.
+
 - `judgeByCommand` now uses `spawnSync` and tolerates EPIPE when the detector
   exits successfully without reading stdin. This removes the intermittent test
   failure.

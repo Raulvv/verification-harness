@@ -191,3 +191,11 @@ test('verify({strict}) rejects what the tolerant gate passes', () => {
     assert.equal(verify(it({}), answer, dir, { strict: true }).mechanicalPass, false)
   } finally { rmSync(dir, { recursive: true, force: true }) }
 })
+
+test('verify: root-level Source with title and · path parses', () => {
+  const dir = corpus()
+  const text = 'Q: The Rasengan was invented by Minato Namikaze.\nSource: Doc Title (Feb 2024) · doc.md\nQuote: The Rasengan was invented by Minato Namikaze.'
+  try {
+    assert.equal(verify(it({}), text, dir).mechanicalPass, true)
+  } finally { rmSync(dir, { recursive: true, force: true }) }
+})

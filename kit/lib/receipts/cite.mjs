@@ -8,7 +8,7 @@ const PATH_RE = /[\w@.\-\/\[\]()%]+\.[A-Za-z0-9]+(?::\d+(?:-\d+)?)?/g
 
 export function splitLegs(locator, quote) {
   const clean = (s) => s.replace(/^[|;,\s]+/, '').replace(/[|;,\s]+$/, '').trim()
-  const isLocator = (t) => t.includes('/') || t.includes(':')
+  const isLocator = (t) => t.includes('/') || t.includes(':') || /\.(?:md|markdown|html?|txt|json|ya?ml)$/i.test(t)
   const found = [...(locator ?? '').matchAll(PATH_RE)].filter((m) => isLocator(m[0]))
   let paths
   if (found.length >= 1) {

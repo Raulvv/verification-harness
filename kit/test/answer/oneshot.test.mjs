@@ -653,3 +653,18 @@ test('rehomeLegs: composite sentence quote splits at the join', () => {
   assert.equal(kept.length, 2)
   assert.deepEqual(kept.map((x) => x.quote), ['Alpha.', 'Beta.'])
 })
+
+test('askOneShot: explicit docs bypass retrieval selection', async () => {
+  const dir = corpus({ 'a.md': 'alpha answer lives here', 'b.md': 'beta detail lives here too' })
+  try {
+    let prompt = ''
+    const _chat = async (msgs) => {
+      prompt = msgs[0].content
+      return { content: '{"answer":"beta","quotes":[{"doc":1,"quote":"beta detail lives here too"}],"not_found":false}', usage: {} }
+    }
+    const docs = [{ rel: 'b.md', content: 'beta detail lives here too' }]
+    await askOneShot({}, dir, 'what lives here?', { _chat, docs })
+    assert.match(prompt, /b\.md/)
+    assert.doesNotMatch(prompt, /a\.md/)
+  } finally { rmSync(dir, { recursive: true, force: true }) }
+})

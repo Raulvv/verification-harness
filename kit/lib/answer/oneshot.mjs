@@ -156,7 +156,10 @@ export async function askOneShot(m, corpusRoot, question, opts = {}) {
   // the double pass: words select (pass 1), reasoning vets (pass 2) —
   // matches whose phrase/paragraph doesn't bear on the question are discarded
   // before composition.
-  let loc = await selectWindow(retriever, corpusRoot, question, opts)
+  const providedDocs = Array.isArray(opts.docs) ? opts.docs : null
+  let loc = providedDocs
+    ? { candidates: providedDocs.map((d) => ({ rel: d.rel })), method: 'provided' }
+    : await selectWindow(retriever, corpusRoot, question, opts)
   let vetted = { dropped: [] }
   const tSelect = Date.now() - t0
   // Speed gate (measured 2026-10-01, broadened 2026-10-01): the vet is a whole
@@ -176,7 +179,7 @@ export async function askOneShot(m, corpusRoot, question, opts = {}) {
   // iterative (opt-in): always take the second hop before answering.
   if (retriever === 'iterative' && loc.candidates?.length) loc = await escalate(corpusRoot, question, loc, opts, chat)
 
-  let docs = pickDocs(corpusRoot, loc, opts)
+  let docs = providedDocs ?? pickDocs(corpusRoot, loc, opts)
   const tLocate = Date.now() - t0
   const t1 = Date.now()
   let parsed = null

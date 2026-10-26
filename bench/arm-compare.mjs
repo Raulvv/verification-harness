@@ -20,6 +20,7 @@ import { selectByReference } from '../kit/lib/retrieval/window.mjs'
 import { askOneShot } from '../kit/lib/answer/oneshot.mjs'
 import { chatWithUsage } from '../kit/lib/model.mjs'
 import { judgeSufficiency, judgeByCommand } from '../kit/lib/receipts/sufficiency.mjs'
+import { verify } from '../kit/lib/receipts/gate.mjs'
 import { ABSTAIN_TERMS, norm, numbersIn, parseAnswer } from '../kit/lib/receipts/text.mjs'
 
 const argv = process.argv.slice(2)
@@ -32,8 +33,12 @@ const K = Number(opt('k', 3))
 const corpus = resolve(opt('corpus', 'bench/corpus/ooh-v1'))
 const qfile = opt('questions', 'bench/ooh-pilot.jsonl')
 const outPath = opt('out', 'bench/results/arm-compare.jsonl')
-const reader = { label: 'reader', baseUrl: opt('base-url', 'http://localhost:11434/v1'), model: opt('model', 'qwen3.5:4b'), apiKeyEnv: opt('api-key-env') }
-const judge = { label: 'judge', baseUrl: opt('judge-base-url', reader.baseUrl), model: opt('judge-model', reader.model), apiKeyEnv: opt('api-key-env') }
+const baseUrl = opt('base-url', 'http://localhost:11434/v1')
+const judgeBaseUrl = opt('judge-base-url', baseUrl)
+const apiKeyEnv = opt('api-key-env')
+const isOllama = (u) => /:11434|ollama/i.test(String(u ?? ''))
+const reader = { label: 'reader', baseUrl, model: opt('model', 'qwen3.5:4b'), apiKeyEnv, apiKey: isOllama(baseUrl) ? 'ollama' : undefined }
+const judge = { label: 'judge', baseUrl: judgeBaseUrl, model: opt('judge-model', reader.model), apiKeyEnv, apiKey: isOllama(judgeBaseUrl) ? 'ollama' : undefined }
 const judgeCmd = opt('judge-cmd')
 
 const items = readFileSync(qfile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))
@@ -102,10 +107,17 @@ async function runArm(arm, item) {
     }
     return { text, gate, ms: Date.now() - t0 }
   }
-  // D: the harness itself; its receipt's Q-line is the answer under test
-  const res = await askOneShot(reader, corpus, item.question, { retriever: 'reference', promptStyle: 'v45', ...(FAKE ? { _chat: fakeChat(item), _vet: fakeChat(item) } : {}) })
-  const text = res.final?.text ?? ''
-  return { text: parseAnswer(text).proposed || text, receipt: text, ms: Date.now() - t0 }
+  // D: the harness on the SAME docs as B/C, then the mechanical gate.
+  // A gate rejection is an abstention; a gate pass is the only shown answer.
+  const res = await askOneShot(reader, corpus, item.question, {
+    retriever: 'reference', promptStyle: 'v45', partialRule: true, docs,
+    ...(FAKE ? { _chat: fakeChat(item), _vet: fakeChat(item) } : {})
+  })
+  const receipt = res.final?.text ?? ''
+  const gateItem = { id: item.id, question: item.question, not_found: res.parsed?.notFound ?? true }
+  const g = verify(gateItem, receipt, corpus)
+  const text = g.mechanicalPass ? (parseAnswer(receipt).proposed || receipt) : 'NOT FOUND (gate rejected: ' + g.why + ')'
+  return { text, receipt, gate: g, ms: Date.now() - t0 }
 }
 
 // ---------- run + report ----------
