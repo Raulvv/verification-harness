@@ -1,11 +1,30 @@
-# OOH benchmark — v1.1.3
+# OOH benchmark — v1.1.4
 
 A neutral, public-corpus, citation-first benchmark built from the U.S. Bureau
 of Labor Statistics **Occupational Outlook Handbook** (2023–33 edition).
 
-Status: **public package + private held-out test**, benchmark frozen 2026-10-24; package v1.1.3, 2026-10-26. The
+Status: **public package + private held-out test**, benchmark frozen 2026-10-24; package v1.1.4, 2026-10-26. The
 public dev set is for iteration; the 100-item test labels are private and must
 not be trained on or published.
+
+## Quickstart
+
+Requirements: `git`, Node 18+, and Python 3.10+. No `npm install` is needed.
+Ollama is optional and only for running a local model.
+
+```bash
+git clone https://github.com/Raulvv/verification-harness.git
+cd verification-harness
+npm run ooh:smoke
+npm run ooh:dev
+npm run ooh:dev:pages
+```
+
+`ooh:smoke` runs the public tests plus both dev runs. The dev runs are
+deterministic and need no API key or model. They write ignored JSONL files under
+`bench/results/`. The private 100-item labels are not in this repository.
+
+For a private corpus, see [Use it on your own private corpus](#use-it-on-your-own-private-corpus).
 
 ## What this benchmark is
 
@@ -44,8 +63,8 @@ benchmark. It measures:
 | Held-out test labels | 100 | **private**; frozen; not in the public tree | `bench/results/ooh-test-private.jsonl` (gitignored) |
 
 Test composition: 40 answerable / 20 partial / 40 unanswerable; two global
-aggregation questions. Test labels are private; use the public pilot and dev
-set for development.
+aggregation questions (46-candidate and 25-candidate). Test labels are private;
+use the public pilot and dev set for development.
 
 ## Scoring rule
 
@@ -94,8 +113,9 @@ DEV=1 node bench/ooh-aggregate-spike.mjs
 DEV=1 PAGES=1 node bench/ooh-aggregate-spike.mjs
 ```
 
-Both runs self-check the gold and the 46/46 (or 48/48 / 2/2) coverage. The
-public dev form is `bench/ooh-dev-validate.html`.
+Both runs self-check the gold and the public dev coverage: 46/46 paid,
+48/48 all, 2/2 selected sums. The public dev form is
+`bench/ooh-dev-validate.html`.
 
 The 100-item test is submission-only; see `bench/ooh-SUBMISSION.md`.
 
@@ -147,7 +167,8 @@ node kit/bin/retrieval-kit.mjs ask "What is the refund window?" \
 
 ## Caveats
 
-- 48 pages, 100 test items, 2 globals; not full wiki.
+- 48 pages, 100 test items, two global aggregation questions (46- and
+  25-candidate); not full wiki.
 - OOH numbers are BLS estimates for 2023–33; frozen snapshot, not current data.
 - State/city/employer/historical/2033-specific questions are intentionally
   unanswerable when the snapshot does not state them.

@@ -1,11 +1,9 @@
 # Confluence fixtures — probe dumps of 2026-09-28
 
-Provenance: the bounded probe of a real Confluence space (hypothesis
-[`2026-09-25_system-3.0-any-source.md`](../../../../docs/hypotheses/2026-09-25_system-3.0-any-source.md)
-§3.1) against `twg` v1.3.3. Per the testing doctrine (epic
-[`retrieval-confluence-source.md`](../../../../archive/epicas/retrieval-confluence-source.md)
-§8.4): **envelope shapes and metadata values are verbatim dumps;
-free-text prose is redacted.** Nothing here is hand-invented. Before
+Provenance: the bounded probe of a real Confluence space against `twg` v1.3.3.
+The internal hypothesis/epic notes are not part of this benchmark-only package.
+**Envelope shapes and metadata values are verbatim dumps; free-text prose is
+redacted.** Nothing here is hand-invented. Before
 publication the two identifying query strings were sanitized: the space
 key became `DEMO` and the CQL title term became `Fixture topic`
 (including their URL-encoded forms in `next`/`self` links); everything

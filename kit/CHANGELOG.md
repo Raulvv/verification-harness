@@ -14,7 +14,7 @@
   the demo-corpus note no longer points at a `corpus/manifest.json` — the
   OOH benchmark reads a frozen snapshot (`bench/corpus/ooh-v1/`).
 - README now keeps kit usage and private-corpus guidance only; historical
-  historical pointers and the old claims ledger are not part of this
+  pointers and the old claims ledger are not part of this
   benchmark-only package.
 - Confluence fixtures and test corpora sanitized for publication: the
   space key, the CQL title term (including URL-encoded forms in

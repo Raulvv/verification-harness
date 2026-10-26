@@ -1,6 +1,6 @@
-# OOH benchmark specification — v1.1.3
+# OOH benchmark specification — v1.1.4
 
-Date: 2026-10-24. Package: v1.1.3, 2026-10-26. Status: frozen public package; private held-out test.
+Date: 2026-10-24. Package: v1.1.4, 2026-10-26. Status: frozen public package; private held-out test.
 This is the single document that defines the benchmark’s scope, labels,
 metrics, scoring, aggregation contract, baselines, and limits. If a number is
 published, this spec plus the README caveats must back it.
@@ -42,7 +42,7 @@ citation breadth/candidate coverage, deterministic aggregation, and cost.
 | Held-out test labels | 100 | **private** | condition, gold, evidence, sources |
 
 Test composition: **40 answerable / 20 partial / 40 unanswerable**; two global
-aggregation questions. The test questions are in
+aggregation questions (46-candidate and 25-candidate). The test questions are in
 `bench/ooh-test-questions.jsonl`; labels are in
 `bench/results/ooh-test-private.jsonl` (gitignored).
 
@@ -77,7 +77,7 @@ The page local run is not full wiki; it is a 48-page fixed-window test.
   the v2 audit shows composite receipts and lower segment counts. The v1.1
   metric is under revision.
 - **Citation breadth / coverage:** cited candidates / expected candidates for
-  aggregation; 46/46, 48/48, or 2/2.
+  aggregation; public dev coverage 46/46 paid, 48/48 all, 2/2 selected sums.
 - **Aggregation correctness:** exact winner/value for max/min, exact count/sum,
   filter correctness, and completeness.
 - **Cost:** receipt words, model tokens, latency.
@@ -110,7 +110,7 @@ For a global/aggregate question:
 5. Bypass the minimal-receipt trimmer; the table is the proof.
 6. Report `citation_breadth = cited / expected`.
 
-Reference coverage: 46/46 paid, 48/48 all, 2/2 selected sums. The generic
+Public dev reference coverage: 46/46 paid, 48/48 all, 2/2 selected sums. The generic
 library is `kit/lib/answer/aggregate.mjs`; the CLI is
 `retrieval-kit ask --aggregate --table <rows.json> --spec <spec.json>`.
 
@@ -136,8 +136,9 @@ Citation **title/row support**: harness 60/60 table, 59/60 pages; baselines
 segments (37/60 contiguous) and pages 38/60 segments (26/60 contiguous).
 The v1.1 page run is **99/100**: `test-030` false-abstained; the old v1.0 page
 100 was a single run. Public dev: 14/14 table and pages. Held-out two-document
-sums: three questions (`test-019`, `test-081`, `test-089`); private audit. These are **not** an accuracy leadership claim; see
-The benchmark is not an accuracy leaderboard.
+sums: three questions (`test-019`, `test-081`, `test-089`); private audit.
+These are **not** an accuracy leadership claim; the benchmark is not an
+accuracy leaderboard.
 
 ## 10. Reproducibility
 
@@ -162,7 +163,8 @@ maintainer-audited, not reproducible from this tree.
 
 ## 12. Limits and falsifiers
 
-- 48 pages, 100 test items, 2 globals; not full wiki.
+- 48 pages, 100 test items, two global aggregation questions (46- and
+  25-candidate); not full wiki.
 - OOH numbers are BLS estimates for 2023–33; frozen snapshot.
 - Two page citation misses are retrieval coverage, not aggregation.
 - No claim that the harness is more accurate than frontier models.
@@ -172,7 +174,7 @@ maintainer-audited, not reproducible from this tree.
 
 ## 13. Version and provenance
 
-- Version: **1.1.3**, benchmark frozen 2026-10-24; package 2026-10-26.
+- Version: **1.1.4**, benchmark frozen 2026-10-24; package 2026-10-26.
 - Manifest: `bench/ooh-MANIFEST.json` (public files + hashes; private test
   boundary).
 - Prior art / positioning: The benchmark is not an accuracy leaderboard.
