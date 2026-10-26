@@ -1,6 +1,6 @@
 {
   "name": "ooh-citation-first-benchmark",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "private": true,
   "type": "module",
   "description": "OOH citation-first benchmark: public corpus, public dev, private test questions and labels separated.",

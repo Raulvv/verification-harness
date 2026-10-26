@@ -120,7 +120,8 @@ node kit/bin/retrieval-kit.mjs config \
 `--retriever reference`.
 
 The benchmark reader was **DeepSeek V4.1 Flash**; `qwen3.5:4b` is the kit's
-local convenience default, not the benchmark model.
+local convenience default, not the benchmark model. The kit writes `.retrieval/`
+and `.retrieval-index/`; both are gitignored.
 
 ## Honest abstention — optional (`--sufficient`)
 

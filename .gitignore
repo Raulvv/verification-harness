@@ -8,3 +8,7 @@ bench/results/
 # Python caches
 __pycache__/
 *.pyc
+
+# retrieval-kit workspace and embedding cache
+.retrieval/
+.retrieval-index/

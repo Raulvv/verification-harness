@@ -1,9 +1,9 @@
-# OOH benchmark — v1.1.5
+# OOH benchmark — v1.1.6
 
 A neutral, public-corpus, citation-first benchmark built from the U.S. Bureau
 of Labor Statistics **Occupational Outlook Handbook** (2023–33 edition).
 
-Status: **public package + private held-out test**, benchmark frozen 2026-10-24; package v1.1.5, 2026-10-26. The
+Status: **public package + private held-out test**, benchmark frozen 2026-10-24; package v1.1.6, 2026-10-26. The
 public dev set is for iteration; the 100-item test labels are private and must
 not be trained on or published.
 
@@ -215,7 +215,8 @@ node kit/bin/retrieval-kit.mjs config \
 - No automatic fallback: a missing model, key, or Ollama service fails loud; it does not switch to a hosted model.
 
 `config` refuses literal keys; use `RETRIEVAL_API_KEY` or `--api-key-env`.
-`config --show` and `config --reset` manage the sealed workspace.
+`config --show` and `config --reset` manage the sealed workspace. The kit writes
+`.retrieval/` and `.retrieval-index/`; both are gitignored.
 
 The benchmark reader was **DeepSeek V4.1 Flash**; `qwen3.5:4b` is only the kit's
 local convenience default, not the benchmark model. Model quality is not
