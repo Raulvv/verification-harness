@@ -1,16 +1,17 @@
-# OOH benchmark — v1.1.4
+# OOH benchmark — v1.1.5
 
 A neutral, public-corpus, citation-first benchmark built from the U.S. Bureau
 of Labor Statistics **Occupational Outlook Handbook** (2023–33 edition).
 
-Status: **public package + private held-out test**, benchmark frozen 2026-10-24; package v1.1.4, 2026-10-26. The
+Status: **public package + private held-out test**, benchmark frozen 2026-10-24; package v1.1.5, 2026-10-26. The
 public dev set is for iteration; the 100-item test labels are private and must
 not be trained on or published.
 
 ## Quickstart
 
 Requirements: `git`, Node 18+, and Python 3.10+. No `npm install` is needed.
-Ollama is optional and only for running a local model.
+Ollama is optional and only for running a local model. For `ask`, see
+[Reader model setup](#reader-model-setup-kit-only).
 
 ```bash
 git clone https://github.com/Raulvv/verification-harness.git
@@ -144,6 +145,81 @@ node kit/bin/retrieval-kit.mjs ask "What is the refund window?" \
 - Hosted OpenAI-compatible endpoints use `--base-url` and
   `RETRIEVAL_API_KEY`; never store a literal key in the workspace.
 - Full kit usage and limits: `kit/README.md`.
+
+## Reader model setup (kit only)
+
+The public benchmark and dev commands need **no model**. Only
+`retrieval-kit ask` needs one. There is **no default hosted model** and **no
+Opencode dependency**; any OpenAI-compatible `/chat/completions` endpoint works.
+
+Defaults when no config or flags are set:
+
+| Setting | Default | Notes |
+|---|---|---|
+| Base URL | `http://localhost:11434/v1` | Assumes Ollama |
+| Model | `qwen3.5:4b` | Only when the base URL looks like Ollama |
+| API key | `ollama` | Other endpoints need `RETRIEVAL_API_KEY` or `--api-key-env` |
+| Retriever | `router` | Needs local `nomic-embed-text`; use `--retriever reference` without it |
+| Tier | `source-v45` | `--quote` switches to `v45` |
+
+### Option A — Ollama
+
+```bash
+ollama pull qwen3.5:4b
+ollama pull nomic-embed-text   # only for dense/router
+
+node kit/bin/retrieval-kit.mjs config \
+  --corpus ./my-docs \
+  --model qwen3.5:4b \
+  --base-url http://localhost:11434/v1 \
+  --retriever reference
+
+node kit/bin/retrieval-kit.mjs ask \
+  "What is the refund window?" --retriever reference --quote
+```
+
+### Option B — hosted OpenAI-compatible endpoint
+
+```bash
+export RETRIEVAL_API_KEY="..."
+node kit/bin/retrieval-kit.mjs config \
+  --corpus ./my-docs \
+  --model "<model-id>" \
+  --base-url "https://your-endpoint/v1" \
+  --retriever reference
+```
+
+### Option C — local non-Ollama server
+
+vLLM, llama.cpp server, LM Studio, and similar OpenAI-compatible servers work.
+The client always sends a Bearer header, so use a dummy key if the server does
+not require auth:
+
+```bash
+export RETRIEVAL_API_KEY=local
+node kit/bin/retrieval-kit.mjs config \
+  --corpus ./my-docs \
+  --model "<served-model-id>" \
+  --base-url "http://localhost:8000/v1" \
+  --retriever reference
+```
+
+### What the errors mean
+
+- `no corpus` — run `config --corpus <dir>` or pass the folder to `ask`.
+- `no chat model` — the base URL is not Ollama and you omitted `--model`.
+- `no api key` — set `RETRIEVAL_API_KEY`, use `--api-key-env <VAR>`, or point at a local model.
+- `the default retriever needs a local embedder` — use `--retriever reference`, or pull `nomic-embed-text`.
+- `connection refused` — Ollama is not running at the default base URL; start it or configure a hosted endpoint.
+- `model not found` — pull the requested Ollama model or set `--model`.
+- No automatic fallback: a missing model, key, or Ollama service fails loud; it does not switch to a hosted model.
+
+`config` refuses literal keys; use `RETRIEVAL_API_KEY` or `--api-key-env`.
+`config --show` and `config --reset` manage the sealed workspace.
+
+The benchmark reader was **DeepSeek V4.1 Flash**; `qwen3.5:4b` is only the kit's
+local convenience default, not the benchmark model. Model quality is not
+validated by the public package.
 
 ## Aggregate library / CLI
 

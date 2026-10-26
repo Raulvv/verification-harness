@@ -24,7 +24,9 @@ run** — and the answer contract carries receipts a machine can re-check.
 
 ## Just ask a folder
 
-The one command is `config` once, then `ask` as often as you like:
+The one command is `config` once, then `ask` as often as you like. This
+example assumes Ollama and `qwen3.5:4b`; see **Reader model setup** below for
+hosted and non-Ollama servers.
 
 ```sh
 node kit/bin/retrieval-kit.mjs config --corpus ./my-docs   # seal the workspace
@@ -55,6 +57,70 @@ node kit/bin/retrieval-kit.mjs ask "What is the refund window?"
   byte-verbatim quote (`v45`), or `--tier source-v45|v45|full`.
 - `config --show` / `config --reset`; `--json` for machines. In this repo the
   command is `node kit/bin/retrieval-kit.mjs`.
+
+## Reader model setup — defaults, Ollama, non-Ollama
+
+The kit does **not** depend on Opencode. The chat boundary is OpenAI-compatible
+(`/chat/completions`); Ollama is special-cased to its native `/api/chat`.
+`ask` needs a model; `config` alone does not call one.
+
+Defaults with no config or flags:
+
+| Setting | Default | Behavior |
+|---|---|---|
+| Base URL | `http://localhost:11434/v1` | Assumes Ollama |
+| Model | `qwen3.5:4b` | Only if the base URL looks like Ollama |
+| API key | `ollama` for Ollama | Non-Ollama needs `RETRIEVAL_API_KEY` or `--api-key-env` |
+| Retriever | `router` | Needs local `nomic-embed-text`; use `reference` without it |
+| Tier | `source-v45` | `--quote` switches to `v45` |
+
+There is **no default hosted model**. If you pass a non-Ollama `--base-url`
+without `--model`, it fails with `no chat model`. If you pass a model but no key,
+it fails with `no api key`. If Ollama is not running, the default local path
+fails with a connection error; it does not fall back to a hosted model. If the
+Ollama model is not pulled, Ollama returns a model-not-found error.
+
+### Ollama
+
+```sh
+ollama pull qwen3.5:4b
+ollama pull nomic-embed-text   # only for dense/router
+
+node kit/bin/retrieval-kit.mjs config \
+  --corpus ./my-docs \
+  --model qwen3.5:4b \
+  --base-url http://localhost:11434/v1 \
+  --retriever reference
+```
+
+### Hosted OpenAI-compatible
+
+```sh
+export RETRIEVAL_API_KEY="..."
+node kit/bin/retrieval-kit.mjs config \
+  --corpus ./my-docs \
+  --model "<model-id>" \
+  --base-url "https://your-endpoint/v1" \
+  --retriever reference
+```
+
+### Local non-Ollama (vLLM, llama.cpp server, LM Studio, etc.)
+
+```sh
+export RETRIEVAL_API_KEY=local   # dummy Bearer value if the server ignores auth
+node kit/bin/retrieval-kit.mjs config \
+  --corpus ./my-docs \
+  --model "<served-model-id>" \
+  --base-url "http://localhost:8000/v1" \
+  --retriever reference
+```
+
+`dense` and `router` always use the local Ollama embedder
+(`nomic-embed-text`), even when the chat model is hosted. Without Ollama, use
+`--retriever reference`.
+
+The benchmark reader was **DeepSeek V4.1 Flash**; `qwen3.5:4b` is the kit's
+local convenience default, not the benchmark model.
 
 ## Honest abstention — optional (`--sufficient`)
 

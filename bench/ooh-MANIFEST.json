@@ -1,6 +1,6 @@
 {
   "name": "ooh-citation-first-benchmark",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "frozen_at": "2026-10-26",
   "status": "public-package-private-test",
   "corpus": {
@@ -357,8 +357,8 @@
     },
     {
       "path": "bench/ooh-README.md",
-      "bytes": 7822,
-      "sha256": "b357da56e4bf0e6146cc2d3c61fbb62ac2515862d6669d11b46ec78945a064e5"
+      "bytes": 10414,
+      "sha256": "7bb34f357ce32dcc3904d27cb0a7cc969982afd50989dfaa51c191dd35077efc"
     },
     {
       "path": "bench/ooh-score.py",
@@ -423,7 +423,7 @@
     {
       "path": "bench/ooh-BENCHMARK.md",
       "bytes": 7955,
-      "sha256": "4e13ab049d170bb17046d0de436dc27e605e813359e28f3585460797bddb17eb"
+      "sha256": "b2876fdb3e9c1352b964789f4b3acae924ae211554bca0b1e07369c38572137e"
     },
     {
       "path": "bench/ooh-score-v2.py",
