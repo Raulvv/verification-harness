@@ -97,6 +97,24 @@ export function evidenceMatches(content, quote) {
   return lines.length >= 1 && lines.every((s) => c.includes(s))
 }
 
+// STRICT evidence matcher (opt-in, `verify(..., { strict: true })`). The default
+// matcher above is deliberately tolerant; this one backs a literal "verbatim"
+// claim: only whitespace runs are collapsed and one pair of wrapping quote
+// marks is stripped. Case, emphasis marks and punctuation must match exactly;
+// no " / " segment joins and no per-line fallback (both let a stitched quote
+// pass). A quote shorter than `minChars` must be a complete line of the file,
+// so a two-word fragment cannot "verify" a claim.
+export function evidenceMatchesStrict(content, quote, { minChars = 20 } = {}) {
+  const ws = (s) => String(s ?? '').normalize('NFC').replace(/\s+/g, ' ').trim()
+  let q = ws(quote)
+  const wrapped = /^([\"'`\u201c\u2018\u00ab])(.*)([\"'`\u201d\u2019\u00bb])$/.exec(q)
+  if (wrapped && !ws(content).includes(q)) q = wrapped[2].trim()
+  if (!q || q.toLowerCase() === 'not found') return false
+  if (!ws(content).includes(q)) return false
+  if (q.length >= minChars) return true
+  return String(content ?? '').split('\n').some((line) => ws(line) === q)
+}
+
 // Does this quote appear in arbitrary TEXT (an answer, not a file)? The
 // answer-side twin of evidenceMatches: emphasis and whitespace tolerated,
 // " / " joins matched whole or by verbatim segment. Shared by the scorer, so

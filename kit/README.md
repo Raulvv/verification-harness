@@ -123,6 +123,20 @@ The benchmark reader was **DeepSeek V4.1 Flash**; `qwen3.5:4b` is the kit's
 local convenience default, not the benchmark model. The kit writes `.retrieval/`
 and `.retrieval-index/`; both are gitignored.
 
+## Strict verbatim mode — opt-in
+
+The default verifier is deliberately tolerant: case, emphasis, whitespace and
+` / ` segment joins can match. For a literal verbatim claim, use:
+
+```sh
+node kit/bin/verify.mjs results.json --golden golden.json --strict
+```
+
+or `verify(item, answer, root, { strict: true })`. Strict mode tolerates only
+whitespace runs and one wrapping quote pair; case, punctuation and emphasis must
+match exactly, and a quote under 20 characters must be a complete line. The
+default is unchanged, so the published OOH numbers keep their definition.
+
 ## Honest abstention — optional (`--sufficient`)
 
 The mechanical gate proves a citation *exists*; it cannot prove the evidence
@@ -355,7 +369,7 @@ Quote: <verbatim line(s)>
 ## Tests — the whole safety net, one command
 
 ```sh
-node kit/bin/test.mjs         # 183 tests + the gate drill
+node kit/bin/test.mjs         # 188 tests + the gate drill
 node kit/bin/coverage.mjs     # the same suite under V8 coverage (npm run kit:coverage)
 ```
 

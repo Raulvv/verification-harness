@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Mechanical gate CLI.
-//   node kit/bin/verify.mjs <results.json> [more.json ...] --golden <file> [--config <file>]
+//   node kit/bin/verify.mjs <results.json> [more.json ...] --golden <file> [--config <file>] [--strict]
 //   node kit/bin/verify.mjs --self-test
 import { readFileSync, writeFileSync, mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -10,7 +10,8 @@ import { loadConfig } from '../lib/config.mjs'
 import { parseFiles } from '../lib/cli.mjs'
 import { readResults } from '../lib/receipts/results.mjs'
 
-const argv = process.argv.slice(2)
+const strict = process.argv.includes('--strict')
+const argv = process.argv.slice(2).filter((a) => a !== '--strict')
 
 if (argv[0] === '--self-test') {
   // Generic seeded-error drill, corpus-independent: quote-class corruptions
@@ -45,7 +46,7 @@ const goldenFiles = groups.golden
 const resultsFiles = positionals
 const cfgPath = options.config ?? null
 if (!goldenFiles.length || !resultsFiles.length) {
-  console.error('usage: node kit/bin/verify.mjs <results.json ...> --golden <file> [...] [--config <file>] | --self-test')
+  console.error('usage: node kit/bin/verify.mjs <results.json ...> --golden <file> [...] [--config <file>] [--strict] | --self-test')
   process.exit(1)
 }
 const cfg = loadConfig(cfgPath)
@@ -54,7 +55,7 @@ const results = resultsFiles.flatMap(readResults)
 let pass = 0
 for (const item of items) {
   const r = results.find((x) => x.id === item.id)
-  const v = verify(item, r?.text ?? '', cfg.corpusRoot)
+  const v = verify(item, r?.text ?? '', cfg.corpusRoot, { strict })
   if (v.mechanicalPass) pass++
   console.log(`  ${item.id.padEnd(6)} ${v.mechanicalPass ? 'PASS' : 'REJECT'}  ${v.why}`)
 }

@@ -155,3 +155,39 @@ test('the corpus-title check is memoized but invalidates on a changed corpus (HK
     assert.equal(verify(item, text, dir).mechanicalPass, false) // gone — and the memo did not serve a stale vocab
   } finally { rmSync(dir, { recursive: true, force: true }) }
 })
+
+// ---------- strict mode (opt-in literal verbatim) ----------
+import { evidenceMatchesStrict } from '../../lib/receipts/text.mjs'
+
+test('strict: exact quote passes, tolerant defaults stay unchanged', () => {
+  const c = 'The Rasengan was invented by Minato Namikaze.'
+  assert.equal(evidenceMatchesStrict(c, 'The Rasengan was invented by Minato Namikaze.'), true)
+  assert.equal(evidenceMatches(c, 'THE RASENGAN WAS INVENTED BY MINATO NAMIKAZE.'), true) // default tolerant
+})
+
+test('strict: case, emphasis and fragments are rejected', () => {
+  const c = 'Refunds are allowed within 30 days.\nShort line\n'
+  assert.equal(evidenceMatchesStrict(c, 'REFUNDS ARE ALLOWED WITHIN 30 DAYS.'), false)
+  assert.equal(evidenceMatchesStrict(c, 'within 30'), false)
+  assert.equal(evidenceMatchesStrict(c, 'Short line'), true) // short but a complete line
+})
+
+test('strict: stitched segments and per-line fallbacks are rejected', () => {
+  const c = 'Alpha beta gamma delta epsilon.\n\nZeta eta theta iota kappa.\n'
+  assert.equal(evidenceMatchesStrict(c, 'Alpha beta gamma delta epsilon. / Zeta eta theta iota kappa.'), false)
+  assert.equal(evidenceMatches(c, 'Alpha beta gamma delta epsilon. / Zeta eta theta iota kappa.'), true)
+})
+
+test('strict: whitespace runs and one wrapping quote pair are tolerated', () => {
+  const c = 'Refunds are allowed\nwithin 30 days.'
+  assert.equal(evidenceMatchesStrict(c, '"Refunds are allowed   within 30 days."'), true)
+})
+
+test('verify({strict}) rejects what the tolerant gate passes', () => {
+  const dir = corpus()
+  const answer = 'Q: Minato.\nPath: doc.md\nQuote: THE RASENGAN WAS INVENTED BY MINATO NAMIKAZE.'
+  try {
+    assert.equal(verify(it({}), answer, dir).mechanicalPass, true)
+    assert.equal(verify(it({}), answer, dir, { strict: true }).mechanicalPass, false)
+  } finally { rmSync(dir, { recursive: true, force: true }) }
+})

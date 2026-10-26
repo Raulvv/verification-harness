@@ -5,7 +5,7 @@
 // PoKéAPI N=8, a 9B self-family judge accepted fabrications → 5/8, a 27B judge
 // matched an independent judge → 7/8), so the judge is explicit, never assumed.
 import { chatWithUsage } from '../model.mjs'
-import { execFileSync } from 'node:child_process'
+import { spawnSync } from 'node:child_process'
 
 export const SUFFICIENCY_PROMPT = (question, evidence, answer) => [
   'You are a strict verifier. Decide whether the EVIDENCE supports the ANSWER to the QUESTION.',
@@ -46,13 +46,18 @@ export async function judgeSufficiency(judge, question, evidence, answer, opts =
 // stdin, read `SUFFICIENT`/`INSUFFICIENT` on stdout. Any external grounding
 // detector plugs in this way (LettuceDetect, an NLI cross-encoder, a hosted API).
 export function judgeByCommand(cmd, question, evidence, answer, { cwd = process.cwd() } = {}) {
-  const out = execFileSync('sh', ['-c', cmd], {
+  // spawnSync, not execFileSync: a detector that exits without reading stdin
+  // makes the stdin write fail with EPIPE (a race), which execFileSync throws
+  // even when the exit status is 0. EPIPE with status 0 is fine.
+  const r = spawnSync('sh', ['-c', cmd], {
     input: JSON.stringify({ question, evidence, answer }),
     encoding: 'utf8',
     cwd,
     maxBuffer: 1 << 20,
   })
-  return parseVerdict(out)
+  if (r.status !== 0 && r.status !== null) throw new Error(`judge command exited ${r.status}: ${r.stderr ?? ''}`)
+  if (r.error && r.error.code !== 'EPIPE') throw r.error
+  return parseVerdict(r.stdout ?? '')
 }
 
 // A GRADED judge (1–5 support), forced through a strict JSON schema so the

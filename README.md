@@ -1,9 +1,9 @@
-# OOH benchmark — v1.1.6
+# OOH benchmark — v1.1.7
 
 A neutral, public-corpus, citation-first benchmark built from the U.S. Bureau
 of Labor Statistics **Occupational Outlook Handbook** (2023–33 edition).
 
-Status: **public package + private held-out test**, benchmark frozen 2026-10-24; package v1.1.6, 2026-10-26. The
+Status: **public package + private held-out test**, benchmark frozen 2026-10-24; package v1.1.7, 2026-10-26. The
 public dev set is for iteration; the 100-item test labels are private and must
 not be trained on or published.
 
@@ -102,7 +102,9 @@ contiguous). Many receipts are composite; the table local receipt is a row
 selection. The v1.1 page run is **99/100**: `test-030` false-abstained; the
 old v1.0 page 100 was a single run and is not a stable claim. The harness is
 **not** an accuracy leader; the differentiator is proof, abstention, and
-aggregation coverage.
+aggregation coverage. The default verifier is deliberately tolerant; use
+`node kit/bin/verify.mjs ... --strict` (or `verify(..., { strict: true })`) for
+literal case/punctuation. Published OOH numbers use the default tolerant mode.
 
 ## Reproduce the public dev set
 
@@ -227,6 +229,8 @@ validated by the public package.
 - Library: `kit/lib/answer/aggregate.mjs` (`askAggregate`).
 - CLI: `retrieval-kit ask --aggregate --table <rows.json> --spec <spec.json> "question"`.
 - OOH aggregate runner: `bench/ooh-aggregate-spike.mjs`.
+- Strong-baseline protocol: `bench/ARM-COMPARE.md`; offline plumbing check:
+  `node bench/arm-compare.mjs --fake`.
 - Private harness/scoring runners are maintainer-side and are not shipped in this public package; private-test scores are not reproducible from this tree.
 - Scorer v2: `bench/ooh-score-v2.py` (title/row, verbatim segments, contiguous);
   v1 remains for historical outputs.

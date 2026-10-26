@@ -10,7 +10,7 @@ import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs'
 import { join, resolve, relative } from 'node:path'
 import { resolveMeta } from '../corpus/meta.mjs'
 import { walkFiles } from '../text/walk.mjs'
-import { evidenceMatches, parseAnswer, ABSTAIN_TERMS } from './text.mjs'
+import { evidenceMatches, evidenceMatchesStrict, parseAnswer, ABSTAIN_TERMS } from './text.mjs'
 import { parseCite, splitLegs, monthYear } from './cite.mjs'
 
 const ABSTAIN_LEAD = /^\s*(not found|no record|nothing (?:found|recorded)|nowhere|not documented|no mention|not in (?:the )?(?:repo|corpus|docs)|cannot find|no reference|no trace)\b/i
@@ -85,7 +85,9 @@ function resolveClaimed(corpusRoot, claimed) {
   return null
 }
 
-export function verify(item, answerText, corpusRoot) {
+// opts.strict: literal verbatim check (see evidenceMatchesStrict); default off,
+// so published benchmark numbers keep their definition.
+export function verify(item, answerText, corpusRoot, { strict = false } = {}) {
   const { proposed, path, source, quote } = parseAnswer(answerText)
   const locator = source || path
   // an abstention is an EXPLICIT claim — the literal NOT FOUND shape — never
@@ -120,7 +122,8 @@ export function verify(item, answerText, corpusRoot) {
     if (!abs) return { ok: false, notes: [`no such file: ${claimed || '(none)'}`] }
     const content = readFileSync(abs, 'utf8')
     if (hasQuote) {
-      const quoteInFile = legQuotes.some((q) => evidenceMatches(content, q))
+      const match = strict ? evidenceMatchesStrict : evidenceMatches
+      const quoteInFile = legQuotes.some((q) => match(content, q))
       if (!quoteInFile) notes.push(`quote not found in ${claimed}`)
     }
     const meta = resolveMeta(corpusRoot, relative(resolve(corpusRoot), abs), content)
