@@ -1,0 +1,20 @@
+{"id":"pilot-01","condition_verdict":"agree","condition":"answerable","machine_condition":"answerable","gold":"correct","evidence":"correct","note":""}
+{"id":"pilot-02","condition_verdict":"agree","condition":"answerable","machine_condition":"answerable","gold":"correct","evidence":"correct","note":""}
+{"id":"pilot-03","condition_verdict":"agree","condition":"answerable","machine_condition":"answerable","gold":"correct","evidence":"correct","note":""}
+{"id":"pilot-04","condition_verdict":"agree","condition":"answerable","machine_condition":"answerable","gold":"correct","evidence":"correct","note":""}
+{"id":"pilot-05","condition_verdict":"agree","condition":"answerable","machine_condition":"answerable","gold":"correct","evidence":"correct","note":""}
+{"id":"pilot-06","condition_verdict":"agree","condition":"answerable","machine_condition":"answerable","gold":"correct","evidence":"correct","note":""}
+{"id":"pilot-07","condition_verdict":"agree","condition":"answerable","machine_condition":"answerable","gold":"fix","evidence":"correct","note":"The gold refers to 3 categories, should only mention Software Developers by 11 percentage points"}
+{"id":"pilot-08","condition_verdict":"agree","condition":"answerable","machine_condition":"answerable","gold":"correct","evidence":"correct","note":""}
+{"id":"pilot-09","condition_verdict":"agree","condition":"partial","machine_condition":"partial","gold":"correct","evidence":"correct","note":""}
+{"id":"pilot-10","condition_verdict":"agree","condition":"partial","machine_condition":"partial","gold":"correct","evidence":"correct","note":""}
+{"id":"pilot-11","condition_verdict":"agree","condition":"partial","machine_condition":"partial","gold":"correct","evidence":"correct","note":""}
+{"id":"pilot-12","condition_verdict":"agree","condition":"partial","machine_condition":"partial","gold":"correct","evidence":"correct","note":"I would say you can state in the gold both: the 2033 specific is not stated, but since the average is there, you could mention the average in the gold. Both are correct I guess"}
+{"id":"pilot-13","condition_verdict":"agree","condition":"unanswerable","machine_condition":"unanswerable","gold":"correct","evidence":"correct","note":""}
+{"id":"pilot-14","condition_verdict":"agree","condition":"unanswerable","machine_condition":"unanswerable","gold":"correct","evidence":"correct","note":""}
+{"id":"pilot-15","condition_verdict":"agree","condition":"unanswerable","machine_condition":"unanswerable","gold":"correct","evidence":"correct","note":""}
+{"id":"pilot-16","condition_verdict":"agree","condition":"unanswerable","machine_condition":"unanswerable","gold":"correct","evidence":"correct","note":""}
+{"id":"pilot-17","condition_verdict":"agree","condition":"unanswerable","machine_condition":"unanswerable","gold":"correct","evidence":"correct","note":""}
+{"id":"pilot-18","condition_verdict":"agree","condition":"unanswerable","machine_condition":"unanswerable","gold":"correct","evidence":"correct","note":""}
+{"id":"pilot-19","condition_verdict":"agree","condition":"unanswerable","machine_condition":"unanswerable","gold":"correct","evidence":"correct","note":""}
+{"id":"pilot-20","condition_verdict":"agree","condition":"unanswerable","machine_condition":"unanswerable","gold":"correct","evidence":"correct","note":""}

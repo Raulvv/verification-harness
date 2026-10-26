@@ -1,0 +1,23 @@
+{
+  "source": "local",
+
+  "docsDir": "docs",
+  "archiveDirs": [],
+  "indexPath": "docs/INDEX.md",
+  "goldenPath": "golden/golden.json",
+
+  "models": {
+    "retriever": {
+      "baseUrl": "https://api.openai.com/v1",
+      "apiKeyEnv": "OPENAI_API_KEY",
+      "model": "<your-flash-tier-model>",
+      "label": "flash"
+    },
+    "coordinator": {
+      "baseUrl": "https://api.openai.com/v1",
+      "apiKeyEnv": "OPENAI_API_KEY",
+      "model": "<your-coordinator-tier-model>",
+      "label": "pro"
+    }
+  }
+}

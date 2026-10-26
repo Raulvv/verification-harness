@@ -1,0 +1,45 @@
+{
+  "apiVersion": "v2",
+  "command": "confluence.content.get",
+  "request": {
+    "urlOrId": "4761223179",
+    "site": "fixture.atlassian.net",
+    "detail": "full",
+    "contentFormat": "markdown",
+    "includeMetadata": true,
+    "draft": false
+  },
+  "data": {
+    "id": "4761223179",
+    "type": "page",
+    "title": "Fixture Experience Page",
+    "status": "current",
+    "spaceId": "789479829",
+    "snapshotToken": "v:6",
+    "detail": "full",
+    "body": {
+      "format": "markdown",
+      "value": "# Fixture Heading One\n\n\nFixture panel text one.\n\n# **Fixture Heading Two**\n",
+      "lossyConversion": true,
+      "lostFeatures": [
+        "ac:structured-macro",
+        "ac:adf-extension"
+      ]
+    },
+    "metadata": {
+      "hasSpaceInstructions": false,
+      "totalViews": 487,
+      "authorId": "000000000000000000000000",
+      "version": {
+        "number": 6,
+        "createdAt": "2026-06-27T17:06:15.868Z",
+        "message": ""
+      }
+    }
+  },
+  "meta": {
+    "resourceClass": "entity",
+    "sourceMode": "native",
+    "resourceType": "confluence.content"
+  }
+}

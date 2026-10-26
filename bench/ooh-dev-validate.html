@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>OOH aggregation dev set — spot check</title>
+<style>
+:root { --ink:#1f2937; --muted:#6b7280; --line:#e5e7eb; --bg:#f8fafc; --good:#166534; --bad:#991b1b; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+header { background:#111827; color:#fff; padding:24px 28px; }
+header h1 { margin:0 0 6px; font-size:22px; }
+header p { margin:4px 0; color:#d1d5db; max-width:900px; }
+main { max-width:1180px; margin:0 auto; padding:22px; }
+.intro { background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px 20px; margin-bottom:18px; }
+.intro h2 { margin:0 0 8px; font-size:17px; }
+.intro ul { margin:8px 0 0 20px; padding:0; }
+.intro li { margin:4px 0; }
+.actions { display:flex; gap:10px; flex-wrap:wrap; margin:14px 0 20px; align-items:center; }
+button { border:0; border-radius:8px; padding:10px 14px; font-weight:600; cursor:pointer; background:#111827; color:#fff; }
+button.secondary { background:#e5e7eb; color:#111827; }
+button:disabled { opacity:.5; cursor:default; }
+#progress { color:var(--muted); font-size:14px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px 20px; margin:16px 0; }
+.cardhead { display:flex; align-items:center; gap:10px; }
+.cardhead h3 { margin:0; font-size:16px; }
+.badge { background:#eef2ff; color:#3730a3; border-radius:999px; padding:2px 9px; font-size:12px; font-weight:700; }
+.q { font-size:17px; margin:10px 0; }
+.gold { background:#f0fdf4; border-left:4px solid #22c55e; padding:9px 12px; margin:8px 0; }
+.rule,.note { color:var(--muted); font-size:13px; margin:5px 0; }
+.tablewrap { overflow:auto; margin:10px 0; border:1px solid var(--line); border-radius:8px; }
+table { border-collapse:collapse; width:100%; font-size:13px; }
+th,td { text-align:left; padding:7px 9px; border-bottom:1px solid var(--line); vertical-align:top; }
+th { background:#f9fafb; font-size:12px; text-transform:uppercase; letter-spacing:.02em; color:#374151; }
+tr:last-child td { border-bottom:0; }
+td.yes { color:var(--good); font-weight:700; }
+td.no { color:var(--bad); }
+a { color:#1d4ed8; text-decoration:none; }
+a:hover { text-decoration:underline; }
+.verdict { margin:10px 0 6px; font-weight:600; }
+.verdict input { width:18px; height:18px; vertical-align:-3px; margin-right:7px; }
+textarea { width:100%; min-height:48px; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font:14px/1.4 inherit; }
+.full { margin-top:28px; }
+.full summary { cursor:pointer; font-weight:700; font-size:16px; }
+footer { color:var(--muted); font-size:13px; padding:20px 0 40px; }
+</style></head><body>
+<header>
+  <h1>OOH public aggregation dev set — spot check</h1>
+  <p>14 items. You do <b>not</b> need to read all 48 articles. Check the question, the gold answer, and the qualifying rows shown. Open a source page only if a boundary looks wrong.</p>
+</header>
+<main>
+  <div class="intro">
+    <h2>What to check</h2>
+    <ul>
+      <li>Is the question unambiguous and answered by the shown rows?</li>
+      <li>Does the gold answer match the table? (Computed should equal gold.)</li>
+      <li>For filters: <code>&gt;</code> vs <code>&gt;=</code>, <code>&gt; 0</code> excludes 0, <code>&gt; 4</code> excludes exactly 4.</li>
+      <li>Counts: the number equals the qualifying rows shown. Sums: 2033 = 2023 jobs + change.</li>
+      <li>Candidate set: 46 paid rows, 48 all rows, or the 2 selected rows for sums.</li>
+    </ul>
+    <p class="muted">The dev set is machine-derived from the public table. This pass is the human check.</p>
+  </div>
+  <div class="actions">
+    <button id="agreeAll" type="button">Agree all 14 (then review exceptions)</button>
+    <button id="download" class="secondary" type="button">Download verdicts JSON</button>
+    <button id="copy" class="secondary" type="button">Copy JSON</button>
+    <span id="progress">0 / 14 agreed</span>
+  </div>
+
+<section class="card" data-id="dev-agg-001">
+  <div class="cardhead"><h3>dev-agg-001</h3><span class="badge">min</span></div>
+  <p class="q">Among the 46 occupations with a reported median annual pay, which has the lowest median annual pay, and what is that pay?</p>
+  <div class="gold"><b>Gold:</b> Childcare Workers — $30,370 <span class="muted">(computed: Childcare Workers — $30,370)</span></div>
+  <div class="rule"><b>Rule:</b> min annual · paid</div>
+  <div class="note">Showing bottom 5 of 46 qualifying rows.</div>
+  <div class="tablewrap"><table><thead><tr><th>Occupation</th><th>Pay</th><th>Growth</th><th>2033 jobs</th><th>Education</th><th>Qualifies</th></tr></thead><tbody><tr><td><a href="corpus/ooh-v1/personal-care-and-service__childcare-workers.md" target="_blank">Childcare Workers</a></td>
+<td>$30,370</td>
+<td>-1%</td><td>$957,800</td>
+<td>High school diploma or equivalent</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/food-preparation-and-serving__waiters-and-waitresses.md" target="_blank">Waiters and Waitresses</a></td>
+<td>$31,940</td>
+<td>1%</td><td>$2,300,800</td>
+<td>No formal educational credential</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/farming-fishing-and-forestry__agricultural-workers.md" target="_blank">Agricultural Workers</a></td>
+<td>$34,790</td>
+<td>-2%</td><td>$765,600</td>
+<td>See How to Become One</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/building-and-grounds-cleaning__janitors-and-building-cleaners.md" target="_blank">Janitors and Building Cleaners</a></td>
+<td>$35,020</td>
+<td>3%</td><td>$2,507,400</td>
+<td>No formal educational credential</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/personal-care-and-service__barbers-hairstylists-and-cosmetologists.md" target="_blank">Barbers, Hairstylists, and Cosmetologists</a></td>
+<td>$35,080</td>
+<td>7%</td><td>$694,700</td>
+<td>Postsecondary nondegree award</td><td class="yes">yes</td></tr></tbody></table></div>
+  <div class="verdict"><label><input type="checkbox" class="agree"> I agree with this question, gold and qualifying rows</label></div>
+  <textarea class="notes" placeholder="Only if something is wrong: what should change?"></textarea>
+</section>
+<section class="card" data-id="dev-agg-002">
+  <div class="cardhead"><h3>dev-agg-002</h3><span class="badge">max</span></div>
+  <p class="q">Among all 48 occupations, which has the highest projected growth rate from 2023 to 2033, and what is that rate?</p>
+  <div class="gold"><b>Gold:</b> Information Security Analysts — 33% <span class="muted">(computed: Information Security Analysts — 33%)</span></div>
+  <div class="rule"><b>Rule:</b> max outlook_pct · all</div>
+  <div class="note">Showing top 5 of 48 qualifying rows.</div>
+  <div class="tablewrap"><table><thead><tr><th>Occupation</th><th>Pay</th><th>Growth</th><th>2033 jobs</th><th>Education</th><th>Qualifies</th></tr></thead><tbody><tr><td><a href="corpus/ooh-v1/computer-and-information-technology__information-security-analysts.md" target="_blank">Information Security Analysts</a></td>
+<td>$120,360</td>
+<td>33%</td><td>$239,800</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/math__actuaries.md" target="_blank">Actuaries</a></td>
+<td>$120,000</td>
+<td>22%</td><td>$36,800</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/computer-and-information-technology__software-developers.md" target="_blank">Software Developers, Quality Assurance Analysts, and Testers</a></td>
+<td>$130,160</td>
+<td>17%</td><td>$2,225,000</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/architecture-and-engineering__mechanical-engineers.md" target="_blank">Mechanical Engineers</a></td>
+<td>$99,510</td>
+<td>11%</td><td>$324,000</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/construction-and-extraction__electricians.md" target="_blank">Electricians</a></td>
+<td>$61,590</td>
+<td>11%</td><td>$864,100</td>
+<td>High school diploma or equivalent</td><td class="yes">yes</td></tr></tbody></table></div>
+  <div class="verdict"><label><input type="checkbox" class="agree"> I agree with this question, gold and qualifying rows</label></div>
+  <textarea class="notes" placeholder="Only if something is wrong: what should change?"></textarea>
+</section>
+<section class="card" data-id="dev-agg-003">
+  <div class="cardhead"><h3>dev-agg-003</h3><span class="badge">min</span></div>
+  <p class="q">Among all 48 occupations, which has the lowest projected growth rate from 2023 to 2033, and what is that rate?</p>
+  <div class="gold"><b>Gold:</b> Advertising Sales Agents — -7% <span class="muted">(computed: Advertising Sales Agents — -7%)</span></div>
+  <div class="rule"><b>Rule:</b> min outlook_pct · all</div>
+  <div class="note">Showing bottom 5 of 48 qualifying rows.</div>
+  <div class="tablewrap"><table><thead><tr><th>Occupation</th><th>Pay</th><th>Growth</th><th>2033 jobs</th><th>Education</th><th>Qualifies</th></tr></thead><tbody><tr><td><a href="corpus/ooh-v1/sales__advertising-sales-agents.md" target="_blank">Advertising Sales Agents</a></td>
+<td>$61,270</td>
+<td>-7%</td><td>$104,200</td>
+<td>High school diploma or equivalent</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/office-and-administrative-support__bookkeeping-accounting-and-auditing-clerks.md" target="_blank">Bookkeeping, Accounting, and Auditing Clerks</a></td>
+<td>$47,440</td>
+<td>-5%</td><td>$1,579,900</td>
+<td>Some college, no degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/office-and-administrative-support__customer-service-representatives.md" target="_blank">Customer Service Representatives</a></td>
+<td>$39,680</td>
+<td>-5%</td><td>$2,805,800</td>
+<td>High school diploma or equivalent</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/farming-fishing-and-forestry__agricultural-workers.md" target="_blank">Agricultural Workers</a></td>
+<td>$34,790</td>
+<td>-2%</td><td>$765,600</td>
+<td>See How to Become One</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/education-training-and-library__kindergarten-and-elementary-school-teachers.md" target="_blank">Kindergarten and Elementary School Teachers</a></td>
+<td>$63,670</td>
+<td>-1%</td><td>$1,552,200</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr></tbody></table></div>
+  <div class="verdict"><label><input type="checkbox" class="agree"> I agree with this question, gold and qualifying rows</label></div>
+  <textarea class="notes" placeholder="Only if something is wrong: what should change?"></textarea>
+</section>
+<section class="card" data-id="dev-agg-004">
+  <div class="cardhead"><h3>dev-agg-004</h3><span class="badge">count</span></div>
+  <p class="q">How many of the 48 occupations have a projected growth rate greater than 10% from 2023 to 2033?</p>
+  <div class="gold"><b>Gold:</b> 6 <span class="muted">(computed: 6)</span></div>
+  <div class="rule"><b>Rule:</b> count outlook_pct · all · filter outlook_pct &gt; 10</div>
+  <div class="note">6 qualifying rows of 48 candidates.</div>
+  <div class="tablewrap"><table><thead><tr><th>Occupation</th><th>Pay</th><th>Growth</th><th>2033 jobs</th><th>Education</th><th>Qualifies</th></tr></thead><tbody><tr><td><a href="corpus/ooh-v1/architecture-and-engineering__mechanical-engineers.md" target="_blank">Mechanical Engineers</a></td>
+<td>$99,510</td>
+<td>11%</td><td>$324,000</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/computer-and-information-technology__information-security-analysts.md" target="_blank">Information Security Analysts</a></td>
+<td>$120,360</td>
+<td>33%</td><td>$239,800</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/computer-and-information-technology__software-developers.md" target="_blank">Software Developers, Quality Assurance Analysts, and Testers</a></td>
+<td>$130,160</td>
+<td>17%</td><td>$2,225,000</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/construction-and-extraction__electricians.md" target="_blank">Electricians</a></td>
+<td>$61,590</td>
+<td>11%</td><td>$864,100</td>
+<td>High school diploma or equivalent</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/math__actuaries.md" target="_blank">Actuaries</a></td>
+<td>$120,000</td>
+<td>22%</td><td>$36,800</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/math__mathematicians-and-statisticians.md" target="_blank">Mathematicians and Statisticians</a></td>
+<td>$104,860</td>
+<td>11%</td><td>$38,700</td>
+<td>Master&#x27;s degree</td><td class="yes">yes</td></tr></tbody></table></div>
+  <div class="verdict"><label><input type="checkbox" class="agree"> I agree with this question, gold and qualifying rows</label></div>
+  <textarea class="notes" placeholder="Only if something is wrong: what should change?"></textarea>
+</section>
+<section class="card" data-id="dev-agg-005">
+  <div class="cardhead"><h3>dev-agg-005</h3><span class="badge">count</span></div>
+  <p class="q">How many of the 48 occupations have a projected decline (growth below 0%) from 2023 to 2033?</p>
+  <div class="gold"><b>Gold:</b> 7 <span class="muted">(computed: 7)</span></div>
+  <div class="rule"><b>Rule:</b> count outlook_pct · all · filter outlook_pct &lt; 0</div>
+  <div class="note">7 qualifying rows of 48 candidates.</div>
+  <div class="tablewrap"><table><thead><tr><th>Occupation</th><th>Pay</th><th>Growth</th><th>2033 jobs</th><th>Education</th><th>Qualifies</th></tr></thead><tbody><tr><td><a href="corpus/ooh-v1/education-training-and-library__kindergarten-and-elementary-school-teachers.md" target="_blank">Kindergarten and Elementary School Teachers</a></td>
+<td>$63,670</td>
+<td>-1%</td><td>$1,552,200</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/farming-fishing-and-forestry__agricultural-workers.md" target="_blank">Agricultural Workers</a></td>
+<td>$34,790</td>
+<td>-2%</td><td>$765,600</td>
+<td>See How to Become One</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/farming-fishing-and-forestry__fishers-and-related-fishing-workers.md" target="_blank">Fishing and Hunting Workers</a></td>
+<td>N/A</td>
+<td>-1%</td><td>$25,300</td>
+<td>No formal educational credential</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/office-and-administrative-support__bookkeeping-accounting-and-auditing-clerks.md" target="_blank">Bookkeeping, Accounting, and Auditing Clerks</a></td>
+<td>$47,440</td>
+<td>-5%</td><td>$1,579,900</td>
+<td>Some college, no degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/office-and-administrative-support__customer-service-representatives.md" target="_blank">Customer Service Representatives</a></td>
+<td>$39,680</td>
+<td>-5%</td><td>$2,805,800</td>
+<td>High school diploma or equivalent</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/personal-care-and-service__childcare-workers.md" target="_blank">Childcare Workers</a></td>
+<td>$30,370</td>
+<td>-1%</td><td>$957,800</td>
+<td>High school diploma or equivalent</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/sales__advertising-sales-agents.md" target="_blank">Advertising Sales Agents</a></td>
+<td>$61,270</td>
+<td>-7%</td><td>$104,200</td>
+<td>High school diploma or equivalent</td><td class="yes">yes</td></tr></tbody></table></div>
+  <div class="verdict"><label><input type="checkbox" class="agree"> I agree with this question, gold and qualifying rows</label></div>
+  <textarea class="notes" placeholder="Only if something is wrong: what should change?"></textarea>
+</section>
+<section class="card" data-id="dev-agg-006">
+  <div class="cardhead"><h3>dev-agg-006</h3><span class="badge">max</span></div>
+  <p class="q">Among occupations with a reported median annual pay and projected growth of at least 10%, which has the highest median annual pay, and what is that pay?</p>
+  <div class="gold"><b>Gold:</b> Software Developers, Quality Assurance Analysts, and Testers — $130,160 <span class="muted">(computed: Software Developers, Quality Assurance Analysts, and Testers — $130,160)</span></div>
+  <div class="rule"><b>Rule:</b> max annual · paid · filter outlook_pct &gt;= 10</div>
+  <div class="note">Showing top 6 of 6 qualifying rows.</div>
+  <div class="tablewrap"><table><thead><tr><th>Occupation</th><th>Pay</th><th>Growth</th><th>2033 jobs</th><th>Education</th><th>Qualifies</th></tr></thead><tbody><tr><td><a href="corpus/ooh-v1/computer-and-information-technology__software-developers.md" target="_blank">Software Developers, Quality Assurance Analysts, and Testers</a></td>
+<td>$130,160</td>
+<td>17%</td><td>$2,225,000</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/computer-and-information-technology__information-security-analysts.md" target="_blank">Information Security Analysts</a></td>
+<td>$120,360</td>
+<td>33%</td><td>$239,800</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/math__actuaries.md" target="_blank">Actuaries</a></td>
+<td>$120,000</td>
+<td>22%</td><td>$36,800</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/math__mathematicians-and-statisticians.md" target="_blank">Mathematicians and Statisticians</a></td>
+<td>$104,860</td>
+<td>11%</td><td>$38,700</td>
+<td>Master&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/architecture-and-engineering__mechanical-engineers.md" target="_blank">Mechanical Engineers</a></td>
+<td>$99,510</td>
+<td>11%</td><td>$324,000</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/construction-and-extraction__electricians.md" target="_blank">Electricians</a></td>
+<td>$61,590</td>
+<td>11%</td><td>$864,100</td>
+<td>High school diploma or equivalent</td><td class="yes">yes</td></tr></tbody></table></div>
+  <div class="verdict"><label><input type="checkbox" class="agree"> I agree with this question, gold and qualifying rows</label></div>
+  <textarea class="notes" placeholder="Only if something is wrong: what should change?"></textarea>
+</section>
+<section class="card" data-id="dev-agg-007">
+  <div class="cardhead"><h3>dev-agg-007</h3><span class="badge">min</span></div>
+  <p class="q">Among occupations with a reported median annual pay and positive projected growth, which has the lowest median annual pay, and what is that pay?</p>
+  <div class="gold"><b>Gold:</b> Waiters and Waitresses — $31,940 <span class="muted">(computed: Waiters and Waitresses — $31,940)</span></div>
+  <div class="rule"><b>Rule:</b> min annual · paid · filter outlook_pct &gt; 0</div>
+  <div class="note">Showing bottom 5 of 38 qualifying rows.</div>
+  <div class="tablewrap"><table><thead><tr><th>Occupation</th><th>Pay</th><th>Growth</th><th>2033 jobs</th><th>Education</th><th>Qualifies</th></tr></thead><tbody><tr><td><a href="corpus/ooh-v1/food-preparation-and-serving__waiters-and-waitresses.md" target="_blank">Waiters and Waitresses</a></td>
+<td>$31,940</td>
+<td>1%</td><td>$2,300,800</td>
+<td>No formal educational credential</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/building-and-grounds-cleaning__janitors-and-building-cleaners.md" target="_blank">Janitors and Building Cleaners</a></td>
+<td>$35,020</td>
+<td>3%</td><td>$2,507,400</td>
+<td>No formal educational credential</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/personal-care-and-service__barbers-hairstylists-and-cosmetologists.md" target="_blank">Barbers, Hairstylists, and Cosmetologists</a></td>
+<td>$35,080</td>
+<td>7%</td><td>$694,700</td>
+<td>Postsecondary nondegree award</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/building-and-grounds-cleaning__grounds-maintenance-workers.md" target="_blank">Grounds Maintenance Workers</a></td>
+<td>$37,690</td>
+<td>5%</td><td>$1,361,300</td>
+<td>See How to Become One</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/installation-maintenance-and-repair__automotive-service-technicians-and-mechanics.md" target="_blank">Automotive Service Technicians and Mechanics</a></td>
+<td>$47,770</td>
+<td>3%</td><td>$815,800</td>
+<td>Postsecondary nondegree award</td><td class="yes">yes</td></tr></tbody></table></div>
+  <div class="verdict"><label><input type="checkbox" class="agree"> I agree with this question, gold and qualifying rows</label></div>
+  <textarea class="notes" placeholder="Only if something is wrong: what should change?"></textarea>
+</section>
+<section class="card" data-id="dev-agg-008">
+  <div class="cardhead"><h3>dev-agg-008</h3><span class="badge">sum</span></div>
+  <p class="q">What is the combined projected 2033 employment of Registered Nurses and Carpenters?</p>
+  <div class="gold"><b>Gold:</b> $4,459,000 <span class="muted">(computed: $4,459,000)</span></div>
+  <div class="rule"><b>Rule:</b> sum jobs2033 · select</div>
+  <div class="note">All 2 selected candidates; 2033 = 2023 jobs + change.</div>
+  <div class="tablewrap"><table><thead><tr><th>Occupation</th><th>Pay</th><th>Growth</th><th>2033 jobs</th><th>Education</th><th>Qualifies</th></tr></thead><tbody><tr><td><a href="corpus/ooh-v1/healthcare__registered-nurses.md" target="_blank">Registered Nurses</a></td>
+<td>$86,070</td>
+<td>6%</td><td>$3,497,300</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/construction-and-extraction__carpenters.md" target="_blank">Carpenters</a></td>
+<td>$56,350</td>
+<td>4%</td><td>$961,700</td>
+<td>High school diploma or equivalent</td><td class="yes">yes</td></tr></tbody></table></div>
+  <div class="verdict"><label><input type="checkbox" class="agree"> I agree with this question, gold and qualifying rows</label></div>
+  <textarea class="notes" placeholder="Only if something is wrong: what should change?"></textarea>
+</section>
+<section class="card" data-id="dev-agg-009">
+  <div class="cardhead"><h3>dev-agg-009</h3><span class="badge">count</span></div>
+  <p class="q">How many occupations with a reported median annual pay have a median annual pay above $100,000?</p>
+  <div class="gold"><b>Gold:</b> 9 <span class="muted">(computed: 9)</span></div>
+  <div class="rule"><b>Rule:</b> count annual · paid · filter annual &gt; 100000</div>
+  <div class="note">9 qualifying rows of 46 candidates.</div>
+  <div class="tablewrap"><table><thead><tr><th>Occupation</th><th>Pay</th><th>Growth</th><th>2033 jobs</th><th>Education</th><th>Qualifies</th></tr></thead><tbody><tr><td><a href="corpus/ooh-v1/computer-and-information-technology__information-security-analysts.md" target="_blank">Information Security Analysts</a></td>
+<td>$120,360</td>
+<td>33%</td><td>$239,800</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/computer-and-information-technology__software-developers.md" target="_blank">Software Developers, Quality Assurance Analysts, and Testers</a></td>
+<td>$130,160</td>
+<td>17%</td><td>$2,225,000</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/healthcare__physicians-and-surgeons.md" target="_blank">Physicians and Surgeons</a></td>
+<td>$239,200</td>
+<td>4%</td><td>$869,000</td>
+<td>Doctoral or professional degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/legal__judges-and-hearing-officers.md" target="_blank">Judges and Hearing Officers</a></td>
+<td>$132,950</td>
+<td>3%</td><td>$42,900</td>
+<td>Doctoral or professional degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/management__administrative-services-managers.md" target="_blank">Administrative Services and Facilities Managers</a></td>
+<td>$104,900</td>
+<td>6%</td><td>$420,700</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/management__top-executives.md" target="_blank">Top Executives</a></td>
+<td>$103,840</td>
+<td>6%</td><td>$4,171,600</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/math__actuaries.md" target="_blank">Actuaries</a></td>
+<td>$120,000</td>
+<td>22%</td><td>$36,800</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/math__mathematicians-and-statisticians.md" target="_blank">Mathematicians and Statisticians</a></td>
+<td>$104,860</td>
+<td>11%</td><td>$38,700</td>
+<td>Master&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/transportation-and-material-moving__airline-and-commercial-pilots.md" target="_blank">Airline and Commercial Pilots</a></td>
+<td>$171,210</td>
+<td>5%</td><td>$160,800</td>
+<td>See How to Become One</td><td class="yes">yes</td></tr></tbody></table></div>
+  <div class="verdict"><label><input type="checkbox" class="agree"> I agree with this question, gold and qualifying rows</label></div>
+  <textarea class="notes" placeholder="Only if something is wrong: what should change?"></textarea>
+</section>
+<section class="card" data-id="dev-agg-010">
+  <div class="cardhead"><h3>dev-agg-010</h3><span class="badge">max</span></div>
+  <p class="q">Among occupations with a reported median annual pay and a typical entry-level education of a master&#x27;s degree, which has the highest median annual pay, and what is that pay?</p>
+  <div class="gold"><b>Gold:</b> Mathematicians and Statisticians — $104,860 <span class="muted">(computed: Mathematicians and Statisticians — $104,860)</span></div>
+  <div class="rule"><b>Rule:</b> max annual · paid · filter education = Master&#x27;s degree</div>
+  <div class="note">Showing top 2 of 2 qualifying rows.</div>
+  <div class="tablewrap"><table><thead><tr><th>Occupation</th><th>Pay</th><th>Growth</th><th>2033 jobs</th><th>Education</th><th>Qualifies</th></tr></thead><tbody><tr><td><a href="corpus/ooh-v1/math__mathematicians-and-statisticians.md" target="_blank">Mathematicians and Statisticians</a></td>
+<td>$104,860</td>
+<td>11%</td><td>$38,700</td>
+<td>Master&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/community-and-social-service__school-and-career-counselors.md" target="_blank">School and Career Counselors and Advisors</a></td>
+<td>$61,710</td>
+<td>4%</td><td>$377,000</td>
+<td>Master&#x27;s degree</td><td class="yes">yes</td></tr></tbody></table></div>
+  <div class="verdict"><label><input type="checkbox" class="agree"> I agree with this question, gold and qualifying rows</label></div>
+  <textarea class="notes" placeholder="Only if something is wrong: what should change?"></textarea>
+</section>
+<section class="card" data-id="dev-agg-011">
+  <div class="cardhead"><h3>dev-agg-011</h3><span class="badge">count</span></div>
+  <p class="q">How many occupations with a reported median annual pay require a doctoral or professional degree for entry?</p>
+  <div class="gold"><b>Gold:</b> 2 <span class="muted">(computed: 2)</span></div>
+  <div class="rule"><b>Rule:</b> count education · paid · filter education = Doctoral or professional degree</div>
+  <div class="note">2 qualifying rows of 46 candidates.</div>
+  <div class="tablewrap"><table><thead><tr><th>Occupation</th><th>Pay</th><th>Growth</th><th>2033 jobs</th><th>Education</th><th>Qualifies</th></tr></thead><tbody><tr><td><a href="corpus/ooh-v1/healthcare__physicians-and-surgeons.md" target="_blank">Physicians and Surgeons</a></td>
+<td>$239,200</td>
+<td>4%</td><td>$869,000</td>
+<td>Doctoral or professional degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/legal__judges-and-hearing-officers.md" target="_blank">Judges and Hearing Officers</a></td>
+<td>$132,950</td>
+<td>3%</td><td>$42,900</td>
+<td>Doctoral or professional degree</td><td class="yes">yes</td></tr></tbody></table></div>
+  <div class="verdict"><label><input type="checkbox" class="agree"> I agree with this question, gold and qualifying rows</label></div>
+  <textarea class="notes" placeholder="Only if something is wrong: what should change?"></textarea>
+</section>
+<section class="card" data-id="dev-agg-012">
+  <div class="cardhead"><h3>dev-agg-012</h3><span class="badge">sum</span></div>
+  <p class="q">What is the combined projected 2033 employment of Social Workers and Psychologists?</p>
+  <div class="gold"><b>Gold:</b> $1,028,100 <span class="muted">(computed: $1,028,100)</span></div>
+  <div class="rule"><b>Rule:</b> sum jobs2033 · select</div>
+  <div class="note">All 2 selected candidates; 2033 = 2023 jobs + change.</div>
+  <div class="tablewrap"><table><thead><tr><th>Occupation</th><th>Pay</th><th>Growth</th><th>2033 jobs</th><th>Education</th><th>Qualifies</th></tr></thead><tbody><tr><td><a href="corpus/ooh-v1/community-and-social-service__social-workers.md" target="_blank">Social Workers</a></td>
+<td>$58,380</td>
+<td>7%</td><td>$806,600</td>
+<td>See How to Become One</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/life-physical-and-social-science__psychologists.md" target="_blank">Psychologists</a></td>
+<td>$92,740</td>
+<td>7%</td><td>$221,500</td>
+<td>See How to Become One</td><td class="yes">yes</td></tr></tbody></table></div>
+  <div class="verdict"><label><input type="checkbox" class="agree"> I agree with this question, gold and qualifying rows</label></div>
+  <textarea class="notes" placeholder="Only if something is wrong: what should change?"></textarea>
+</section>
+<section class="card" data-id="dev-agg-013">
+  <div class="cardhead"><h3>dev-agg-013</h3><span class="badge">max</span></div>
+  <p class="q">Among occupations with a reported median annual pay and projected growth above 20%, which has the highest median annual pay, and what is that pay?</p>
+  <div class="gold"><b>Gold:</b> Information Security Analysts — $120,360 <span class="muted">(computed: Information Security Analysts — $120,360)</span></div>
+  <div class="rule"><b>Rule:</b> max annual · paid · filter outlook_pct &gt; 20</div>
+  <div class="note">Showing top 2 of 2 qualifying rows.</div>
+  <div class="tablewrap"><table><thead><tr><th>Occupation</th><th>Pay</th><th>Growth</th><th>2033 jobs</th><th>Education</th><th>Qualifies</th></tr></thead><tbody><tr><td><a href="corpus/ooh-v1/computer-and-information-technology__information-security-analysts.md" target="_blank">Information Security Analysts</a></td>
+<td>$120,360</td>
+<td>33%</td><td>$239,800</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/math__actuaries.md" target="_blank">Actuaries</a></td>
+<td>$120,000</td>
+<td>22%</td><td>$36,800</td>
+<td>Bachelor&#x27;s degree</td><td class="yes">yes</td></tr></tbody></table></div>
+  <div class="verdict"><label><input type="checkbox" class="agree"> I agree with this question, gold and qualifying rows</label></div>
+  <textarea class="notes" placeholder="Only if something is wrong: what should change?"></textarea>
+</section>
+<section class="card" data-id="dev-agg-014">
+  <div class="cardhead"><h3>dev-agg-014</h3><span class="badge">count</span></div>
+  <p class="q">How many occupations with a reported median annual pay have a median annual pay below $40,000?</p>
+  <div class="gold"><b>Gold:</b> 8 <span class="muted">(computed: 8)</span></div>
+  <div class="rule"><b>Rule:</b> count annual · paid · filter annual &lt; 40000</div>
+  <div class="note">8 qualifying rows of 46 candidates.</div>
+  <div class="tablewrap"><table><thead><tr><th>Occupation</th><th>Pay</th><th>Growth</th><th>2033 jobs</th><th>Education</th><th>Qualifies</th></tr></thead><tbody><tr><td><a href="corpus/ooh-v1/building-and-grounds-cleaning__grounds-maintenance-workers.md" target="_blank">Grounds Maintenance Workers</a></td>
+<td>$37,690</td>
+<td>5%</td><td>$1,361,300</td>
+<td>See How to Become One</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/building-and-grounds-cleaning__janitors-and-building-cleaners.md" target="_blank">Janitors and Building Cleaners</a></td>
+<td>$35,020</td>
+<td>3%</td><td>$2,507,400</td>
+<td>No formal educational credential</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/farming-fishing-and-forestry__agricultural-workers.md" target="_blank">Agricultural Workers</a></td>
+<td>$34,790</td>
+<td>-2%</td><td>$765,600</td>
+<td>See How to Become One</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/food-preparation-and-serving__waiters-and-waitresses.md" target="_blank">Waiters and Waitresses</a></td>
+<td>$31,940</td>
+<td>1%</td><td>$2,300,800</td>
+<td>No formal educational credential</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/office-and-administrative-support__customer-service-representatives.md" target="_blank">Customer Service Representatives</a></td>
+<td>$39,680</td>
+<td>-5%</td><td>$2,805,800</td>
+<td>High school diploma or equivalent</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/personal-care-and-service__barbers-hairstylists-and-cosmetologists.md" target="_blank">Barbers, Hairstylists, and Cosmetologists</a></td>
+<td>$35,080</td>
+<td>7%</td><td>$694,700</td>
+<td>Postsecondary nondegree award</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/personal-care-and-service__childcare-workers.md" target="_blank">Childcare Workers</a></td>
+<td>$30,370</td>
+<td>-1%</td><td>$957,800</td>
+<td>High school diploma or equivalent</td><td class="yes">yes</td></tr><tr><td><a href="corpus/ooh-v1/production__assemblers-and-fabricators.md" target="_blank">Assemblers and Fabricators</a></td>
+<td>$39,720</td>
+<td>0%</td><td>$1,966,800</td>
+<td>High school diploma or equivalent</td><td class="yes">yes</td></tr></tbody></table></div>
+  <div class="verdict"><label><input type="checkbox" class="agree"> I agree with this question, gold and qualifying rows</label></div>
+  <textarea class="notes" placeholder="Only if something is wrong: what should change?"></textarea>
+</section>
+  <details class="full">
+    <summary>Full 48-row table (for cross-checking)</summary>
+    <div class="tablewrap"><table><thead><tr><th>Occupation</th><th>Pay</th><th>Growth</th><th>2033 jobs</th><th>Education</th></tr></thead><tbody><tr><td><a href="corpus/ooh-v1/architecture-and-engineering__civil-engineers.md" target="_blank">Civil Engineers</a></td><td>$95,890</td><td>6%</td><td>$363,900</td><td>Bachelor&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/architecture-and-engineering__mechanical-engineers.md" target="_blank">Mechanical Engineers</a></td><td>$99,510</td><td>11%</td><td>$324,000</td><td>Bachelor&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/arts-and-design__graphic-designers.md" target="_blank">Graphic Designers</a></td><td>$58,910</td><td>2%</td><td>$273,800</td><td>Bachelor&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/arts-and-design__interior-designers.md" target="_blank">Interior Designers</a></td><td>$62,510</td><td>4%</td><td>$95,900</td><td>Bachelor&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/building-and-grounds-cleaning__grounds-maintenance-workers.md" target="_blank">Grounds Maintenance Workers</a></td><td>$37,690</td><td>5%</td><td>$1,361,300</td><td>See How to Become One</td></tr><tr><td><a href="corpus/ooh-v1/building-and-grounds-cleaning__janitors-and-building-cleaners.md" target="_blank">Janitors and Building Cleaners</a></td><td>$35,020</td><td>3%</td><td>$2,507,400</td><td>No formal educational credential</td></tr><tr><td><a href="corpus/ooh-v1/business-and-financial__accountants-and-auditors.md" target="_blank">Accountants and Auditors</a></td><td>$79,880</td><td>6%</td><td>$1,653,400</td><td>Bachelor&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/business-and-financial__financial-analysts.md" target="_blank">Financial Analysts</a></td><td>$99,890</td><td>9%</td><td>$442,700</td><td>Bachelor&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/community-and-social-service__school-and-career-counselors.md" target="_blank">School and Career Counselors and Advisors</a></td><td>$61,710</td><td>4%</td><td>$377,000</td><td>Master&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/community-and-social-service__social-workers.md" target="_blank">Social Workers</a></td><td>$58,380</td><td>7%</td><td>$806,600</td><td>See How to Become One</td></tr><tr><td><a href="corpus/ooh-v1/computer-and-information-technology__information-security-analysts.md" target="_blank">Information Security Analysts</a></td><td>$120,360</td><td>33%</td><td>$239,800</td><td>Bachelor&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/computer-and-information-technology__software-developers.md" target="_blank">Software Developers, Quality Assurance Analysts, and Testers</a></td><td>$130,160</td><td>17%</td><td>$2,225,000</td><td>Bachelor&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/construction-and-extraction__carpenters.md" target="_blank">Carpenters</a></td><td>$56,350</td><td>4%</td><td>$961,700</td><td>High school diploma or equivalent</td></tr><tr><td><a href="corpus/ooh-v1/construction-and-extraction__electricians.md" target="_blank">Electricians</a></td><td>$61,590</td><td>11%</td><td>$864,100</td><td>High school diploma or equivalent</td></tr><tr><td><a href="corpus/ooh-v1/education-training-and-library__kindergarten-and-elementary-school-teachers.md" target="_blank">Kindergarten and Elementary School Teachers</a></td><td>$63,670</td><td>-1%</td><td>$1,552,200</td><td>Bachelor&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/education-training-and-library__postsecondary-teachers.md" target="_blank">Postsecondary Teachers</a></td><td>$84,380</td><td>8%</td><td>$1,509,000</td><td>See How to Become One</td></tr><tr><td><a href="corpus/ooh-v1/entertainment-and-sports__musicians-and-singers.md" target="_blank">Musicians and Singers</a></td><td>N/A</td><td>2%</td><td>$172,800</td><td>No formal educational credential</td></tr><tr><td><a href="corpus/ooh-v1/entertainment-and-sports__producers-and-directors.md" target="_blank">Producers and Directors</a></td><td>$82,510</td><td>8%</td><td>$181,400</td><td>Bachelor&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/farming-fishing-and-forestry__agricultural-workers.md" target="_blank">Agricultural Workers</a></td><td>$34,790</td><td>-2%</td><td>$765,600</td><td>See How to Become One</td></tr><tr><td><a href="corpus/ooh-v1/farming-fishing-and-forestry__fishers-and-related-fishing-workers.md" target="_blank">Fishing and Hunting Workers</a></td><td>N/A</td><td>-1%</td><td>$25,300</td><td>No formal educational credential</td></tr><tr><td><a href="corpus/ooh-v1/food-preparation-and-serving__chefs-and-head-cooks.md" target="_blank">Chefs and Head Cooks</a></td><td>$58,920</td><td>8%</td><td>$202,600</td><td>High school diploma or equivalent</td></tr><tr><td><a href="corpus/ooh-v1/food-preparation-and-serving__waiters-and-waitresses.md" target="_blank">Waiters and Waitresses</a></td><td>$31,940</td><td>1%</td><td>$2,300,800</td><td>No formal educational credential</td></tr><tr><td><a href="corpus/ooh-v1/healthcare__physicians-and-surgeons.md" target="_blank">Physicians and Surgeons</a></td><td>$239,200</td><td>4%</td><td>$869,000</td><td>Doctoral or professional degree</td></tr><tr><td><a href="corpus/ooh-v1/healthcare__registered-nurses.md" target="_blank">Registered Nurses</a></td><td>$86,070</td><td>6%</td><td>$3,497,300</td><td>Bachelor&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/installation-maintenance-and-repair__automotive-service-technicians-and-mechanics.md" target="_blank">Automotive Service Technicians and Mechanics</a></td><td>$47,770</td><td>3%</td><td>$815,800</td><td>Postsecondary nondegree award</td></tr><tr><td><a href="corpus/ooh-v1/installation-maintenance-and-repair__heating-air-conditioning-and-refrigeration-mechanics-and-installers.md" target="_blank">Heating, Air Conditioning, and Refrigeration Mechanics and Installers</a></td><td>$57,300</td><td>9%</td><td>$481,300</td><td>Postsecondary nondegree award</td></tr><tr><td><a href="corpus/ooh-v1/legal__judges-and-hearing-officers.md" target="_blank">Judges and Hearing Officers</a></td><td>$132,950</td><td>3%</td><td>$42,900</td><td>Doctoral or professional degree</td></tr><tr><td><a href="corpus/ooh-v1/legal__paralegals-and-legal-assistants.md" target="_blank">Paralegals and Legal Assistants</a></td><td>$60,970</td><td>1%</td><td>$370,500</td><td>Associate&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/life-physical-and-social-science__chemists-and-materials-scientists.md" target="_blank">Chemists and Materials Scientists</a></td><td>$87,180</td><td>8%</td><td>$103,900</td><td>Bachelor&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/life-physical-and-social-science__psychologists.md" target="_blank">Psychologists</a></td><td>$92,740</td><td>7%</td><td>$221,500</td><td>See How to Become One</td></tr><tr><td><a href="corpus/ooh-v1/management__administrative-services-managers.md" target="_blank">Administrative Services and Facilities Managers</a></td><td>$104,900</td><td>6%</td><td>$420,700</td><td>Bachelor&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/management__top-executives.md" target="_blank">Top Executives</a></td><td>$103,840</td><td>6%</td><td>$4,171,600</td><td>Bachelor&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/math__actuaries.md" target="_blank">Actuaries</a></td><td>$120,000</td><td>22%</td><td>$36,800</td><td>Bachelor&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/math__mathematicians-and-statisticians.md" target="_blank">Mathematicians and Statisticians</a></td><td>$104,860</td><td>11%</td><td>$38,700</td><td>Master&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/media-and-communication__public-relations-specialists.md" target="_blank">Public Relations Specialists</a></td><td>$66,750</td><td>6%</td><td>$327,200</td><td>Bachelor&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/media-and-communication__writers-and-authors.md" target="_blank">Writers and Authors</a></td><td>$73,690</td><td>5%</td><td>$158,400</td><td>Bachelor&#x27;s degree</td></tr><tr><td><a href="corpus/ooh-v1/office-and-administrative-support__bookkeeping-accounting-and-auditing-clerks.md" target="_blank">Bookkeeping, Accounting, and Auditing Clerks</a></td><td>$47,440</td><td>-5%</td><td>$1,579,900</td><td>Some college, no degree</td></tr><tr><td><a href="corpus/ooh-v1/office-and-administrative-support__customer-service-representatives.md" target="_blank">Customer Service Representatives</a></td><td>$39,680</td><td>-5%</td><td>$2,805,800</td><td>High school diploma or equivalent</td></tr><tr><td><a href="corpus/ooh-v1/personal-care-and-service__barbers-hairstylists-and-cosmetologists.md" target="_blank">Barbers, Hairstylists, and Cosmetologists</a></td><td>$35,080</td><td>7%</td><td>$694,700</td><td>Postsecondary nondegree award</td></tr><tr><td><a href="corpus/ooh-v1/personal-care-and-service__childcare-workers.md" target="_blank">Childcare Workers</a></td><td>$30,370</td><td>-1%</td><td>$957,800</td><td>High school diploma or equivalent</td></tr><tr><td><a href="corpus/ooh-v1/production__assemblers-and-fabricators.md" target="_blank">Assemblers and Fabricators</a></td><td>$39,720</td><td>0%</td><td>$1,966,800</td><td>High school diploma or equivalent</td></tr><tr><td><a href="corpus/ooh-v1/production__machinists-and-tool-and-die-makers.md" target="_blank">Machinists and Tool and Die Makers</a></td><td>$53,180</td><td>0%</td><td>$356,300</td><td>See How to Become One</td></tr><tr><td><a href="corpus/ooh-v1/protective-service__firefighters.md" target="_blank">Firefighters</a></td><td>$57,120</td><td>4%</td><td>$340,500</td><td>Postsecondary nondegree award</td></tr><tr><td><a href="corpus/ooh-v1/protective-service__police-and-detectives.md" target="_blank">Police and Detectives</a></td><td>$74,910</td><td>4%</td><td>$825,500</td><td>See How to Become One</td></tr><tr><td><a href="corpus/ooh-v1/sales__advertising-sales-agents.md" target="_blank">Advertising Sales Agents</a></td><td>$61,270</td><td>-7%</td><td>$104,200</td><td>High school diploma or equivalent</td></tr><tr><td><a href="corpus/ooh-v1/sales__real-estate-brokers-and-sales-agents.md" target="_blank">Real Estate Brokers and Sales Agents</a></td><td>$56,620</td><td>2%</td><td>$554,500</td><td>High school diploma or equivalent</td></tr><tr><td><a href="corpus/ooh-v1/transportation-and-material-moving__airline-and-commercial-pilots.md" target="_blank">Airline and Commercial Pilots</a></td><td>$171,210</td><td>5%</td><td>$160,800</td><td>See How to Become One</td></tr><tr><td><a href="corpus/ooh-v1/transportation-and-material-moving__heavy-and-tractor-trailer-truck-drivers.md" target="_blank">Heavy and Tractor-trailer Truck Drivers</a></td><td>$54,320</td><td>5%</td><td>$2,313,300</td><td>Postsecondary nondegree award</td></tr></tbody></table></div>
+  </details>
+  <footer>Save the downloaded JSON next to the dev set, or send it back. No test labels are in this form.</footer>
+</main>
+<script>
+const cards = [...document.querySelectorAll('.card')];
+const boxes = [...document.querySelectorAll('.agree')];
+const progress = document.getElementById('progress');
+function update() { const n = boxes.filter(b => b.checked).length; progress.textContent = `${n} / ${cards.length} agreed`; }
+boxes.forEach(b => b.addEventListener('change', update));
+document.getElementById('agreeAll').onclick = () => { boxes.forEach(b => b.checked = true); update(); };
+function verdicts() {
+  return { reviewer: '', reviewed_at: new Date().toISOString(), items: cards.map(c => ({
+    id: c.dataset.id,
+    agree: c.querySelector('.agree').checked,
+    notes: c.querySelector('.notes').value.trim()
+  })) };
+}
+document.getElementById('download').onclick = () => {
+  const blob = new Blob([JSON.stringify(verdicts(), null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'ooh-dev-verdicts.json'; a.click(); URL.revokeObjectURL(a.href);
+};
+document.getElementById('copy').onclick = async () => {
+  try { await navigator.clipboard.writeText(JSON.stringify(verdicts(), null, 2)); document.getElementById('copy').textContent = 'Copied'; }
+  catch { document.getElementById('copy').textContent = 'Copy failed — use Download'; }
+};
+update();
+</script></body></html>

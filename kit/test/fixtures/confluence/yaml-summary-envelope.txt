@@ -1,0 +1,14 @@
+output_files:
+  stdout: "/var/folders/3k/wt6w638n071gjrydk6c5c1sh0000gn/T/twg/1790610267/run.FIXTURE/stdout.json"
+  stdout_lines: 495
+  stdout_bytes: 20589
+  compact: "/var/folders/3k/wt6w638n071gjrydk6c5c1sh0000gn/T/twg/1790610267/run.FIXTURE/stdout.compact.json"
+  compact_bytes: 5897
+command: "confluence.search.query"
+resource_type: "entity"
+agent_output:
+  summary: "auto"
+  view: "compact"
+  fields: ["request.cql", "request.limit", "request.cursor", "data.results.entityType", "data.results.content.id", "data.results.content.title", "data.results.content.type", "data.results.content._links.webui", "data.results.space.key", "data.results.space.name", "data.results.space.type", "data.results.space.status", "data.results.url", "data.results.lastModified", "data.totalSize", "data.size", "data.nextCursor", "meta.acquisition", "meta.page", "meta.evidence"]
+  field_source: "recommended"
+stdout_inline:  # … data payload redacted (probe titles/urls; see search.json for the JSON shape)

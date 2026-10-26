@@ -1,0 +1,159 @@
+{
+  "apiVersion": "v2",
+  "command": "confluence.search.query",
+  "request": {
+    "site": "fixture.atlassian.net",
+    "cql": "space = DEMO AND type = page AND title ~ \"Fixture topic\"",
+    "limit": 10,
+    "excerpt": false,
+    "cursor": null
+  },
+  "data": {
+    "results": [
+      {
+        "content": {
+          "id": "5382537278",
+          "type": "page",
+          "status": "current",
+          "title": "Fixture Result One",
+          "childTypes": {},
+          "macroRenderedOutput": {},
+          "restrictions": {},
+          "_expandable": {
+            "container": "",
+            "metadata": "",
+            "extensions": "",
+            "operations": "",
+            "children": "",
+            "history": "/rest/api/content/5382537278/history",
+            "ancestors": "",
+            "body": "",
+            "version": "",
+            "descendants": "",
+            "space": "/rest/api/space/DEMO"
+          },
+          "_links": {
+            "webui": "/spaces/DEMO/pages/5382537278/Fixture+Result+1",
+            "self": "https://fixture.atlassian.net/wiki/rest/api/content/5382537278",
+            "tinyui": "/x/PgDTQAE"
+          }
+        },
+        "title": "Fixture Result One",
+        "excerpt": "Fixture excerpt with matched words and a truncated senten",
+        "url": "/spaces/DEMO/pages/5382537278/Fixture+Result+1",
+        "resultGlobalContainer": {
+          "title": "Business Services (ex GLP Products)",
+          "displayUrl": "/spaces/DEMO"
+        },
+        "breadcrumbs": [],
+        "entityType": "content",
+        "iconCssClass": "aui-icon content-type-page",
+        "lastModified": "2026-08-10T11:54:01.000Z",
+        "friendlyLastModified": "Aug 10, 2026",
+        "score": 0
+      },
+      {
+        "content": {
+          "id": "5371756560",
+          "type": "page",
+          "status": "current",
+          "title": "Fixture Result Two",
+          "childTypes": {},
+          "macroRenderedOutput": {},
+          "restrictions": {},
+          "_expandable": {
+            "container": "",
+            "metadata": "",
+            "extensions": "",
+            "operations": "",
+            "children": "",
+            "history": "/rest/api/content/5371756560/history",
+            "ancestors": "",
+            "body": "",
+            "version": "",
+            "descendants": "",
+            "space": "/rest/api/space/DEMO"
+          },
+          "_links": {
+            "webui": "/spaces/DEMO/pages/5371756560/Fixture+Result+2",
+            "self": "https://fixture.atlassian.net/wiki/rest/api/content/5371756560",
+            "tinyui": "/x/EIAuQAE"
+          }
+        },
+        "title": "Fixture Result Two",
+        "excerpt": "Fixture excerpt with matched words and a truncated senten",
+        "url": "/spaces/DEMO/pages/5371756560/Fixture+Result+2",
+        "resultGlobalContainer": {
+          "title": "Business Services (ex GLP Products)",
+          "displayUrl": "/spaces/DEMO"
+        },
+        "breadcrumbs": [],
+        "entityType": "content",
+        "iconCssClass": "aui-icon content-type-page",
+        "lastModified": "2026-08-06T10:40:37.000Z",
+        "friendlyLastModified": "Aug 06, 2026",
+        "score": 0
+      }
+    ],
+    "start": 0,
+    "limit": 10,
+    "size": 2,
+    "totalSize": 14,
+    "cqlQuery": "space = DEMO AND type = page AND title ~ \"Fixture topic\"",
+    "searchDuration": 113,
+    "archivedResultCount": 0,
+    "_links": {
+      "base": "https://fixture.atlassian.net/wiki",
+      "context": "/wiki",
+      "next": "/rest/api/search?next=true&cursor=_t_WyJcdDQyMTExNzk1NzAgbUwoTTliJU9PI15IW0w2YjQoZ2wgY3AiXQ%3D%3D_h_W10%3D&limit=10&start=10&cql=space+%3D+DEMO+AND+type+%3D+page+AND+title+%7E+%22Fixture+topic%22",
+      "self": "https://fixture.atlassian.net/wiki/rest/api/search?cql=space+%3D+DEMO+AND+type+%3D+page+AND+title+%7E+%22Fixture+topic%22"
+    },
+    "nextCursor": "_t_WyJcdDQyMTExNzk1NzAgbUwoTTliJU9PI15IW0w2YjQoZ2wgY3AiXQ==_h_W10="
+  },
+  "meta": {
+    "resourceClass": "entity",
+    "sourceMode": "native",
+    "resourceType": "confluence.search",
+    "acquisition": {
+      "requested": 10,
+      "returned": 10,
+      "failed": 0,
+      "omitted": 0,
+      "truncated": 4,
+      "matched": 14,
+      "matchedExact": true
+    },
+    "page": {
+      "cursor": null,
+      "nextCursor": "_t_WyJcdDQyMTExNzk1NzAgbUwoTTliJU9PI15IW0w2YjQoZ2wgY3AiXQ==_h_W10=",
+      "start": 0,
+      "limit": 10,
+      "size": 10,
+      "totalSize": 14
+    },
+    "evidence": {
+      "provenance": {
+        "source": "confluence"
+      },
+      "coverage": {
+        "status": "partial",
+        "covered": [
+          "content:5382537278",
+          "content:5371756560",
+          "content:5324046379",
+          "content:5080711183",
+          "content:4931911705",
+          "content:4761223179",
+          "content:4386521947",
+          "content:4363125163",
+          "content:4344643607",
+          "content:4211179570"
+        ]
+      },
+      "truncation": {
+        "truncated": true,
+        "reason": "additional-page-available"
+      }
+    }
+  }
+}

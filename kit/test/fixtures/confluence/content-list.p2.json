@@ -1,0 +1,19 @@
+{
+  "apiVersion": "v2",
+  "command": "confluence.content.list",
+  "request": {
+    "contentType": "page",
+    "space": "DEMO",
+    "limit": "5"
+  },
+  "data": {
+    "type": "page",
+    "total": 5,
+    "results": []
+  },
+  "meta": {
+    "resourceClass": "projection",
+    "sourceMode": "native",
+    "resourceType": "confluence.content.page.list"
+  }
+}
