@@ -55,3 +55,8 @@ D's advantage is receipts and complete-candidate aggregation, not a lower
 false-accept rate than entailment. C is the stronger standard solution on
 false accepts and partials; D is stronger on answerable accuracy and
 unanswerable abstention. Raw held-out outputs stay private.
+
+## Held-out report
+
+See `bench/ARM-COMPARE-REPORT.md` for per-condition shown/abstained/wrong,
+retrieval misses, intervals, coverage, strict-mode delta, and the held-out hash.
