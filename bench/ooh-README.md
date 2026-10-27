@@ -1,11 +1,11 @@
-# OOH benchmark — v1.1.12
+# OOH benchmark — v1.1.13
 
 > Repository: `verification-harness` · package: `ooh-citation-first-benchmark`
 
 A neutral, public-corpus, citation-first benchmark built from the U.S. Bureau
 of Labor Statistics **Occupational Outlook Handbook** (2023–33 edition).
 
-Status: **public package + private held-out test**, benchmark frozen 2026-10-24; package v1.1.12, 2026-10-26. The
+Status: **public package + private held-out test**, benchmark frozen 2026-10-24; package v1.1.13, 2026-10-26. The
 public dev set is for iteration; the 100-item test labels are private and must
 not be trained on or published.
 
@@ -252,7 +252,7 @@ validated by the public package.
 - 48 pages, 100 test items, two global aggregation questions (46- and
   25-candidate); not full wiki.
 - Strong-reader arm comparison (DeepSeek V4.1 Flash, K=3, held-out 100):
-  D-gate **4%** false accepts vs B RAG-cite **8%** and C RAG-cite +
+  D-gate **2%** audited false accepts vs B RAG-cite **8%** and C RAG-cite +
   MiniCheck **3%**. D has 100% unanswerable abstention, 46/100 coverage, and
   adds receipts; C achieves 3% with only 28/100 coverage. Comparable, not
   proven superior to entailment.

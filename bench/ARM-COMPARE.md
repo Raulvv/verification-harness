@@ -43,12 +43,16 @@ well enough for the gate to matter.
 
 ### Strong-reader held-out (DeepSeek V4.1 Flash, 100, one seed, K=3)
 
-| Arm | Correct | False accept | Coverage | Answerable | Unanswerable abstain | Partial |
-|---|---:|---:|---:|---:|---:|---:|
-| A naive | 8/100 | **92% [85–96]** | 97/100 | 5/40 | 3/40 | 0/20 |
-| B RAG-cite | 81/100 | **8% [4–15]** | 55/100 | 27/40 | 38/40 | 16/20 |
-| C RAG-cite + MiniCheck | 61/100 | **3% [1–8]** | 28/100 | 20/40 | 38/40 | 3/20 |
-| D harness + gate | 78/100 | **4% [2–10]** | 46/100 | 27/40 | 40/40 | 11/20 |
+| Arm | Answerable | Unanswerable | Partial | Audited wrong-shown | Coverage |
+|---|---:|---:|---:|---:|---:|
+| B RAG-cite | 27/40 | 38/40 | 20/20 | **8% [4–15]** | 55/100 |
+| C RAG-cite + MiniCheck | 20/40 | 38/40 | 5/20 | **3% [1–8]** | 28/100 |
+| D harness + gate | 27/40 | 40/40 | 17/20 | **2% [1–7]** | 46/100 |
+
+D and B tie on answerable; D has 1 wrong answer vs B's 6. D's partials are
+17/20 after audit, not 7 wrong. C's low false-accept rate comes with the lowest
+coverage. Intervals overlap; do not claim separation. Raw held-out outputs stay
+private.
 
 D is comparable to C on false accepts with much higher coverage (46 vs 28),
 and better answerable/partial accuracy; C abstains more. D is comparable to B
