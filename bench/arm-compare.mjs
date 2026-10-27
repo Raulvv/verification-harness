@@ -21,7 +21,8 @@ import { askOneShot } from '../kit/lib/answer/oneshot.mjs'
 import { chatWithUsage } from '../kit/lib/model.mjs'
 import { judgeSufficiency, judgeByCommand } from '../kit/lib/receipts/sufficiency.mjs'
 import { verify } from '../kit/lib/receipts/gate.mjs'
-import { ABSTAIN_TERMS, norm, numbersIn, parseAnswer } from '../kit/lib/receipts/text.mjs'
+import { parseAnswer } from '../kit/lib/receipts/text.mjs'
+import { score, wilson } from './lib/arm-score.mjs'
 
 const argv = process.argv.slice(2)
 const flag = (n) => argv.includes('--' + n)
@@ -42,31 +43,6 @@ const judge = { label: 'judge', baseUrl: judgeBaseUrl, model: opt('judge-model',
 const judgeCmd = opt('judge-cmd')
 
 const items = readFileSync(qfile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))
-
-// ---------- scoring (mechanical; no LLM oracle) ----------
-const hasAbstain = (t) => ABSTAIN_TERMS.some((m) => norm(t).includes(m))
-const leadAbstain = (t) => /^\s*(not found|no record|cannot find|nowhere|not documented|not stated)\b/i.test(t)
-const valueIn = (text, v) => typeof v === 'number'
-  ? numbersIn(text).includes(String(v)) || numbersIn(text).includes(String(v).replace(/(\d)(?=(\d{3})+$)/g, '$1'))
-  : norm(text).includes(norm(String(v)))
-export function score(item, text) {
-  const abstained = leadAbstain(text) || (item.condition === 'unanswerable' && hasAbstain(text))
-  if (item.condition === 'unanswerable') return { shown: !abstained, correct: abstained, falseAccept: !abstained }
-  if (item.condition === 'partial') {
-    const stated = item.gold.parts.filter((p) => p.status === 'stated')
-    const gotStated = stated.every((p) => valueIn(text, p.value))
-    const flagged = hasAbstain(text)
-    return { shown: !leadAbstain(text), correct: gotStated && flagged, falseAccept: !leadAbstain(text) && !flagged }
-  }
-  const ok = !abstained && valueIn(text, item.gold)
-  return { shown: !abstained, correct: ok, falseAccept: !abstained && !ok } // wrong answer shown as an answer
-}
-export function wilson(k, n, z = 1.96) {
-  if (!n) return [0, 0]
-  const p = k / n, d = 1 + z * z / n
-  const c = p + z * z / (2 * n), m = z * Math.sqrt(p * (1 - p) / n + z * z / (4 * n * n))
-  return [(c - m) / d, (c + m) / d]
-}
 
 // ---------- model plumbing (injectable for --fake) ----------
 const fakeChat = (item) => async (msgs) => {

@@ -1,6 +1,6 @@
 {
   "name": "ooh-citation-first-benchmark",
-  "version": "1.1.10",
+  "version": "1.1.11",
   "private": true,
   "type": "module",
   "description": "OOH citation-first benchmark: public corpus, public dev, private test questions and labels separated.",
@@ -10,7 +10,8 @@
     "ooh:test": "node --test kit/test/answer/aggregate.test.mjs kit/test/cli/aggregate.test.mjs && python3 bench/ooh-score.test.py",
     "kit:test": "node kit/bin/test.mjs",
     "ooh:smoke": "npm run ooh:test && npm run kit:test && npm run ooh:dev && npm run ooh:dev:pages",
-    "arm:fake": "node bench/arm-compare.mjs --fake"
+    "arm:fake": "node bench/arm-compare.mjs --fake",
+    "arm:test": "node --test bench/arm-score.test.mjs"
   },
   "repository": {
     "type": "git",

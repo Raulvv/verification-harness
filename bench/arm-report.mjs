@@ -29,6 +29,16 @@ for (const r of rows) {
   by.get(key).push(r)
 }
 console.log(`# Arm report\n\nRows: \`${rowsPath}\`  \nQuestions: \`${qPath}\`  \nCorpus: \`${corpus}\`  \nK: ${K}  \nSHA-256: \`${createHash('sha256').update(readFileSync(rowsPath)).digest('hex')}\`\n`)
+console.log('## Headline false accept / coverage\n')
+console.log('| Arm | Correct | False accept | Coverage |')
+console.log('|---|---:|---:|---:|')
+for (const arm of arms) {
+  const R = rows.filter((r) => r.arm === arm)
+  const fa = R.filter((r) => r.falseAccept).length
+  const shown = R.filter((r) => r.shown).length
+  console.log(`| ${arm} | ${R.filter((r) => r.correct).length}/${R.length} | ${pct(fa, R.length)} | ${shown}/${R.length} |`)
+}
+console.log('\n')
 console.log('| Arm | Condition | n | Correct | Abstained | Wrong shown | Retrieval miss | Coverage | False accept |')
 console.log('|---|---|---:|---:|---:|---:|---:|---:|---:|')
 for (const arm of arms) for (const cond of conditions) {

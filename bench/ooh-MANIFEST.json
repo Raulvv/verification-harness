@@ -1,6 +1,6 @@
 {
   "name": "ooh-citation-first-benchmark",
-  "version": "1.1.10",
+  "version": "1.1.11",
   "frozen_at": "2026-10-26",
   "status": "public-package-private-test",
   "corpus": {
@@ -357,8 +357,8 @@
     },
     {
       "path": "bench/ooh-README.md",
-      "bytes": 11219,
-      "sha256": "777084bd40a30dd1c788cd0173a817e6b6d1dd4ef1639ed4ea391045db584630"
+      "bytes": 11272,
+      "sha256": "5184df7ecff7256d04f38f22fa05f57a99150f8ce98cb6d9cb884d235c769c22"
     },
     {
       "path": "bench/ooh-score.py",
@@ -423,7 +423,7 @@
     {
       "path": "bench/ooh-BENCHMARK.md",
       "bytes": 7958,
-      "sha256": "fc525ed0194c9ccaf8e91bfd88f9c5175561578b5cf39ccf844c6b64767b16f4"
+      "sha256": "9a33af66d65e06efa5413d080a9305c0ee95cae1513563e1d44d3db1f1fcf3f7"
     },
     {
       "path": "bench/ooh-score-v2.py",
@@ -437,23 +437,38 @@
     },
     {
       "path": "bench/ARM-COMPARE.md",
-      "bytes": 2981,
-      "sha256": "5e946d7d0847d5401956e617226a51e77a213a8421e9ab4919fafa9e7d0545b0"
+      "bytes": 3101,
+      "sha256": "bdf2acdf3f5f9325c87d50f90c6fd4a4f76f62c972b6b193c229d5d588cc5b38"
     },
     {
       "path": "bench/arm-compare.mjs",
-      "bytes": 8852,
-      "sha256": "e968392d6ea2b7e54e27511e6a8acd8ae05d17089c6b17c3f9afc533b277cecc"
+      "bytes": 7441,
+      "sha256": "fb22ecb599e7497ee1db4d9c7ba9a17019093a022ac2dda3cb7f9d54e2e11844"
     },
     {
       "path": "bench/ARM-COMPARE-REPORT.md",
-      "bytes": 2425,
-      "sha256": "d91df857a85c4a1e28213e7200648abb193f66cf27f440fcb7ce45f72d858701"
+      "bytes": 3044,
+      "sha256": "5aefc0230ed769a553a17a40a1acfb896600e4d6ce067766ac314305b82b43e5"
     },
     {
       "path": "bench/arm-report.mjs",
-      "bytes": 3827,
-      "sha256": "f30a5b8bde7500a319a2d344c82f4882da082499872661dad0b1b4dea0751c02"
+      "bytes": 4291,
+      "sha256": "1a613579ea2c32876960cfc9d029b145968d54a98198978cc606561fb9a33d9c"
+    },
+    {
+      "path": "bench/lib/arm-score.mjs",
+      "bytes": 1958,
+      "sha256": "313a2d29e503426f158d36e751382493e41a2885c52787712130dcbc7b2b9460"
+    },
+    {
+      "path": "bench/arm-rescore.mjs",
+      "bytes": 1049,
+      "sha256": "a791966a575650fb0c679c808c029f41311c4d863df5204cf5f85cfe37a25376"
+    },
+    {
+      "path": "bench/arm-score.test.mjs",
+      "bytes": 1122,
+      "sha256": "553cdb6139bfd0eb9ff1541b04dd4df239a4fdc6d02544bd88b83a8b765a07ee"
     }
   ],
   "license": {

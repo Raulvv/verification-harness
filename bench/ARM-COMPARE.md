@@ -37,24 +37,24 @@ D now receives the exact B/C window and applies `verify()` before scoring.
 
 ### Weak-reader pilot (qwen3.5:4b, public 20, one seed)
 
-D-gate **45%** false accepts vs B/C **5%**. This is a weak-reader warning, not
-product evidence; the 4B does not follow the contract well enough for the gate
-to matter.
+D-gate **40%** false accepts vs B/C **0%** after the scorer fix. This is a
+weak-reader warning, not product evidence; the 4B does not follow the contract
+well enough for the gate to matter.
 
 ### Strong-reader held-out (DeepSeek V4.1 Flash, 100, one seed, K=3)
 
-| Arm | Answerable | Unanswerable abstain | Partial correct | False accept |
-|---|---:|---:|---:|---:|
-| A naive | 8/40 | 8/40 | 0/20 | **94%** |
-| B RAG-cite | 21/40 | 38/40 | 16/20 | **14%** |
-| C RAG-cite + MiniCheck | 15/40 | 38/40 | 3/20 | **8%** |
-| D harness + gate | 21/40 | 40/40 | 11/20 | **10%** |
+| Arm | Correct | False accept | Coverage | Answerable | Unanswerable abstain | Partial |
+|---|---:|---:|---:|---:|---:|---:|
+| A naive | 8/100 | **92% [85–96]** | 97/100 | 5/40 | 3/40 | 0/20 |
+| B RAG-cite | 81/100 | **8% [4–15]** | 55/100 | 27/40 | 38/40 | 16/20 |
+| C RAG-cite + MiniCheck | 61/100 | **3% [1–8]** | 28/100 | 20/40 | 38/40 | 3/20 |
+| D harness + gate | 78/100 | **4% [2–10]** | 46/100 | 27/40 | 40/40 | 11/20 |
 
-D is comparable to B and close to C; it is **not** clearly superior to C.
-D's advantage is receipts and complete-candidate aggregation, not a lower
-false-accept rate than entailment. C is the stronger standard solution on
-false accepts and partials; D is stronger on answerable accuracy and
-unanswerable abstention. Raw held-out outputs stay private.
+D is comparable to C on false accepts with much higher coverage (46 vs 28),
+and better answerable/partial accuracy; C abstains more. D is comparable to B
+on answerable accuracy with lower false accepts and lower coverage; B is better
+on partials. D is not proven superior to entailment. Raw held-out outputs stay
+private.
 
 ## Held-out report
 
