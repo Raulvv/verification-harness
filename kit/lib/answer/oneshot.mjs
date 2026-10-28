@@ -12,7 +12,7 @@ import { readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { chatWithUsage } from '../model.mjs'
 import { selectByReference } from '../retrieval/window.mjs'
-import { selectByDense, selectUnion, selectFuse } from '../retrieval/dense.mjs'
+import { selectByDense } from '../retrieval/dense.mjs'
 import { pruneByRelevance } from '../retrieval/vet.mjs'
 import { PROMPT, PROMPT_NOQUOTE, PROMPT_SENTENCE, PROMPT_SOURCE, PROMPT_SOURCE_V45, PROMPT_V45, ONESHOT_SCHEMA, ONESHOT_SCHEMA_NOQUOTE, ONESHOT_SCHEMA_SENTENCE, ONESHOT_SCHEMA_SOURCE, QUOTE_SCHEMA, ANSWER_EVIDENCE_SCHEMA, PROMPT_QUOTE, PROMPT_ANSWER_EVIDENCE, transcriptish } from './prompt.mjs'
 import { parseOneShot, parseQuote } from './parse.mjs'
@@ -38,14 +38,14 @@ const BRIDGE_PROMPT = (q, parts) => [
   'What single SHORT search query (a few words — the missing entity or fact) would find the information needed to answer the question? Reply with ONLY the query text.',
 ].join('\n')
 
-// Layer 0 selection: dense is the default retriever (`opts.retriever`); the
-// naming reference selector stays available for named-file corpora / tests.
+// Layer 0 selection: the default retriever is `reference` (deterministic, no
+// embedder); `dense`/`router` opt into the embedding index. The CLI refuses an
+// unknown choice at resolve time; a direct library call with one falls back to
+// the safe default.
 async function selectWindow(retriever, corpusRoot, question, opts) {
-  if (retriever === 'dense' || retriever === 'iterative' || retriever === 'router') {
+  if (retriever === 'dense' || retriever === 'router') {
     return selectByDense(corpusRoot, question, { corpus: opts.corpus, _embed: opts._embed })
   }
-  if (retriever === 'fuse') return selectFuse(corpusRoot, question, { corpus: opts.corpus, _embed: opts._embed })
-  if (retriever === 'union') return selectUnion(corpusRoot, question, { corpus: opts.corpus, _embed: opts._embed })
   return selectByReference(corpusRoot, question, { corpus: opts.corpus })
 }
 
@@ -141,6 +141,7 @@ async function runEvidenceFirst(chat, question, docs, allow = []) {
     prompt_tokens: (q.usage.prompt_tokens ?? 0) + (a.usage.prompt_tokens ?? 0),
     completion_tokens: (q.usage.completion_tokens ?? 0) + (a.usage.completion_tokens ?? 0),
   }
+  if (q.usage.cost != null || a.usage.cost != null) usage.cost = (q.usage.cost ?? 0) + (a.usage.cost ?? 0)
   const failures = [...q.failures, ...a.failures]
   if (!a.parsed || a.parsed.notFound) return { parsed: null, usage, failures }
   const unanchored = unanchoredNumbers(a.parsed.answer, evidence.map((e) => e.quote), { allow })
@@ -176,9 +177,6 @@ export async function askOneShot(m, corpusRoot, question, opts = {}) {
     loc = { ...loc, candidates: vetted.kept.map((x) => ({ rel: x.rel })) }
     tVet = Date.now() - t0 - tSelect
   }
-  // iterative (opt-in): always take the second hop before answering.
-  if (retriever === 'iterative' && loc.candidates?.length) loc = await escalate(corpusRoot, question, loc, opts, chat)
-
   let docs = providedDocs ?? pickDocs(corpusRoot, loc, opts)
   const tLocate = Date.now() - t0
   const t1 = Date.now()
@@ -209,10 +207,10 @@ export async function askOneShot(m, corpusRoot, question, opts = {}) {
     ({ parsed, usage, failures } = await runRead(chat, tier, question, docs))
   }
 
-  // Router (default): dense first; the abstention IS the router — only when the
-  // first read says NOT FOUND do we take the second hop and re-read. A
-  // non-abstention is never re-windowed, so a confident dense answer pays
-  // nothing extra.
+  // Router (opt-in, `dense`'s upgrade): dense first; the abstention IS the
+  // router — only when the first read says NOT FOUND do we take the second hop
+  // and re-read. A non-abstention is never re-windowed, so a confident dense
+  // answer pays nothing extra.
   if (retriever === 'router' && parsed?.notFound && loc.candidates?.length) {
     const esc = await escalate(corpusRoot, question, loc, opts, chat)
     if (esc !== loc) {
@@ -237,21 +235,32 @@ export async function askOneShot(m, corpusRoot, question, opts = {}) {
     }
   }
   const tModel = Date.now() - t1
+  // Cost/token accounting includes the selection-vet call: it is a real reader
+  // call, and hiding it made D's cost look smaller than it is.
+  const vetUsage = vetted.usage ?? null
+  if (vetUsage) {
+    usage = {
+      ...usage,
+      prompt_tokens: (usage.prompt_tokens ?? 0) + (vetUsage.prompt_tokens ?? 0),
+      completion_tokens: (usage.completion_tokens ?? 0) + (vetUsage.completion_tokens ?? 0),
+    }
+    if (vetUsage.cost != null) usage.cost = (usage.cost ?? 0) + vetUsage.cost
+  }
   const tokens = (usage.prompt_tokens ?? 0) + (usage.completion_tokens ?? 0)
   if (!parsed) {
     return {
       question, attempts: docs.map((d) => ({ rel: d.rel })), final: { text: `Q: NOT FOUND\nSource: NOT FOUND\nQuote: NOT FOUND` },
-      parseFailures: failures.map((f) => 'oneshot: ' + f), timings: { select_ms: tSelect, vet_ms: tVet, locate_ms: tLocate, model_ms: tModel, total_ms: Date.now() - t0 }, tokens,
+      parseFailures: failures.map((f) => 'oneshot: ' + f), usage, timings: { select_ms: tSelect, vet_ms: tVet, locate_ms: tLocate, model_ms: tModel, total_ms: Date.now() - t0 }, tokens,
     }
   }
   const assembled = tier.assemble === 'source'
     ? assembleSource(corpusRoot, question, docs, parsed)
-    : assembleOneShot(corpusRoot, question, docs, parsed, { minimizeReceipt: opts.minimizeReceipt === true })
+    : assembleOneShot(corpusRoot, question, docs, parsed, { minimizeReceipt: opts.minimizeReceipt === true, maxQuotesPerDoc: opts.maxQuotesPerDoc })
   return {
     question, attempts: docs.map((d) => ({ rel: d.rel })), docs, parsed,
-    final: { text: assembled.text }, legs: assembled.legs,
+    final: { text: assembled.text }, legs: assembled.legs, citations: assembled.citations ?? [],
     droppedLegs: assembled.dropped, windowDropped: vetted.dropped, window: docs.map((d) => d.rel),
     evidence, unanchored, evidenceFirst: opts.evidenceFirst === true,
-    parseFailures: [], timings: { select_ms: tSelect, vet_ms: tVet, locate_ms: tLocate, model_ms: tModel, total_ms: Date.now() - t0 }, tokens,
+    parseFailures: [], usage, timings: { select_ms: tSelect, vet_ms: tVet, locate_ms: tLocate, model_ms: tModel, total_ms: Date.now() - t0 }, tokens,
   }
 }

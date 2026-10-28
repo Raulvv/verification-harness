@@ -1,12 +1,11 @@
-// Dense selection (layer 0, the default retriever) — ranking, the index cache,
-// BM25+RRF fusion and the union. The embedder is stubbed, so this is offline
-// and deterministic (epic retrieval-kit-refactor Iteration 1, HK-3).
+// Dense selection — ranking and the index cache. The embedder is stubbed, so
+// this is offline and deterministic (epic retrieval-kit-refactor Iter. 1, HK-3).
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { mkdtempSync, writeFileSync, rmSync, existsSync, readdirSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { denseIndex, selectByDense, selectFuse, selectUnion } from '../../lib/retrieval/dense.mjs'
+import { denseIndex, selectByDense } from '../../lib/retrieval/dense.mjs'
 
 // Deterministic bag-of-words embedder over three feature words: cosine ranking
 // is then predictable without a model.
@@ -63,32 +62,6 @@ test('a changed corpus re-embeds — the index key moves with the files', async 
     await selectByDense(dir, 'alpha', { _embed: counted })
     assert.equal(calls - first, 2) // re-embed documents + query
     assert.equal(readdirSync(join(dir, '.retrieval-index')).length, 2)
-  } finally { rmSync(dir, { recursive: true, force: true }) }
-})
-
-test('selectFuse fuses BM25 and dense with RRF; the exact-term doc leads', async () => {
-  const dir = corpus({ 'p1.md': 'nothing relevant here', 'p2.md': 'alpha alpha alpha alpha', 'p3.md': 'gamma' })
-  try {
-    const r = await selectFuse(dir, 'alpha', { _embed: embed, k: 2 })
-    assert.equal(r.method, 'fuse')
-    assert.equal(r.candidates.length, 2)
-    assert.equal(r.candidates[0].rel, 'p2.md') // top in both BM25 and dense
-  } finally { rmSync(dir, { recursive: true, force: true }) }
-})
-
-test('selectUnion interleaves reference and dense, deduped, capped at k', async () => {
-  const dir = corpus({
-    'Service_Onboarding_API.md': '# Service Onboarding API\nalpha goal',
-    'Service_Onboarding_Guide.md': '# Service Onboarding Guide\nbeta guide',
-    'Unrelated.md': '# Unrelated\ngamma',
-  })
-  try {
-    const corpusList = ['Service_Onboarding_API.md', 'Service_Onboarding_Guide.md', 'Unrelated.md']
-    const r = await selectUnion(dir, 'Service Onboarding API alpha', { corpus: corpusList, _embed: embed, k: 2 })
-    assert.equal(r.method, 'union')
-    assert.equal(r.candidates.length, 2)
-    assert.equal(new Set(r.candidates.map((c) => c.rel)).size, 2) // deduped
-    assert.ok(r.candidates.some((c) => c.rel === 'Service_Onboarding_API.md'))
   } finally { rmSync(dir, { recursive: true, force: true }) }
 })
 

@@ -1,0 +1,2195 @@
+{
+  "date": "2026-10-29",
+  "reviewer": "assistant (frontier model, manual claim-level audit — Sonnet replication)",
+  "method": "Each positive/computed claim in a quoted shown answer was checked against the shown quotes. Extra details not in the quotes are marked unsupported (D: apprenticeship / 779,800). Absence claims were checked against the full corpus: pilot-06 and pilot-08 are false; pilot-09/10/11/12 are true. Answers with no quote are unverifiable. Not a human audit.",
+  "caveat": "AI adjudication; not pre-registered for Sonnet (same thresholds applied descriptively).",
+  "arms": {
+    "Q": {
+      "shown_rows": 34,
+      "with_quotes": 34,
+      "unverifiable": 0,
+      "positive": 45,
+      "supported": 45,
+      "absences": 20,
+      "true_absences": 16,
+      "false_absences": 4,
+      "coverage_complete": 30,
+      "coverage_rows": 34,
+      "notes": 4
+    },
+    "D": {
+      "shown_rows": 33,
+      "with_quotes": 33,
+      "unverifiable": 0,
+      "positive": 69,
+      "supported": 62,
+      "absences": 24,
+      "true_absences": 19,
+      "false_absences": 5,
+      "coverage_complete": 30,
+      "coverage_rows": 33,
+      "notes": 0
+    }
+  },
+  "rows": [
+    {
+      "arm": "Q",
+      "seed": 0,
+      "id": "pilot-01",
+      "condition": "answerable",
+      "quotes": [
+        "2023 Median Pay | $95,890 per year $46.10 per hour"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The 2023 median pay for civil engineers is $95,890 per year ($46.10 per hour), per the Quick Facts in the civil engineers document.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 0,
+      "id": "pilot-02",
+      "condition": "answerable",
+      "quotes": [
+        "Employment Change, 2023-33 | 197,200",
+        "Job Outlook, 2023-33 | 6% (Faster than average)"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The projected employment change for registered nurses from 2023 to 2033 is 197,200 jobs, a 6% increase (faster than average).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 0,
+      "id": "pilot-03",
+      "condition": "answerable",
+      "quotes": [
+        "Typical Entry-Level Education | High school diploma or equivalent"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The typical entry-level education for carpenters is a high school diploma or equivalent (source: construction-and-extraction__carpenters.md).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 0,
+      "id": "pilot-04",
+      "condition": "answerable",
+      "quotes": [
+        "Number of Jobs, 2023 | 1,897,100",
+        "Software developers held about 1.7 million jobs in 2023.",
+        "Software quality assurance analysts and testers held about 205,000 jobs in 2023."
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Software developers, quality assurance analysts, and testers held 1,897,100 jobs in 2023 (source: computer-and-information-technology__software-developers.md).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Of these, software developers held about 1.7 million jobs and software quality assurance analysts and testers held about 205,000 jobs.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 0,
+      "id": "pilot-05",
+      "condition": "answerable",
+      "quotes": [
+        "Number of Jobs, 2023 | 341,800",
+        "Employment Change, 2023-33 | 22,100"
+      ],
+      "coverage": {
+        "required": 2,
+        "covered": 2,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The projected 2033 employment is about 363,900 civil engineers, calculated as the 2023 employment of 341,800 plus the projected employment change of 22,100 for 2023-33.",
+          "kind": "computed",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state the 2033 figure directly; it is derived from these two stated numbers.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 0,
+      "id": "pilot-07",
+      "condition": "answerable",
+      "quotes": [
+        "Job Outlook, 2023-33 | 17% (Much faster than average)",
+        "Job Outlook, 2023-33 | 6% (Faster than average)"
+      ],
+      "coverage": {
+        "required": 2,
+        "covered": 2,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Software developers (including quality assurance analysts and testers) have the higher projected growth rate: 17% for 2023-33 versus 6% for registered nurses, a difference of 11 percentage points.",
+          "kind": "computed",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 0,
+      "id": "pilot-08",
+      "condition": "answerable",
+      "quotes": [
+        "2023 Median Pay | $95,890 per year $46.10 per hour",
+        "2023 Median Pay | $58,910 per year $28.32 per hour"
+      ],
+      "coverage": {
+        "required": 3,
+        "covered": 2,
+        "complete": false
+      },
+      "claims": [
+        {
+          "claim": "Accountants and auditors are not covered in the documents, so the three-way comparison cannot be completed.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Of the two occupations that are covered, civil engineers ($95,890 per year) have a higher median pay than graphic designers ($58,910 per year).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The median pay for accountants and auditors is not stated.",
+          "kind": "absence",
+          "verdict": "false_absence",
+          "reason": "the corpus states the value on a page outside the window"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 0,
+      "id": "pilot-09",
+      "condition": "partial",
+      "quotes": [
+        "2023 Median Pay | $86,070 per year $41.38 per hour"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The median annual pay for registered nurses was $86,070 per year in 2023 (Quick Facts).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state the median annual pay for registered nurses in California, so that part is not stated.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 0,
+      "id": "pilot-10",
+      "condition": "partial",
+      "quotes": [
+        "Job Outlook, 2023-33 | 4% (As fast as average)"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The projected growth rate for carpenters from 2023 to 2033 is 4% (as fast as average), per carpenters.md.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state how many carpenters were employed in 2010; that part is not stated (only the 2023 figure of 923,100 jobs is given).",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": [
+        "923,100 side-detail not in the shown quote"
+      ]
+    },
+    {
+      "arm": "Q",
+      "seed": 0,
+      "id": "pilot-11",
+      "condition": "partial",
+      "quotes": [
+        "2023 Median Pay | $79,880 per year $38.41 per hour"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The median annual pay for accountants and auditors in 2023 was $79,880 per year (Document 1).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state the median annual pay in Texas, so that part is not stated.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 0,
+      "id": "pilot-12",
+      "condition": "partial",
+      "quotes": [
+        "Typical Entry-Level Education | High school diploma or equivalent",
+        "Employment Change, 2023-33 | 84,300"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Typical entry-level education for electricians is a high school diploma or equivalent.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state the number of openings projected for 2033 specifically; the only projection figures given are an employment change of 84,300 jobs over 2023-33 and an 11% job outlook, and no annual openings figure is stated.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": [
+        "11% side-detail not in the shown quote"
+      ]
+    },
+    {
+      "arm": "Q",
+      "seed": 1,
+      "id": "pilot-01",
+      "condition": "answerable",
+      "quotes": [
+        "2023 Median Pay | $95,890 per year $46.10 per hour"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The 2023 median pay for civil engineers is $95,890 per year (about $46.10 per hour), per Document 1.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 1,
+      "id": "pilot-02",
+      "condition": "answerable",
+      "quotes": [
+        "Employment Change, 2023-33 | 197,200",
+        "Job Outlook, 2023-33 | 6% (Faster than average)"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The projected employment change for registered nurses from 2023 to 2033 is 197,200 jobs, a 6% increase (faster than average).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 1,
+      "id": "pilot-03",
+      "condition": "answerable",
+      "quotes": [
+        "Typical Entry-Level Education | High school diploma or equivalent"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The typical entry-level education for carpenters is a high school diploma or equivalent (source: construction-and-extraction__carpenters.md).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 1,
+      "id": "pilot-04",
+      "condition": "answerable",
+      "quotes": [
+        "Number of Jobs, 2023 | 1,897,100",
+        "Software developers held about 1.7 million jobs in 2023.",
+        "Software quality assurance analysts and testers held about 205,000 jobs in 2023."
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "In 2023, software developers, quality assurance analysts, and testers held 1,897,100 jobs (per the Quick Facts).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Separately, software developers held about 1.7 million jobs and software quality assurance analysts and testers held about 205,000 jobs.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 1,
+      "id": "pilot-05",
+      "condition": "answerable",
+      "quotes": [
+        "Number of Jobs, 2023 | 341,800",
+        "Employment Change, 2023-33 | 22,100"
+      ],
+      "coverage": {
+        "required": 2,
+        "covered": 2,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Projected 2033 employment is about 363,900 civil engineers.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "This is calculated from 341,800 jobs in 2023 plus a projected employment change of 22,100 for 2023-33.",
+          "kind": "computed",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state the 2033 figure directly.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 1,
+      "id": "pilot-06",
+      "condition": "answerable",
+      "quotes": [
+        "2023 Median Pay | $86,070 per year $41.38 per hour"
+      ],
+      "coverage": {
+        "required": 2,
+        "covered": 1,
+        "complete": false
+      },
+      "claims": [
+        {
+          "claim": "Only part is stated.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents give the registered nurses' 2023 median pay ($86,070 per year) in healthcare__registered-nurses.md.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "They do not state the median pay for carpenters, so the difference cannot be calculated.",
+          "kind": "absence",
+          "verdict": "false_absence",
+          "reason": "the corpus states the value on a page outside the window"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 1,
+      "id": "pilot-07",
+      "condition": "answerable",
+      "quotes": [
+        "Job Outlook, 2023-33 | 17% (Much faster than average)",
+        "Job Outlook, 2023-33 | 6% (Faster than average)"
+      ],
+      "coverage": {
+        "required": 2,
+        "covered": 2,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Software developers (including quality assurance analysts and testers) have the higher projected growth rate: 17% for 2023-33, versus 6% for registered nurses.",
+          "kind": "computed",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The difference is 11 percentage points.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 1,
+      "id": "pilot-08",
+      "condition": "answerable",
+      "quotes": [
+        "2023 Median Pay | $95,890 per year $46.10 per hour",
+        "2023 Median Pay | $58,910 per year $28.32 per hour"
+      ],
+      "coverage": {
+        "required": 3,
+        "covered": 2,
+        "complete": false
+      },
+      "claims": [
+        {
+          "claim": "Accountants and auditors are not covered in the documents, so the three-way comparison cannot be completed.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Of the two occupations that are covered, civil engineers have the higher 2023 median pay ($95,890 per year) compared with graphic designers ($58,910 per year).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The median pay for accountants and auditors is not stated.",
+          "kind": "absence",
+          "verdict": "false_absence",
+          "reason": "the corpus states the value on a page outside the window"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 1,
+      "id": "pilot-09",
+      "condition": "partial",
+      "quotes": [
+        "2023 Median Pay | $86,070 per year $41.38 per hour"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The median annual pay for registered nurses was $86,070 per year in 2023 (per the Quick Facts).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state the median annual pay for registered nurses in California, so that part is NOT FOUND.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 1,
+      "id": "pilot-10",
+      "condition": "partial",
+      "quotes": [
+        "Job Outlook, 2023-33 | 4% (As fast as average)"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The projected growth rate for carpenters from 2023 to 2033 is 4% (as fast as average), per carpenters.md.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state how many carpenters were employed in 2010; that part is not stated.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 1,
+      "id": "pilot-11",
+      "condition": "partial",
+      "quotes": [
+        "2023 Median Pay | $79,880 per year $38.41 per hour"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The median annual pay for accountants and auditors in 2023 was $79,880 per year (Document 1).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state the median annual pay in Texas, so that part is not stated.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 1,
+      "id": "pilot-12",
+      "condition": "partial",
+      "quotes": [
+        "Typical Entry-Level Education | High school diploma or equivalent",
+        "Employment Change, 2023-33 | 84,300"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The typical entry-level education for electricians is a high school diploma or equivalent.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state the number of openings projected for 2033 specifically.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        },
+        {
+          "claim": "They give only an employment change of 84,300 for 2023-33 and a job outlook of 11%, and they do not give a figure for annual openings or for openings in 2033.",
+          "kind": "computed",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 2,
+      "id": "pilot-01",
+      "condition": "answerable",
+      "quotes": [
+        "2023 Median Pay | $95,890 per year $46.10 per hour"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The 2023 median pay for civil engineers is $95,890 per year (which is $46.10 per hour), according to 1_architecture-and-engineering__civil-engineers.md.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 2,
+      "id": "pilot-02",
+      "condition": "answerable",
+      "quotes": [
+        "Employment Change, 2023-33 | 197,200",
+        "Job Outlook, 2023-33 | 6% (Faster than average)"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The projected employment change for registered nurses from 2023 to 2033 is 197,200 jobs, which is a 6% increase (faster than average).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 2,
+      "id": "pilot-03",
+      "condition": "answerable",
+      "quotes": [
+        "Typical Entry-Level Education | High school diploma or equivalent"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The typical entry-level education for carpenters is a high school diploma or equivalent (source: construction-and-extraction__carpenters.md).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 2,
+      "id": "pilot-04",
+      "condition": "answerable",
+      "quotes": [
+        "Number of Jobs, 2023 | 1,897,100",
+        "Software developers held about 1.7 million jobs in 2023.",
+        "Software quality assurance analysts and testers held about 205,000 jobs in 2023."
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Software developers, quality assurance analysts, and testers together held 1,897,100 jobs in 2023, according to the Quick Facts in computer-and-information-technology__software-developers.md.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The same file says software developers held about 1.7 million of those jobs and software quality assurance analysts and testers held about 205,000.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 2,
+      "id": "pilot-05",
+      "condition": "answerable",
+      "quotes": [
+        "Number of Jobs, 2023 | 341,800",
+        "Employment Change, 2023-33 | 22,100"
+      ],
+      "coverage": {
+        "required": 2,
+        "covered": 2,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The projected 2033 employment is about 363,900 civil engineers, calculated as 2023 employment of 341,800 plus the projected employment change of 22,100.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state this total directly; it is derived from the two stated figures.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 2,
+      "id": "pilot-07",
+      "condition": "answerable",
+      "quotes": [
+        "Job Outlook, 2023-33 | 17% (Much faster than average)",
+        "Job Outlook, 2023-33 | 6% (Faster than average)"
+      ],
+      "coverage": {
+        "required": 2,
+        "covered": 2,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Software developers (including quality assurance analysts and testers) have the higher projected growth rate: 17% for 2023-33, versus 6% for registered nurses.",
+          "kind": "computed",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The difference is 11 percentage points.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 2,
+      "id": "pilot-08",
+      "condition": "answerable",
+      "quotes": [
+        "2023 Median Pay | $95,890 per year $46.10 per hour",
+        "2023 Median Pay | $58,910 per year $28.32 per hour"
+      ],
+      "coverage": {
+        "required": 3,
+        "covered": 2,
+        "complete": false
+      },
+      "claims": [
+        {
+          "claim": "Accountants and auditors are not covered in the documents, so the full comparison cannot be made.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Of the two occupations that are covered, civil engineers have the higher 2023 median pay ($95,890 per year) compared with graphic designers ($58,910 per year).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The median pay for accountants and auditors is not stated.",
+          "kind": "absence",
+          "verdict": "false_absence",
+          "reason": "the corpus states the value on a page outside the window"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 2,
+      "id": "pilot-09",
+      "condition": "partial",
+      "quotes": [
+        "2023 Median Pay | $86,070 per year $41.38 per hour"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The median annual pay for registered nurses was $86,070 per year in 2023.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state the median annual pay for registered nurses in California, so that part is not stated.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 2,
+      "id": "pilot-10",
+      "condition": "partial",
+      "quotes": [
+        "Job Outlook, 2023-33 | 4% (As fast as average)"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The projected growth rate for carpenters from 2023 to 2033 is 4% (as fast as average), per carpenters.md.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state how many carpenters were employed in 2010; that part is not stated (only the 2023 figure of 923,100 jobs is given).",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": [
+        "923,100 side-detail not in the shown quote"
+      ]
+    },
+    {
+      "arm": "Q",
+      "seed": 2,
+      "id": "pilot-11",
+      "condition": "partial",
+      "quotes": [
+        "2023 Median Pay | $79,880 per year $38.41 per hour"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The median annual pay for accountants and auditors in 2023 was $79,880 per year (Document 1).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state the median annual pay in Texas, so that part is not stated.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "Q",
+      "seed": 2,
+      "id": "pilot-12",
+      "condition": "partial",
+      "quotes": [
+        "Typical Entry-Level Education | High school diploma or equivalent",
+        "Employment Change, 2023-33 | 84,300"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The typical entry-level education for electricians is a high school diploma or equivalent.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state the number of openings projected for 2033 specifically; they give only an employment change of 84,300 for 2023-33 and a job outlook of 11%.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        },
+        {
+          "claim": "The number of openings for 2033 is not stated.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": [
+        "11% side-detail not in the shown quote"
+      ]
+    },
+    {
+      "arm": "D",
+      "seed": 0,
+      "id": "pilot-01",
+      "condition": "answerable",
+      "quotes": [
+        "2023 Median Pay | $95,890 per year $46.10 per hour"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The median annual wage for civil engineers was $95,890 per year in 2023, which is equivalent to $46.10 per hour.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 0,
+      "id": "pilot-02",
+      "condition": "answerable",
+      "quotes": [
+        "Employment Change, 2023-33 | 197,200",
+        "Job Outlook, 2023-33 | 6% (Faster than average)",
+        "Number of Jobs, 2023 | 3,300,100"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The documents project that employment of registered nurses will change by 197,200 jobs from 2023 to 2033.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "This is a 6% increase, described as faster than average, from a base of 3,300,100 jobs in 2023.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 0,
+      "id": "pilot-03",
+      "condition": "answerable",
+      "quotes": [
+        "Typical Entry-Level Education | High school diploma or equivalent",
+        "A high school diploma or equivalent is typically required to enter the occupation. Certain high school courses, such as mathematics and mechanical drawing, may be useful. Some vocational-technical schools offer associate’s degrees in carpentry. The programs vary in length and teach basics and specialties in carpentry.",
+        "A high school diploma or equivalent is typically required to enter the occupation. Certain high school courses, such as mathematics and mechanical drawing, may be useful. Some vocational-technical schools offer associate’s degrees in carpentry. The programs vary in length and teach basics and specialties in carpentry."
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The typical entry-level education for carpenters is a high school diploma or equivalent.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Carpenters then typically learn on the job or through apprenticeships.",
+          "kind": "positive",
+          "verdict": "unsupported",
+          "reason": "detail not present in the shown quote"
+        },
+        {
+          "claim": "Some vocational-technical schools also offer associate's degrees in carpentry, but these are not the typical requirement.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 0,
+      "id": "pilot-04",
+      "condition": "answerable",
+      "quotes": [
+        "Number of Jobs, 2023 | 1,897,100",
+        "Software developers held about 1.7 million jobs in 2023. The largest employers of software developers were as follows:",
+        "Software quality assurance analysts and testers held about 205,000 jobs in 2023. The largest employers of software quality assurance analysts and testers were as follows:"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Software developers, quality assurance analysts, and testers together held 1,897,100 jobs in 2023 (Quick Facts).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Broken down, software developers held about 1.7 million jobs and software quality assurance analysts and testers held about 205,000 jobs.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 0,
+      "id": "pilot-05",
+      "condition": "answerable",
+      "quotes": [
+        "Number of Jobs, 2023 | 341,800",
+        "Employment Change, 2023-33 | 22,100",
+        "Job Outlook, 2023-33 | 6% (Faster than average)"
+      ],
+      "coverage": {
+        "required": 2,
+        "covered": 2,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Civil engineers held 341,800 jobs in 2023, and employment is projected to change by 22,100 over 2023-33 (a 6% increase).",
+          "kind": "computed",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Adding the change to the 2023 base gives a projected 2033 employment of 341,800 + 22,100 = 363,900.",
+          "kind": "computed",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The document does not state the 2033 figure directly; it is calculated from these two stated figures.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 0,
+      "id": "pilot-07",
+      "condition": "answerable",
+      "quotes": [
+        "Job Outlook, 2023-33 | 17% (Much faster than average)",
+        "Job Outlook, 2023-33 | 6% (Faster than average)"
+      ],
+      "coverage": {
+        "required": 2,
+        "covered": 2,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Software developers (including quality assurance analysts and testers) have the higher projected growth rate.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Doc 1 gives a 2023-33 job outlook of 17% for software developers.",
+          "kind": "computed",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Doc 2 gives 6% for registered nurses over the same period.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The difference is 17 - 6 = 11 percentage points.",
+          "kind": "computed",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 0,
+      "id": "pilot-08",
+      "condition": "answerable",
+      "quotes": [
+        "2023 Median Pay | $95,890 per year $46.10 per hour",
+        "2023 Median Pay | $58,910 per year $28.32 per hour"
+      ],
+      "coverage": {
+        "required": 3,
+        "covered": 2,
+        "complete": false
+      },
+      "claims": [
+        {
+          "claim": "Among the three occupations, the documents give median pay for only two: civil engineers ($95,890 per year in 2023, Doc 1) and graphic designers ($58,910 per year in 2023, Doc 2).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Civil engineers earn more than graphic designers.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state median annual pay for accountants and auditors, so that occupation cannot be compared.",
+          "kind": "absence",
+          "verdict": "false_absence",
+          "reason": "the corpus states the value on a page outside the window"
+        },
+        {
+          "claim": "Of the two with stated figures, civil engineers have the higher median annual pay, but whether they are highest among all three cannot be confirmed because the accountants and auditors figure is not provided.",
+          "kind": "absence",
+          "verdict": "false_absence",
+          "reason": "the corpus states the value on a page outside the window"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 0,
+      "id": "pilot-09",
+      "condition": "partial",
+      "quotes": [
+        "2023 Median Pay | $86,070 per year $41.38 per hour"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The documents state that the national median annual pay for registered nurses in 2023 was $86,070 per year (about $41.38 per hour).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state the median annual pay for registered nurses in California, so that part is not stated.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 0,
+      "id": "pilot-10",
+      "condition": "partial",
+      "quotes": [
+        "Job Outlook, 2023-33 | 4% (As fast as average)",
+        "Employment Change, 2023-33 | 38,600",
+        "Number of Jobs, 2023 | 923,100"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Part 1 (stated): Doc 1 projects employment growth for carpenters of 4% from 2023 to 2033, described as 'As fast as average', which equals an employment change of 38,600 jobs.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Part 2 (not stated): Doc 1 gives only the 2023 employment figure of 923,100 carpenters.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        },
+        {
+          "claim": "The documents do not state how many carpenters were employed in 2010.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 0,
+      "id": "pilot-11",
+      "condition": "partial",
+      "quotes": [
+        "2023 Median Pay | $79,880 per year $38.41 per hour"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The national median annual pay for accountants and auditors in 2023 was $79,880 per year (about $38.41 per hour), per Document 1.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state the median annual pay for accountants and auditors in Texas, so that part is not stated.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 0,
+      "id": "pilot-12",
+      "condition": "partial",
+      "quotes": [
+        "Typical Entry-Level Education | High school diploma or equivalent",
+        "A high school diploma or equivalent is required to become an electrician.",
+        "Employment Change, 2023-33 | 84,300",
+        "Job Outlook, 2023-33 | 11% (Much faster than average)"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The typical entry-level education for electricians is a high school diploma or equivalent (Doc 1).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state a number of openings projected for 2033 specifically.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        },
+        {
+          "claim": "They give only an employment change of 84,300 over 2023-33 (an 11% growth outlook from 779,800 jobs in 2023).",
+          "kind": "computed",
+          "verdict": "unsupported",
+          "reason": "detail not present in the shown quote"
+        },
+        {
+          "claim": "That figure is projected growth over the decade, not a count of openings in 2033, so the openings figure is not stated.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 1,
+      "id": "pilot-01",
+      "condition": "answerable",
+      "quotes": [
+        "2023 Median Pay | $95,890 per year $46.10 per hour"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The median annual wage for civil engineers was $95,890 per year in 2023, which equals $46.10 per hour.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 1,
+      "id": "pilot-02",
+      "condition": "answerable",
+      "quotes": [
+        "Employment Change, 2023-33 | 197,200",
+        "Job Outlook, 2023-33 | 6% (Faster than average)",
+        "Number of Jobs, 2023 | 3,300,100"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The projected employment change for registered nurses from 2023 to 2033 is 197,200 jobs.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "This corresponds to a 6% job outlook, described as faster than average, from a base of 3,300,100 jobs in 2023.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 1,
+      "id": "pilot-03",
+      "condition": "answerable",
+      "quotes": [
+        "Typical Entry-Level Education | High school diploma or equivalent",
+        "A high school diploma or equivalent is typically required to enter the occupation. Certain high school courses, such as mathematics and mechanical drawing, may be useful. Some vocational-technical schools offer associate’s degrees in carpentry. The programs vary in length and teach basics and specialties in carpentry.",
+        "A high school diploma or equivalent is typically required to enter the occupation. Certain high school courses, such as mathematics and mechanical drawing, may be useful. Some vocational-technical schools offer associate’s degrees in carpentry. The programs vary in length and teach basics and specialties in carpentry."
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Carpenters typically need a high school diploma or equivalent to enter the occupation.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Quick Facts lists this as the typical entry-level education, with no related work experience required and apprenticeship as the on-the-job training.",
+          "kind": "positive",
+          "verdict": "unsupported",
+          "reason": "detail not present in the shown quote"
+        },
+        {
+          "claim": "Some vocational-technical schools also offer associate's degrees in carpentry, but these are not required.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 1,
+      "id": "pilot-04",
+      "condition": "answerable",
+      "quotes": [
+        "Number of Jobs, 2023 | 1,897,100",
+        "Software developers held about 1.7 million jobs in 2023. The largest employers of software developers were as follows:",
+        "Software quality assurance analysts and testers held about 205,000 jobs in 2023. The largest employers of software quality assurance analysts and testers were as follows:"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Software developers, quality assurance analysts, and testers together held 1,897,100 jobs in 2023 (Quick Facts).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The breakdown in the same document is about 1.7 million jobs for software developers and about 205,000 for quality assurance analysts and testers.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 1,
+      "id": "pilot-05",
+      "condition": "answerable",
+      "quotes": [
+        "Number of Jobs, 2023 | 341,800",
+        "Employment Change, 2023-33 | 22,100",
+        "Job Outlook, 2023-33 | 6% (Faster than average)"
+      ],
+      "coverage": {
+        "required": 2,
+        "covered": 2,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Civil engineers held 341,800 jobs in 2023, and the projected employment change for 2023-33 is 22,100 jobs.",
+          "kind": "computed",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Adding the change to the 2023 base gives a projected 2033 employment of 341,800 + 22,100 = 363,900.",
+          "kind": "computed",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "This 2033 total is computed from the two stated figures; the documents do not state it directly.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        },
+        {
+          "claim": "The 22,100 increase is consistent with the stated 6% growth outlook.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 1,
+      "id": "pilot-07",
+      "condition": "answerable",
+      "quotes": [
+        "Job Outlook, 2023-33 | 17% (Much faster than average)",
+        "Job Outlook, 2023-33 | 6% (Faster than average)"
+      ],
+      "coverage": {
+        "required": 2,
+        "covered": 2,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Software developers have the higher projected growth rate.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Doc 1 gives software developers, quality assurance analysts, and testers a 2023-33 job outlook of 17%, while Doc 2 gives registered nurses 6%.",
+          "kind": "computed",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The difference is 17 − 6 = 11 percentage points.",
+          "kind": "computed",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 1,
+      "id": "pilot-08",
+      "condition": "answerable",
+      "quotes": [
+        "2023 Median Pay | $95,890 per year $46.10 per hour",
+        "2023 Median Pay | $58,910 per year $28.32 per hour"
+      ],
+      "coverage": {
+        "required": 3,
+        "covered": 2,
+        "complete": false
+      },
+      "claims": [
+        {
+          "claim": "Only two of the three occupations have pay stated in the documents.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Civil engineers have a 2023 median pay of $95,890 per year (Doc 1).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Graphic designers have a 2023 median pay of $58,910 per year (Doc 2).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Civil engineers are higher than graphic designers.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state median pay for accountants and auditors, so they cannot be ranked against the other two.",
+          "kind": "absence",
+          "verdict": "false_absence",
+          "reason": "the corpus states the value on a page outside the window"
+        },
+        {
+          "claim": "Among the occupations whose pay is stated, civil engineers have the highest median annual pay, but whether they are highest of all three is not stated.",
+          "kind": "absence",
+          "verdict": "false_absence",
+          "reason": "the corpus states the value on a page outside the window"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 1,
+      "id": "pilot-09",
+      "condition": "partial",
+      "quotes": [
+        "2023 Median Pay | $86,070 per year $41.38 per hour"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The 2023 median annual pay for registered nurses is $86,070 per year, which is $41.38 per hour (Doc 1).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state the median annual pay for registered nurses in California.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 1,
+      "id": "pilot-10",
+      "condition": "partial",
+      "quotes": [
+        "Job Outlook, 2023-33 | 4% (As fast as average)",
+        "Employment Change, 2023-33 | 38,600",
+        "Number of Jobs, 2023 | 923,100"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The projected growth rate for carpenters from 2023 to 2033 is 4% (as fast as average), with an employment change of 38,600 jobs.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The number of carpenters employed in 2010 is not stated.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        },
+        {
+          "claim": "The documents give only the 2023 figure of 923,100 jobs.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 1,
+      "id": "pilot-11",
+      "condition": "partial",
+      "quotes": [
+        "2023 Median Pay | $79,880 per year $38.41 per hour"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The national median annual pay for accountants and auditors in 2023 was $79,880 per year (about $38.41 per hour), per Doc 1.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state the median annual pay for accountants and auditors in Texas, so that part is not stated.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 1,
+      "id": "pilot-12",
+      "condition": "partial",
+      "quotes": [
+        "Typical Entry-Level Education | High school diploma or equivalent",
+        "A high school diploma or equivalent is required to become an electrician.",
+        "Employment Change, 2023-33 | 84,300"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Typical entry-level education for electricians is a high school diploma or equivalent (Doc 1), with training mainly through an apprenticeship.",
+          "kind": "positive",
+          "verdict": "unsupported",
+          "reason": "detail not present in the shown quote"
+        },
+        {
+          "claim": "The documents do not state a number of openings projected for 2033 specifically.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        },
+        {
+          "claim": "They give only an employment change of 84,300 for 2023-33 (and an 11% outlook, from 779,800 jobs in 2023).",
+          "kind": "computed",
+          "verdict": "unsupported",
+          "reason": "detail not present in the shown quote"
+        },
+        {
+          "claim": "That is a change in employment over the decade, not an annual or 2033 openings figure.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "So the education part is answered, and the 2033-specific openings figure is not stated.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 2,
+      "id": "pilot-01",
+      "condition": "answerable",
+      "quotes": [
+        "2023 Median Pay | $95,890 per year $46.10 per hour"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The median annual wage for civil engineers was $95,890 per year in 2023, which is equivalent to $46.10 per hour.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 2,
+      "id": "pilot-02",
+      "condition": "answerable",
+      "quotes": [
+        "Employment Change, 2023-33 | 197,200",
+        "Job Outlook, 2023-33 | 6% (Faster than average)",
+        "Number of Jobs, 2023 | 3,300,100"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The projected employment change for registered nurses from 2023 to 2033 is 197,200 jobs.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "This comes with a 6% job outlook (faster than average), measured against 3,300,100 jobs in 2023.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 2,
+      "id": "pilot-03",
+      "condition": "answerable",
+      "quotes": [
+        "Typical Entry-Level Education | High school diploma or equivalent",
+        "A high school diploma or equivalent is typically required to enter the occupation. Certain high school courses, such as mathematics and mechanical drawing, may be useful. Some vocational-technical schools offer associate’s degrees in carpentry. The programs vary in length and teach basics and specialties in carpentry.",
+        "A high school diploma or equivalent is typically required to enter the occupation. Certain high school courses, such as mathematics and mechanical drawing, may be useful. Some vocational-technical schools offer associate’s degrees in carpentry. The programs vary in length and teach basics and specialties in carpentry."
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Carpenters typically need a high school diploma or equivalent to enter the occupation.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Doc 1 lists this as the typical entry-level education in its Quick Facts and repeats it in the education section.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Related work experience is not required, and skills are learned on the job or through apprenticeships.",
+          "kind": "positive",
+          "verdict": "unsupported",
+          "reason": "detail not present in the shown quote"
+        },
+        {
+          "claim": "Some vocational-technical schools also offer associate's degrees in carpentry, but these are not the typical requirement.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 2,
+      "id": "pilot-04",
+      "condition": "answerable",
+      "quotes": [
+        "Number of Jobs, 2023 | 1,897,100",
+        "Software developers held about 1.7 million jobs in 2023. The largest employers of software developers were as follows:",
+        "Software quality assurance analysts and testers held about 205,000 jobs in 2023. The largest employers of software quality assurance analysts and testers were as follows:"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Software developers, quality assurance analysts, and testers together held 1,897,100 jobs in 2023 (Quick Facts).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The breakdown in Doc 1 is: software developers held about 1.7 million jobs, and software quality assurance analysts and testers held about 205,000 jobs.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 2,
+      "id": "pilot-05",
+      "condition": "answerable",
+      "quotes": [
+        "Number of Jobs, 2023 | 341,800",
+        "Employment Change, 2023-33 | 22,100",
+        "Job Outlook, 2023-33 | 6% (Faster than average)"
+      ],
+      "coverage": {
+        "required": 2,
+        "covered": 2,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Civil engineers held 341,800 jobs in 2023, and employment is projected to change by 22,100 over 2023-33 (a 6% increase).",
+          "kind": "computed",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Adding the change to the 2023 base gives projected 2033 employment of 341,800 + 22,100 = 363,900 jobs.",
+          "kind": "computed",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The 2033 figure is computed from the two stated numbers rather than being stated directly in the document.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 2,
+      "id": "pilot-07",
+      "condition": "answerable",
+      "quotes": [
+        "Job Outlook, 2023-33 | 17% (Much faster than average)",
+        "Job Outlook, 2023-33 | 6% (Faster than average)"
+      ],
+      "coverage": {
+        "required": 2,
+        "covered": 2,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Software developers have the higher projected growth rate.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Doc 1 gives software developers (with quality assurance analysts and testers) a 17% job outlook for 2023-33, while Doc 2 gives registered nurses 6% for the same period.",
+          "kind": "computed",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The difference is 17 − 6 = 11 percentage points.",
+          "kind": "computed",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 2,
+      "id": "pilot-08",
+      "condition": "answerable",
+      "quotes": [
+        "2023 Median Pay | $95,890 per year $46.10 per hour",
+        "2023 Median Pay | $58,910 per year $28.32 per hour"
+      ],
+      "coverage": {
+        "required": 3,
+        "covered": 2,
+        "complete": false
+      },
+      "claims": [
+        {
+          "claim": "Among the occupations asked about, only two have pay data in the documents: civil engineers (2023 median pay $95,890 per year) and graphic designers ($58,910 per year).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Civil engineers earn more than graphic designers, about $37,000 more.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents give no median pay for accountants and auditors, so that occupation cannot be compared.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Of the occupations with stated pay, civil engineers are highest, but the accountants and auditors figure is not stated.",
+          "kind": "absence",
+          "verdict": "false_absence",
+          "reason": "the corpus states the value on a page outside the window"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 2,
+      "id": "pilot-09",
+      "condition": "partial",
+      "quotes": [
+        "2023 Median Pay | $86,070 per year $41.38 per hour"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The documents state the national median annual pay for registered nurses: $86,070 per year in 2023 (about $41.38 per hour).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The median annual pay in California is not stated in the documents.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 2,
+      "id": "pilot-10",
+      "condition": "partial",
+      "quotes": [
+        "Job Outlook, 2023-33 | 4% (As fast as average)",
+        "Employment Change, 2023-33 | 38,600",
+        "Number of Jobs, 2023 | 923,100"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "Part 1 (growth rate): Doc 1 gives the 2023-33 job outlook for carpenters as 4%, described as \"As fast as average\", with an employment change of 38,600 jobs.",
+          "kind": "computed",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "Part 2 (2010 employment): the documents do not state how many carpenters were employed in 2010.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        },
+        {
+          "claim": "Doc 1 gives only the 2023 figure of 923,100 jobs, so the 2010 employment figure is not stated.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 2,
+      "id": "pilot-11",
+      "condition": "partial",
+      "quotes": [
+        "2023 Median Pay | $79,880 per year $38.41 per hour"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The national median annual pay for accountants and auditors in 2023 was $79,880 per year (about $38.41 per hour), per Document 1.",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state a Texas-specific median annual pay for accountants and auditors, so that part is not stated.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "arm": "D",
+      "seed": 2,
+      "id": "pilot-12",
+      "condition": "partial",
+      "quotes": [
+        "Typical Entry-Level Education | High school diploma or equivalent",
+        "A high school diploma or equivalent is required to become an electrician.",
+        "Employment Change, 2023-33 | 84,300"
+      ],
+      "coverage": {
+        "required": 1,
+        "covered": 1,
+        "complete": true
+      },
+      "claims": [
+        {
+          "claim": "The typical entry-level education for electricians is a high school diploma or equivalent (Doc 1).",
+          "kind": "positive",
+          "verdict": "supported",
+          "reason": "shown quote states the value/relation"
+        },
+        {
+          "claim": "The documents do not state a number of openings projected for 2033 specifically.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        },
+        {
+          "claim": "They give only an employment change for 2023-33 of 84,300 jobs, along with 779,800 jobs in 2023 and an 11% outlook.",
+          "kind": "computed",
+          "verdict": "unsupported",
+          "reason": "detail not present in the shown quote"
+        },
+        {
+          "claim": "That is a ten-year growth figure, not a count of openings in 2033, so the 2033 openings figure is not stated.",
+          "kind": "absence",
+          "verdict": "true_absence",
+          "reason": "not present in the 48-page snapshot"
+        }
+      ],
+      "notes": []
+    }
+  ]
+}

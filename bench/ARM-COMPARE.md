@@ -64,7 +64,63 @@ on answerable accuracy with lower false accepts and lower coverage; B is better
 on partials. D is not proven superior to entailment. Raw held-out outputs stay
 private.
 
+### Reader robustness pilots (2026-10-29, public 20-item pilot)
+
+The defect is interface-level, not model-tier, so the same arms were rerun on
+the public pilot with the benchmark reader, two frontier readers and a local
+mid-tier one. DeepSeek V4.1 Flash (3 seeds): D 2/60 wrong shown versus B's 4/60
+(3 substantive; one empty output), answerable 18/24 versus 20/24, partials
+7/12 versus 9/12. GLM-5.3 (3 seeds): D 0/60 versus B's 4/60, unanswerable
+24/24, partials tied, answerable 18/24 versus 21/24.
+Sonnet 5.5 (two 3-seed replications): a tie — D 2–3/60 versus B 3/60,
+answerable 20/24 versus 21/24, partials 7–8/12 versus 9/12 — because Sonnet's
+errors were false absences, which the gate cannot reject. Local 27B: D and B
+tie on wrong shown (1/20), and D abstains on partials the reader could have
+answered — contract compliance, not gate rejection. Across the direct
+comparison, D never beats B on answerable or partials; its gain is wrong-shown
+for fabricating readers only, at a coverage cost. Full tables, per-seed
+spread, row audit, costs, and hashes: `bench/ARM-COMPARE-REPORT.md` § Reader
+robustness.
+
 ## Held-out report
 
 See `bench/ARM-COMPARE-REPORT.md` for per-condition shown/abstained/wrong,
 retrieval misses, intervals, coverage, strict-mode delta, and the held-out hash.
+
+## Citation metrics — pre-registered 2026-10-29 (before the run)
+
+The answer metric and the citation metric are separate. For every shown answer:
+
+1. **Validity (mechanical, per quote):** exact in the claimed document /
+   tolerant-only / misattributed (exists in another document) / missing.
+   Per answer: all quotes valid?
+2. **Completeness (mechanical):** quotes cover every required operand (answerable)
+   or stated part (partial).
+3. **Support (semantic, ALCE-style):** split the answer into sentences; classify
+   each as positive, absence, or computed. Positive claims are judged with
+   MiniCheck against the shown quotes; computed claims require their operands in
+   the quotes; absence claims are reported separately (the D-absence class).
+
+**Joint view:** answer correct/wrong × citation valid/invalid/none.
+
+**Arms.** `Q` = B's prompt + "copy the exact supporting passage VERBATIM for
+every claim" (JSON, no gate, no lift/repair) — the simple-prompt control.
+`D` = the shipped contract + gate; D reports **raw generation** and **shown
+receipt** validity separately. B and C are not rerun: they carry no quotes, and
+their answer behaviour is unchanged; their rows from the v2 pilot are reused as
+a cross-run reference.
+
+**Run.** Public pilot v2 (20 items), Flash, 3 seeds, `--arms Q,D`,
+`--max-tokens 1200`, MiniCheck. Thresholds, fixed before running:
+
+- **Q fails the simple-prompt test** if exact-verbatim < 95%, or required
+  coverage < 90%, or positive-claim support < 90% (answerable + partial).
+- **D passes** if shown validity = 100% and wrong+invalid = 0.
+
+All rates reported with counts and Wilson intervals; if Q meets the thresholds,
+the "a simple prompt does not work" claim is withdrawn.
+
+**Post-run note (2026-10-29).** The pre-registered MiniCheck support over-refused
+(it rejected an obvious entailment), so the support measure is a manual
+claim-level audit (`bench/audits/citation-support-2026-10-29.json`); the 9B
+sensitivity is withdrawn. The Q decision is unchanged: coverage fails.

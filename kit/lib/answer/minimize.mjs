@@ -8,7 +8,7 @@ const content = (s) => words(s).filter((w) => !STOP.has(w))
 const quoteWords = (s) => String(s ?? '').split(/\s+/).filter(Boolean).length
 
 function sentences (quote) {
-  const raw = String(quote ?? '').replace(/\s*\|\s*/g, ' ').split(/(?<=[.!?])\s+|\n+/).map((s) => s.trim()).filter((s) => s.length > 3)
+  const raw = String(quote ?? '').split(/(?<=[.!?])\s+|\n+/).map((s) => s.trim()).filter((s) => s.length > 3)
   const seen = new Set()
   const out = []
   for (const s of raw) {
@@ -41,6 +41,15 @@ function greedy (sents, target, want) {
   return { chosen, cov: target.size ? covered.size / target.size : 0 }
 }
 
+// The receipt is rebuilt ONLY from verbatim units: a ` | ` separator is a real
+// leg split (gate-visible), so it must never be glued into a sentence. Each
+// leg's quote is segmented on ` | ` first, sentence-split WITHIN a segment,
+// and whatever the greedy pass keeps is rejoined with the same separator —
+// every surviving unit is a verbatim unit the mechanical gate can find.
+function extractUnits (leg) {
+  return String(leg.quote ?? '').split(/\s*\|\s+/g).flatMap((seg) => (seg.trim() ? sentences(seg) : []))
+}
+
 export function minimizeAssembled (assembled, answer, { tolerance = 0.01 } = {}) {
   const legs = assembled.legs ?? []
   if (!legs.length) return { ...assembled, minimized: false, reason: 'no_legs' }
@@ -52,7 +61,7 @@ export function minimizeAssembled (assembled, answer, { tolerance = 0.01 } = {})
   const entries = []
   const seen = new Set()
   legs.forEach((leg, li) => {
-    for (const s of sentences(leg.quote)) {
+    for (const s of extractUnits(leg)) {
       const key = s.toLowerCase().replace(/\s+/g, ' ').trim()
       if (seen.has(key)) continue
       seen.add(key)
@@ -71,7 +80,7 @@ export function minimizeAssembled (assembled, answer, { tolerance = 0.01 } = {})
   const newLegs = []
   legs.forEach((leg, li) => {
     const qs = entries.filter((x) => x.li === li && chosen.has(x.s)).map((x) => x.s)
-    if (qs.length) newLegs.push({ ...leg, quote: qs.join(' | ') })
+    if (qs.length) newLegs.push({ ...leg, quote: qs.join(' | '), quotes: qs })
   })
   if (!newLegs.length) return { ...assembled, minimized: false, reason: 'empty_selection' }
 

@@ -14,6 +14,8 @@ test('config: seal in the cwd (corpus recorded), show it, reset it; a literal ke
   mkdirSync(corpus)
   try {
     assert.throws(() => runConfig({ flags: { corpus: 'docs', apiKey: 'sk-literal' }, cwd: root }), /literal key/)
+    // unknown config flags are refused, never silently ignored
+    assert.throws(() => runConfig({ flags: { corpus: 'docs', modeel: 'qwen3.5:4b' }, cwd: root }), /unknown flag: --modeel/)
 
     const w = runConfig({ flags: { corpus: 'docs', model: 'qwen3.5:4b', apiKeyEnv: 'OPENAI_API_KEY' }, cwd: root })
     assert.equal(w.action, 'write')

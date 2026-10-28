@@ -12,3 +12,6 @@ __pycache__/
 # retrieval-kit workspace and embedding cache
 .retrieval/
 .retrieval-index/
+
+# local working drafts (article/email) — never published from this tree
+drafts/

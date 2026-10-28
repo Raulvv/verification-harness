@@ -1,16 +1,18 @@
 # retrieval-kit
 
-> **This is the kit component of the OOH citation-first benchmark.**
-> The OOH results are in `README.md` and `bench/ooh-BENCHMARK.md`; the old
-> historical verification-harness tables are not part of this repo.
+> **This is the citation-first retrieval system; the OOH benchmark is its
+> frozen evaluation corpus.**
+> The OOH results are in `bench/ooh-README.md` and `bench/ooh-BENCHMARK.md`;
+> the old historical verification-harness tables are not part of this repo.
 
 **Layered retrieval with receipts.** Declared metadata → flash-tier
 select-and-extract under a verbatim-quote contract → a free mechanical gate
 with veto power. Bring your docs and your models; the contract is what
 matters, not the vendor.
 
-Current measured results are the **OOH citation-first benchmark** (root
-`README.md`, `bench/ooh-BENCHMARK.md`, `bench/ARM-COMPARE-REPORT.md`).
+Current measured results are the **OOH citation-first benchmark**
+(`bench/ooh-README.md`, `bench/ooh-BENCHMARK.md`, `bench/ARM-COMPARE-REPORT.md`;
+the root `README.md` carries the evidence summary).
 Pre-OOH 1.0/2.0 numbers live in [HISTORY.md](HISTORY.md); they are not OOH
 results and are not comparable across corpora.
 
@@ -21,6 +23,10 @@ example assumes Ollama and `qwen3.5:4b`; see **Reader model setup** below for
 hosted and non-Ollama servers.
 
 ```sh
+node kit/bin/retrieval-kit.mjs ask bench/corpus/ooh-v1 \
+  "What is the median annual pay for registered nurses?" --quote
+# zero-config one-off on the frozen OOH snapshot — a folder IS a workspace
+
 node kit/bin/retrieval-kit.mjs config --corpus ./my-docs   # seal the workspace
 node kit/bin/retrieval-kit.mjs ask "What is the refund window?"
 # Q: …  /  Source: …  /  gate: verified
@@ -40,14 +46,18 @@ node kit/bin/retrieval-kit.mjs ask "What is the refund window?"
   up from the cwd) **→ defaults**; `ask <dir> "<question>"` is a one-off with no
   workspace. `config` writes the seat **where you run it** (`.retrieval/`), so run
   `config` and `ask` from the same place (or pass the folder).
-- The default retriever is **`router`** (dense → abstain → iterative) and needs a
-  local embedder; if none is reachable it **fails loud** with the fix
-  (`ollama pull nomic-embed-text`). `--retriever reference` is the explicit
-  embedder-free path.
+- The default retriever is **`reference`** — deterministic, embedder-free, and
+  the mode the benchmark numbers were measured under. `dense`/`router` opt into
+  a local embedder; if none is reachable they **fail loud** with the fix
+  (`ollama pull nomic-embed-text`), an unknown `--retriever` value is
+  refused rather than silently degraded, and every other `--flag` is exact too:
+  an unknown or valued-bare flag (a `--quote.` typo) refuses with the valid set.
 - The default contract is the shipped **`source-v45`** (a `Source` receipt, which
   the gate verifies by path/title/date). Add **`--quote`** for the full
   byte-verbatim quote (`v45`), or `--tier source-v45|v45|full`.
-- `config --show` / `config --reset`; `--json` for machines. In this repo the
+- `config --show` / `config --reset`; `--json` for machines. `--json` includes
+  a `citations` array (source id, quote, byte offsets, section, exact flag);
+  `--max-quotes-per-doc <n>` caps quotes per source (opt-in). In this repo the
   command is `node kit/bin/retrieval-kit.mjs`.
 
 ## Reader model setup — defaults, Ollama, non-Ollama
@@ -63,12 +73,14 @@ Defaults with no config or flags:
 | Base URL | `http://localhost:11434/v1` | Assumes Ollama |
 | Model | `qwen3.5:4b` | Only if the base URL looks like Ollama |
 | API key | `ollama` for Ollama | Non-Ollama needs `RETRIEVAL_API_KEY` or `--api-key-env` |
-| Retriever | `router` | Needs local `nomic-embed-text`; use `reference` without it |
+| Retriever | `reference` | Embedder-free; `dense`/`router` need local `nomic-embed-text` |
 | Tier | `source-v45` | `--quote` switches to `v45` |
 
 There is **no default hosted model**. If you pass a non-Ollama `--base-url`
 without `--model`, it fails with `no chat model`. If you pass a model but no key,
-it fails with `no api key`. If Ollama is not running, the default local path
+it fails with `no api key`. If the sealed workspace names an `apiKeyEnv` and that
+variable is not exported in the current shell, it fails before any call with
+`no api key — <VAR> is not set`. If Ollama is not running, the default local path
 fails with a connection error; it does not fall back to a hosted model. If the
 Ollama model is not pulled, Ollama returns a model-not-found error.
 
@@ -76,13 +88,11 @@ Ollama model is not pulled, Ollama returns a model-not-found error.
 
 ```sh
 ollama pull qwen3.5:4b
-ollama pull nomic-embed-text   # only for dense/router
 
 node kit/bin/retrieval-kit.mjs config \
   --corpus ./my-docs \
   --model qwen3.5:4b \
-  --base-url http://localhost:11434/v1 \
-  --retriever reference
+  --base-url http://localhost:11434/v1
 ```
 
 ### Hosted OpenAI-compatible
@@ -92,8 +102,7 @@ export RETRIEVAL_API_KEY="..."
 node kit/bin/retrieval-kit.mjs config \
   --corpus ./my-docs \
   --model "<model-id>" \
-  --base-url "https://your-endpoint/v1" \
-  --retriever reference
+  --base-url "https://your-endpoint/v1"
 ```
 
 ### Local non-Ollama (vLLM, llama.cpp server, LM Studio, etc.)
@@ -103,13 +112,12 @@ export RETRIEVAL_API_KEY=local   # dummy Bearer value if the server ignores auth
 node kit/bin/retrieval-kit.mjs config \
   --corpus ./my-docs \
   --model "<served-model-id>" \
-  --base-url "http://localhost:8000/v1" \
-  --retriever reference
+  --base-url "http://localhost:8000/v1"
 ```
 
 `dense` and `router` always use the local Ollama embedder
-(`nomic-embed-text`), even when the chat model is hosted. Without Ollama, use
-`--retriever reference`.
+(`nomic-embed-text`), even when the chat model is hosted. Without Ollama, the
+default `reference` retriever is what you want — no flag needed.
 
 The benchmark reader was **DeepSeek V4.1 Flash**; `qwen3.5:4b` is the kit's
 local convenience default, not the benchmark model. The kit writes `.retrieval/`
@@ -255,22 +263,21 @@ page's own version history; auth lives in `twg`'s config, never here;
 `twg` must be on `PATH`). Same config shape throughout — nothing
 downstream changes.
 
-## Embeddings — the default retriever's one local dependency
+## Embeddings — the opt-in retriever's one local dependency
 
-The default retriever is `router` → **dense**, which ranks the corpus with
-local embeddings. That needs a local [Ollama](https://ollama.com) serving an
-embedding model:
+The `dense`/`router` retrievers rank the corpus with local embeddings. That
+needs a local [Ollama](https://ollama.com) serving an embedding model:
 
 ```sh
-ollama pull nomic-embed-text     # the default embedding model
+ollama pull nomic-embed-text     # the embedding model for dense/router
 ```
 
 - `OLLAMA_URL` (default `http://localhost:11434`) — where the embedder lives.
 - `RETRIEVAL_EMBED_MODEL` (default `nomic-embed-text`) — the model.
 
-Embeddings are local-only: no network beyond localhost. The `reference`
-retriever (exact title/heading match) needs no embedder — `--retriever
-reference`, or set `cfg.retriever`, for a fully embedder-free run.
+Embeddings are local-only: no network beyond localhost. The default `reference`
+retriever (phrase + IDF term ranking) needs no embedder at all — a fully
+embedder-free run, and the mode the benchmark numbers were measured under.
 
 ## The one-pager recipe
 
@@ -363,7 +370,7 @@ Quote: <verbatim line(s)>
 The pre-OOH 1.0/2.0 internal numbers (96%, 6.4×, 80/81) are kept in
 [HISTORY.md](HISTORY.md) for provenance. They are **not** OOH results and are
 not comparable across corpora; the current public comparison is the OOH
-benchmark (root `README.md`).
+benchmark (`bench/ooh-README.md`).
 
 ## Tests — the whole safety net, one command
 

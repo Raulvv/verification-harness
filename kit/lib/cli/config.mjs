@@ -6,10 +6,12 @@
 import { existsSync } from 'node:fs'
 import { resolve, relative } from 'node:path'
 import { findWorkspace, writeWorkspace, clearWorkspace, formatWorkspace } from './workspace.mjs'
+import { validateFlags, CONFIG_FLAGS, CONFIG_BOOLEAN } from '../cli.mjs'
 
 const FIELDS = ['model', 'baseUrl', 'apiKeyEnv', 'embedModel', 'retriever', 'tier']
 
 export function runConfig({ flags = {}, cwd = process.cwd() } = {}) {
+  validateFlags(flags, CONFIG_FLAGS, { booleans: CONFIG_BOOLEAN })
   if (flags.show) {
     const ws = findWorkspace(cwd)
     if (!ws) throw new Error('no sealed workspace here (or above) — run `retrieval-kit config --corpus <dir>`')

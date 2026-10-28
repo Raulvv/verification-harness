@@ -3,8 +3,9 @@
 Pre-OOH internal numbers, kept for provenance only. **Not** OOH results, and
 not comparable across corpora: different corpus, different questions,
 different methodology. The public, independently readable comparison is the
-OOH citation-first benchmark — root `README.md` (decision summary),
-`bench/ooh-BENCHMARK.md`, `bench/ARM-COMPARE-REPORT.md`.
+OOH citation-first benchmark — `bench/ooh-README.md` (benchmark details),
+`bench/ooh-BENCHMARK.md`, `bench/ARM-COMPARE-REPORT.md`; the root `README.md`
+carries the evidence summary.
 
 ## 1.0/2.0 internal baselines
 
@@ -21,5 +22,6 @@ One private repo, 27 golden questions / 81 points:
 
 OOH held-out (100 items, flash-tier reader, one seed): the harness +
 gate answers 27/40 answerable correct at **2%** audited wrong-shown versus
-**8%** for plain RAG with citations, at 46/100 vs 55/100 coverage. See the
-decision summary in the root `README.md`.
+**8%** for plain RAG with citations, at 46/100 vs 55/100 coverage. See the evidence
+summary in the root `README.md` and the benchmark details in
+`bench/ooh-README.md`.

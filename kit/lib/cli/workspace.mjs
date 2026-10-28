@@ -56,7 +56,7 @@ export function formatWorkspace(ws) {
     row('baseUrl', c.baseUrl ?? '(default: http://localhost:11434/v1)'),
     row('apiKeyEnv', c.apiKeyEnv ?? '(none — must come from the env)'),
     row('embedModel', c.embedModel ?? '(default: nomic-embed-text)'),
-    row('retriever', c.retriever ?? '(auto)'),
-    row('tier', c.tier ?? '(default: v45)'),
+    row('retriever', c.retriever ?? '(default: reference)'),
+    row('tier', c.tier ?? '(default: source-v45)'),
   ].join('\n')
 }

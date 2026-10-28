@@ -32,7 +32,7 @@ const label = arg('label') ?? (arg('prompt') === 'lean' ? 'lean' : 'one-shot')
 const evidenceFirst = has('evidence-first')
 const minimalReceipt = has('minimal-receipt')
 const evidenceAnchor = arg('evidence-anchor') ?? undefined
-const run = (question) => askOneShot(model, corpusRoot, question, { corpus: cfg.corpus, promptStyle: arg('prompt') ?? 'source-v45', retriever: arg('retriever') ?? cfg.retriever ?? 'router', evidenceFirst, evidenceAnchor, minimizeReceipt: minimalReceipt })
+const run = (question) => askOneShot(model, corpusRoot, question, { corpus: cfg.corpus, promptStyle: arg('prompt') ?? 'source-v45', retriever: arg('retriever') ?? cfg.retriever, evidenceFirst, evidenceAnchor, minimizeReceipt: minimalReceipt })
 
 const N = golden.items.length
 const nCorpus = (cfg.corpus ?? []).length

@@ -1,7 +1,6 @@
-// The shipped DEFAULT path — `router` (dense first, the NOT FOUND is the
-// router signal) and the opt-in `iterative` second hop — driven end-to-end
-// through askOneShot with stubbed chat/embed, then re-checked by the gate.
-// This is the gate HK-16 said did not exist (epic retrieval-kit-refactor It. 1).
+// The `router` retriever — dense first, the NOT FOUND is the router signal —
+// driven end-to-end through askOneShot with stubbed chat/embed, then re-checked
+// by the gate. This is the gate HK-16 said did not exist (epic retrieval It. 1).
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { mkdtempSync, writeFileSync, rmSync } from 'node:fs'
@@ -54,19 +53,5 @@ test('router: a confident first read never escalates — and its receipt verifie
     assert.match(r.final.text, /Q: x/)
     const item = { id: 't', question: 'what is x?', not_found: false, candidates: [{ path: 'a.md', quote: 'alpha the answer is x' }] }
     assert.equal(verify(item, r.final.text, dir).mechanicalPass, true)
-  } finally { rmSync(dir, { recursive: true, force: true }) }
-})
-
-test('iterative: the second hop is always taken before answering', async () => {
-  const dir = corpus({ 'a.md': '# A\nalpha one', 'b.md': '# B\nbeta two' })
-  try {
-    let bridge = 0
-    const _chat = async (msgs) => {
-      if (msgs[0].content.includes('SHORT search query')) { bridge++; return { content: 'beta', usage: {} } }
-      return { content: j({ answer: 'two', quotes: [{ doc: 2, quote: 'beta two' }], not_found: false }), usage: {} }
-    }
-    const r = await askOneShot({}, dir, 'what is two?', { retriever: 'iterative', _chat, _embed: flatEmbed })
-    assert.equal(bridge, 1)
-    assert.equal(r.parsed.notFound, false)
   } finally { rmSync(dir, { recursive: true, force: true }) }
 })

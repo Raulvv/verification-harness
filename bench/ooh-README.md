@@ -2,9 +2,9 @@
 
 > Repository: `verification-harness` · package: `ooh-citation-first-benchmark`
 >
-> Submitters: the scoring rule below is authoritative. The repository root
-> `README.md` carries the current decision summary (problem, claim, evidence,
-> limits, ask).
+> Submitters: the scoring rule below is authoritative. This file is the
+> benchmark's own README (corpus, splits, scoring, reproduction). The repository
+> root `README.md` describes the citation system the benchmark evaluates.
 
 A neutral, public-corpus, citation-first benchmark built from the U.S. Bureau
 of Labor Statistics **Occupational Outlook Handbook** (2023–33 edition).
@@ -130,8 +130,17 @@ The 100-item test is submission-only; see `bench/ooh-SUBMISSION.md`.
 
 ## Use it on your own private corpus
 
+Zero config is possible: **a folder is a workspace**. This runs the frozen
+OOH snapshot with no `config` call (needs a local Ollama model):
+
+```bash
+node kit/bin/retrieval-kit.mjs ask bench/corpus/ooh-v1 \
+  "What is the median annual pay for registered nurses?" --quote
+```
+
 The benchmark is public; the same kit runs on a private folder. Do not put
-private documents or labels in this repository.
+private documents or labels in this repository. To point at your own corpus,
+or to keep settings beyond one call, seal the workspace once:
 
 ```bash
 # local Ollama model; no cloud egress
@@ -140,13 +149,12 @@ node kit/bin/retrieval-kit.mjs config \
   --model qwen3.5:4b \
   --base-url http://localhost:11434/v1
 
-# simplest embedder-free retrieval; full byte-verbatim receipt
-node kit/bin/retrieval-kit.mjs ask "What is the refund window?" \
-  --retriever reference --quote
+# the default retriever is embedder-free; --quote is the full byte-verbatim receipt
+node kit/bin/retrieval-kit.mjs ask "What is the refund window?" --quote
 ```
 
-- `--retriever reference` needs no embedding model; `dense`/`router` need
-  Ollama `nomic-embed-text`.
+- The default `reference` retriever needs no embedding model; `dense`/`router`
+  opt into Ollama `nomic-embed-text` and fail loud without it.
 - `--quote` returns the full verbatim receipt; the default `source-v45` returns
   a Source receipt.
 - `--json` for machines; `--minimal-receipt` for shorter local receipts.
@@ -167,23 +175,22 @@ Defaults when no config or flags are set:
 | Base URL | `http://localhost:11434/v1` | Assumes Ollama |
 | Model | `qwen3.5:4b` | Only when the base URL looks like Ollama |
 | API key | `ollama` | Other endpoints need `RETRIEVAL_API_KEY` or `--api-key-env` |
-| Retriever | `router` | Needs local `nomic-embed-text`; use `--retriever reference` without it |
+| Retriever | `reference` | Embedder-free; `dense`/`router` need Ollama `nomic-embed-text` |
 | Tier | `source-v45` | `--quote` switches to `v45` |
 
 ### Option A — Ollama
 
 ```bash
 ollama pull qwen3.5:4b
-ollama pull nomic-embed-text   # only for dense/router
+ollama pull nomic-embed-text   # only for --retriever dense|router
 
 node kit/bin/retrieval-kit.mjs config \
   --corpus ./my-docs \
   --model qwen3.5:4b \
-  --base-url http://localhost:11434/v1 \
-  --retriever reference
+  --base-url http://localhost:11434/v1
 
 node kit/bin/retrieval-kit.mjs ask \
-  "What is the refund window?" --retriever reference --quote
+  "What is the refund window?" --quote
 ```
 
 ### Option B — hosted OpenAI-compatible endpoint
@@ -193,8 +200,7 @@ export RETRIEVAL_API_KEY="..."
 node kit/bin/retrieval-kit.mjs config \
   --corpus ./my-docs \
   --model "<model-id>" \
-  --base-url "https://your-endpoint/v1" \
-  --retriever reference
+  --base-url "https://your-endpoint/v1"
 ```
 
 ### Option C — local non-Ollama server
@@ -208,8 +214,7 @@ export RETRIEVAL_API_KEY=local
 node kit/bin/retrieval-kit.mjs config \
   --corpus ./my-docs \
   --model "<served-model-id>" \
-  --base-url "http://localhost:8000/v1" \
-  --retriever reference
+  --base-url "http://localhost:8000/v1"
 ```
 
 ### What the errors mean
@@ -217,7 +222,12 @@ node kit/bin/retrieval-kit.mjs config \
 - `no corpus` — run `config --corpus <dir>` or pass the folder to `ask`.
 - `no chat model` — the base URL is not Ollama and you omitted `--model`.
 - `no api key` — set `RETRIEVAL_API_KEY`, use `--api-key-env <VAR>`, or point at a local model.
-- `the default retriever needs a local embedder` — use `--retriever reference`, or pull `nomic-embed-text`.
+- `the dense retriever needs a local embedder` (also `router`) — use the default `reference`, or pull `nomic-embed-text`.
+- `unknown retriever` — `--retriever` accepts `reference|dense|router`; anything else is refused.
+- `unknown flag: --quote.` — flags are exact and kebab-case; the mistake is named and the valid set is echoed. A `--quote.` typo refuses here instead of silently running the source tier.
+- `--quote is a bare flag` — bare-only flags (`--quote`, `--sufficient`, `--json`, `--minimal-receipt`, …) take no value.
+- `unknown flag: --quote.` — flags are exact and kebab-case; the mistake is named and the valid set is echoed. A `--quote.` typo refuses here instead of silently running the source tier.
+- `--quote is a bare flag` — bare-only flags (`--quote`, `--sufficient`, `--json`, `--minimal-receipt`, …) take no value.
 - No automatic fallback: a missing model or key fails loud.
 
 `config` refuses literal keys; use `RETRIEVAL_API_KEY` or `--api-key-env`.

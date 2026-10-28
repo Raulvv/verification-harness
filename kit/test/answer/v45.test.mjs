@@ -31,3 +31,12 @@ test('v4.5 on the source tier: scaffold present, source contract (no quote) unde
   assert.ok(sv45.endsWith(src), 'the source contract is intact underneath')
   assert.ok(!/quotes/.test(sv45), 'the source tier stays quote-free (no verbatim field)')
 })
+
+test('partial rule is default in the receipt and source prompts', () => {
+  const q = 'Q?', parts = ['=== DOC 1: a ===\nbody']
+  for (const p of [PROMPT_V45(q, parts), PROMPT_SOURCE_V45(q, parts)]) {
+    assert.match(p, /multiple parts and only some are stated/i)
+    assert.match(p, /explicitly say which parts are not stated/i)
+    assert.match(p, /For a question with no stated part, silence is not a negative/i)
+  }
+})

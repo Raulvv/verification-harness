@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Citation metadata** on the assembled receipt (additive): `--json` now
+  carries `citations[]` with `document_index`, `title`, `rel`, `quote`,
+  `start_char_index`/`end_char_index` (0-indexed, exclusive end), `exact`,
+  `section`, `context`, and `kind` (`prose`/`table`/`row`). The human receipt
+  groups evidence by source and section instead of one flat `Quote:` line; the
+  canonical `Q:/Source:/Quote:` text is unchanged. `--max-quotes-per-doc <n>`
+  caps quotes per source (opt-in; approximates the ALCE/LongCite convention).
 - Opt-in strict verbatim verifier: `verify(..., { strict: true })` and
   `kit/bin/verify.mjs --strict`. It tolerates only whitespace runs and one
   wrapping quote pair; short quotes must be complete lines. Default behavior is
@@ -43,6 +50,22 @@
 
 ### Fixed
 
+- A reader call that fails — missing key, HTTP error, unparseable output — is
+  now an explicit `state: "error"` (`reader_error`, `gate: not checked`,
+  non-zero exit), not a verified abstention. Previously the fallback
+  `Q: NOT FOUND` receipt passed the gate as a "correct abstention": a dead
+  call with 0 tokens looked identical to an honest refusal. A workspace that
+  names an `apiKeyEnv` whose variable is not exported now fails at resolve
+  time with the variable name.
+- The CLI refuses unknown flags and valued bare flags loudly
+  (`unknown flag: --quote.`, `--quote is a bare flag — it takes no value`);
+  previously a typo (`--quote.`) silently dropped the flag and ran the wrong
+  tier. The valid set is echoed in the error.
+- `--minimal-receipt` is now honored by `retrieval-kit ask` (it was documented
+  but silently ignored there — only the battery runner consumed it). The
+  receipt minimizer was also fixed to rebuild from verbatim units only: the
+  old pipe-flattening stitched a non-verbatim quote that the kit's own gate
+  rejected, so a minimized receipt could never re-verify.
 - Root-level `Source: Title (date) · file.md` receipts now parse as one
   locator; the gate no longer splits the title on words like “and”.
 - `askOneShot(..., { docs })` accepts a pre-selected window, so arm D can use
@@ -52,6 +75,28 @@
   failure.
 
 ### Changed
+
+- **Multi-part questions are handled by default.** Every answer prompt now
+  instructs: answer the stated parts, explicitly name the missing parts, and
+  reserve `NOT FOUND` for questions with no stated part. The "silence is not a
+  negative" rule is scoped to that case. The dead `partialRule` option is
+  removed. Measured on the corrected 20-item pilot: D partials **9/12 → 12/12**
+  and answerable 18→21 at the same wrong-shown level.
+- `askOneShot` returns the aggregated `usage` object, and token/cost accounting
+  now includes the reference-retriever vet call (it was a real reader call but
+  was invisible to `tokens`/cost). `bench/arm-compare.mjs` reports per-arm
+  tokens and provider cost (`$/q`, `$total`) when the endpoint returns
+  `usage.cost`.
+- **`reference` is now the shipped default retriever** — deterministic,
+  embedder-free, and the mode the benchmark numbers were measured under;
+  `--retriever reference` no longer has to be spelled out. `dense`/`router`
+  remain opt-in and fail loud with the fix when the local embedder is
+  unreachable, and an unknown `--retriever` value is refused instead of
+  silently degrading (`lib/cli/resolve.mjs`).
+- Removed the dead retriever paths: `selectFuse` (BM25/RRF), `selectUnion`,
+  and the standalone opt-in `iterative` retriever. `router` keeps its
+  NOT-FOUND second hop (`escalate`); `fuse`/`union` were unreachable from the
+  CLI and unused by the benchmark. The frozen facade drops the two exports.
 
 - `rehomeLegs` now records the minimal claim **span** (the sentence/table
   cell containing the anchor) beside the full-line `quote`; `liftSpan` handles

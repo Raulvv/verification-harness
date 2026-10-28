@@ -26,9 +26,9 @@ export {
   transcriptish,
 } from './lib/answer/prompt.mjs'
 
-// ── retrieval: window selection, dense/BM25 fusion, vet, deterministic locate ─
+// ── retrieval: window selection, dense index, vet, deterministic locate ───────
 export { selectByReference, mdFiles, snippetFor, stem, splitId } from './lib/retrieval/window.mjs'
-export { denseIndex, selectByDense, selectFuse, selectUnion } from './lib/retrieval/dense.mjs'
+export { denseIndex, selectByDense } from './lib/retrieval/dense.mjs'
 export { pruneByRelevance } from './lib/retrieval/vet.mjs'
 export { locate, rank } from './lib/retrieval/locate.mjs'
 export { questionTerms } from './lib/retrieval/terms.mjs'

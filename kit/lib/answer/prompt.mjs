@@ -38,6 +38,15 @@ const ONESHOT_SCHEMA_SENTENCE = {
   required: ['answer', 'sources', 'not_found'],
 }
 
+
+// Multi-part questions: answer the stated parts and name the missing ones. This
+// is the one place the "silence is not a negative" rule must not swallow a
+// partial answer — the missing half is a fact the documents do not provide,
+// not an inference. Default for every tier (the benchmark's B baseline has the
+// same rule; the v45/source prompts used to lack it).
+const PARTIAL_RULE = 'If the question has multiple parts and only some are stated: answer every stated part, and explicitly say which parts are not stated. This is not an absence inference — the missing part is a fact the documents do not provide. If none of the parts are stated, answer NOT FOUND.'
+const SILENCE_RULE = 'Answer ONLY what the documents STATE. For a question with no stated part, silence is not a negative: if the documents never say the thing does not exist, answer NOT FOUND — never answer "No, …" by inference from what is missing.'
+
 const PROMPT = (question, parts, compact = false) => [
   'Answer ONE question from the documents below. This is synthesis: answer freely in your own words.',
   'Answer ONLY the question asked. Documents that do not bear on it must be ignored — never summarize them, never widen the topic.',
@@ -49,7 +58,8 @@ const PROMPT = (question, parts, compact = false) => [
   'If the documents do not answer the question, the "answer" field must be EXACTLY: NOT FOUND — the corpus does not state <the fact the question asks>. Nothing more — no clarifications, no "while the documents mention". Never name, quote, or summarize what else the documents mention; an abstention carries no receipts.',
   '  GOOD abstention: "NOT FOUND — the corpus does not state the SLA duration."',
   '  BAD abstention (never do this): "NOT FOUND. While the documents mention SLA agreements, ..."',
-  'Answer ONLY what the documents STATE. Silence is not a negative: if the documents never say the thing does not exist, answer NOT FOUND — never answer "No, …" by inference from what is missing.',
+  PARTIAL_RULE,
+  SILENCE_RULE,
   'When a source states a change over time (historically / previously / used to / currently), carry BOTH sides of the split — the era is part of the answer.',
   'When documents disagree, say what each says, referencing its document number.',
   'Question: ' + question,
@@ -69,7 +79,8 @@ const PROMPT_NOQUOTE = (question, parts, compact = false) => [
   'If the documents do not answer the question, the "answer" field must be EXACTLY: NOT FOUND — the corpus does not state <the fact the question asks>. Nothing more — no clarifications, no "while the documents mention". Never name, quote, or summarize what else the documents mention; an abstention carries no receipts.',
   '  GOOD abstention: "NOT FOUND — the corpus does not state the SLA duration."',
   '  BAD abstention (never do this): "NOT FOUND. While the documents mention SLA agreements, ..."',
-  'Answer ONLY what the documents STATE. Silence is not a negative: if the documents never say the thing does not exist, answer NOT FOUND — never answer "No, …" by inference from what is missing.',
+  PARTIAL_RULE,
+  SILENCE_RULE,
   'When a source states a change over time (historically / previously / used to / currently), carry BOTH sides of the split — the era is part of the answer.',
   'When documents disagree, say what each says, referencing its document number.',
   'Question: ' + question,
@@ -89,7 +100,8 @@ const PROMPT_SOURCE = (question, parts, compact = false) => [
   'If the documents do not answer the question, the "answer" field must be EXACTLY: NOT FOUND — the corpus does not state <the fact the question asks>. Nothing more — no clarifications, no "while the documents mention". Never name, quote, or summarize what else the documents mention; an abstention carries no receipts.',
   '  GOOD abstention: "NOT FOUND — the corpus does not state the SLA duration."',
   '  BAD abstention (never do this): "NOT FOUND. While the documents mention SLA agreements, ..."',
-  'Answer ONLY what the documents STATE. Silence is not a negative: if the documents never say the thing does not exist, answer NOT FOUND — never answer "No, …" by inference from what is missing.',
+  PARTIAL_RULE,
+  SILENCE_RULE,
   'When a source states a change over time (historically / previously / used to / currently), carry BOTH sides of the split — the era is part of the answer.',
   'When documents disagree, say what each says, referencing its document number.',
   'Question: ' + question,
@@ -111,7 +123,8 @@ const PROMPT_SENTENCE = (question, parts, compact = false) => [
   'If the documents do not answer the question, the "answer" field must be EXACTLY: NOT FOUND — the corpus does not state <the fact the question asks>. Nothing more — no clarifications, no "while the documents mention". Never name, quote, or summarize what else the documents mention; an abstention carries no receipts.',
   '  GOOD abstention: "NOT FOUND — the corpus does not state the SLA duration."',
   '  BAD abstention (never do this): "NOT FOUND. While the documents mention SLA agreements, ..."',
-  'Answer ONLY what the documents STATE. Silence is not a negative: if the documents never say the thing does not exist, answer NOT FOUND — never answer "No, …" by inference from what is missing.',
+  PARTIAL_RULE,
+  SILENCE_RULE,
   'When a source states a change over time (historically / previously / used to / currently), carry BOTH sides of the split — the era is part of the answer.',
   'When documents disagree, say what each says, referencing its document number.',
   'Question: ' + question,

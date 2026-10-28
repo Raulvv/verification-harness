@@ -11,7 +11,7 @@
     "kit:test": "node kit/bin/test.mjs",
     "ooh:smoke": "npm run ooh:test && npm run kit:test && npm run ooh:dev && npm run ooh:dev:pages",
     "arm:fake": "node bench/arm-compare.mjs --fake",
-    "arm:test": "node --test bench/arm-score.test.mjs"
+    "arm:test": "node --test bench/arm-score.test.mjs bench/test/cite-score.test.mjs"
   },
   "repository": {
     "type": "git",

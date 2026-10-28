@@ -9,15 +9,23 @@ import { ungroundedTerms } from '../receipts/grounding.mjs'
 import { judgeSufficiency, judgeByCommand, judgeGrade } from '../receipts/sufficiency.mjs'
 import { judgeEvidenceFor } from '../receipts/evidence.mjs'
 import { resolveAsk } from './resolve.mjs'
+import { validateFlags, ASK_FLAGS, ASK_BOOLEAN } from '../cli.mjs'
 
 export async function runAsk({ question, flags = {}, env = process.env, cwd = process.cwd(), probe, chat, embed, judgeFn, gradeFn } = {}) {
   if (!question || !String(question).trim()) throw new Error('no question — usage: retrieval-kit ask "<question>"')
+  validateFlags(flags, ASK_FLAGS, { booleans: ASK_BOOLEAN })
+  if (flags.maxQuotesPerDoc != null) {
+    const n = Number(flags.maxQuotesPerDoc)
+    if (!Number.isInteger(n) || n < 1) throw new Error('--max-quotes-per-doc must be a positive integer')
+  }
   const started = Date.now()
   const r = await resolveAsk({ flags, env, cwd, probe })
   const res = await askOneShot(r.model, r.corpusRoot, String(question).trim(), {
     retriever: r.retriever,
     promptStyle: r.tier,
     corpus: r.corpusFiles ?? undefined,
+    minimizeReceipt: flags.minimalReceipt === true,
+    maxQuotesPerDoc: flags.maxQuotesPerDoc != null ? Number(flags.maxQuotesPerDoc) : undefined,
     _chat: chat,
     _embed: embed,
   })
@@ -26,12 +34,17 @@ export async function runAsk({ question, flags = {}, env = process.env, cwd = pr
   // the refusal *vocabulary* in the Q-line (the gate's own ABSTAIN_TERMS), so an
   // honest "the documents do not state…" is an abstention; a claim with
   // Source/Quote NOT FOUND is not, and is rejected.
+  // A reader that produced NO parseable answer has failed — it has not
+  // abstained. askOneShot returns a NOT FOUND-shaped fallback in that case; it
+  // must never pass the gate as a "correct abstention" (a dead call would look
+  // identical to an honest refusal, with 0 tokens).
+  const readerError = res.parsed ? null : (res.parseFailures?.[0] ?? 'reader produced no parseable answer')
   const proposed = parseAnswer(text).proposed.toLowerCase()
-  let abstained = ABSTAIN_TERMS.some((m) => proposed.includes(m))
+  let abstained = !readerError && ABSTAIN_TERMS.some((m) => proposed.includes(m))
   // NON-AUTHORITATIVE hint only (a lexical check cannot decide sufficiency).
   let grounding = null
   const useGrounding = flags.grounding !== false && !flags.noGrounding
-  if (useGrounding && !abstained && Array.isArray(res.docs) && res.docs.length) {
+  if (useGrounding && !readerError && !abstained && Array.isArray(res.docs) && res.docs.length) {
     const missing = ungroundedTerms(parseAnswer(text).proposed, res.docs.map((d) => d.content).join('\n'))
     if (missing.length) grounding = { missing }
   }
@@ -42,8 +55,8 @@ export async function runAsk({ question, flags = {}, env = process.env, cwd = pr
   // injected judgeFn keeps the binary SUFFICIENT/INSUFFICIENT contract.
   let sufficiency = null
   let failReason = null
-  let state = abstained ? 'not_found' : null
-  if (r.sufficient && !abstained && Array.isArray(res.docs) && res.docs.length) {
+  let state = readerError ? 'error' : abstained ? 'not_found' : null
+  if (r.sufficient && !readerError && !abstained && Array.isArray(res.docs) && res.docs.length) {
     const evidence = judgeEvidenceFor(r.judgeEvidence, text, question, res.docs, res.legs)
     const answer = parseAnswer(text).proposed
     if (judgeFn || r.judgeCmd) {
@@ -68,9 +81,13 @@ export async function runAsk({ question, flags = {}, env = process.env, cwd = pr
     ? 'Q: NOT FOUND — the retrieved documents do not support the answer\nSource: NOT FOUND'
     : text
   const item = { id: 'q', question, not_found: abstained, candidates: [] }
-  const g = verify(item, receipt, r.corpusRoot)
+  const g = readerError
+    ? { mechanicalPass: false, why: `reader failed: ${readerError}` }
+    : verify(item, receipt, r.corpusRoot)
   return {
     question, receipt, abstained, state, fail_reason: failReason,
+    reader_error: readerError, parse_failures: res.parseFailures ?? [],
+    citations: res.citations ?? [],
     gate: { passed: g.mechanicalPass, why: g.why },
     grounding, sufficiency,
     retriever: r.retriever, tier: r.tier, model: r.modelId,
@@ -96,15 +113,41 @@ export function formatAggregate(res, { json = false } = {}) {
   return `${res.receipt}\n\ncoverage: ${c.candidates}/${c.expected}${c.complete ? ' complete' : ' INCOMPLETE'}`
 }
 
+// Human receipt: the evidence grouped by source and section, never a flat
+// ` | ` line. The canonical `Q:/Source:/Quote:` receipt stays untouched (gate,
+// scorer, stored results); this is presentation only.
+function formatEvidence(res) {
+  const cites = res.citations ?? []
+  if (!cites.length) return null
+  const proposed = parseAnswer(res.receipt).proposed
+  const docs = new Map()
+  for (const c of cites) if (!docs.has(c.document_index)) docs.set(c.document_index, c)
+  const out = [`Q: ${proposed}`, '', 'Sources:']
+  for (const [n, c] of [...docs.entries()].sort((a, b) => a[0] - b[0])) {
+    out.push(`  [${n}] ${c.title} (${c.date || 'unknown'}) · ${c.rel}`)
+  }
+  out.push('', 'Evidence:')
+  for (const c of cites) {
+    const label = c.exact
+      ? ([c.section, c.kind !== 'prose' ? c.kind : null].filter(Boolean).join(', ') || 'source')
+      : 'tolerant match'
+    out.push(`  [${c.document_index}] (${label})`)
+    if (c.context) out.push(`      context: ${c.context}`)
+    for (const line of String(c.quote).split('\n')) out.push(`      ${line}`)
+    out.push('')
+  }
+  return out.join('\n').trimEnd()
+}
+
 export function formatAsk(res, { json = false } = {}) {
   if (json) {
     return JSON.stringify({
-      question: res.question, receipt: res.receipt, state: res.state, fail_reason: res.fail_reason ?? null, retriever: res.retriever, tier: res.tier,
-      model: res.model, gate: res.gate, sufficiency: res.sufficiency, window: res.window, tokens: res.tokens,
+      question: res.question, receipt: res.receipt, state: res.state, fail_reason: res.fail_reason ?? null, reader_error: res.reader_error ?? null, parse_failures: res.parse_failures ?? [], retriever: res.retriever, tier: res.tier,
+      model: res.model, gate: res.gate, sufficiency: res.sufficiency, citations: res.citations ?? [], window: res.window, tokens: res.tokens,
       timings: res.timings, ms: res.ms,
     }, null, 2)
   }
-  const verdict = res.gate.passed ? 'verified' : 'rejected'
+  const verdict = res.reader_error ? 'not checked' : res.gate.passed ? 'verified' : 'rejected'
   const why = res.gate.why && !res.gate.passed ? ` — ${humanize(res.gate.why)}` : ''
   const cost = res.tokens != null ? ` · ${res.tokens} tok` : ''
   const time = res.ms != null ? ` · ${(res.ms / 1000).toFixed(1)} s` : ''
@@ -118,7 +161,8 @@ export function formatAsk(res, { json = false } = {}) {
       : res.state === 'unverified' ? `\nsufficiency: ${s.verdict} (${s.judge}) — shown but UNVERIFIED`
         : `\nsufficiency: ${s.verdict} (${s.judge}) — the answer was not supported; abstained`
   const note = s?.note ? `\nnote: ${s.note}` : ''
-  return `${res.receipt}\n\ngate: ${verdict}${why}   (${res.model} · ${res.retriever} · ${res.tier}${cost}${time})${hint}${suff}${note}`
+  const body = formatEvidence(res) ?? res.receipt
+  return `${body}\n\ngate: ${verdict}${why}   (${res.model} · ${res.retriever} · ${res.tier}${cost}${time})${hint}${suff}${note}`
 }
 
 // The gate's reasons are precise but internal; say the same thing for a reader.

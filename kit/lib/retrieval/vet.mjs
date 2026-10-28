@@ -21,6 +21,13 @@ const VET_SCHEMA = {
 
 export async function pruneByRelevance(m, question, matches, opts = {}) {
   const chat = opts._chat ?? ((msgs, o) => chatWithUsage(m, msgs, o))
+  const usage = { prompt_tokens: 0, completion_tokens: 0, cost: 0 }
+  const addUsage = (u) => {
+    if (!u) return
+    usage.prompt_tokens += u.prompt_tokens ?? 0
+    usage.completion_tokens += u.completion_tokens ?? 0
+    usage.cost += u.cost ?? 0
+  }
   const vet = async (set, bar) => {
     if (!set.length) return { kept: set, dropped: [] }
     const prompt = [
@@ -32,6 +39,7 @@ export async function pruneByRelevance(m, question, matches, opts = {}) {
     let verdicts = []
     try {
       const res = await chat([{ role: 'user', content: prompt }], { maxTokens: 800, think: false, format: VET_SCHEMA })
+      addUsage(res.usage)
       verdicts = JSON.parse(String(res.content ?? '').trim().replace(/^```(?:json)?\s*([\s\S]*?)\s*```$/i, '$1')).verdicts ?? []
     } catch { return { kept: set, dropped: [] } }
     const kept = []
@@ -44,7 +52,7 @@ export async function pruneByRelevance(m, question, matches, opts = {}) {
     return { kept, dropped }
   }
   const first = await vet(matches, 'soft')
-  if (first.kept.length <= 3) return first
+  if (first.kept.length <= 3) return { ...first, usage }
   const second = await vet(first.kept, 'tight') // the width governor
-  return { kept: second.kept, dropped: [...first.dropped, ...second.dropped] }
+  return { kept: second.kept, dropped: [...first.dropped, ...second.dropped], usage }
 }

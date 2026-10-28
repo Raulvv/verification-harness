@@ -39,7 +39,7 @@ function usage() {
     '  retrieval-kit config --show | --reset',
     '',
     'options: --retriever dense|reference|router   --files a.md,b.md (corpus allowlist)   --quote (also print the full verbatim quote)   --tier source-v45|v45|full',
-    '         --sufficient --judge <model> (graded gate: score<lo abstains, lo..hi-1 UNVERIFIED, >=hi verified; frozen lo=2 hi=5)   --lo <n> --hi <n>   --unverified (force the flag path)   --judge-evidence window|receipt|union   --judge-cmd <cmd>   --json',
+    '         --sufficient --judge <model> (graded gate: score<lo abstains, lo..hi-1 UNVERIFIED, >=hi verified; frozen lo=2 hi=5)   --lo <n> --hi <n>   --unverified (force the flag path)   --judge-evidence window|receipt|union   --judge-cmd <cmd>   --max-quotes-per-doc <n>   --json',
     '         --aggregate --table <rows.json> --spec <spec.json> (deterministic table reducer; no model)',
   ].join('\n'))
 }
@@ -65,6 +65,7 @@ async function main() {
     const question = pos.length >= 2 ? pos.slice(1).join(' ') : pos.join(' ')
     const res = await runAsk({ question, flags: { ...flags, corpus } })
     process.stdout.write(formatAsk(res, { json: Boolean(flags.json) }) + '\n')
+    if (res.reader_error) process.exitCode = 1
     return
   }
   console.error(`unknown command: ${sub}`)

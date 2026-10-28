@@ -26,7 +26,7 @@ const EXPECTED = [
   'parseAnswer', 'parseCite', 'parseOneShot', 'pruneByRelevance',
   'questionTerms',
   'rank', 'rehomeLegs', 'resolveDate', 'resolveMeta', 'resolveTitle', 'runTwg',
-  'scoreAll', 'scoreItem', 'selectByDense', 'selectByReference', 'selectFuse', 'selectUnion',
+  'scoreAll', 'scoreItem', 'selectByDense', 'selectByReference',
   'snippetFor', 'splitId', 'splitLegs', 'stem', 'syncSource',
   'transcriptish', 'verify',
 ].sort()
