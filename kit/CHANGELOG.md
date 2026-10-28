@@ -62,8 +62,8 @@
   the demo-corpus note no longer points at a `corpus/manifest.json` — the
   OOH benchmark reads a frozen snapshot (`bench/corpus/ooh-v1/`).
 - README keeps kit usage and private-corpus guidance up front; the pre-OOH
-  1.0/2.0 claims are retained only under a labeled **Historical internal
-  baselines** section, explicitly not OOH results.
+  1.0/2.0 claims moved to `HISTORY.md` (shipped in the package), so the
+  front page carries only OOH claims.
 - Confluence fixtures and test corpora sanitized for publication: the
   space key, the CQL title term (including URL-encoded forms in
   `next`/`self` links), and every project/client codename and real

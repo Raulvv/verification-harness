@@ -2,7 +2,7 @@
 import { ABSTAIN_TERMS, norm, numbersIn } from '../../kit/lib/receipts/text.mjs'
 
 const hasAbstain = (t) => ABSTAIN_TERMS.some((m) => norm(t).includes(m)) || /\b(?:do|does) not (?:provide|state|list|report|include|contain|specify)\b/i.test(t)
-const leadAbstain = (t) => /^\s*(not found|no record|cannot find|nowhere|not documented|not stated)\b/i.test(t)
+export const leadAbstain = (t) => /^\s*(not found|no record|cannot find|nowhere|not documented|not stated)\b/i.test(t)
 const valueIn = (text, v) => typeof v === 'number'
   ? numbersIn(text).includes(String(v)) || numbersIn(text).includes(String(v).replace(/(\d)(?=(\d{3})+$)/g, '$1'))
   : norm(text).includes(norm(String(v)))

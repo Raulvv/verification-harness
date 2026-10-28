@@ -11,9 +11,8 @@ matters, not the vendor.
 
 Current measured results are the **OOH citation-first benchmark** (root
 `README.md`, `bench/ooh-BENCHMARK.md`, `bench/ARM-COMPARE-REPORT.md`).
-Pre-OOH 1.0/2.0 numbers are kept for provenance under
-[Historical internal baselines](#historical-internal-baselines); they are not
-OOH results and are not comparable across corpora.
+Pre-OOH 1.0/2.0 numbers live in [HISTORY.md](HISTORY.md); they are not OOH
+results and are not comparable across corpora.
 
 ## Just ask a folder
 
@@ -359,21 +358,12 @@ Quote: <verbatim line(s)>
   verification-harness benchmarks and probes are not part of this
   benchmark-only package.
 
-## Historical internal baselines
+## Historical baselines
 
-Pre-OOH, one private repo, 27 golden questions / 81 points. Kept for
-provenance only — **not** OOH results and not comparable across corpora:
-
-- **96% accuracy at ~10.5k tokens and ~13 s per question** — 6.4× cheaper,
-  ~5× faster and +9 accuracy points over one coordinator model searching
-  alone, with every accepted quote machine-verified (27/27).
-- After the 2.0 receipt/gate fixes (tense + `Status:` receipts, multi-receipt
-  legs, file-side quote scoring): **80/81 goldens · 48/48 adversarial · 43/43
-  mechanical verification** on the certification run.
-
-The public, independently readable comparison is the OOH benchmark: 27/40
-answerable correct at **2%** audited wrong-shown versus **8%** for plain RAG
-with citations (root `README.md`).
+The pre-OOH 1.0/2.0 internal numbers (96%, 6.4×, 80/81) are kept in
+[HISTORY.md](HISTORY.md) for provenance. They are **not** OOH results and are
+not comparable across corpora; the current public comparison is the OOH
+benchmark (root `README.md`).
 
 ## Tests — the whole safety net, one command
 

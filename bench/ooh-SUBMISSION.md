@@ -26,9 +26,10 @@ Required: `id`, `answer`, `notFound`. Recommended: `quote`, `legs`, `coverage`,
 
 ## Scoring
 
-The private scorer is `bench/ooh-score-v2.py` and the rule is documented in
-`bench/ooh-README.md` (helpful abstention, no external knowledge). The scorer
-is run by the maintainer; do not submit labels.
+The benchmark's scorer is `bench/ooh-score-v2.py` (shipped; run by the
+maintainer) and the rule is documented in
+`bench/ooh-README.md` (helpful abstention, no external knowledge). Do not
+submit labels.
 
 ## Submission
 

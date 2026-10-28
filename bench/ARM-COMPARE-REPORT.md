@@ -65,11 +65,12 @@ The ceiling is ~52 (32 reachable answerable + 20 partials):
 
 ## Cost and latency
 
-The held-out run recorded per-answer wall time but **not** token usage or
-memory, and this report aggregates neither. No per-arm token, second, or GB
-cost is claimed. `bench/ooh-BENCHMARK.md` lists cost as a benchmark metric;
-a future run should capture tokens and seconds per question for each arm so
-the arms can be budgeted against each other.
+The frozen held-out run recorded per-answer wall time but **not** token usage
+or memory; this report aggregates neither, so no per-arm token, second, or GB
+cost is claimed for those numbers. `bench/arm-compare.mjs` now records token
+usage (`usage`, `tokens`) beside `ms` on every row and prints `s/q` and
+`tok/q`, so the next held-out run will carry per-arm cost;
+`bench/ooh-BENCHMARK.md` lists cost as a benchmark metric.
 
 ## Correct-row sample and second rater
 

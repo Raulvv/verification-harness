@@ -18,7 +18,8 @@ D now receives the exact B/C window and applies `verify()` before scoring.
 2. 3 seeds (`--seeds 3`). The hosted judge flips ~1 in 10 labels; report the spread, not one run.
 3. Primary metric: false-accept rate, i.e. a wrong answer, or any answer to an unanswerable
    or incompletely-flagged partial question, shown as if it were fine. Secondary: answerable
-   accuracy, unanswerable abstention, partial-correct, seconds/question.
+   accuracy, unanswerable abstention, partial-correct, tokens/question and seconds/question
+   (both recorded per row by the runner).
 4. Scoring is mechanical (gold value present, abstention flagged). It is stricter than a
    human on paraphrase: spot-check 20 rows by hand and report the disagreement rate.
 
@@ -42,6 +43,9 @@ weak-reader warning, not product evidence; the 4B does not follow the contract
 well enough for the gate to matter.
 
 ### Strong-reader held-out (DeepSeek V4.1 Flash, 100, one seed, K=3)
+
+The published held-out run used **one seed**; the 3-seed protocol above is
+the bar for a separation claim, and no separation is claimed.
 
 | Arm | Answerable | Unanswerable | Partial | Audited wrong-shown | Coverage |
 |---|---:|---:|---:|---:|---:|

@@ -1,18 +1,19 @@
-# OOH benchmark — v1.1.14
+# OOH benchmark — v1.1.15
 
 > Repository: `verification-harness` · package: `ooh-citation-first-benchmark`
 
 A neutral, public-corpus, citation-first benchmark built from the U.S. Bureau
 of Labor Statistics **Occupational Outlook Handbook** (2023–33 edition).
 
-Status: **public package + private held-out test**, benchmark frozen 2026-10-24; package v1.1.14, 2026-10-26. The
+Status: **public package + private held-out test**, benchmark frozen 2026-10-24; package v1.1.15, 2026-10-28. The
 public dev set is for iteration; the 100-item test labels are private and must
 not be trained on or published.
 
 ## Decision summary
 
-**Problem.** A small local model's RAG answers are unauditable: a plausible
-wrong number looks exactly like a correct one.
+**Problem.** Flash-tier readers (cheap hosted models, small local models)
+give unauditable RAG answers: a plausible wrong number looks exactly like a
+correct one.
 
 **Claim.** A verbatim-quote contract plus a free mechanical gate — the quote
 must exist verbatim in the cited file, otherwise abstain — makes *wrong
@@ -21,22 +22,32 @@ answers shown* rare without giving up answerable accuracy.
 **Evidence** (held-out 100, DeepSeek V4.1 Flash, one seed, K=3, hand-audited
 wrong rows):
 
-| Arm | Answerable correct | Wrong shown (audited) | Coverage |
+| Arm | Answerable correct | Wrong shown (all conditions) | Coverage |
 |---|---:|---:|---:|
-| RAG + citations | 27/40 | 6 (**8%** [4–15]) | 55/100 |
-| RAG + citations + entailment (MiniCheck) | 20/40 | 1 (**3%** [1–8]) | 28/100 |
-| Harness + mechanical gate | 27/40 | 1 (**2%** [1–7]) | 46/100 |
+| RAG + citations | 27/40 | 8/100 (**8%** [4–15]) | 55/100 |
+| RAG + citations + entailment (MiniCheck) | 20/40 | 3/100 (**3%** [1–8]) | 28/100 |
+| Harness + mechanical gate | 27/40 | **2/100 (2%** [1–7]) | 46/100 |
+
+*Wrong shown* counts every condition (answerable, partial, unanswerable);
+answerable-only wrong counts are 6 / 1 / 1 (see the report).
 
 **Limits.** One corpus (48 BLS pages), n=100, one seed, not pre-registered;
 RAG vs harness p=0.070 — no pairwise separation at 0.05. Labels and outputs
 are private; only hashes are published. Several label/scorer fixes and a hand
 audit happened post-hoc (all disclosed). The second rater was a model and was
 weakly concordant (12/18). Entailment reaches a similar error rate at much
-lower coverage; the harness is **comparable, not proven superior**.
+lower coverage; the harness is **comparable, not proven superior**. The
+evidence is from a flash-tier reader (DeepSeek V4.1 Flash); a 4B local reader
+did not follow the contract (qwen3.5:4b pilot: 40% false accepts vs 0% for
+the baselines), and the quickstart default `qwen3.5:4b` is for plumbing, not
+evidence.
 
-**Ask.** A time-boxed spike on your own corpus — `config --corpus` + `ask`,
-below — not a commitment to this stack. See `bench/ARM-COMPARE.md` and
-`bench/ARM-COMPARE-REPORT.md` for the protocol and the full report.
+**Ask.** A time-boxed spike on your own corpus, with a kill rule: proceed
+only if wrong-shown is no worse than your current RAG **and** coverage is at
+least 80% of the reachable ceiling (the answerable + partial items your docs
+can actually answer) **at** cost within your current setup. Start from
+`config --corpus` + `ask`, below. Protocol and full report:
+`bench/ARM-COMPARE.md`, `bench/ARM-COMPARE-REPORT.md`.
 
 ## Quickstart
 
@@ -267,6 +278,8 @@ validated by the public package.
 - Scorer v2: `bench/ooh-score-v2.py` (title/row, verbatim segments, contiguous);
   v1 remains for historical outputs.
 - Tests: `npm run kit:test`; clean-clone smoke: `npm run ooh:smoke`.
+- CI: `.github/workflows/offline.yml` runs `ooh:test` + `kit:test` on every
+  push and pull request (no models, no network).
 
 ## Public package and provenance
 

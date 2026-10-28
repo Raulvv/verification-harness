@@ -18,7 +18,7 @@
     ".": "./index.mjs",
     "./package.json": "./package.json"
   },
-  "files": ["index.mjs", "bin", "lib", "GOLDEN.md", "README.md", "LICENSE", "CHANGELOG.md"],
+  "files": ["index.mjs", "bin", "lib", "GOLDEN.md", "HISTORY.md", "README.md", "LICENSE", "CHANGELOG.md"],
   "engines": { "node": ">=18" },
   "license": "Apache-2.0"
 }

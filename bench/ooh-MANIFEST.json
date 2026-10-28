@@ -1,7 +1,7 @@
 {
   "name": "ooh-citation-first-benchmark",
-  "version": "1.1.14",
-  "frozen_at": "2026-10-26",
+  "version": "1.1.15",
+  "frozen_at": "2026-10-28",
   "status": "public-package-private-test",
   "corpus": {
     "name": "U.S. BLS Occupational Outlook Handbook 2023-33 snapshot",
@@ -353,12 +353,12 @@
     {
       "path": "bench/ooh-SUBMISSION.md",
       "bytes": 1809,
-      "sha256": "bb4d4c64104a68ff899861719efb9cb163a7d783faa0ab93cdcde3807ac59a8d"
+      "sha256": "eb0cbc44d1b8dc66fb319a6f87c56c7a9de78264a2ab3c7104b21da4d5899241"
     },
     {
       "path": "bench/ooh-README.md",
-      "bytes": 11280,
-      "sha256": "cc14569e70f24537bcc876bba9e5b77f70393b1cc011573624e4d442f35f16d7"
+      "bytes": 11451,
+      "sha256": "548b4dbf9e289d16f957559d460302a5cbf25141f96bc7aba598d3f819364293"
     },
     {
       "path": "bench/ooh-score.py",
@@ -423,7 +423,7 @@
     {
       "path": "bench/ooh-BENCHMARK.md",
       "bytes": 7958,
-      "sha256": "4842df506e91a43f5f1bd0b44a1f761757cc8738ebd3886f405790bad402b1f4"
+      "sha256": "56a10f442ab1a9b11b61963d0f4c5eba6be12ef804fbfedc963bc324262f1983"
     },
     {
       "path": "bench/ooh-score-v2.py",
@@ -437,18 +437,18 @@
     },
     {
       "path": "bench/ARM-COMPARE.md",
-      "bytes": 3232,
-      "sha256": "e13d32d955788c25cb9102d7646602e9186112e91d101c03b1e342c402c378a0"
+      "bytes": 3431,
+      "sha256": "38cc0950e4ea6304810de0971ba88b73dd5d08b3749fbef15048a6686e61b0ee"
     },
     {
       "path": "bench/arm-compare.mjs",
-      "bytes": 7441,
-      "sha256": "fb22ecb599e7497ee1db4d9c7ba9a17019093a022ac2dda3cb7f9d54e2e11844"
+      "bytes": 7952,
+      "sha256": "fcd2cf6b807e168011350cb5b1bc845d2e9b08e3bf7711fb34fd19512b9f8014"
     },
     {
       "path": "bench/ARM-COMPARE-REPORT.md",
-      "bytes": 3511,
-      "sha256": "a6ff02e51e322cb92a58deb379356f5e6131af999f0c0fd160427a31d14c9f81"
+      "bytes": 3956,
+      "sha256": "782b014c3b78e64e386e3b95b14fd67f9b351114467a4ad8ef229d94fc2af662"
     },
     {
       "path": "bench/arm-report.mjs",
@@ -457,8 +457,8 @@
     },
     {
       "path": "bench/lib/arm-score.mjs",
-      "bytes": 2046,
-      "sha256": "6ffba2baa38df6948fa96c9082b2af9074a272e1bd360fe604747a07dad0502e"
+      "bytes": 2053,
+      "sha256": "7d5b26a1079c1835e56f0dbd0fbc464f75f293b63323e5552753b1dafec5f0c6"
     },
     {
       "path": "bench/arm-rescore.mjs",

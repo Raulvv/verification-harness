@@ -22,7 +22,7 @@ import { chatWithUsage } from '../kit/lib/model.mjs'
 import { judgeSufficiency, judgeByCommand } from '../kit/lib/receipts/sufficiency.mjs'
 import { verify } from '../kit/lib/receipts/gate.mjs'
 import { parseAnswer } from '../kit/lib/receipts/text.mjs'
-import { score, wilson } from './lib/arm-score.mjs'
+import { score, wilson, leadAbstain } from './lib/arm-score.mjs'
 
 const argv = process.argv.slice(2)
 const flag = (n) => argv.includes('--' + n)
@@ -45,12 +45,14 @@ const judgeCmd = opt('judge-cmd')
 const items = readFileSync(qfile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))
 
 // ---------- model plumbing (injectable for --fake) ----------
+const tok = (u) => (u?.prompt_tokens ?? 0) + (u?.completion_tokens ?? 0)
+const fakeUsage = { prompt_tokens: 10, completion_tokens: 5, total_tokens: 15 }
 const fakeChat = (item) => async (msgs) => {
   const p = msgs.map((m) => m.content).join('\n')
-  if (/SUFFICIENT or INSUFFICIENT|Claim:/.test(p)) return { content: /\d/.test(p.split('ANSWER:')[1] ?? '') ? 'SUFFICIENT' : 'INSUFFICIENT' }
-  if (/not_found/.test(p) || /JSON/i.test(p)) return { content: JSON.stringify({ answer: '', quotes: [], not_found: true }) }
+  if (/SUFFICIENT or INSUFFICIENT|Claim:/.test(p)) return { content: /\d/.test(p.split('ANSWER:')[1] ?? '') ? 'SUFFICIENT' : 'INSUFFICIENT', usage: { ...fakeUsage } }
+  if (/not_found/.test(p) || /JSON/i.test(p)) return { content: JSON.stringify({ answer: '', quotes: [], not_found: true }), usage: { ...fakeUsage } }
   const g = item.condition === 'answerable' ? String(item.gold) : null
-  return { content: g && p.includes('Documents') ? g : 'NOT FOUND' }
+  return { content: g && p.includes('Documents') ? g : 'NOT FOUND', usage: { ...fakeUsage } }
 }
 const chat = (item) => FAKE ? fakeChat(item) : (msgs, o) => chatWithUsage(reader, msgs, { maxTokens: 400, think: false, ...o })
 
@@ -69,7 +71,7 @@ async function runArm(arm, item) {
   const ask = chat(item)
   if (arm === 'A') {
     const r = await ask([{ role: 'user', content: 'Answer concisely. If you do not know, reply NOT FOUND.\nQuestion: ' + item.question }])
-    return { text: r.content, ms: Date.now() - t0 }
+    return { text: r.content, usage: r.usage ?? {}, tokens: tok(r.usage), ms: Date.now() - t0 }
   }
   const docs = window_(item)
   if (arm === 'B' || arm === 'C') {
@@ -81,7 +83,7 @@ async function runArm(arm, item) {
         : await judgeSufficiency(judge, item.question, ev, text, FAKE ? { _chat: fakeChat(item) } : {})
       if (gate !== 'SUFFICIENT') text = 'NOT FOUND (entailment check: ' + gate + ')'
     }
-    return { text, gate, ms: Date.now() - t0 }
+    return { text, gate, usage: r.usage ?? {}, tokens: tok(r.usage), ms: Date.now() - t0 }
   }
   // D: the harness on the SAME docs as B/C, then the mechanical gate.
   // A gate rejection is an abstention; a gate pass is the only shown answer.
@@ -93,14 +95,14 @@ async function runArm(arm, item) {
   const gateItem = { id: item.id, question: item.question, not_found: res.parsed?.notFound ?? true }
   const g = verify(gateItem, receipt, corpus)
   const text = g.mechanicalPass ? (parseAnswer(receipt).proposed || receipt) : 'NOT FOUND (gate rejected: ' + g.why + ')'
-  return { text, receipt, gate: g, ms: Date.now() - t0 }
+  return { text, receipt, gate: g, tokens: res.tokens ?? 0, ms: Date.now() - t0 }
 }
 
 // ---------- run + report ----------
 const rows = []
 for (let s = 0; s < seeds; s++) for (const item of items) for (const arm of arms) {
   let out
-  try { out = await runArm(arm, item) } catch (e) { out = { text: '', error: String(e.message ?? e), ms: 0 } }
+  try { out = await runArm(arm, item) } catch (e) { out = { text: '', error: String(e.message ?? e), ms: 0, tokens: 0 } }
   rows.push({ seed: s, arm, id: item.id, condition: item.condition, ...out, ...score(item, out.text) })
 }
 mkdirSync(dirname(resolve(outPath)), { recursive: true })
@@ -109,11 +111,13 @@ writeFileSync(outPath, rows.map((r) => JSON.stringify(r)).join('\n') + '\n')
 const pct = (k, n) => n ? (100 * k / n).toFixed(0).padStart(3) + '%' : '  - '
 const ci = (k, n) => { const [a, b] = wilson(k, n); return `[${Math.max(0, 100 * a).toFixed(0)}-${Math.min(100, 100 * b).toFixed(0)}]` }
 console.log(`${FAKE ? '(FAKE MODELS — plumbing check only, numbers are meaningless)\n' : ''}items=${items.length} seeds=${seeds} k=${K} reader=${reader.model} judge=${judgeCmd ? 'cmd' : judge.model}\n`)
-console.log('arm  answerable-correct        unanswerable-abstain       partial-correct            false-accept(all)       s/q')
+console.log('arm  answerable-correct        unanswerable-abstain       partial-correct            false-accept(all)       s/q  tok/q')
 for (const arm of arms) {
   const R = rows.filter((r) => r.arm === arm)
   const cell = (cond, f) => { const x = R.filter((r) => r.condition === cond); const k = x.filter(f).length; return `${pct(k, x.length)} ${ci(k, x.length).padEnd(9)} n=${String(x.length).padEnd(3)}` }
   const fa = R.filter((r) => r.falseAccept).length
-  console.log(`${arm}    ${cell('answerable', (r) => r.correct).padEnd(26)} ${cell('unanswerable', (r) => r.correct).padEnd(26)} ${cell('partial', (r) => r.correct).padEnd(26)} ${(pct(fa, R.length) + ' ' + ci(fa, R.length)).padEnd(23)} ${(R.reduce((a, r) => a + r.ms, 0) / R.length / 1000).toFixed(1)}`)
+  const msq = (R.reduce((a, r) => a + r.ms, 0) / R.length / 1000).toFixed(1)
+  const tokq = Math.round(R.reduce((a, r) => a + (r.tokens ?? 0), 0) / R.length)
+  console.log(`${arm}    ${cell('answerable', (r) => r.correct).padEnd(26)} ${cell('unanswerable', (r) => r.correct).padEnd(26)} ${cell('partial', (r) => r.correct).padEnd(26)} ${(pct(fa, R.length) + ' ' + ci(fa, R.length)).padEnd(23)} ${msq.padStart(4)} ${String(tokq).padStart(5)}`)
 }
 console.log(`\nrows -> ${outPath}. Intervals are Wilson 95% over seed-pooled rows (seeds are not independent questions: widen by eye).`)
