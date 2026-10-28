@@ -63,6 +63,14 @@ The ceiling is ~52 (32 reachable answerable + 20 partials):
 - B: 53/52 = **102%** — B answers one unreachable item, so its raw coverage
   includes a wrong answer.
 
+## Cost and latency
+
+The held-out run recorded per-answer wall time but **not** token usage or
+memory, and this report aggregates neither. No per-arm token, second, or GB
+cost is claimed. `bench/ooh-BENCHMARK.md` lists cost as a benchmark metric;
+a future run should capture tokens and seconds per question for each arm so
+the arms can be budgeted against each other.
+
 ## Correct-row sample and second rater
 
 A local different-family model (`llama3.1:8b`) re-judged:

@@ -9,18 +9,11 @@ select-and-extract under a verbatim-quote contract → a free mechanical gate
 with veto power. Bring your docs and your models; the contract is what
 matters, not the vendor.
 
-Measured origin (27 golden questions / 81 points, one real repo): **96%
-accuracy at ~10.5k tokens and ~13 s per question — 6.4× cheaper, ~5×
-faster and +9 accuracy points over one coordinator model searching alone,
-with every accepted quote machine-verified (27/27).**
-After the 2.0 receipt/gate fixes (tense + `Status:` receipts, multi-receipt
-legs, file-side quote scoring) the certified numbers are **80/81 goldens ·
-48/48 adversarial · 43/43 mechanical verification on the certification
-run** — and the answer contract carries receipts a machine can re-check.
-
-> **Scope of those numbers.** They are historical **1.0/2.0 internal
-> baselines**, not OOH results. Do not read “most accurate” as an OOH claim.
-> The OOH v1.1 results are in `README.md` and `bench/ooh-BENCHMARK.md`.
+Current measured results are the **OOH citation-first benchmark** (root
+`README.md`, `bench/ooh-BENCHMARK.md`, `bench/ARM-COMPARE-REPORT.md`).
+Pre-OOH 1.0/2.0 numbers are kept for provenance under
+[Historical internal baselines](#historical-internal-baselines); they are not
+OOH results and are not comparable across corpora.
 
 ## Just ask a folder
 
@@ -366,6 +359,22 @@ Quote: <verbatim line(s)>
   verification-harness benchmarks and probes are not part of this
   benchmark-only package.
 
+## Historical internal baselines
+
+Pre-OOH, one private repo, 27 golden questions / 81 points. Kept for
+provenance only — **not** OOH results and not comparable across corpora:
+
+- **96% accuracy at ~10.5k tokens and ~13 s per question** — 6.4× cheaper,
+  ~5× faster and +9 accuracy points over one coordinator model searching
+  alone, with every accepted quote machine-verified (27/27).
+- After the 2.0 receipt/gate fixes (tense + `Status:` receipts, multi-receipt
+  legs, file-side quote scoring): **80/81 goldens · 48/48 adversarial · 43/43
+  mechanical verification** on the certification run.
+
+The public, independently readable comparison is the OOH benchmark: 27/40
+answerable correct at **2%** audited wrong-shown versus **8%** for plain RAG
+with citations (root `README.md`).
+
 ## Tests — the whole safety net, one command
 
 ```sh
@@ -375,10 +384,11 @@ node kit/bin/coverage.mjs     # the same suite under V8 coverage (npm run kit:co
 
 Covers every pure layer (answer parsing, evidence matching, citation
 integrity, title/date resolution, source adapters with stubbed fetch,
-config) and the battery's frozen contract. No model, no network. Runs in the
-pre-commit hook **and in CI** (`.github/workflows/offline.yml`).
+config) and the battery's frozen contract. No model, no network. Runs in CI
+(`.github/workflows/offline.yml`); add it to a local pre-commit hook if you
+want it on every commit.
 
 Coverage baseline (2026-10-20, `npm run kit:coverage`): **96.99% statements /
-79.52% branches / 93.71% functions** overall, with a CI-enforced floor of 95%
-statements / 75% branches — the floor ratchets, never regresses (RN-K07).
+79.52% branches / 93.71% functions** overall, with a floor of 95% statements /
+75% branches — the floor ratchets, never regresses (RN-K07).
 

@@ -9,6 +9,35 @@ Status: **public package + private held-out test**, benchmark frozen 2026-10-24;
 public dev set is for iteration; the 100-item test labels are private and must
 not be trained on or published.
 
+## Decision summary
+
+**Problem.** A small local model's RAG answers are unauditable: a plausible
+wrong number looks exactly like a correct one.
+
+**Claim.** A verbatim-quote contract plus a free mechanical gate — the quote
+must exist verbatim in the cited file, otherwise abstain — makes *wrong
+answers shown* rare without giving up answerable accuracy.
+
+**Evidence** (held-out 100, DeepSeek V4.1 Flash, one seed, K=3, hand-audited
+wrong rows):
+
+| Arm | Answerable correct | Wrong shown (audited) | Coverage |
+|---|---:|---:|---:|
+| RAG + citations | 27/40 | 6 (**8%** [4–15]) | 55/100 |
+| RAG + citations + entailment (MiniCheck) | 20/40 | 1 (**3%** [1–8]) | 28/100 |
+| Harness + mechanical gate | 27/40 | 1 (**2%** [1–7]) | 46/100 |
+
+**Limits.** One corpus (48 BLS pages), n=100, one seed, not pre-registered;
+RAG vs harness p=0.070 — no pairwise separation at 0.05. Labels and outputs
+are private; only hashes are published. Several label/scorer fixes and a hand
+audit happened post-hoc (all disclosed). The second rater was a model and was
+weakly concordant (12/18). Entailment reaches a similar error rate at much
+lower coverage; the harness is **comparable, not proven superior**.
+
+**Ask.** A time-boxed spike on your own corpus — `config --corpus` + `ask`,
+below — not a commitment to this stack. See `bench/ARM-COMPARE.md` and
+`bench/ARM-COMPARE-REPORT.md` for the protocol and the full report.
+
 ## Quickstart
 
 Requirements: `git`, Node 18+, and Python 3.10+. No `npm install` is needed.
