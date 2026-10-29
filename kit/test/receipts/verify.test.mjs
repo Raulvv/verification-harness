@@ -103,9 +103,23 @@ test('verify: lying citations reject; honest variants pass', () => {
 test('verify: multi-leg all-of, path-shape tolerance, table-pipe quotes', () => {
   const dir = corpus()
   const two = it({ expect: ['x'], candidates_groups: [[{ path: 'doc.md', quote: 'invented by Minato Namikaze' }], [{ path: 'plain.md', quote: 'A line with table pipes' }]] })
-  assert.equal(verify(two, 'Q: x\nSource: Doc Title (2024-02-02) · doc.md:3 and Plain · plain.md:3\nQuote: The Rasengan was invented by Minato Namikaze. | A line with table pipes | like | this | end.', dir).mechanicalPass, true)
+  const twoText = 'Q: x\nSource: Doc Title (2024-02-02) · doc.md:3 and Plain · plain.md:3\nQuote: The Rasengan was invented by Minato Namikaze. | A line with table pipes | like | this | end.'
+  const twoCites = [
+    { rel: 'doc.md', title: 'Doc Title', date: '2024-02-02', quote: 'The Rasengan was invented by Minato Namikaze.' },
+    { rel: 'plain.md', title: 'Plain', date: '', quote: 'A line with table pipes | like | this | end.' },
+  ]
+  assert.equal(verify(two, twoText, dir, { citations: twoCites }).mechanicalPass, true)
+  // no structured citations: a table pipe makes the leg count ambiguous; reject
+  assert.equal(verify(two, twoText, dir).mechanicalPass, false)
   // the gate verifies the ANSWER's receipt; golden completeness is the scorer's job
   assert.equal(verify(two, 'Q: x\nSource: Doc Title · doc.md:3 and Plain · plain.md:3\nQuote: The Rasengan was invented by Minato Namikaze. | this appears nowhere at all', dir).mechanicalPass, false) // one leg fabricated
+  // structured citations bind each quote to its own document: a missing second leg rejects
+  assert.equal(verify(two, twoText, dir, { citations: [
+    twoCites[0],
+    { rel: 'plain.md', title: 'Plain', date: '', quote: 'this appears nowhere at all' },
+  ] }).mechanicalPass, false)
+  // a single leg with a table pipe is one whole quote, not two legs
+  assert.equal(verify(it({ expect: ['pipes'], candidates: [{ path: 'plain.md', quote: 'table pipes' }] }), 'Q: x\nSource: Plain · plain.md:3\nQuote: A line with table pipes | like | this | end.', dir).mechanicalPass, true)
   // suffix / bare basename paths (citations carry the agent's working view)
   assert.equal(verify(it({ expect: ['Minato'], candidates: [{ path: 'doc.md', quote: 'invented by Minato Namikaze' }] }), 'Q: x\nSource: Doc · some/other/prefix/doc.md:1\nQuote: The Rasengan was invented by Minato Namikaze.', dir).mechanicalPass, true)
   assert.equal(verify(it({ expect: ['Minato'], candidates: [{ path: 'doc.md', quote: 'invented by Minato Namikaze' }] }), 'Q: x\nSource: Doc · doc.md\nQuote: The Rasengan was invented by Minato Namikaze.', dir).mechanicalPass, true)

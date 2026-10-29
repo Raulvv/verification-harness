@@ -87,7 +87,7 @@ function resolveClaimed(corpusRoot, claimed) {
 
 // opts.strict: literal verbatim check (see evidenceMatchesStrict); default off,
 // so published benchmark numbers keep their definition.
-export function verify(item, answerText, corpusRoot, { strict = false } = {}) {
+export function verify(item, answerText, corpusRoot, { strict = false, citations = null } = {}) {
   const { proposed, path, source, quote } = parseAnswer(answerText)
   const locator = source || path
   // an abstention is an EXPLICIT claim — the literal NOT FOUND shape — never
@@ -105,16 +105,30 @@ export function verify(item, answerText, corpusRoot, { strict = false } = {}) {
   // Quote line. When there is no quote to check, the gate verifies the SOURCE —
   // the path exists, the title and date match — which is the receipt the tier
   // actually carries. A quote, when present, is still byte-checked.
-  const hasQuote = String(quote ?? '').trim() !== ''
+  const structured = Array.isArray(citations) ? citations.filter((c) => String(c?.quote ?? '').trim()) : []
+  const hasQuote = structured.length > 0 || String(quote ?? '').trim() !== ''
 
-  const { paths, quotes } = splitLegs(locator, quote)
-  const checked = []
-  for (let i = 0; i < paths.length; i++) {
-    const cite = parseCite(paths[i])
-    const claimed = cite.path.replace(/:\d+(-\d+)?$/, '')
-    const legQuotes = quotes.length === paths.length ? [quotes[i]] : quotes
-    checked.push({ cite, claimed, legQuotes })
+  let checked = []
+  let ambiguous = null
+  if (structured.length) {
+    for (const c of structured) {
+      const rel = String(c.rel ?? c.path ?? '')
+      const cite = parseCite(`${c.title ?? ''} (${c.date ?? ''}) · ${rel}`)
+      const claimed = cite.path.replace(/:\d+(-\d+)?$/, '')
+      checked.push({ cite, claimed, legQuotes: [String(c.quote)] })
+    }
+  } else {
+    const { paths, quotes } = splitLegs(locator, quote)
+    if (paths.length > 1 && quotes.length !== paths.length) {
+      ambiguous = 'ambiguous quote binding: quote legs do not match source legs (pass structured citations)'
+    }
+    for (let i = 0; i < paths.length; i++) {
+      const cite = parseCite(paths[i])
+      const claimed = cite.path.replace(/:\d+(-\d+)?$/, '')
+      checked.push({ cite, claimed, legQuotes: paths.length === 1 ? [String(quote ?? '')] : [quotes[i]] })
+    }
   }
+  if (ambiguous) return { abstained, pathExists: false, quoteInFile: false, mechanicalPass: false, why: ambiguous }
 
   const runLeg = ({ cite, claimed, legQuotes }) => {
     const notes = []
@@ -123,7 +137,7 @@ export function verify(item, answerText, corpusRoot, { strict = false } = {}) {
     const content = readFileSync(abs, 'utf8')
     if (hasQuote) {
       const match = strict ? evidenceMatchesStrict : evidenceMatches
-      const quoteInFile = legQuotes.some((q) => match(content, q))
+      const quoteInFile = legQuotes.every((q) => match(content, q))
       if (!quoteInFile) notes.push(`quote not found in ${claimed}`)
     }
     const meta = resolveMeta(corpusRoot, relative(resolve(corpusRoot), abs), content)

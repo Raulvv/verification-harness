@@ -57,6 +57,7 @@ export function formatWorkspace(ws) {
     row('apiKeyEnv', c.apiKeyEnv ?? '(none — must come from the env)'),
     row('embedModel', c.embedModel ?? '(default: nomic-embed-text)'),
     row('retriever', c.retriever ?? '(default: reference)'),
-    row('tier', c.tier ?? '(default: source-v45)'),
+    row('tier', c.tier ?? '(default: v45)'),
+    row('absence', c.absence === false ? 'off' : '(default: on)'),
   ].join('\n')
 }

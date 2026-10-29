@@ -8,7 +8,7 @@ import { resolve, relative } from 'node:path'
 import { findWorkspace, writeWorkspace, clearWorkspace, formatWorkspace } from './workspace.mjs'
 import { validateFlags, CONFIG_FLAGS, CONFIG_BOOLEAN } from '../cli.mjs'
 
-const FIELDS = ['model', 'baseUrl', 'apiKeyEnv', 'embedModel', 'retriever', 'tier']
+const FIELDS = ['model', 'baseUrl', 'apiKeyEnv', 'embedModel', 'retriever', 'tier', 'absence']
 
 export function runConfig({ flags = {}, cwd = process.cwd() } = {}) {
   validateFlags(flags, CONFIG_FLAGS, { booleans: CONFIG_BOOLEAN })
@@ -23,7 +23,7 @@ export function runConfig({ flags = {}, cwd = process.cwd() } = {}) {
     clearWorkspace(ws.dir)
     return { action: 'reset', output: `workspace removed: ${resolve(ws.dir, '.retrieval')}` }
   }
-  if (!flags.corpus) throw new Error('usage: retrieval-kit config --corpus <dir> [--model <id>] [--base-url <url>] [--retriever dense|reference|router] [--tier v45|source-v45|full]')
+  if (!flags.corpus) throw new Error('usage: retrieval-kit config --corpus <dir> [--model <id>] [--base-url <url>] [--retriever dense|reference|router] [--tier v45|source-v45|full] [--source] [--no-absence]')
   if (flags.apiKey) throw new Error('refusing to write a literal key — use `--api-key-env <VAR>` and set that variable instead (RN-G12)')
   const corpusRoot = resolve(cwd, flags.corpus)
   if (!existsSync(corpusRoot)) throw new Error(`corpus not found: ${corpusRoot}`)
@@ -34,6 +34,8 @@ export function runConfig({ flags = {}, cwd = process.cwd() } = {}) {
 
   const cfg = { corpus }
   for (const k of FIELDS) if (flags[k] != null && flags[k] !== true) cfg[k] = flags[k]
+  if (flags.source) { cfg.tier = 'source-v45'; cfg.absence = false }
+  if (flags.noAbsence) cfg.absence = false
   const file = writeWorkspace(sealDir, cfg)
   return { action: 'write', file, output: `workspace sealed: ${file}\ncorpus:  ${corpusRoot}\nnext:  retrieval-kit ask "<question>"` }
 }

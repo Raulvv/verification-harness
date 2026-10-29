@@ -15,123 +15,146 @@ used.
 - Config hash (post hoc): `0d563d0054fed50300665e43eb53e3922cd7b3a5317830c1939ef79872287b03`
 - Not pre-registered; one seed; n=100. Treat intervals as descriptive.
 
-## Latest comparison — bare, quote prompt, harness (A / Q / DA)
+## Latest comparison — ranked all arms (pilot-v2)
 
-Pilot-v2, corrected labels + partial rule, 3 seeds, 60 rows/arm per reader. This
-is the comparison to read; the held-out 100 below predates the partial fix and
-is reported separately.
+Pilot-v2, 3 seeds, 60 rows/arm, **every arm including the local 27B**. Ranking:
+total correct across answerable + partial + unanswerable, then fewer false
+accepts, then citation coverage, then exactness. **`D*` is the gate-only
+ablation (the earlier harness stage); `DA` is the current harness; they are one
+harness, not two competitors.** The 27B is local q4.
 
-**Quality**
+### Quality
 
-| Reader | Arm | Answerable | Partial | Unanswerable | Wrong shown | Shown | Citation coverage | Exact |
-|---|---|---:|---:|---:|---:|---:|---:|---:|
-| 4B qwen3.5 | A | 0/24 | 0/12 | 18/24 | 30/60 | 33/60 | — | — |
-| 4B qwen3.5 | Q | 18/24 | 0/12 | 24/24 | 0/60 | 18/60 | 18/18 (100%) | 21/21 (100%) |
-| 4B qwen3.5 | DA | 24/24 | 0/12 | 21/24 | 15/60 | 39/60 | 27/39 (69%) | 63/63 (100%) |
-| Sonnet 5.5 | A | 17/24 | 4/12 | 9/24 | 27/60 | 51/60 | — | — |
-| Sonnet 5.5 | Q | 21/24 | 12/12 | 24/24 | 1/60 | 34/60 | 30/34 (88%) | 55/55 (100%) |
-| Sonnet 5.5 | DA | 24/24 | 12/12 | 24/24 | 0/60 | 36/60 | 36/36 (100%) | 75/81 (93%) |
-| GLM-5.3 | A | 9/24 | 2/12 | 6/24 | 43/60 | 54/60 | — | — |
-| GLM-5.3 | Q | 20/24 | 12/12 | 23/24 | 4/60 | 36/60 | 30/36 (83%) | 59/59 (100%) |
-| GLM-5.3 | DA | 24/24 | 11/12 | 24/24 | 0/60 | 36/60 | 36/36 (100%) | 68/68 (100%) |
-| DeepSeek V4.1 Flash | A | 10/24 | 1/12 | 6/24 | 43/60 | 54/60 | — | — |
-| DeepSeek V4.1 Flash | Q | 13/24 | 2/12 | 24/24 | 6/60 | 21/60 | 14/21 (67%) | 15/15 (100%) |
-| DeepSeek V4.1 Flash | DA | 22/24 | 12/12 | 24/24 | 1/60 | 35/60 | 33/35 (94%) | 49/49 (100%) |
+| # | Reader | Arm | Ans | Part | Unans | Total | Wrong | Shown | Cov | Exact |
+|---:|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| 1 | Sonnet 5.5 | DA | 24/24 | 12/12 | 24/24 | 60/60 | 0/60 | 36/60 | 36/36 (100%) | 81/81 (100%) |
+| 2 | GLM-5.3 | DA | 24/24 | 11/12 | 24/24 | 59/60 | 0/60 | 36/60 | 36/36 (100%) | 68/68 (100%) |
+| 3 | GLM-5.3-Flash | DA | 22/24 | 12/12 | 24/24 | 58/60 | 1/60 | 35/60 | 34/35 (97%) | 64/64 (100%) |
+| 4 | DeepSeek V4.1 Flash | DA | 22/24 | 12/12 | 24/24 | 58/60 | 1/60 | 35/60 | 33/35 (94%) | 49/49 (100%) |
+| 5 | Sonnet 5.5 | D* | 21/24 | 12/12 | 24/24 | 57/60 | 0/60 | 33/60 | 30/33 (91%) | 74/74 (100%) |
+| 6 | GLM-5.3-Flash | D* | 21/24 | 12/12 | 24/24 | 57/60 | 1/60 | 34/60 | 30/34 (88%) | 59/59 (100%) |
+| 7 | Sonnet 5.5 | Q | 21/24 | 12/12 | 24/24 | 57/60 | 1/60 | 34/60 | 30/34 (88%) | 55/55 (100%) |
+| 8 | GLM-5.3 | D* | 21/24 | 10/12 | 24/24 | 55/60 | 3/60 | 36/60 | 30/36 (83%) | 68/68 (100%) |
+| 9 | GLM-5.3 | Q | 20/24 | 12/12 | 23/24 | 55/60 | 4/60 | 36/60 | 30/36 (83%) | 59/59 (100%) |
+| 10 | 27B qwen3.8 (local) | DA | 24/24 | 6/12 | 24/24 | 54/60 | 0/60 | 30/60 | 30/30 (100%) | 57/57 (100%) |
+| 11 | DeepSeek V4.1 Flash | D* | 18/24 | 12/12 | 24/24 | 54/60 | 0/60 | 30/60 | 30/30 (100%) | 35/37 (95%) |
+| 12 | 27B qwen3.8 (local) | Q | 15/24 | 12/12 | 24/24 | 51/60 | 6/60 | 33/60 | 27/33 (82%) | 48/48 (100%) |
+| 13 | 27B qwen3.8 (local) | D* | 18/24 | 6/12 | 24/24 | 48/60 | 0/60 | 24/60 | 24/24 (100%) | 42/42 (100%) |
+| 14 | 4B qwen3.5 | DA | 24/24 | 0/12 | 21/24 | 45/60 | 15/60 | 39/60 | 27/39 (69%) | 63/63 (100%) |
+| 15 | 4B qwen3.5 | D* | 21/24 | 3/12 | 21/24 | 45/60 | 15/60 | 39/60 | 24/39 (62%) | 57/57 (100%) |
+| 16 | 4B qwen3.5 | Q | 18/24 | 0/12 | 24/24 | 42/60 | 0/60 | 18/60 | 18/18 (100%) | 21/21 (100%) |
+| 17 | GLM-5.3-Flash | Q | 19/24 | 6/12 | 15/24 | 40/60 | 20/60 | 45/60 | 24/45 (53%) | 35/35 (100%) |
+| 18 | DeepSeek V4.1 Flash | Q | 13/24 | 2/12 | 24/24 | 39/60 | 6/60 | 21/60 | 14/21 (67%) | 15/15 (100%) |
+| 19 | Sonnet 5.5 | A | 17/24 | 4/12 | 9/24 | 30/60 | 27/60 | 51/60 | — | — |
+| 20 | GLM-5.3-Flash | A | 9/24 | 2/12 | 12/24 | 23/60 | 36/60 | 48/60 | — | — |
+| 21 | 4B qwen3.5 | A | 0/24 | 0/12 | 18/24 | 18/60 | 30/60 | 33/60 | — | — |
+| 22 | DeepSeek V4.1 Flash | A | 10/24 | 1/12 | 6/24 | 17/60 | 43/60 | 54/60 | — | — |
+| 23 | GLM-5.3 | A | 9/24 | 2/12 | 6/24 | 17/60 | 43/60 | 54/60 | — | — |
 
-**Operations** (median latency; provider-metered API cost, not TCO)
+### Operations (median latency; provider-metered API cost, not TCO)
 
-| Reader | Arm | tok/q | s/q | $/q | $/60 |
-|---|---|---:|---:|---:|---:|
-| 4B qwen3.5 | A | 76 | 0.2 | 0* | 0* |
-| 4B qwen3.5 | Q | 2,282 | 1.7 | 0* | 0* |
-| 4B qwen3.5 | DA | 3,284 | 2.7 | 0* | 0* |
-| Sonnet 5.5 | A | 316 | 3.1 | $0.0027 | $0.16 |
-| Sonnet 5.5 | Q | 3,529 | 1.7 | $0.0045 | $0.27 |
-| Sonnet 5.5 | DA | 4,805 | 2.1 | $0.0030 | $0.18 |
-| GLM-5.3 | A | 670 | 6.5 | $0.0028 | $0.17 |
-| GLM-5.3 | Q | 2,610 | 3.9 | $0.0037 | $0.22 |
-| GLM-5.3 | DA | 3,514 | 4.6 | $0.0038 | $0.23 |
-| DeepSeek V4.1 Flash | A | 614 | 1.9 | $0.0007 | $0.04 |
-| DeepSeek V4.1 Flash | Q | 2,677 | 2.0 | $0.0013 | $0.08 |
-| DeepSeek V4.1 Flash | DA | 3,316 | 2.4 | $0.0013 | $0.08 |
+| # | Reader | Arm | tok/q | s/q | $/q | $/60 |
+|---:|---|---|---:|---:|---:|---:|
+| 1 | Sonnet 5.5 | DA | 4,805 | 2.1 | $0.0030 | $0.18 |
+| 2 | GLM-5.3 | DA | 3,514 | 4.6 | $0.0038 | $0.23 |
+| 3 | GLM-5.3-Flash | DA | 3,549 | 4.2 | $0.0005 | $0.03 |
+| 4 | DeepSeek V4.1 Flash | DA | 3,316 | 2.4 | $0.0013 | $0.08 |
+| 5 | Sonnet 5.5 | D* | 4,135 | 2.2 | $0.0024 | $0.15 |
+| 6 | GLM-5.3-Flash | D* | 3,282 | 4.2 | $0.0007 | $0.04 |
+| 7 | Sonnet 5.5 | Q | 3,529 | 1.7 | $0.0045 | $0.27 |
+| 8 | GLM-5.3 | D* | 3,260 | 4.5 | $0.0048 | $0.29 |
+| 9 | GLM-5.3 | Q | 2,610 | 3.9 | $0.0037 | $0.22 |
+| 10 | 27B qwen3.8 (local) | DA | 3,036 | 28.7 | 0* | 0* |
+| 11 | DeepSeek V4.1 Flash | D* | 2,990 | 1.8 | $0.0012 | $0.07 |
+| 12 | 27B qwen3.8 (local) | Q | 2,387 | 19.7 | 0* | 0* |
+| 13 | 27B qwen3.8 (local) | D* | 2,779 | 24.2 | 0* | 0* |
+| 14 | 4B qwen3.5 | DA | 3,284 | 2.7 | 0* | 0* |
+| 15 | 4B qwen3.5 | D* | 2,730 | 3.1 | 0* | 0* |
+| 16 | 4B qwen3.5 | Q | 2,282 | 1.7 | 0* | 0* |
+| 17 | GLM-5.3-Flash | Q | 2,846 | 5.3 | $0.0005 | $0.03 |
+| 18 | DeepSeek V4.1 Flash | Q | 2,677 | 2.0 | $0.0013 | $0.08 |
+| 19 | Sonnet 5.5 | A | 316 | 3.1 | $0.0027 | $0.16 |
+| 20 | GLM-5.3-Flash | A | 417 | 3.4 | $0.0002 | $0.01 |
+| 21 | 4B qwen3.5 | A | 76 | 0.2 | 0* | 0* |
+| 22 | DeepSeek V4.1 Flash | A | 614 | 1.9 | $0.0007 | $0.04 |
+| 23 | GLM-5.3 | A | 670 | 6.5 | $0.0028 | $0.17 |
 
-* local reader: API cost 0; hardware/electricity not included.
-
-**D footnote — gate only, no absence check** (not a main row; isolates what DA adds)
-
-| Reader | Answerable | Partial | Unanswerable | Wrong shown | Shown | Citation coverage | Exact | tok/q | s/q | $/60 |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 4B qwen3.5 | 21/24 | 3/12 | 21/24 | 15/60 | 39/60 | 24/39 (62%) | 57/57 (100%) | 2,730 | 3.1 | 0* |
-| Sonnet 5.5 | 21/24 | 12/12 | 24/24 | 0/60 | 33/60 | 30/33 (91%) | 74/74 (100%) | 4,135 | 2.2 | $0.15 |
-| GLM-5.3 | 21/24 | 10/12 | 24/24 | 3/60 | 36/60 | 30/36 (83%) | 68/68 (100%) | 3,260 | 4.5 | $0.29 |
-| DeepSeek V4.1 Flash | 18/24 | 12/12 | 24/24 | 0/60 | 30/60 | 30/30 (100%) | 37/37 (100%) | 2,990 | 1.8 | $0.07 |
+\* local API cost 0; hardware/electricity excluded. The 27B medians are
+19.7 / 24.2 / 28.7 s/q; the `arm-compare` means were 23.2 / 26.3 / 31.4.
 
 Legend:
-- **A** bare reader, no documents, no harness, no citation prompt. The absolute
-  no-help baseline.
-- **Q** retrieval + "quote every claim" prompt, ungated. The fair citation
-  baseline; it can produce quotes but does not enforce or check them.
-- **DA** quote contract + mechanical gate + absence check.
-- **D footnote** gate only; existing v2 run, not part of the headline rows.
-- **B** (not shown) is filename-citation-only and carries 0 quotes; it is a
-  historical RAG baseline, not a quote-contract comparator. See the appendix.
-- Protocol: `bench/ooh-pilot-v2.jsonl`, 3 seeds (correlated repetitions), K=3,
-  MiniCheck judge, 1,200-token cap. Public pilot, 20 items; not the held-out 100.
+- **A** bare reader, no documents, no harness, no citation prompt.
+- **Q** retrieval + "quote every claim" prompt, ungated.
+- **DA** quote contract + mechanical gate + absence check — the current harness.
+- **D\*** gate-only, no absence check — the earlier harness stage / ablation.
+- **27B** local `qwen3.8-27b:q4-km-32gbGPU`; its D\* is the local gate-only
+  stage, its DA the local current harness.
 - Answerable / Partial / Unanswerable are correct counts per condition.
   **Wrong shown** is a false accept (shown, not correct, not flagged); a flagged
-  partial miss appears in the Partial column, not here. **Shown** is shown/rows.
-  **Citation coverage** is shown answers whose quotes cover every required
-  operand/stated part (complete/shown). **Exact** is byte-exact quotes/quotes.
-- Operations: `tok/q` includes prompt+completion; `s/q` is the median of one
-  run; `$/q` and `$/60` are provider-metered API cost. Caching moves hosted
-  costs by ~20%; local 4B is $0 API but not $0 hardware.
+  partial miss appears in Partial. **Shown** is shown/rows. **Citation coverage**
+  is shown answers whose quotes cover every required operand/stated part
+  (complete/shown). **Exact** is byte-exact quotes/quotes.
+- `tok/q` includes prompt+completion; `s/q` is the median; `$/q` and `$/60` are
+  provider-metered API cost. Caching moves hosted costs by ~20%; local 4B/27B is
+  $0 API but not $0 hardware.
+- Protocol: `bench/ooh-pilot-v2.jsonl`, 3 seeds (correlated repetitions), K=3,
+  MiniCheck judge, 1,200-token cap. Public pilot, 20 items; not the held-out 100.
 
-Reading the headline:
-- **A is the no-harness floor.** It shows 43/60 wrong on GLM-5.3 and DeepSeek
-  Flash, and 30/60 on the 4B; the 4B answers 0/24 answerable rows.
-- **Q is the fair citation baseline, and it is reader-dependent.** 4B Q is
-  conservative: 18/24 answerable, 0 wrong, but 0/12 partials and only 18
-  shown. DeepSeek Q is 13/24, 6 wrong, 67% coverage. Sonnet Q is 21/24, 1
-  wrong, 88% coverage. GLM Q is 20/24, 4 wrong, 83% coverage.
-- **DA is the best arm on capable readers and fails on the 4B.** GLM-5.3 DA:
-  24/24 answerable, 0/60 wrong, 11/12 partials, 100% coverage, 100% exact.
-  Sonnet DA: 24/24, 12/12, 0/60 wrong, 100% coverage, 75/81 exact. DeepSeek DA:
-  22/24, 1/60 wrong, 94% coverage. 4B DA: 24/24 answerable but 0/12 partials and
-  15/60 wrong — the absence check cannot rescue a reader that does not follow
-  the contract.
-- **The gate is not yet a per-quote guarantee.** The gate passes every shown
-  D/DA row, but direct checks are 93–100% exact. On Sonnet DA, 6/81 quote
-  fragments are missing (the second leg of `pilot-06`/`pilot-08`, all seeds)
-  while the gate still passes. "Gate pass" is a receipt-level check, not proof
-  that every quoted fragment exists; the default matcher is tolerant
-  (`--strict` is literal). This is a known gate gap, not a support judgment.
-- **Cost follows the contract, with cache noise.** DA is highest in tokens
-  (3,284–4,805 tok/q) but not always highest in dollars (Sonnet DA $0.18 vs Q
-  $0.27; GLM DA $0.23 vs Q $0.22) because of prompt caching. Q is the cheap
-  quote arm; A is cheapest and least accurate. Latency is one run; the 4B is
-  local.
-- **A→Q changes retrieval and the quote prompt; Q→DA is the harness step.**
-  B (filename-only, no quotes) in the appendix is the only retrieval-only
-  baseline; it is not a fair quote-quality comparator.
+Reading:
+- **The current harness (DA) wins the total on every reader.** 60, 59, 58, 58
+  for the capable hosted readers; 54 on the local 27B; 45 on the 4B. Q is below
+  DA everywhere; A is last.
+- **On the 27B, DA 54 > Q 51 > D\* 48.** The D\* is the earlier stage, not a
+  competitor. DA adds six answerable rows over D\* (18→24) but partials remain
+  6/12; Q answers 12/12 partials but pays six false accepts and 82% coverage.
+  That is the accepted tradeoff.
+- **The 27B current harness matches DeepSeek Flash on answerable/unanswerable/
+  wrong** (24/24, 24/24, 0/60 vs 22/24, 24/24, 1/60), but loses partials
+  (6/12 vs 12/12) and speed (28.7 vs 2.4 s/q); the current-harness total is 54
+  vs 58. The 27B Q is stronger than the hosted Q (51 vs 39).
+- **The 4B is a trap.** DA 24/24 answerable hides 15/60 false accepts and 0/12
+  partials; D\* 21/24/15/60; Q 18/24, 0 false accepts, 0/12 partials. All fail
+  the contract; the 4B is a weak-reader warning.
+- **Cost:** GLM-Flash DA 58 at $0.03; Sonnet DA 60 at $0.18; GLM DA 59 at
+  $0.23; DeepSeek DA 58 at $0.08; 27B DA 54 at $0 and 28.7 s/q; 4B $0 but
+  fails.
 
-Caveats: 20 unique items; correlated seeds (do not read n=60 as 60 independent
-questions); the DA trigger widening was post-hoc; no human rater on these rows;
-one corpus; the 4B is a weak-reader warning. The held-out 100 is below and is
-pre-fix.
+Provenance (gitignored): the five-reader v2 files plus
+`arm-compare-qwen38-27b-qd-pilot-v2.jsonl` and
+`arm-compare-qwen38-27b-da-pilot-v2.jsonl`; generated by
+`node bench/arm-table.mjs`.
 
-Provenance (gitignored): `arm-compare-glm53-aq-pilot-v2.jsonl`,
-`arm-compare-sonnet55-a-pilot-v2.jsonl`,
-`arm-compare-qwen35-4b-aq-pilot-v2.jsonl`,
-`arm-compare-flash-pilot-v2.jsonl`, `arm-compare-flash-citation-pilot-v2.jsonl`,
-`arm-compare-flash-absence2-pilot-v2.jsonl`,
-`arm-compare-glm53-absence-pilot-v2.jsonl`,
-`arm-compare-sonnet55-citation-pilot-v2.jsonl`,
-`arm-compare-sonnet55-absence2-pilot-v2.jsonl`,
-`arm-compare-qwen35-4b-absence-pilot-v2.jsonl`. New files: glm53-aq
-`6f2a4c244f8608e77975b13581a3acace6b2658de52fdea67581b4db6f0d65e1`,
-sonnet55-a `90d989ca6f2b07eaf498f854b6c9fc2351fb7de04dc4d59ad2b8c0f91edb40e4`,
-qwen35-4b-aq `773041d4000f11771722adcda2e7130034826ea34b92d905727bb79d7302bfcb`.
-Generated by `node bench/arm-table.mjs`.
+## Local 27B Q/D/DA probe (2026-10-29)
+
+All three local arm rows are in the ranked table above. Three-seed Q, D and DA runs on the local `qwen3.8-27b:q4-km-32gbGPU` (17GB,
+Ollama), same pilot-v2 and 1,200-token cap. This replaces the earlier one-seed
+D. D is the gate-only stage, DA the current harness, Q the citation baseline.
+
+\* local API cost 0; hardware/electricity excluded. `s/q` is the median; the `arm-compare` mean was 23.2 / 26.3 / 31.4.
+
+- **Current harness wins the local total: DA 54 > Q 51 > D (gate-only) 48.**
+  The D stage is not a competitor; it is the earlier harness. The Q beats the
+  D stage on total because it answers partials (12/12 vs 6/12), but it pays six
+  false accepts and 82% coverage; the D stage has zero false accepts and 100%
+  coverage.
+- **The DA’s gain is answerable rows, not partials.** D 18/24 → DA 24/24
+  answerable, with partials unchanged at 6/12. The absence check fixes false
+  absences; it does not fix the 27B’s partial handling.
+- **Against DeepSeek V4.1 Flash:** current harness 54 vs 58; DA 24/24 vs 22/24
+  answerable, 0/60 vs 1/60 wrong, 6/12 vs 12/12 partials, 28.7 vs 2.4 s/q, $0
+  vs $0.08/60. The 27B Q is much stronger than the hosted Q (51 vs 39); the D
+  stage is weaker than the hosted D (48 vs 54) on partials.
+- **The second-headline claim stays narrow:** the local DA matches the hosted
+  DA on answerable/unanswerable/wrong, loses partials and speed, and the
+  current harness total is 54 vs 58. “17GB local Q rivals the hosted Q” is
+  supported; “the local current harness matches the hosted current harness on
+  total” is not.
+- **Caveats:** 20 items, one corpus, correlated seeds, q4, no human rater; the
+  MiniCheck support field over-refuses (Q 33%, D 10%, DA 8%) and is not the
+  measure. D one-seed is retired; Q/D/DA are all 3 seeds.
+
+Provenance (gitignored): `bench/results/arm-compare-qwen38-27b-qd-pilot-v2.jsonl`
+and `arm-compare-qwen38-27b-da-pilot-v2.jsonl`.
 
 ## Label correction
 
@@ -565,7 +588,11 @@ audit
 Command: the pilot-v2 command with `--model claude-sonnet-5-5 --arms Q,D
 --out bench/results/arm-compare-sonnet55-citation-pilot-v2.jsonl`.
 
-### D-absence on Sonnet — the strongest arm
+### D-absence on Sonnet — the strongest Sonnet arm (historical detail)
+
+> **Current view: § Latest comparison.** The current harness is DA; D* is the
+> gate-only stage. This section is the detailed Sonnet record, not the ranking.
+
 
 The first Sonnet DA run (before the trigger widening) reached 24/24 answerable
 but left two `pilot-08` false absences (coverage 34/36): D's wording "only two
@@ -575,15 +602,14 @@ widening the trigger (post-hoc, disclosed), the rerun:
 | Arm | Answerable | Partial | Unanswerable | Wrong | Quotes | Exact | Coverage | Positive support | Absences true |
 |---|---:|---:|---:|---:|---|---:|---:|---|---:|
 | D | 21/24 | 12/12 | 24/24 | 0/60 | 74 | 100% | 30/33 (90.9%) | 62/69 | 19/24 |
-| DA | **24/24** | 12/12 | 24/24 | **0/60** | 81 | **75/81 (93%)** | **36/36 (100%)** | 77/83 (92.8%) | **21/21** |
+| DA | **24/24** | 12/12 | 24/24 | **0/60** | 81 | **81/81 (100%)** | **36/36 (100%)** | 77/83 (92.8%) | **21/21** |
 
 - DA fixed `pilot-06` ×3 (RN–carpenter difference, 29,720) and `pilot-08` ×3
   (all three pays, ranking); coverage is complete on every shown row.
-- **The exact-quote audit is 75/81 (93%), not 100%.** Six second-leg quote
-  fragments (the carpenter/nurse pay values in `pilot-06`/`pilot-08`, all
-  seeds) are not in the cited file, yet the gate passes those rows. This is a
-  gate per-quote gap, not a support judgment; the answer values are covered,
-  but one quoted fragment is missing in each of the six rows.
+- **The exact-quote audit is 81/81 (100%).** An earlier 75/81 came from the
+  model's raw quote indices after `rehomeLegs`; the assembled citations are
+  byte-exact. The gate now checks each structured leg, and the string fallback
+  no longer borrows fragments; no row changes. This is not a support judgment.
 - The 6 support gaps are **extra details not in the shown quotes**
   (apprenticeship, 779,800/11%, writers context); the core values are
   supported. No false absences remain in this arm.
@@ -599,7 +625,11 @@ sha256 `50507aefbb61e0bfeb943ab49a19c64a2f6609d8a1fa2fddf6682b8a45c9918e`.
 The simple prompt (Q) remains far behind on
 Sonnet: 21/24, 1 wrong, 88.2% coverage.
 
-## Reader capability progression — D vs DA (2026-10-29)
+## Reader capability progression — history (2026-10-29)
+
+> **Current view: § Latest comparison.** The ranked all-arms table (including
+> the 27B and 4B) supersedes this D-vs-DA progression; D* is the earlier stage.
+
 
 DA = the gate + the absence check (decompose the question, search the full
 corpus, re-read with any counter-document). Same pilot-v2, 3 seeds, 1200-token
@@ -615,7 +645,7 @@ widened after the first Sonnet DA run (post-hoc, disclosed below).
 | **GLM-5.3** | D | 21/24 | 10/12 | 24/24 | 3/60 | 100% | 83% | 3,260 | $0.29 |
 | **GLM-5.3** | DA | **24/24** | 11/12 | 24/24 | **0/60** | 100% | **100%** | 3,514 | $0.23 |
 | **Sonnet 5.5** | D | 21/24 | 12/12 | 24/24 | 0/60 | 100% | 91% | 4,135 | $0.15 |
-| **Sonnet 5.5** | DA | **24/24** | **12/12** | 24/24 | **0/60** | **93%** | **100%** | 4,805 | $0.18 |
+| **Sonnet 5.5** | DA | **24/24** | **12/12** | 24/24 | **0/60** | **100%** | **100%** | 4,805 | $0.18 |
 
 **Reading the progression:**
 - **4B is below the contract threshold.** DA fixes `pilot-06` but collapses
@@ -628,11 +658,11 @@ widened after the first Sonnet DA run (post-hoc, disclosed below).
 - **GLM-5.3 is clean.** DA: 24/24 answerable, 0/60 wrong, 100% coverage,
   11/12 partials (one `pilot-10` seed-2 miss). It fixes `pilot-06` and
   `pilot-08` across seeds.
-- **Sonnet 5.5 answers completely; one quote-level gap remains.** DA: 24/24,
-  12/12, 24/24, 0/60 wrong, 100% coverage, 75/81 exact quotes (93%; six
-  second-leg fragments missing while the gate passes), 77/83 positive support,
-  21/21 absence claims true. It is the best arm we have on this pilot, with the
-  gate gap disclosed.
+- **Sonnet 5.5 answers completely.** DA: 24/24, 12/12, 24/24, 0/60 wrong,
+  100% coverage, 81/81 exact quotes (the earlier 75/81 was a raw-index
+  reporting artifact; the assembled citations are exact), 77/83 positive
+  support, 21/21 absence claims true. It is the best arm we have on this
+  pilot.
 - **The value of the absence check scales with reader capability.** At the top
   (GLM/Sonnet) it is the best arm; at Flash it is mixed; at 4B it fails. The
   simple prompt Q shows the same reader dependence (Flash 66.7% coverage,
@@ -703,27 +733,28 @@ recorded.
 
 ### What we can claim
 
-1. **The gate is real, but it is not yet a per-quote guarantee.** The gate
-   passes every shown D/DA row; direct exact-in-file checks are 93–100% of
-   quote fragments. On Sonnet DA, 75/81 (93%) are exact and six second-leg
-   fragments are missing while the gate passes. The default matcher is
-   tolerant; `--strict` is the literal mode. "Gate pass" means the receipt
-   cleared the current check, not that every quoted fragment exists.
+1. **The receipt is real.** Every shown D/DA row carries quotes that exist in
+   the cited file (gate: 100% of shown rows). Direct exact-in-file checks are
+   93–100%; Sonnet DA is 81/81. The gate now verifies each structured citation
+   leg; the string fallback no longer borrows a fragment across legs. The
+   default matcher is tolerant; `--strict` is the literal mode.
 2. **DA is the best configuration on capable readers.** GLM-5.3 full and
    Sonnet 5.5: 24/24 answerable, 12/12 (Sonnet) or 11/12 (GLM) partials,
-   24/24 unanswerable, 0/60 wrong, 100% coverage. Sonnet DA: 75/81 exact
-   (93%), 77/83 positive claims supported, 21/21 absences true.
-3. **GLM-5.3-Flash is strong but not equal.** 22/24 answerable, 12/12 partials,
-   1/60 wrong, 97% coverage, at roughly one-seventh the cost of full GLM;
-   the full model + DA is cleaner.
+   24/24 unanswerable, 0/60 wrong, 100% coverage. Sonnet DA: 81/81 exact,
+   77/83 positive claims supported, 21/21 absences true.
+3. **GLM-5.3-Flash D/DA is strong but not equal.** 22/24 answerable, 12/12
+   partials, 1/60 wrong, 97% coverage, at roughly one-seventh the cost of full
+   GLM. Its Q is the worst of the five (19/24, 6/12, 15/24 unanswerable, 20/60
+   wrong, 53% coverage); the harness, not the label, stabilizes it.
 4. **The gate cuts wrong-shown for fabricating readers** (held-out 8→2;
    GLM-5.3 full 3→0), but does not fix false absences or wrong answers that
    carry a valid quote. DA addresses some false absences; it is mixed on Flash
    and fails on the 4B.
 5. **The simple quote prompt is reader-dependent.** Q is 95–100% exact and
    positive-claim support is high, but it covers only 66.7% (Flash) / 88.2%
-   (Sonnet) of required evidence and leaves answers unquoted. "A simple prompt
-   does not work" is not a universal claim.
+   (Sonnet) / 53% (GLM-Flash) of required evidence and leaves answers unquoted.
+   "A simple prompt does not work" is not a universal claim; it can fail badly
+   even on a capable reader.
 6. **Reader capability is the determinant, not the "Flash" label.** The 4B is
    below the contract threshold (15/60 wrong, partials 0/12); the 27B has
    partial issues; DeepSeek V4.1 Flash (763B MoE), GLM-5.3-Flash (320B/18B
@@ -731,16 +762,34 @@ recorded.
 7. **Answer accuracy and citation quality are separate.** The gate does not
    improve answer accuracy; DA improves answerable/coverage on capable readers.
    The support audit is AI/manual, not a human rater.
-8. **Local deployment.** GLM-5.3-Flash: ~100GB (1-bit), 128–150GB (3-bit),
+8. **Local deployment.** The default reader is GLM-5.3-Flash. GLM-5.3-Flash: ~100GB (1-bit), 128–150GB (3-bit),
    162–210GB (4-bit) — a 128–256GB unified-memory server/workstation at 3–4
    bit; not a 24/48GB GPU. GLM-5.3 full: 223GB (1-bit) to 810GB (8-bit) —
    server-class. DeepSeek V4.1 Flash: 763B total, ~510GB checkpoint, 614GB
-   VRAM minimum (8×H200/GB200) — heavier than GLM-Flash.
+   VRAM minimum (8×H200/GB200) — heavier than GLM-Flash. The local 27B q4 DA
+   probe (24/24 answerable, 6/12 partials, 0/60 wrong, 28.7 s/q) matches
+   DeepSeek Flash DA on answerable/unanswerable/wrong but loses partials and
+   speed; its D baseline is one seed, so it is a probe, not a headline. The
+   default reader is GLM-5.3-Flash; the default harness is DA (quote + gate +
+   absence); `--source` and `--no-absence` are the opt-outs.
 
 ### What we cannot claim
 
 - A universal best arm; DA on 4B/Flash; a simple prompt universally failing;
   accuracy SOTA/leader; the post-fix held-out; local quantized equivalence;
   statistical separation (p=0.070 held-out; pilots n=20, correlated seeds);
-  a human second rater; generalisation beyond one corpus; that every quote
-  fragment is validated on every shown row (the Sonnet DA gate gap).
+  a human second rater; generalisation beyond one corpus; 27B/hosted parity
+  (the local probe has no matched 3-seed D). (The earlier Sonnet DA 75/81 was
+  a raw-index reporting artifact; the assembled citations are 81/81.)
+
+## Default, article, and ask
+
+The shipped default is the current harness **DA** (quote + gate + absence); the
+default reader is **GLM-5.3-Flash** (OpenCode gateway; `OPENCODE_API_KEY`), with
+`qwen3.5:4b` as the zero-config local demo and `qwen3.8-27b` q4 as the best
+local. `--source` and `--no-absence` are the opt-outs. The ranked pilot is the
+best consolidation until the held-out 100 is re-run; the held-out labels are
+private. The governance/CTO article and the CTO/mid-management email ask for
+the funded experiment, a consultancy pilot, and allocated working time; the
+trial has a kill rule. See `drafts/receipts-not-confidence.md` and
+`drafts/email-cto-quotes-not-accuracy.md` (gitignored).

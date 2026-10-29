@@ -13,6 +13,12 @@ export const ABSTAIN_TERMS = [
   'not stated', 'never states',
 ]
 
+// The leading abstention shape: an answer that opens with NOT FOUND / no record /
+// cannot find / nowhere / not documented / not stated. Shared by the scorer, the
+// gate's absence check, and the kit's absence layer; the broad `ABSTAIN_TERMS`
+// list stays for the vocabulary check inside an answer.
+export const leadAbstain = (t) => /^\s*(not found|no record|cannot find|nowhere|not documented|not stated)\b/i.test(t)
+
 // The one evidence lifter: given a short anchor the model copied from a
 // document, return the FULL line(s) it points at — so the stored receipt is
 // verbatim-by-construction (lifted from the file), never verbatim-by-recopy.

@@ -1,23 +1,9 @@
 {
-  "source": "local",
-
-  "docsDir": "docs",
-  "archiveDirs": [],
-  "indexPath": "docs/INDEX.md",
-  "goldenPath": "golden/golden.json",
-
-  "models": {
-    "retriever": {
-      "baseUrl": "https://api.openai.com/v1",
-      "apiKeyEnv": "OPENAI_API_KEY",
-      "model": "<your-flash-tier-model>",
-      "label": "flash"
-    },
-    "coordinator": {
-      "baseUrl": "https://api.openai.com/v1",
-      "apiKeyEnv": "OPENAI_API_KEY",
-      "model": "<your-coordinator-tier-model>",
-      "label": "pro"
-    }
-  }
+  "corpus": "../bench/corpus/ooh-v1",
+  "model": "glm-5.3-flash",
+  "baseUrl": "https://opencode.ai/inference/openai/v1",
+  "apiKeyEnv": "OPENCODE_API_KEY",
+  "retriever": "reference",
+  "tier": "v45",
+  "absence": true
 }

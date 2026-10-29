@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+## 0.2.0 — DA default + GLM-5.3-Flash
+
+### Changed
+
+- **Default is the current harness (DA)**: the `v45` quote contract + the
+  mechanical gate + the absence check. `--source` keeps the lighter Source
+  receipt; `--no-absence` keeps the gate-only stage. `--quote` remains an alias
+  for `v45`.
+- **Default reader is GLM-5.3-Flash** on an OpenAI-compatible endpoint (the
+  example config uses the OpenCode gateway; `OPENCODE_API_KEY`). The zero-config
+  local fallback is still `qwen3.5:4b`; the best local is `qwen3.8-27b` q4.
+- The absence check moved from the benchmark into `kit/lib/answer/absence.mjs`
+  and is shared by `ask` and `bench/arm-compare.mjs`; absent claims are
+  decomposed, searched over the full corpus, and re-read with any
+  counter-document.
+- `config --source` / `config --no-absence`; `--json` now includes `absence` and
+  `usage`; the human receipt shows absence status.
+- Tests: 206 (was 201); the default/source/absence/GLM-Flash paths are covered.
+
+
 ### Added
 
 - **Citation metadata** on the assembled receipt (additive): `--json` now

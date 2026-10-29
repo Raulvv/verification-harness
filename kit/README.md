@@ -18,18 +18,24 @@ results and are not comparable across corpora.
 
 ## Just ask a folder
 
-The one command is `config` once, then `ask` as often as you like. This
-example assumes Ollama and `qwen3.5:4b`; see **Reader model setup** below for
-hosted and non-Ollama servers.
+The one command is `config` once, then `ask` as often as you like. The
+default is the current harness (DA) with GLM-5.3-Flash; see **Reader model
+setup** below for the local fallback.
 
 ```sh
+export OPENCODE_API_KEY="..."
 node kit/bin/retrieval-kit.mjs ask bench/corpus/ooh-v1 \
-  "What is the median annual pay for registered nurses?" --quote
-# zero-config one-off on the frozen OOH snapshot — a folder IS a workspace
+  "What is the median annual pay for registered nurses?"
+# default: GLM-5.3-Flash via the OpenCode gateway, DA, verified quote
+
+# local fallback (Ollama), same DA default:
+node kit/bin/retrieval-kit.mjs ask bench/corpus/ooh-v1 \
+  "What is the median annual pay for registered nurses?" \
+  --base-url http://localhost:11434/v1 --model qwen3.5:4b
 
 node kit/bin/retrieval-kit.mjs config --corpus ./my-docs   # seal the workspace
 node kit/bin/retrieval-kit.mjs ask "What is the refund window?"
-# Q: …  /  Source: …  /  gate: verified
+# Q: …  /  Source: …  /  Quote: …  /  gate: verified
 ```
 
 > The OOH benchmark corpus is `bench/corpus/ooh-v1`; point `--corpus` at your
@@ -52,9 +58,10 @@ node kit/bin/retrieval-kit.mjs ask "What is the refund window?"
   (`ollama pull nomic-embed-text`), an unknown `--retriever` value is
   refused rather than silently degraded, and every other `--flag` is exact too:
   an unknown or valued-bare flag (a `--quote.` typo) refuses with the valid set.
-- The default contract is the shipped **`source-v45`** (a `Source` receipt, which
-  the gate verifies by path/title/date). Add **`--quote`** for the full
-  byte-verbatim quote (`v45`), or `--tier source-v45|v45|full`.
+- The default contract is the current harness **DA**: the full byte-verbatim
+  quote (`v45`) + the gate + the absence check. **`--source`** opts into the
+  lighter `source-v45` receipt; **`--no-absence`** is the gate-only stage;
+  `--tier source-v45|v45|full` remains available.
 - `config --show` / `config --reset`; `--json` for machines. `--json` includes
   a `citations` array (source id, quote, byte offsets, section, exact flag);
   `--max-quotes-per-doc <n>` caps quotes per source (opt-in). In this repo the
@@ -62,27 +69,29 @@ node kit/bin/retrieval-kit.mjs ask "What is the refund window?"
 
 ## Reader model setup — defaults, Ollama, non-Ollama
 
-The kit does **not** depend on Opencode. The chat boundary is OpenAI-compatible
-(`/chat/completions`); Ollama is special-cased to its native `/api/chat`.
-`ask` needs a model; `config` alone does not call one.
+The boundary is OpenAI-compatible (`/chat/completions`); Ollama is special-cased
+to its native `/api/chat`. The shipped default config points at the OpenCode
+gateway for **GLM-5.3-Flash**; any compatible endpoint works. `ask` needs a
+model; `config` alone does not call one.
 
 Defaults with no config or flags:
 
 | Setting | Default | Behavior |
 |---|---|---|
-| Base URL | `http://localhost:11434/v1` | Assumes Ollama |
-| Model | `qwen3.5:4b` | Only if the base URL looks like Ollama |
-| API key | `ollama` for Ollama | Non-Ollama needs `RETRIEVAL_API_KEY` or `--api-key-env` |
+| Base URL | `https://opencode.ai/inference/openai/v1` | The default reader's gateway |
+| Model | `glm-5.3-flash` | The best cost/efficient reader in the pilot |
+| API key | `OPENCODE_API_KEY` | Set it in the shell; never committed |
 | Retriever | `reference` | Embedder-free; `dense`/`router` need local `nomic-embed-text` |
-| Tier | `source-v45` | `--quote` switches to `v45` |
+| Tier | `v45` + absence | `--source` = Source receipt; `--no-absence` = gate-only |
+| Local fallback | `qwen3.5:4b` on `http://localhost:11434/v1` | Fast demo; below the contract threshold |
 
-There is **no default hosted model**. If you pass a non-Ollama `--base-url`
-without `--model`, it fails with `no chat model`. If you pass a model but no key,
-it fails with `no api key`. If the sealed workspace names an `apiKeyEnv` and that
-variable is not exported in the current shell, it fails before any call with
-`no api key — <VAR> is not set`. If Ollama is not running, the default local path
-fails with a connection error; it does not fall back to a hosted model. If the
-Ollama model is not pulled, Ollama returns a model-not-found error.
+The default reader is GLM-5.3-Flash; set `OPENCODE_API_KEY`. If you pass a
+non-Ollama `--base-url` without `--model`, it uses the default model. If you pass
+a model but no key, the model call fails with `no API key for <model> (set
+<VAR>)`. If the sealed workspace names an `apiKeyEnv` and that variable is not
+exported, it fails before any call with `no api key — <VAR> is not set`. The
+local fallback is `qwen3.5:4b` on Ollama; it is a fast demo, below the contract
+threshold. The best local is `qwen3.8-27b` q4.
 
 ### Ollama
 
@@ -119,8 +128,8 @@ node kit/bin/retrieval-kit.mjs config \
 (`nomic-embed-text`), even when the chat model is hosted. Without Ollama, the
 default `reference` retriever is what you want — no flag needed.
 
-The benchmark reader was **DeepSeek V4.1 Flash**; `qwen3.5:4b` is the kit's
-local convenience default, not the benchmark model. The kit writes `.retrieval/`
+The ranked benchmark's readers are GLM-5.3-Flash, DeepSeek V4.1 Flash, GLM-5.3,
+Sonnet 5.5 and the local 27B/4B; the default is GLM-5.3-Flash. The kit writes `.retrieval/`
 and `.retrieval-index/`; both are gitignored.
 
 ## Strict verbatim mode — opt-in
@@ -333,7 +342,7 @@ kit/
   GOLDEN.md   how to author the ground truth
 ```
 
-## System 3.0 — citation-first (current)
+## System 3.0 — citation-first (current: DA default)
 
 The receipt is a **citation**, and the system reads nothing hand-written:
 
@@ -343,6 +352,9 @@ Source: <the document's own title> · <path:line>
 Quote: <verbatim line(s)>
 ```
 
+- **Default contract:** the `v45` quote + the mechanical gate + the absence
+  check. `--source` is the lighter Source receipt; `--no-absence` is the
+  gate-only stage. `--strict` is the literal matcher.
 - **Dates and titles are auto-resolved** (sidecar `.meta.json` → git →
   file mtime; title from front-matter/H1/filename) — no headers, no index,
   no declared guidance required. Works on any corpus that can become files.
@@ -375,7 +387,7 @@ benchmark (`bench/ooh-README.md`).
 ## Tests — the whole safety net, one command
 
 ```sh
-node kit/bin/test.mjs         # 190 tests + the gate drill
+node kit/bin/test.mjs         # 206 tests + the gate drill
 node kit/bin/coverage.mjs     # the same suite under V8 coverage (npm run kit:coverage)
 ```
 

@@ -18,8 +18,8 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { join, resolve, dirname } from 'node:path'
 import { selectByReference } from '../kit/lib/retrieval/window.mjs'
 import { askOneShot } from '../kit/lib/answer/oneshot.mjs'
+import { runAbsence, shouldRunAbsence } from '../kit/lib/answer/absence.mjs'
 import { chatWithUsage } from '../kit/lib/model.mjs'
-import { rank } from '../kit/lib/retrieval/locate.mjs'
 import { judgeSufficiency, judgeByCommand } from '../kit/lib/receipts/sufficiency.mjs'
 import { verify } from '../kit/lib/receipts/gate.mjs'
 import { parseAnswer } from '../kit/lib/receipts/text.mjs'
@@ -32,7 +32,7 @@ const argv = process.argv.slice(2)
 const flag = (n) => argv.includes('--' + n)
 const opt = (n, d) => { const i = argv.indexOf('--' + n); return i >= 0 ? argv[i + 1] : d }
 const FAKE = flag('fake')
-const arms = opt('arms', 'A,B,C,D').split(',')
+const arms = opt('arms', 'A,Q,DA').split(',')
 const seeds = Number(opt('seeds', FAKE ? 1 : 3))
 const K = Number(opt('k', 3))
 const MAX_TOKENS = Number(opt('max-tokens', 400)) // reasoning readers need headroom; documented in the report
@@ -98,24 +98,6 @@ async function supportFor(item, answer, quotesText) {
   return { positive, supported, computed, computedOk, absence }
 }
 
-// D-absence: when D abstains or claims a fact is absent, decompose the question
-// into atomic facts, search the FULL corpus for each, and re-read with any
-// counter-document found. This verifies absence claims; the gate verifies
-// presence claims.
-const ABSENCE_RE = /not (?:stated|provided|included|listed|available|covered)|(?:does|do) not (?:state|provide|include|list|contain|specify)|no (?:record|data|information|mention|pay|salary|wage|figure|value)|(?:only|just) (?:one|two|three|four|\d+) [^.]*(?:have|has|are|is)|cannot be (?:determined|calculated|computed|confirmed|completed|made|ranked)/i
-const FACTS_SCHEMA = {
-  type: 'object',
-  properties: { facts: { type: 'array', items: { type: 'object', properties: { entity: { type: 'string' }, attribute: { type: 'string' } }, required: ['entity', 'attribute'] } } },
-  required: ['facts'],
-}
-const PROMPT_FACTS = (q) => [
-  'Extract every entity the question names — occupation, person, place, organization, date, or metric — and for each, the attribute asked about it.',
-  'Do not answer the question. One fact per entity.',
-  'Return ONLY JSON: {"facts":[{"entity":"<entity>","attribute":"<attribute>"}]}',
-  'Question: ' + q,
-].join('\n')
-const normText = (s) => String(s ?? '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
-
 // D: the harness on the SAME docs as B/C, then the mechanical gate.
 // A gate rejection is an abstention; a gate pass is the only shown answer.
 async function runArm(arm, item) {
@@ -144,7 +126,7 @@ async function runArm(arm, item) {
     })
     const receipt = res.final?.text ?? ''
     const gateItem = { id: item.id, question: item.question, not_found: res.parsed?.notFound ?? true }
-    const g = verify(gateItem, receipt, corpus)
+    const g = verify(gateItem, receipt, corpus, { citations: res.citations })
     const text = g.mechanicalPass ? (parseAnswer(receipt).proposed || receipt) : 'NOT FOUND (gate rejected: ' + g.why + ')'
     return { text, rawAnswer: res.parsed?.answer ?? text, rawQuotes: res.parsed?.quotes ?? [], receipt, gate: g, citations: res.citations ?? [], usage: res.usage ?? {}, tokens: res.tokens ?? 0, ms: Date.now() - t0 }
   }
@@ -161,43 +143,25 @@ async function runArm(arm, item) {
   if (arm === 'D') return runDWith(docs)
   if (arm === 'DA') {
     const d = await runDWith(docs)
-    const triggered = d.gate.mechanicalPass && !d.text.startsWith('NOT FOUND (gate rejected') && (leadAbstain(d.text) || ABSENCE_RE.test(d.text))
+    const triggered = d.gate.mechanicalPass && !d.text.startsWith('NOT FOUND (gate rejected') && shouldRunAbsence(d.text)
     if (!triggered) return d
-    const fr = await ask([{ role: 'user', content: PROMPT_FACTS(item.question) }], { format: FACTS_SCHEMA, maxTokens: 300 })
-    let facts = []
-    try {
-      const txt = String(fr.content ?? '').trim().replace(/^```(?:json)?\s*([\s\S]*?)\s*```$/i, '$1')
-      facts = (JSON.parse(txt).facts ?? []).filter((f) => f && (f.entity || f.attribute))
-    } catch { /* fall back to the question as one fact */ }
-    if (!facts.length) facts = [{ entity: '', attribute: item.question }]
-    const seen = new Set(docs.map((x) => x.rel))
-    const qn = normText(item.question)
-    const candidates = []
-    for (const f of facts) {
-      const ent = normText(f.entity)
-      // drop entities the question does not actually name (model drift)
-      if (ent && !qn.includes(ent)) continue
-      const attrWords = normText(f.attribute).split(' ').filter((w) => w.length >= 4)
-      const q = `${f.entity ?? ''} ${f.attribute ?? ''}`.trim() || item.question
-      for (const hit of rank(corpus, q, 20)) {
-        if (seen.has(hit.rel) || !/\.md$/i.test(hit.rel)) continue
-        const content = readFileSync(join(corpus, hit.rel), 'utf8')
-        const cn = normText(content.slice(0, 20000))
-        const hasEntity = ent ? cn.includes(ent) : true
-        const hasAttr = attrWords.length ? attrWords.some((w) => cn.includes(w)) : true
-        if (!hasEntity || !hasAttr) continue
-        seen.add(hit.rel)
-        candidates.push(hit.rel)
-        break
-      }
+    const a = await runAbsence({ question: item.question, docs, corpusRoot: corpus, chat: ask, read: runDWith })
+    const base = a.fixed ?? d
+    const usage = { ...(base.usage ?? {}) }
+    const add = (u) => {
+      if (!u) return
+      for (const k of ['prompt_tokens', 'completion_tokens', 'total_tokens']) if (u[k] != null) usage[k] = (usage[k] ?? 0) + u[k]
+      if (u.cost != null) usage.cost = (usage.cost ?? 0) + u.cost
     }
-    const extra = candidates.slice(0, 2).map((rel) => ({ rel, content: readFileSync(join(corpus, rel), 'utf8').slice(0, 6000) }))
-    const meta = { triggered: true, facts: facts.length, candidates, fixed: false }
-    if (extra.length) {
-      const r = await runDWith([...docs, ...extra])
-      if (r.gate.mechanicalPass && !leadAbstain(r.text)) { r.absence = { ...meta, fixed: true }; return r }
+    if (a.fixed) add(d.usage)
+    add(a.usage)
+    return {
+      ...base,
+      absence: a.absence,
+      usage,
+      tokens: (base.tokens ?? 0) + (a.fixed ? (d.tokens ?? 0) : 0) + (a.usage?.total_tokens ?? 0),
+      ms: (d.ms ?? 0) + (a.ms ?? 0),
     }
-    return { ...d, absence: meta }
   }
   return { text: '', ms: 0, tokens: 0, error: 'unknown arm: ' + arm }
 }

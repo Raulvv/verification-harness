@@ -29,13 +29,19 @@ test('resolve: flags beat env beat workspace', async () => {
   } finally { rmSync(dir, { recursive: true, force: true }) }
 })
 
-test('resolve: the tier defaults to source-v45; --quote switches to v45', async () => {
+test('resolve: the tier defaults to v45 + absence; --source and --no-absence opt out', async () => {
   const dir = mkdtempSync(join(tmpdir(), 'rs3-'))
   try {
     const def = await resolveAsk({ flags: { corpus: dir, retriever: 'reference' }, env: {}, cwd: dir, probe: noEmbedder })
-    assert.equal(def.tier, 'source-v45')
+    assert.equal(def.tier, 'v45')
+    assert.equal(def.absence, true)
     const quoted = await resolveAsk({ flags: { corpus: dir, retriever: 'reference', quote: true }, env: {}, cwd: dir, probe: noEmbedder })
     assert.equal(quoted.tier, 'v45')
+    const source = await resolveAsk({ flags: { corpus: dir, retriever: 'reference', source: true }, env: {}, cwd: dir, probe: noEmbedder })
+    assert.equal(source.tier, 'source-v45')
+    assert.equal(source.absence, false)
+    const gateOnly = await resolveAsk({ flags: { corpus: dir, retriever: 'reference', noAbsence: true }, env: {}, cwd: dir, probe: noEmbedder })
+    assert.equal(gateOnly.absence, false)
     const explicit = await resolveAsk({ flags: { corpus: dir, retriever: 'reference', tier: 'full' }, env: {}, cwd: dir, probe: noEmbedder })
     assert.equal(explicit.tier, 'full')
   } finally { rmSync(dir, { recursive: true, force: true }) }
@@ -46,7 +52,7 @@ test('resolve: no corpus / no model fail loud; the default retriever is referenc
   const dir = mkdtempSync(join(tmpdir(), 'rs2-'))
   try {
     await assert.rejects(
-      resolveAsk({ flags: { corpus: dir, baseUrl: 'https://api.example/v1' }, env: {}, cwd: dir, probe: noEmbedder }),
+      resolveAsk({ flags: { corpus: dir, baseUrl: 'https://api.example/v1', model: '' }, env: {}, cwd: dir, probe: noEmbedder }),
       /no chat model/,
     )
     // the shipped default needs no embedder — it resolves even when the probe
@@ -71,7 +77,9 @@ test('resolve: no corpus / no model fail loud; the default retriever is referenc
     )
     const ref = await resolveAsk({ flags: { corpus: dir, retriever: 'reference' }, env: {}, cwd: dir, probe: noEmbedder })
     assert.equal(ref.retriever, 'reference')
-    assert.equal(ref.modelId, 'qwen3.5:4b') // safe local default
+    assert.equal(ref.modelId, 'glm-5.3-flash') // shipped default reader
+    const local = await resolveAsk({ flags: { corpus: dir, baseUrl: 'http://localhost:11434/v1' }, env: {}, cwd: dir, probe: noEmbedder })
+    assert.equal(local.modelId, 'qwen3.5:4b') // zero-config local fallback
   } finally { rmSync(dir, { recursive: true, force: true }) }
 })
 

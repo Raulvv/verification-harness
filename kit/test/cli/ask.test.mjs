@@ -1,6 +1,6 @@
 // `ask`: one question → answer + machine-checked receipt + verdict, offline
-// (the model boundary is injected). Default tier is the shipped `source-v45`
-// (Source, no quote); `--quote` switches to the full-quote `v45` tier.
+// (the model boundary is injected). Default tier is `v45` + absence; `--source`
+// opts into the lighter Source receipt; `--no-absence` is the gate-only stage.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { mkdtempSync, writeFileSync, rmSync } from 'node:fs'
@@ -15,19 +15,41 @@ const withCorpus = (fn) => {
   return fn(dir).finally(() => rmSync(dir, { recursive: true, force: true }))
 }
 
-test('ask: default source-v45 — a Source receipt, verified', async () => {
+test('ask: default v45 — a quoted receipt, verified; --source is the lighter opt-in', async () => {
   await withCorpus(async (dir) => {
     const res = await runAsk({
       question: 'what is the fact?',       flags: { corpus: dir, retriever: 'reference' }, env: {}, cwd: dir,
-      chat: stubChat({ answer: 'The fact is 42.', sources: [1], not_found: false }),
+      chat: stubChat({ answer: 'The fact is 42.', quotes: [{ doc: 1, quote: 'the fact is 42' }], not_found: false }),
     })
-    assert.equal(res.tier, 'source-v45')
+    assert.equal(res.tier, 'v45')
     assert.match(res.receipt, /Q: The fact is 42\./)
-    assert.match(res.receipt, /Source: Doc A .* · a\.md/)
-    assert.ok(!/^Quote:/m.test(res.receipt), 'source-v45 carries no Quote line')
+    assert.match(res.receipt, /Quote: the fact is 42/)
     assert.equal(res.gate.passed, true)
     assert.equal(typeof res.ms, 'number')
     assert.match(formatAsk(res), /[\d.]+ s\)/) // … tok · 12.3 s)
+  })
+})
+
+test('ask --source: the Source receipt, no Quote line', async () => {
+  await withCorpus(async (dir) => {
+    const res = await runAsk({
+      question: 'what is the fact?',       flags: { corpus: dir, source: true, retriever: 'reference' }, env: {}, cwd: dir,
+      chat: stubChat({ answer: 'The fact is 42.', sources: [1], not_found: false }),
+    })
+    assert.equal(res.tier, 'source-v45')
+    assert.ok(!/^Quote:/m.test(res.receipt), 'source-v45 carries no Quote line')
+    assert.equal(res.gate.passed, true)
+  })
+})
+
+test('ask --no-absence: the gate-only stage', async () => {
+  await withCorpus(async (dir) => {
+    const res = await runAsk({
+      question: 'what is the secret?',       flags: { corpus: dir, noAbsence: true, retriever: 'reference' }, env: {}, cwd: dir,
+      chat: stubChat({ answer: 'NOT FOUND', quotes: [], not_found: true }),
+    })
+    assert.equal(res.absence, null)
+    assert.equal(res.gate.passed, true)
   })
 })
 
@@ -90,7 +112,7 @@ test('ask: a fabricated quote (--quote tier) is rejected', async () => {
 test('ask: a lexical grounding hint is non-authoritative (never a pass/fail)', async () => {
   await withCorpus(async (dir) => {
     const res = await runAsk({
-      question: 'what is the fact?', flags: { corpus: dir, retriever: 'reference' }, env: {}, cwd: dir,
+      question: 'what is the fact?', flags: { corpus: dir, source: true, retriever: 'reference' }, env: {}, cwd: dir,
       chat: stubChat({ answer: 'Brock used Charmander.', sources: [1], not_found: false }),
     })
     assert.equal(res.abstained, false) // the hint never forces an abstention
@@ -103,7 +125,7 @@ test('ask: a lexical grounding hint is non-authoritative (never a pass/fail)', a
 test('ask --sufficient: an INSUFFICIENT verdict abstains; SUFFICIENT keeps the answer', async () => {
   await withCorpus(async (dir) => {
     const base = {
-      question: 'what is the fact?', flags: { corpus: dir, retriever: 'reference', sufficient: true }, env: {}, cwd: dir,
+      question: 'what is the fact?', flags: { corpus: dir, source: true, retriever: 'reference', sufficient: true }, env: {}, cwd: dir,
       chat: stubChat({ answer: 'The fact is 42.', sources: [1], not_found: false }),
     }
     const insufficient = await runAsk({ ...base, judgeFn: async () => 'INSUFFICIENT' })
@@ -121,7 +143,7 @@ test('ask --sufficient: an INSUFFICIENT verdict abstains; SUFFICIENT keeps the a
 test('ask --sufficient --unverified: an INSUFFICIENT verdict keeps the answer, flagged unverified', async () => {
   await withCorpus(async (dir) => {
     const base = {
-      question: 'what is the fact?', flags: { corpus: dir, retriever: 'reference', sufficient: true, unverified: true }, env: {}, cwd: dir,
+      question: 'what is the fact?', flags: { corpus: dir, source: true, retriever: 'reference', sufficient: true, unverified: true }, env: {}, cwd: dir,
       chat: stubChat({ answer: 'The fact is 42.', sources: [1], not_found: false }),
     }
     const res = await runAsk({ ...base, judgeFn: async () => 'INSUFFICIENT' })
@@ -138,7 +160,7 @@ test('ask --sufficient --unverified: an INSUFFICIENT verdict keeps the answer, f
 test('ask --json emits the receipt, the verdict and the timing', async () => {
   await withCorpus(async (dir) => {
     const res = await runAsk({
-      question: 'what is the fact?', flags: { corpus: dir, retriever: 'reference' }, env: {}, cwd: dir,
+      question: 'what is the fact?', flags: { corpus: dir, source: true, retriever: 'reference' }, env: {}, cwd: dir,
       chat: stubChat({ answer: 'The fact is 42.', sources: [1], not_found: false }),
     })
     const j = JSON.parse(formatAsk(res, { json: true }))
@@ -150,7 +172,7 @@ test('ask --json emits the receipt, the verdict and the timing', async () => {
 
 test('ask --sufficient graded gate: score bands -> verified / unverified / not_found', async () => {
   await withCorpus(async (dir) => {
-    const base = { question: 'what is the fact?', flags: { corpus: dir, retriever: 'reference', sufficient: true }, env: {}, cwd: dir, chat: stubChat({ answer: 'The fact is 42.', sources: [1], not_found: false }) }
+    const base = { question: 'what is the fact?', flags: { corpus: dir, source: true, retriever: 'reference', sufficient: true }, env: {}, cwd: dir, chat: stubChat({ answer: 'The fact is 42.', sources: [1], not_found: false }) }
     assert.equal((await runAsk({ ...base, gradeFn: async () => 5 })).state, 'verified')
     assert.equal((await runAsk({ ...base, gradeFn: async () => 2 })).state, 'unverified')
     const nf = await runAsk({ ...base, gradeFn: async () => 1 })

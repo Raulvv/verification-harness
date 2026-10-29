@@ -5,12 +5,14 @@ Runner: `bench/arm-compare.mjs`. Offline plumbing check: `node bench/arm-compare
 | Arm | What it is |
 |---|---|
 | A | naive: question only |
-| B | RAG, shared top-k window, "cite the file / NOT FOUND" prompt |
-| C | B + entailment check (MiniCheck-style `--judge-model`, or any detector via `--judge-cmd`); INSUFFICIENT => abstain |
-| D | the harness on the same K-doc window (`askOneShot`, contract reader + mechanical gate); gate rejection = abstention |
+| Q | retrieval + "quote every claim" prompt, ungated (the fair citation baseline) |
+| DA | the current harness: quote contract + mechanical gate + absence check |
+| B | RAG, shared top-k window, "cite the file / NOT FOUND" prompt (opt-in) |
+| C | B + entailment check (MiniCheck-style `--judge-model`, or any detector via `--judge-cmd`); INSUFFICIENT => abstain (opt-in) |
+| D | gate-only stage / ablation on the same window; `--no-absence` in the CLI |
 
 Same reader, corpus and retrieval window in every arm (`--k`, reference retriever);
-D now receives the exact B/C window and applies `verify()` before scoring.
+the default arms are `A,Q,DA`; B/C/D are opt-in; D is the gate-only ablation.
 
 ## Protocol (fix before running)
 
@@ -20,7 +22,9 @@ D now receives the exact B/C window and applies `verify()` before scoring.
    or incompletely-flagged partial question, shown as if it were fine. Secondary: answerable
    accuracy, unanswerable abstention, partial-correct, tokens/question and seconds/question
    (both recorded per row by the runner).
-4. Scoring is mechanical (gold value present, abstention flagged). It is stricter than a
+4. The ranked all-arms tables (A/Q/DA/D*/27B) are in `ARM-COMPARE-REPORT.md`; the
+   current harness is DA, not a separate D competitor.
+5. Scoring is mechanical (gold value present, abstention flagged). It is stricter than a
    human on paraphrase: spot-check 20 rows by hand and report the disagreement rate.
 
 ## Decision rule

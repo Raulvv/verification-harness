@@ -15,3 +15,8 @@ __pycache__/
 
 # local working drafts (article/email) — never published from this tree
 drafts/
+
+# local secrets
+.env
+.env.*
+!.env.example

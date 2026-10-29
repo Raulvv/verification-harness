@@ -20,8 +20,12 @@ One private repo, 27 golden questions / 81 points:
 
 ## Current public numbers
 
-OOH held-out (100 items, flash-tier reader, one seed): the harness +
-gate answers 27/40 answerable correct at **2%** audited wrong-shown versus
-**8%** for plain RAG with citations, at 46/100 vs 55/100 coverage. See the evidence
+Ranked pilot-v2 (20 items, 3 seeds, 5 readers; current harness DA):
+Sonnet 60/60, GLM 59/60, GLM-Flash 58/60, DeepSeek 58/60, 27B local 54/60,
+4B 45/60. DA is the best total on every reader; the 27B matches the hosted DA
+on answerable/unanswerable/wrong but loses partials. The OOH held-out (100
+items, one seed, pre-fix) remains 27/40 answerable, 2/100 audited wrong-shown
+versus B's 8/100, 46/100 vs 55/100 coverage; the current DA has not run there.
+See the evidence
 summary in the root `README.md` and the benchmark details in
 `bench/ooh-README.md`.

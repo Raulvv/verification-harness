@@ -7,11 +7,15 @@
 import { resolve } from 'node:path'
 import { findWorkspace, corpusOf } from './workspace.mjs'
 
-const DEFAULT_BASE = 'http://localhost:11434/v1'
+const DEFAULT_BASE = 'https://opencode.ai/inference/openai/v1'
 const DEFAULT_EMBED = 'nomic-embed-text'
+const DEFAULT_MODEL = 'glm-5.3-flash'
+const DEFAULT_API_KEY_ENV = 'OPENCODE_API_KEY'
 const DEFAULT_LOCAL_MODEL = 'qwen3.5:4b'
-const DEFAULT_TIER = 'source-v45'
+const DEFAULT_TIER = 'v45'
+const SOURCE_TIER = 'source-v45'
 const QUOTE_TIER = 'v45'
+const DEFAULT_ABSENCE = true
 const DEFAULT_RETRIEVER = 'reference'
 const DEFAULT_JUDGE = 'qwen3.5:9b'
 
@@ -43,11 +47,12 @@ export async function resolveAsk({ flags = {}, env = process.env, cwd = process.
   // OLLAMA_URL) — independent of the chat model's base URL. Probe THERE, never
   // the chat endpoint.
   const embedBaseUrl = env.OLLAMA_URL ?? wc.embedBaseUrl ?? 'http://localhost:11434'
-  const tier = flags.quote ? QUOTE_TIER : (flags.tier ?? wc.tier ?? DEFAULT_TIER)
   const ollama = isOllamaUrl(baseUrl)
-  const apiKey = flags.apiKey ?? env.RETRIEVAL_API_KEY ?? (ollama ? 'ollama' : null)
-  const apiKeyEnv = flags.apiKeyEnv ?? wc.apiKeyEnv ?? null
-  const model = flags.model ?? env.RETRIEVAL_MODEL ?? wc.model ?? (ollama ? DEFAULT_LOCAL_MODEL : null)
+  const tier = flags.source ? SOURCE_TIER : flags.quote ? QUOTE_TIER : (flags.tier ?? wc.tier ?? DEFAULT_TIER)
+  const absence = flags.noAbsence ? false : flags.source || tier === SOURCE_TIER ? false : (flags.absence ?? wc.absence ?? DEFAULT_ABSENCE)
+  const apiKeyEnv = flags.apiKeyEnv ?? wc.apiKeyEnv ?? (ollama ? null : DEFAULT_API_KEY_ENV)
+  const apiKey = flags.apiKey ?? env.RETRIEVAL_API_KEY ?? (ollama ? 'ollama' : (apiKeyEnv && env[apiKeyEnv]) ? env[apiKeyEnv] : null)
+  const model = flags.model ?? env.RETRIEVAL_MODEL ?? wc.model ?? (ollama ? DEFAULT_LOCAL_MODEL : DEFAULT_MODEL)
 
   const corpusRoot = flags.corpus ? resolve(cwd, flags.corpus) : ws ? corpusOf(ws) : null
   if (!corpusRoot) {
@@ -59,11 +64,12 @@ export async function resolveAsk({ flags = {}, env = process.env, cwd = process.
   if (!apiKey && !apiKeyEnv && env.RETRIEVAL_API_KEY == null && !ollama) {
     throw new Error('no api key — set RETRIEVAL_API_KEY, pass --api-key-env <VAR>, or point --base-url at a local model')
   }
-  // A named key that is not actually exported is the classic sealed-workspace
-  // trap: the workspace records the NAME, so resolve must verify the VALUE is
-  // present. Failing here keeps a dead call from masquerading as an abstention.
-  if (apiKeyEnv && !env[apiKeyEnv] && !apiKey) {
-    throw new Error(`no api key — ${apiKeyEnv} is not set (named in the workspace; export it in this shell or pass --api-key-env)`)
+  // An explicitly named key (flag or workspace) must be exported here: a dead
+  // name is the sealed-workspace trap. The shipped default (OPENCODE_API_KEY) is
+  // checked lazily at the model call so injected/offline chats still work.
+  const explicitKeyEnv = flags.apiKeyEnv ?? wc.apiKeyEnv
+  if (explicitKeyEnv && !env[explicitKeyEnv] && !apiKey) {
+    throw new Error(`no api key — ${explicitKeyEnv} is not set (named in the workspace; export it in this shell or pass --api-key-env)`)
   }
 
   // The shipped default is `reference` — deterministic, embedder-free, and the
@@ -106,5 +112,5 @@ export async function resolveAsk({ flags = {}, env = process.env, cwd = process.
   const gateHi = Number(flags.hi ?? env.RETRIEVAL_GATE_HI ?? wc.gateHi ?? 5)
   // Optional corpus allowlist (the battery restricts to a named file set).
   const corpusFiles = flags.files ? String(flags.files).split(',').map((s) => s.trim()).filter(Boolean) : (wc.files ?? null)
-  return { corpusRoot, model: { baseUrl, apiKey: apiKey ?? undefined, apiKeyEnv: apiKeyEnv ?? undefined, model }, modelId: model, embedModel, retriever, tier, sufficient, unverified, judge, judgeCmd, judgeEvidence, gateLo, gateHi, corpusFiles }
+  return { corpusRoot, model: { baseUrl, apiKey: apiKey ?? undefined, apiKeyEnv: apiKeyEnv ?? undefined, model }, modelId: model, embedModel, retriever, tier, absence, sufficient, unverified, judge, judgeCmd, judgeEvidence, gateLo, gateHi, corpusFiles }
 }

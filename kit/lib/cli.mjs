@@ -32,17 +32,17 @@ export function validateFlags(flags, valid, { booleans = [] } = {}) {
 export const ASK_FLAGS = [
   'aggregate', 'apiKey', 'apiKeyEnv', 'baseUrl', 'corpus', 'embedModel', 'files',
   'grounding', 'hi', 'judge', 'judgeBaseUrl', 'judgeCmd', 'judgeEvidence', 'json',
-  'lo', 'maxQuotesPerDoc', 'minimalReceipt', 'model', 'noGrounding', 'quote', 'retriever', 'spec',
+  'lo', 'maxQuotesPerDoc', 'minimalReceipt', 'model', 'noAbsence', 'noGrounding', 'quote', 'retriever', 'source', 'spec',
   'sufficient', 'table', 'tier', 'unverified',
 ]
-export const ASK_BOOLEAN = ['aggregate', 'json', 'minimalReceipt', 'noGrounding', 'quote', 'sufficient', 'unverified']
+export const ASK_BOOLEAN = ['aggregate', 'json', 'minimalReceipt', 'noAbsence', 'noGrounding', 'quote', 'source', 'sufficient', 'unverified']
 
 // The config surface (runConfig).
 export const CONFIG_FLAGS = [
-  'apiKey', 'apiKeyEnv', 'at', 'baseUrl', 'corpus', 'embedModel',
-  'model', 'retriever', 'reset', 'show', 'tier',
+  'absence', 'apiKey', 'apiKeyEnv', 'at', 'baseUrl', 'corpus', 'embedModel',
+  'model', 'noAbsence', 'retriever', 'reset', 'show', 'source', 'tier',
 ]
-export const CONFIG_BOOLEAN = ['reset', 'show']
+export const CONFIG_BOOLEAN = ['noAbsence', 'reset', 'show', 'source']
 
 // Collect `--multi a b c` groups, `--single value` options and bare
 // positionals, preserving order. Behaviour matches the hand-rolled loops it

@@ -8,6 +8,7 @@ import { parseAnswer, ABSTAIN_TERMS } from '../receipts/text.mjs'
 import { ungroundedTerms } from '../receipts/grounding.mjs'
 import { judgeSufficiency, judgeByCommand, judgeGrade } from '../receipts/sufficiency.mjs'
 import { judgeEvidenceFor } from '../receipts/evidence.mjs'
+import { runAbsence, shouldRunAbsence } from '../answer/absence.mjs'
 import { resolveAsk } from './resolve.mjs'
 import { validateFlags, ASK_FLAGS, ASK_BOOLEAN } from '../cli.mjs'
 
@@ -20,16 +21,46 @@ export async function runAsk({ question, flags = {}, env = process.env, cwd = pr
   }
   const started = Date.now()
   const r = await resolveAsk({ flags, env, cwd, probe })
-  const res = await askOneShot(r.model, r.corpusRoot, String(question).trim(), {
-    retriever: r.retriever,
-    promptStyle: r.tier,
-    corpus: r.corpusFiles ?? undefined,
-    minimizeReceipt: flags.minimalReceipt === true,
-    maxQuotesPerDoc: flags.maxQuotesPerDoc != null ? Number(flags.maxQuotesPerDoc) : undefined,
-    _chat: chat,
-    _embed: embed,
-  })
-  const text = res.final?.text ?? ''
+  const read = async (docs) => {
+    const t0 = Date.now()
+    const out = await askOneShot(r.model, r.corpusRoot, String(question).trim(), {
+      retriever: r.retriever,
+      promptStyle: r.tier,
+      corpus: r.corpusFiles ?? undefined,
+      minimizeReceipt: flags.minimalReceipt === true,
+      maxQuotesPerDoc: flags.maxQuotesPerDoc != null ? Number(flags.maxQuotesPerDoc) : undefined,
+      ...(Array.isArray(docs) ? { docs } : {}),
+      _chat: chat,
+      _embed: embed,
+    })
+    const receipt = out.final?.text ?? ''
+    const gateItem = { id: 'q', question, not_found: out.parsed?.notFound ?? true }
+    const gate = verify(gateItem, receipt, r.corpusRoot, { citations: out.citations })
+    const text = gate.mechanicalPass ? (parseAnswer(receipt).proposed || receipt) : 'NOT FOUND (gate rejected: ' + gate.why + ')'
+    return { ...out, receipt, gate, text, ms: Date.now() - t0 }
+  }
+  let res = await read()
+  let absence = null
+  if (r.absence && res.gate?.mechanicalPass && !res.text.startsWith('NOT FOUND (gate rejected') && shouldRunAbsence(res.text)) {
+    const first = res
+    const a = await runAbsence({ question, docs: res.docs ?? [], corpusRoot: r.corpusRoot, chat, read })
+    absence = a.absence
+    if (a.fixed) {
+      res = { ...a.fixed, absence: a.absence }
+      const usage = { ...(res.usage ?? {}) }
+      const add = (u) => {
+        if (!u) return
+        for (const k of ['prompt_tokens', 'completion_tokens', 'total_tokens']) if (u[k] != null) usage[k] = (usage[k] ?? 0) + u[k]
+        if (u.cost != null) usage.cost = (usage.cost ?? 0) + u.cost
+      }
+      add(first.usage)
+      add(a.usage)
+      res.usage = usage
+      res.tokens = (res.tokens ?? 0) + (first.tokens ?? 0) + (a.usage?.total_tokens ?? 0)
+      res.ms = (first.ms ?? 0) + (a.ms ?? 0)
+    }
+  }
+  const text = res.final?.text ?? res.receipt ?? ''
   // The gate judges the RECEIPT, not the model's `not_found` flag. A refusal is
   // the refusal *vocabulary* in the Q-line (the gate's own ABSTAIN_TERMS), so an
   // honest "the documents do not state…" is an abstention; a claim with
@@ -83,15 +114,16 @@ export async function runAsk({ question, flags = {}, env = process.env, cwd = pr
   const item = { id: 'q', question, not_found: abstained, candidates: [] }
   const g = readerError
     ? { mechanicalPass: false, why: `reader failed: ${readerError}` }
-    : verify(item, receipt, r.corpusRoot)
+    : verify(item, receipt, r.corpusRoot, { citations: res.citations })
   return {
     question, receipt, abstained, state, fail_reason: failReason,
     reader_error: readerError, parse_failures: res.parseFailures ?? [],
     citations: res.citations ?? [],
     gate: { passed: g.mechanicalPass, why: g.why },
-    grounding, sufficiency,
+    absence, grounding, sufficiency,
     retriever: r.retriever, tier: r.tier, model: r.modelId,
-    window: res.window ?? [], tokens: res.tokens ?? null, timings: res.timings ?? null,
+    window: res.window ?? [], tokens: res.tokens ?? null, usage: res.usage ?? null,
+    timings: { ...(res.timings ?? {}), absence_ms: absence ? (res.ms ?? 0) : 0 },
     ms: Date.now() - started, // wall time from the ask to the printed answer
   }
 }
@@ -143,8 +175,8 @@ export function formatAsk(res, { json = false } = {}) {
   if (json) {
     return JSON.stringify({
       question: res.question, receipt: res.receipt, state: res.state, fail_reason: res.fail_reason ?? null, reader_error: res.reader_error ?? null, parse_failures: res.parse_failures ?? [], retriever: res.retriever, tier: res.tier,
-      model: res.model, gate: res.gate, sufficiency: res.sufficiency, citations: res.citations ?? [], window: res.window, tokens: res.tokens,
-      timings: res.timings, ms: res.ms,
+      model: res.model, gate: res.gate, absence: res.absence ?? null, sufficiency: res.sufficiency, citations: res.citations ?? [], window: res.window, tokens: res.tokens,
+      usage: res.usage ?? null, timings: res.timings, ms: res.ms,
     }, null, 2)
   }
   const verdict = res.reader_error ? 'not checked' : res.gate.passed ? 'verified' : 'rejected'
