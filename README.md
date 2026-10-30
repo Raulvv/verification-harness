@@ -44,6 +44,35 @@ What you get is a property: **every shown answer can be independently
 re-verified by a human or a script in seconds**, today and after the corpus,
 the model, and the vendor have changed.
 
+## Current result — held-out 100 (GLM-5.3-Flash, one seed, v2 labels)
+
+| Arm | Ans | Partial | Unans | Wrong | Total |
+|---|---:|---:|---:|---:|---:|
+| A bare | 15/40 | 4/20 | 27/40 | 44/100 | 46 |
+| B status quo | 27/40 | **19/20** | 36/40 | 9/100 | 82 |
+| Q quote prompt | 26/40 | 8/20 | 35/40 | 13/100 | 69 |
+| D gate only | 29/40 | 14/20 | **40/40** | 8/100 | 83 |
+| DA current harness | **31/40** | 17/20 | **40/40** | **6/100** | **88** |
+
+Tiers, not a precise order: the current harness **DA 88** is the best held-out
+total; **D 83** and the status quo **B 82** are the next tier; **Q 69** is the
+quote prompt without the gate; **A 46** is bare. DA is **+6 total and −3 false
+accepts vs B**, but **−2 partials**; Q is **−13 and +4 false accepts vs B**,
+so the quote prompt alone hurts this reader. The gate alone is nearly flat
+(D 83 vs B 82, −1 false accept); the absence check adds the rest. On the 20-item
+pilot the **4B reverses: B 51 > DA 45**, and the **27B ties at 54** (B 12/12
+partials/3 false vs DA 6/12/0). Cost: DA $0.08/100, 7.9 s/q; B $0.05/100,
+3.2 s/q; Q $0.05; D $0.04. The held-out is one seed; the pilot is 3 seeds and
+is the development fit. The support audit is AI-assisted manual adjudication,
+not an independent human rater; a human second rater is a resource ask.
+
+The kill rule: proceed only if wrong-shown is no worse than the current RAG,
+coverage is at least 80% of the reachable ceiling, and cost is within the
+current setup. If your reader is cautious (errors are false absences, not
+fabrications), or you do not need an independent audit trail, plain RAG with
+citations is cheaper. The harness is an assurance layer, not an accuracy
+upgrade.
+
 **What the gate checks** — file exists at the cited path, title and date match
 the resolved metadata, the quote exists (tolerant matcher by default; literal
 byte-for-byte with `--strict`), and an abstention has the right shape. **What
@@ -218,7 +247,7 @@ An unknown `--retriever` value is refused rather than silently degraded. The
 retriever is a swappable layer: the quote gate applies to whatever window the
 retriever returns.
 
-## The OOH benchmark — the frozen corpus; the ranked pilot is the current baseline
+## The OOH benchmark — historical held-out (pre-fix) and the current ranked pilot
 
 The benchmark is a closed-corpus, document-grounded, factual/calculated/
 abstention evaluation built from 48 BLS Occupational Outlook Handbook pages
@@ -236,9 +265,9 @@ retrieved K=3 window.
 | C — B + entailment judge | 20/40 | 3/100 | 5/20 | 28/100 |
 | D — quote contract + gate | 27/40 | **2/100** | 17/20 | 46/100 |
 
-> **Pre-fix held-out record.** This table predates the partial-rule fix; the
-> current harness (DA) has not run on the held-out 100. It is not the headline;
-> the ranked pilot below is the best consolidation until the rerun.
+> **Historical held-out record.** This B/C/D table predates the partial-rule
+> fix and the current DA harness. The current held-out result is at the top;
+> the ranked pilot below is the development fit.
 
 D tied plain RAG on answerable accuracy, abstained correctly on 40/40
 unanswerable items, and showed fewer wrong answers (2 vs 8). Its correct shown

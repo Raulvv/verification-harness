@@ -14,30 +14,35 @@ const ITEMS = new Map(
 const R = 'bench/results'
 const FILES = {
   '4B qwen3.5': {
+    B: `${R}/arm-compare-qwen35-4b-b-pilot-v2.jsonl`,
     A: `${R}/arm-compare-qwen35-4b-aq-pilot-v2.jsonl`,
     Q: `${R}/arm-compare-qwen35-4b-aq-pilot-v2.jsonl`,
     D: `${R}/arm-compare-qwen35-4b-absence-pilot-v2.jsonl`,
     DA: `${R}/arm-compare-qwen35-4b-absence-pilot-v2.jsonl`,
   },
   'Sonnet 5.5': {
+    B: `${R}/arm-compare-sonnet55-b-pilot-v2.jsonl`,
     A: `${R}/arm-compare-sonnet55-a-pilot-v2.jsonl`,
     Q: `${R}/arm-compare-sonnet55-citation-pilot-v2.jsonl`,
     D: `${R}/arm-compare-sonnet55-absence2-pilot-v2.jsonl`,
     DA: `${R}/arm-compare-sonnet55-absence2-pilot-v2.jsonl`,
   },
   'GLM-5.3': {
+    B: `${R}/arm-compare-glm53-b-pilot-v2.jsonl`,
     A: `${R}/arm-compare-glm53-aq-pilot-v2.jsonl`,
     Q: `${R}/arm-compare-glm53-aq-pilot-v2.jsonl`,
     D: `${R}/arm-compare-glm53-absence-pilot-v2.jsonl`,
     DA: `${R}/arm-compare-glm53-absence-pilot-v2.jsonl`,
   },
   'GLM-5.3-Flash': {
+    B: `${R}/arm-compare-glm53flash-b-pilot-v2.jsonl`,
     A: `${R}/arm-compare-glm53flash-aq-pilot-v2.jsonl`,
     Q: `${R}/arm-compare-glm53flash-aq-pilot-v2.jsonl`,
     D: `${R}/arm-compare-glm53flash-absence-pilot-v2.jsonl`,
     DA: `${R}/arm-compare-glm53flash-absence-pilot-v2.jsonl`,
   },
   'DeepSeek V4.1 Flash': {
+    B: `${R}/arm-compare-flash-pilot-v2.jsonl`,
     A: `${R}/arm-compare-flash-pilot-v2.jsonl`,
     Q: `${R}/arm-compare-flash-citation-pilot-v2.jsonl`,
     D: `${R}/arm-compare-flash-absence2-pilot-v2.jsonl`,
@@ -163,7 +168,7 @@ for (const reader of Object.keys(LOCAL)) {
 
 const RANKED = []
 for (const reader of Object.keys(FILES)) {
-  for (const arm of ['A', 'Q', 'DA', 'D']) {
+  for (const arm of ['A', 'B', 'Q', 'DA', 'D']) {
     RANKED.push({ reader, arm: arm === 'D' ? 'D*' : arm, s: stats(rows(FILES[reader][arm], arm)) })
   }
 }

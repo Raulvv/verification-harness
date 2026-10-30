@@ -13,3 +13,4 @@ jobs:
           node-version: 20
       - run: npm run ooh:test
       - run: npm run kit:test
+      - run: npm run manifest:check

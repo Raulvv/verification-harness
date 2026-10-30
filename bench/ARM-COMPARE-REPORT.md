@@ -9,11 +9,35 @@ used.
 - Run code: `2e0f500` (v1.1.8) — same K=3 window, D-gate.
 - Scorer: `1d4c16c` (v1.1.11) + v2 label/scorer fixes.
 - Label file v2: `c0a0a8e38de7e3be8f213892b66ad4e43db0f854605f5896975860305a6d7081`
-- Held-out output: `46de107ab35c03468f6fbe16115936175950c7a70e315bced68f228f4fcea49e`
+- Held-out output: `46de107ab35c03468f6fbe16115936175950c7a70e315bced68f228f4fcea49e` (old pre-fix); current rerun output is private/gitignored
 - Filled v2 audit sheet: `b11d2b5b5d7c04670c1ec2d67197a22d49d1bd35b56d4c099e3b2db8d2a7ce4a`
 - Second-rater results: `9516baecb9b84e5543d4a43e334b6d03f0738e8caa250445f96690ebb0a8b47e`
 - Config hash (post hoc): `0d563d0054fed50300665e43eb53e3922cd7b3a5317830c1939ef79872287b03`
 - Not pre-registered; one seed; n=100. Treat intervals as descriptive.
+
+## Held-out 100 — current harness (2026-10-30)
+
+GLM-5.3-Flash, one seed, v2 labels, frozen questions. Labels hash
+`c0a0a8e38de7e3be8f213892b66ad4e43db0f854605f5896975860305a6d7081`;
+output `bench/results/arm-compare-heldout-glm53flash-v2.jsonl` (private,
+gitignored). C dropped.
+
+| Arm | Ans | Partial | Unans | Wrong | Total |
+|---|---:|---:|---:|---:|---:|
+| A bare | 15/40 | 4/20 | 27/40 | 44/100 | 46 |
+| B status quo | 27/40 | **19/20** | 36/40 | 9/100 | 82 |
+| Q quote prompt | 26/40 | 8/20 | 35/40 | 13/100 | 69 |
+| D gate only | 29/40 | 14/20 | **40/40** | 8/100 | 83 |
+| DA current harness | **31/40** | 17/20 | **40/40** | **6/100** | **88** |
+
+- **DA is the best held-out total; B is the status quo.** DA +6 total, −3
+  false accepts vs B, but −2 partials. Q is negative vs B (−13 total, +4 false
+  accepts); the quote contract alone hurts this reader. D is nearly flat vs B
+  (83 vs 82, −1 false accept); the absence check adds the rest.
+- **The 4B reverses on the pilot** (B 51 > DA 45); **the 27B ties** (B 54, DA
+  54; B 12/12 partials/3 false, DA 6/12/0).
+- One seed; the pilot is 3 seeds and is the development fit. The support audit
+  is AI-assisted manual adjudication, not an independent human rater.
 
 ## Latest comparison — ranked all arms (pilot-v2)
 
@@ -746,10 +770,10 @@ recorded.
    partials, 1/60 wrong, 97% coverage, at roughly one-seventh the cost of full
    GLM. Its Q is the worst of the five (19/24, 6/12, 15/24 unanswerable, 20/60
    wrong, 53% coverage); the harness, not the label, stabilizes it.
-4. **The gate cuts wrong-shown for fabricating readers** (held-out 8→2;
-   GLM-5.3 full 3→0), but does not fix false absences or wrong answers that
-   carry a valid quote. DA addresses some false absences; it is mixed on Flash
-   and fails on the 4B.
+4. **The gate cuts wrong-shown for fabricating readers** (current held-out:
+   B 9/100, Q 13/100, D 8/100, DA 6/100), but does not fix false absences or
+   wrong answers that carry a valid quote. DA addresses some false absences; it
+   is mixed on Flash and fails on the 4B (pilot B 51 > DA 45).
 5. **The simple quote prompt is reader-dependent.** Q is 95–100% exact and
    positive-claim support is high, but it covers only 66.7% (Flash) / 88.2%
    (Sonnet) / 53% (GLM-Flash) of required evidence and leaves answers unquoted.
