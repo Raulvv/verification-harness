@@ -3,9 +3,17 @@ import { ABSTAIN_TERMS, norm, numbersIn, leadAbstain } from '../../kit/lib/recei
 export { leadAbstain }
 
 const hasAbstain = (t) => ABSTAIN_TERMS.some((m) => norm(t).includes(m)) || /\b(?:do|does) not (?:provide|state|list|report|include|contain|specify)\b/i.test(t)
-const valueIn = (text, v) => typeof v === 'number'
-  ? numbersIn(text).includes(String(v)) || numbersIn(text).includes(String(v).replace(/(\d)(?=(\d{3})+$)/g, '$1'))
-  : norm(text).includes(norm(String(v)))
+const valueIn = (text, v) => {
+  if (typeof v === 'number') {
+    return numbersIn(text).includes(String(v)) || numbersIn(text).includes(String(v).replace(/(\d)(?=(\d{3})+$)/g, '$1'))
+  }
+  const raw = String(v)
+  if (norm(text).includes(norm(raw))) return true
+  const pct = raw.match(/^(-?\d+(?:\.\d+)?)\s*%$/)
+  if (!pct) return false
+  const n = pct[1].replace('.', '\\.')
+  return new RegExp(`(^|[^0-9.])${n}\\s*(?:%|percent)\\b`, 'i').test(text)
+}
 const goldIn = (text, gold) => {
   if (gold && typeof gold === 'object') {
     if (gold.winner != null && !norm(text).includes(norm(String(gold.winner)))) return false

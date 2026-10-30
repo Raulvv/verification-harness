@@ -1,7 +1,7 @@
 // Text primitives for receipts: the one normalization, the one evidence
 // matcher, the answer parser, the abstention shape and vocabulary — shared
 // by the gate and the scorer so the two cannot drift.
-export const norm = (s) => (s ?? '').replace(/[\u200b-\u200d\ufeff]/g, '').replace(/[`*_"'“”«»]/g, '').replace(/\s+/g, ' ').trim().toLowerCase()
+export const norm = (s) => (s ?? '').replace(/[\u200b-\u200d\ufeff]/g, '').replace(/[`*_"'“”«»‘’]/g, '').replace(/\s+/g, ' ').trim().toLowerCase()
 
 // The single abstention vocabulary: the scorer's not-found branch and the
 // gate's abstention detection both read it.

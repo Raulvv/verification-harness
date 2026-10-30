@@ -16,8 +16,8 @@
 //   node bench/arm-compare.mjs --fake     # offline plumbing self-test, no models
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { join, resolve, dirname } from 'node:path'
-import { selectByReference } from '../kit/lib/retrieval/window.mjs'
 import { askOneShot } from '../kit/lib/answer/oneshot.mjs'
+import { askAggregate } from '../kit/lib/answer/aggregate.mjs'
 import { runAbsence, shouldRunAbsence } from '../kit/lib/answer/absence.mjs'
 import { chatWithUsage } from '../kit/lib/model.mjs'
 import { judgeSufficiency, judgeByCommand } from '../kit/lib/receipts/sufficiency.mjs'
@@ -27,6 +27,8 @@ import { parseOneShot } from '../kit/lib/answer/parse.mjs'
 import { ONESHOT_SCHEMA } from '../kit/lib/answer/prompt.mjs'
 import { score, wilson, leadAbstain } from './lib/arm-score.mjs'
 import { citationStats, splitClaims, computedHolds } from './lib/cite-score.mjs'
+import { loadRows, isGlobalItem, globalSpec, baseFor, expectedFor, formatField, receiptLine, legsFor } from './lib/ooh-rows.mjs'
+import { windowDocs } from './lib/doc-window.mjs'
 
 const argv = process.argv.slice(2)
 const flag = (n) => argv.includes('--' + n)
@@ -36,6 +38,13 @@ const arms = opt('arms', 'A,Q,DA').split(',')
 const seeds = Number(opt('seeds', FAKE ? 1 : 3))
 const K = Number(opt('k', 3))
 const MAX_TOKENS = Number(opt('max-tokens', 400)) // reasoning readers need headroom; documented in the report
+const DOC_CHARS = Number(opt('doc-chars', 20000))
+const DOC_MODE = opt('doc-mode', 'excerpt')
+if (!['head', 'full', 'excerpt'].includes(DOC_MODE)) throw new Error('--doc-mode must be head, full or excerpt')
+const AGGREGATE = opt('aggregate', 'off')
+if (!['off', 'table', 'pages'].includes(AGGREGATE)) throw new Error('--aggregate must be off, table or pages')
+const AGGREGATE_DATA = opt('aggregate-data', 'bench/ooh-data.json')
+const IDS = opt('ids') ? new Set(opt('ids').split(',').filter(Boolean)) : null
 const corpus = resolve(opt('corpus', 'bench/corpus/ooh-v1'))
 const qfile = opt('questions', 'bench/ooh-pilot.jsonl')
 const outPath = opt('out', 'bench/results/arm-compare.jsonl')
@@ -47,7 +56,7 @@ const reader = { label: 'reader', baseUrl, model: opt('model', 'qwen3.5:4b'), ap
 const judge = { label: 'judge', baseUrl: judgeBaseUrl, model: opt('judge-model', reader.model), apiKeyEnv, apiKey: isOllama(judgeBaseUrl) ? 'ollama' : undefined }
 const judgeCmd = opt('judge-cmd')
 
-const items = readFileSync(qfile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))
+const items = readFileSync(qfile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)).filter((item) => !IDS || IDS.has(item.id))
 
 // ---------- model plumbing (injectable for --fake) ----------
 const tok = (u) => (u?.prompt_tokens ?? 0) + (u?.completion_tokens ?? 0)
@@ -61,8 +70,7 @@ const fakeChat = (item) => async (msgs) => {
 }
 const chat = (item) => FAKE ? fakeChat(item) : (msgs, o) => chatWithUsage(reader, msgs, { maxTokens: MAX_TOKENS, think: false, ...o })
 
-const window_ = (item) => selectByReference(corpus, item.question).candidates.slice(0, K)
-  .map((c) => ({ rel: c.rel, content: readFileSync(join(corpus, c.rel), 'utf8').slice(0, 6000) }))
+const window_ = (item) => windowDocs(corpus, item.question, { k: K, docChars: DOC_CHARS, mode: DOC_MODE })
 const docsBlock = (docs) => docs.map((d, i) => `[${i + 1}] ${d.rel}\n${d.content}`).join('\n\n')
 const PROMPT_B = (q, docs) => [
   'Answer using ONLY the documents. Name the source file.',
@@ -98,15 +106,58 @@ async function supportFor(item, answer, quotesText) {
   return { positive, supported, computed, computedOk, absence }
 }
 
+let aggregateSourceCache = null
+const aggregateSource = () => aggregateSourceCache ??= loadRows({
+  source: AGGREGATE === 'pages' ? 'pages' : 'table',
+  dataPath: AGGREGATE_DATA,
+  corpusRoot: corpus,
+})
+function runAggregate(item) {
+  const t0 = Date.now()
+  const source = aggregateSource()
+  const spec = globalSpec(item.question)
+  const base = baseFor(source, spec)
+  const result = askAggregate({
+    expected: expectedFor(source, spec),
+    rows: base,
+    spec,
+    question: item.question,
+    formatField,
+    receiptLine,
+    legsFor,
+  })
+  return {
+    text: result.answer,
+    rawAnswer: result.answer,
+    rawQuotes: [],
+    receipt: result.final.text,
+    gate: null,
+    citations: [],
+    usage: {},
+    tokens: 0,
+    ms: Date.now() - t0,
+    aggregate: {
+      ...result.aggregate,
+      source: source.meta.source,
+      coverage: result.coverage,
+      citation_breadth: result.citation_breadth,
+      receipt: result.final.text,
+      legs: result.legs,
+    },
+  }
+}
+
 // D: the harness on the SAME docs as B/C, then the mechanical gate.
 // A gate rejection is an abstention; a gate pass is the only shown answer.
 async function runArm(arm, item) {
+
   const t0 = Date.now()
   const ask = chat(item)
   if (arm === 'A') {
     const r = await ask([{ role: 'user', content: 'Answer concisely. If you do not know, reply NOT FOUND.\nQuestion: ' + item.question }])
     return { text: r.content, usage: r.usage ?? {}, tokens: tok(r.usage), ms: Date.now() - t0 }
   }
+  if (arm === 'DA' && AGGREGATE !== 'off' && isGlobalItem(item)) return runAggregate(item)
   const docs = window_(item)
   if (arm === 'B' || arm === 'C') {
     const r = await ask([{ role: 'user', content: PROMPT_B(item.question, docs) }])
@@ -145,7 +196,7 @@ async function runArm(arm, item) {
     const d = await runDWith(docs)
     const triggered = d.gate.mechanicalPass && !d.text.startsWith('NOT FOUND (gate rejected') && shouldRunAbsence(d.text)
     if (!triggered) return d
-    const a = await runAbsence({ question: item.question, docs, corpusRoot: corpus, chat: ask, read: runDWith })
+    const a = await runAbsence({ question: item.question, docs, corpusRoot: corpus, chat: ask, read: runDWith, docChars: DOC_CHARS })
     const base = a.fixed ?? d
     const usage = { ...(base.usage ?? {}) }
     const add = (u) => {
@@ -171,7 +222,11 @@ const rows = []
 for (let s = 0; s < seeds; s++) for (const item of items) for (const arm of arms) {
   let out
   try { out = await runArm(arm, item) } catch (e) { out = { text: '', error: String(e.message ?? e), ms: 0, tokens: 0 } }
-  if (arm === 'Q' || arm === 'D' || arm === 'DA') {
+  if (out.aggregate) {
+    out.citationRaw = null
+    out.citationShown = null
+    out.support = null
+  } else if (arm === 'Q' || arm === 'D' || arm === 'DA') {
     const docs = window_(item)
     const shown = !leadAbstain(out.text)
     if (arm === 'Q') {
@@ -251,17 +306,21 @@ for (const arm of ['Q', 'D', 'DA']) {
 }
 if (!FAKE) {
   const Q = rows.filter((r) => r.arm === 'Q')
-  const Qc = Q.filter((r) => r.shown).map((r) => r.citationShown).filter(Boolean)
-  const qq = sum(Qc, (c) => c.quotes), qe = sum(Qc, (c) => c.exact)
-  const qcovRows = Qc.filter((c) => c.coverage.required > 0), qcov = qcovRows.filter((c) => c.coverage.complete).length
-  const Qsup = Q.filter((r) => r.support), qpos = sum(Qsup, (r) => r.support.positive), qok = sum(Qsup, (r) => r.support.supported)
-  const qExact = qq ? qe / qq : 0, qCov = qcovRows.length ? qcov / qcovRows.length : 0, qSup = qpos ? qok / qpos : 0
+  if (Q.length) {
+    const Qc = Q.filter((r) => r.shown).map((r) => r.citationShown).filter(Boolean)
+    const qq = sum(Qc, (c) => c.quotes), qe = sum(Qc, (c) => c.exact)
+    const qcovRows = Qc.filter((c) => c.coverage.required > 0), qcov = qcovRows.filter((c) => c.coverage.complete).length
+    const Qsup = Q.filter((r) => r.support), qpos = sum(Qsup, (r) => r.support.positive), qok = sum(Qsup, (r) => r.support.supported)
+    const qExact = qq ? qe / qq : 0, qCov = qcovRows.length ? qcov / qcovRows.length : 0, qSup = qpos ? qok / qpos : 0
+    console.log(`\nPRE-REGISTERED: Q exact ${(qExact*100).toFixed(1)}% coverage ${(qCov*100).toFixed(1)}% support ${(qSup*100).toFixed(1)}% -> ${qExact >= 0.95 && qCov >= 0.90 && qSup >= 0.90 ? 'PASS (simple prompt holds)' : 'FAIL (simple prompt does not hold)'}`)
+  }
   const D = rows.filter((r) => r.arm === 'D')
-  const Dc = D.map((r) => r.citationShown).filter((c) => c && c.quotes > 0)
-  const dValid = Dc.length ? Dc.filter((c) => c.all_valid).length / Dc.length : 0
-  const dWrongInvalid = D.filter((r) => r.shown && !r.correct && r.citationShown && r.citationShown.invalid > 0).length
-  console.log(`\nPRE-REGISTERED: Q exact ${(qExact*100).toFixed(1)}% coverage ${(qCov*100).toFixed(1)}% support ${(qSup*100).toFixed(1)}% -> ${qExact >= 0.95 && qCov >= 0.90 && qSup >= 0.90 ? 'PASS (simple prompt holds)' : 'FAIL (simple prompt does not hold)'}`)
-  console.log(`PRE-REGISTERED: D shown-validity ${(dValid*100).toFixed(1)}% wrong+invalid ${dWrongInvalid} -> ${dValid === 1 && dWrongInvalid === 0 ? 'PASS' : 'FAIL'}`)
+  if (D.length) {
+    const Dc = D.map((r) => r.citationShown).filter((c) => c && c.quotes > 0)
+    const dValid = Dc.length ? Dc.filter((c) => c.all_valid).length / Dc.length : 0
+    const dWrongInvalid = D.filter((r) => r.shown && !r.correct && r.citationShown && r.citationShown.invalid > 0).length
+    console.log(`PRE-REGISTERED: D shown-validity ${(dValid*100).toFixed(1)}% wrong+invalid ${dWrongInvalid} -> ${dValid === 1 && dWrongInvalid === 0 ? 'PASS' : 'FAIL'}`)
+  }
 }
 console.log(`\nrows -> ${outPath}. Intervals are Wilson 95% over seed-pooled rows (seeds are not independent questions: widen by eye).`)
 console.log('$/q and $total come from provider usage.cost when the endpoint reports it; blank when it does not.')

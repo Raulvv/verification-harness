@@ -17,3 +17,16 @@ test('arm score: partial needs stated value plus missing-part disclosure', () =>
   assert.equal(score(item, 'The US median is $61,270; Florida is not stated.').correct, true)
   assert.equal(score(item, 'The US median is $61,270.').correct, false)
 })
+
+test('arm score: percent and percent-word are equivalent for partial values', () => {
+  const item = { condition: 'partial', gold: { parts: [{ part: 'growth', value: '5%', status: 'stated' }, { part: '2010 employment', value: null, status: 'not stated' }] } }
+  assert.equal(score(item, 'Grounds Maintenance Workers are projected to grow 5 percent; the 2010 employment is not stated.').correct, true)
+})
+
+test('arm score: unicode apostrophes normalize for partial values', () => {
+  const item = {
+    condition: 'partial',
+    gold: { parts: [{ part: 'education', value: "Master's degree", status: 'stated' }, { part: '2033 openings', value: null, status: 'not stated' }] },
+  }
+  assert.equal(score(item, 'The education is a master’s degree. The documents do not state the 2033 openings.').correct, true)
+})

@@ -1,6 +1,6 @@
-# OOH benchmark specification — v1.1.15
+# OOH benchmark specification — v1.2.1
 
-Date: 2026-10-24. Package: v1.1.15, 2026-10-28. Status: frozen public package; private held-out test.
+Date: 2026-10-30. Package: v1.2.1, 2026-10-30. Status: frozen public package; private held-out test; corrected harness.
 This is the single document that defines the benchmark’s scope, labels,
 metrics, scoring, aggregation contract, baselines, and limits. If a number is
 published, this spec plus the README caveats must back it.
@@ -44,7 +44,7 @@ citation breadth/candidate coverage, deterministic aggregation, and cost.
 Test composition: **40 answerable / 20 partial / 40 unanswerable**; two global
 aggregation questions (46-candidate and 25-candidate). The test questions are in
 `bench/ooh-test-questions.jsonl`; labels are in
-`bench/results/ooh-test-private.jsonl` (gitignored).
+`bench/results/ooh-test-private-v2.jsonl` (gitignored).
 
 ## 4. Conditions
 
@@ -60,11 +60,13 @@ Answerability is **from this corpus**, not the world.
 | context | what the reader sees | purpose |
 |---|---|---|
 | table | 48-row Quick Facts table | controlled full-candidate view |
-| pages | 48 pages, fixed 12-document reference window | distractor/retrieval stress |
+| pages | 48 pages, fixed K=3 reference window | distractor/retrieval stress |
+| page excerpt | 6k head + question-relevant tail, K=3 | corrected local context |
+| full pages | all 48 pages (20k cap) | full-context ablation |
 | aggregate table | 46 paid rows, deterministic reducer | proof-carrying global answers |
 | aggregate pages | all 48 pages parsed, completeness guard | proof on documents |
 
-The page local run is not full wiki; it is a 48-page fixed-window test.
+The page local run is not full wiki; it is a 48-page fixed-window test. The 2026-10-30 correction uses `excerpt`; the old 6k head is the historical context. Full 20k pages are an ablation: they recover the annual openings but regress `088`/`089`.
 
 ## 6. Metrics
 
@@ -120,25 +122,38 @@ library is `kit/lib/answer/aggregate.mjs`; the CLI is
   receipts; table or page window.
 - **Harness aggregate:** deterministic reducer + completeness guard + full
   candidate receipt.
-- **Naive deepseek:** same table/pages, no contract, no quotes.
-- **Mimo 2.6 Flash proxy:** same, no contract; **not GPT-4o**.
-- GPT-4o was unavailable; the proxy is labelled honestly.
+- **B:** RAG-cite baseline; **Q:** quote prompt; **DA:** current harness.
+- **Readers:** DeepSeek V4.1 Flash and Sonnet 5.5; the shipped default remains
+  GLM-5.3-Flash. The old naive/Mimo proxy table is historical v1.1 context,
+  not part of the corrected matrix.
 
-Reference results (private test, human-corrected; counts only, no labels):
+Corrected reference results (private test, v2 labels, one seed, 2026-10-30;
+counts only, no labels):
 
-| context | harness | naive | Mimo proxy |
-|---|---:|---:|---:|
-| table | **100/100** | 88/100 | 96/100 |
-| pages | **99/100** with aggregate | 89/100 | 89/100 |
+| Reader | Arm | Local 98 | + page aggregate | + table aggregate | False | Cost |
+|---|---|---:|---:|---:|---:|---:|
+| DeepSeek V4.1 Flash | B | 94 | — | — | 5 | $0.11 |
+| Sonnet 5.5 | B | 94 | — | — | 4 | $1.10 |
+| DeepSeek V4.1 Flash | DA | **98** | **100** | **100** | **0** | **$0.23** |
+| Sonnet 5.5 | DA | 94 | **96** | **96** | 4 | **$1.80** |
 
-Citation **title/row support**: harness 60/60 table, 59/60 pages; baselines
-0/60. That is **not** a byte-verbatim claim. v2 gives table 37/60 verbatim
-segments (37/60 contiguous) and pages 38/60 segments (26/60 contiguous).
-The v1.1 page run is **99/100**: `test-030` false-abstained; the old v1.0 page
-100 was a single run. Public dev: 14/14 table and pages. Held-out two-document
-sums: three questions (`test-019`, `test-081`, `test-089`); private audit.
-These are **not** an accuracy leadership claim; the benchmark is not an
-accuracy leaderboard.
+The local column excludes the two globals; the aggregate columns add them
+deterministically. **Page aggregate is primary; table is the control.**
+DeepSeek B and Sonnet B tie at 94 (DeepSeek ~10x cheaper; Sonnet one fewer
+false). DeepSeek DA 100 vs Sonnet DA 96 at ~7.8x lower cost, 0 vs 4 false.
+The Sonnet DA’s +2 over Sonnet B is the aggregate only; the DeepSeek DA’s +6
+is +4 local and +2 aggregate. The aggregate is not a reader win.
+
+Citation **title/row support** in the older v1.1 context: harness 60/60 table,
+59/60 pages; baselines 0/60. That is **not** a byte-verbatim claim. v2 gives
+table 37/60 verbatim segments (37/60 contiguous) and pages 38/60 segments
+(26/60 contiguous). The old v1.1 page run was 99/100 (`test-030` false
+abstention); the corrected page aggregate is 100/100 for DeepSeek and 96/100
+for Sonnet. Public dev: 14/14 table and pages. Held-out two-document sums:
+three questions (`test-019`, `test-081`, `test-089`); private audit. These are
+**not** an accuracy leadership claim; the benchmark is not an accuracy
+leaderboard. The old naive/Mimo proxy table is historical v1.1 context and is
+not part of the corrected matrix.
 
 ## 10. Reproducibility
 
@@ -174,7 +189,7 @@ maintainer-audited, not reproducible from this tree.
 
 ## 13. Version and provenance
 
-- Version: **1.1.15**, benchmark frozen 2026-10-24; package 2026-10-28.
+- Version: **1.2.1**, benchmark frozen 2026-10-24; harness corrected 2026-10-30; package 2026-10-30.
 - Manifest: `bench/ooh-MANIFEST.json` (public files + hashes; private test
   boundary).
 - Prior art / positioning: The benchmark is not an accuracy leaderboard.

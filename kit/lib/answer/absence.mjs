@@ -29,7 +29,7 @@ const normText = (s) => String(s ?? '').toLowerCase().replace(/[^a-z0-9]+/g, ' '
 // chat: the reader's chat call (facts extraction). read(docs): the same
 // D pipeline over a document window, returning { text, gate, usage, tokens, ms }.
 // Returns the fixed result (or null), the absence metadata and the facts usage.
-export async function runAbsence({ question, docs = [], corpusRoot, chat, read }) {
+export async function runAbsence({ question, docs = [], corpusRoot, chat, read, docChars = 20000 }) {
   const t0 = Date.now()
   let facts = []
   let usage = null
@@ -64,9 +64,10 @@ export async function runAbsence({ question, docs = [], corpusRoot, chat, read }
     }
   }
 
+  const limit = Number.isFinite(docChars) && docChars > 0 ? docChars : Infinity
   const extra = candidates.slice(0, 2).map((rel) => {
     let content = ''
-    try { content = readFileSync(join(corpusRoot, rel), 'utf8').slice(0, 6000) } catch { /* unreadable */ }
+    try { content = readFileSync(join(corpusRoot, rel), 'utf8').slice(0, limit) } catch { /* unreadable */ }
     return { rel, content }
   }).filter((d) => d.content)
   const absence = { triggered: true, facts: facts.length, candidates, fixed: false }

@@ -14,30 +14,73 @@ used.
 - Second-rater results: `9516baecb9b84e5543d4a43e334b6d03f0738e8caa250445f96690ebb0a8b47e`
 - Config hash (post hoc): `0d563d0054fed50300665e43eb53e3922cd7b3a5317830c1939ef79872287b03`
 - Not pre-registered; one seed; n=100. Treat intervals as descriptive.
+- **2026-10-30 correction run:** working tree (commit follows); excerpt context; page and table aggregate. Private outputs: DeepSeek DA excerpt `ae0540f53611c24eb9f9c8562bc80a8a5fc7c126a547d80ab94dc338c1d49b61`; DeepSeek DA excerpt+page `5dbe92fc6aea7afb8eb9bc167540e63813df9de4a5e724d3c5b9ecbff237ccf5`; DeepSeek DA excerpt+table `253f2295d2852665648ee2a86aa0ec01a3ce0bdcc789f00c7cfffc8b92233aa1`; Sonnet DA excerpt `0f23fdb701a6bcb5a9d8ce08408cbcdebb916c0903141afb9ad2468a93876fd2`; Sonnet DA excerpt+page `80914d593652c63e9d7c5fe6108d2cdb9541690264eb130308675b3d5034d195`; Sonnet DA excerpt+table `cb197ad488d36043cc103577c5a89968622bb7cd6736bdbf81a800d092c707b5`; DeepSeek B `73d1a5270dc89fb9953493361d2bdf464335afe627b22a619e018f9084beef80`; Sonnet B `f1442e0b409e428e4b73866127389f613e5b71b39b34a7ffffe0ce652ba46d41`.
 
-## Held-out 100 — current harness (2026-10-30)
+## Held-out 100 — corrected harness (2026-10-30)
 
-GLM-5.3-Flash, one seed, v2 labels, frozen questions. Labels hash
-`c0a0a8e38de7e3be8f213892b66ad4e43db0f854605f5896975860305a6d7081`;
-output `bench/results/arm-compare-heldout-glm53flash-v2.jsonl` (private,
-gitignored). C dropped.
+DeepSeek V4.1 Flash and Sonnet 5.5, one seed, v2 labels, frozen questions.
+**Page aggregate is primary; table aggregate is the control.** C dropped.
+Labels hash
+`c0a0a8e38de7e3be8f213892b66ad4e43db0f854605f5896975860305a6d7081`.
+
+| Reader | Arm | Local 98 | + page agg | + table agg | False | Cost |
+|---|---|---:|---:|---:|---:|---:|
+| DeepSeek V4.1 Flash | B | 94 | — | — | 5 | **$0.11** |
+| Sonnet 5.5 | B | 94 | — | — | 4 | **$1.10** |
+| DeepSeek V4.1 Flash | DA | **98** | **100** | **100** | **0** | **$0.23** |
+| Sonnet 5.5 | DA | 94 | **96** | **96** | 4 | **$1.80** |
+
+The local column excludes the two global items; the aggregate columns add them
+deterministically. DeepSeek DA local: 38/40 answerable, 20/20 partial, 40/40
+unanswerable, 1 false. Sonnet DA local: 36/40, 19/20, 39/40, 5 false. With the
+two globals: DeepSeek 40/40, 20/20, 40/40, 0 false; Sonnet 38/40, 19/20, 39/40,
+4 false (`041`, `088`, `091`, `093`).
+
+### What changed on 2026-10-30
+
+1. **Excerpt instead of a 6k head.** The annual-openings sentences sit at
+   7,380–10,555 chars. The old runner truncated them. The excerpt keeps the 6k
+   head and adds tail lines for question terms missing from the head. Full 20k
+   pages were an ablation: they recovered the annual openings but regressed
+   `088`/`089`; the targeted excerpt avoids that.
+2. **Scorer normalization.** `master’s` vs `Master's` and `5 percent` vs `5%`
+   were false partial misses. The mechanical scorer now treats them as equal.
+3. **Aggregate route for the two globals.** `095` and `100` are 46-candidate
+   global questions; a K=3 page window cannot answer them. The existing
+   `askAggregate` path now runs on the complete table or page map, with a
+   completeness guard and full candidate receipt.
+
+The six annual-opening items are fixed. The remaining Sonnet DA misses are
+local (`041`, `088`, `091`, `093`); the remaining DeepSeek DA local miss is
+none after the aggregate. Page and table contexts agree.
+
+### Reader-only reading
+
+- **DeepSeek B and Sonnet B tie at 94.** DeepSeek is ~10x cheaper; Sonnet has
+  one fewer false accept. This is cost parity, not a DeepSeek reader win.
+- **Sonnet DA adds no local gain over Sonnet B** (94 both); the +2 to 96 is the
+  aggregate only.
+- **DeepSeek DA adds 4 local rows over DeepSeek B** (94 to 98); the aggregate
+  adds the last 2.
+- **DeepSeek DA 100 vs Sonnet DA 96** at ~7.8x lower cost; 0 vs 4 false
+  accepts. That is a DA/harness plus reader result.
+
+### Previous held-out — pre-correction (do not compare)
+
+GLM-5.3-Flash, one seed, old 6k/page context. This is a historical record, not
+the current result:
 
 | Arm | Ans | Partial | Unans | Wrong | Total |
 |---|---:|---:|---:|---:|---:|
 | A bare | 15/40 | 4/20 | 27/40 | 44/100 | 46 |
-| B status quo | 27/40 | **19/20** | 36/40 | 9/100 | 82 |
+| B status quo | 27/40 | 19/20 | 36/40 | 9/100 | 82 |
 | Q quote prompt | 26/40 | 8/20 | 35/40 | 13/100 | 69 |
-| D gate only | 29/40 | 14/20 | **40/40** | 8/100 | 83 |
-| DA current harness | **31/40** | 17/20 | **40/40** | **6/100** | **88** |
+| D gate only | 29/40 | 14/20 | 40/40 | 8/100 | 83 |
+| DA current harness | 31/40 | 17/20 | 40/40 | 6/100 | 88 |
 
-- **DA is the best held-out total; B is the status quo.** DA +6 total, −3
-  false accepts vs B, but −2 partials. Q is negative vs B (−13 total, +4 false
-  accepts); the quote contract alone hurts this reader. D is nearly flat vs B
-  (83 vs 82, −1 false accept); the absence check adds the rest.
-- **The 4B reverses on the pilot** (B 51 > DA 45); **the 27B ties** (B 54, DA
-  54; B 12/12 partials/3 false, DA 6/12/0).
-- One seed; the pilot is 3 seeds and is the development fit. The support audit
-  is AI-assisted manual adjudication, not an independent human rater.
+The old “DA +6 total, −3 false accepts vs B, −2 partials” reading applies only
+to this pre-correction row. The 4B reversal (B 51 > DA 45) and 27B tie (54) are
+pilot findings; they are not re-run here.
 
 ## Latest comparison — ranked all arms (pilot-v2)
 
@@ -185,8 +228,10 @@ and `arm-compare-qwen38-27b-da-pilot-v2.jsonl`.
 Four partial labels included an unasked “annual average openings over the
 decade” part: `test-022`, `test-052`, `test-055`, `test-093`. The v2 label
 file removes that part. Two further flips were scorer phrasing (“do not
-provide/state”); the scorer now recognizes them. OOH headline re-scores:
-table **100/100**, pages **99/100**.
+provide/state”); the scorer now recognizes them. After the 2026-10-30 excerpt
+and aggregate correction the OOH headline is **table 100/100** and
+**page 100/100** for DeepSeek DA; the old v1.1 page 99/100 (`test-030` false
+abstention) is historical.
 
 ## Pre-fix / post-fix / post-audit
 
@@ -215,8 +260,8 @@ D partial is **17/20**, not 7 wrong. C buys its 3% with the lowest coverage.
 partial deficit (17/20 vs B's 20/20) was a **pre-fix prompt bug**: the partial
 rule was never wired into the v45 prompt. After the fix the corrected pilot is
 D **21/24 answerable, 12/12 partials, 1/60 wrong** versus B 20/24, 12/12,
-4/60 (correct shown 57 vs 56). The held-out D row above still predates the fix;
-a rerun is blocked on the private labels. The gate's comparative case remains
+4/60 (correct shown 57 vs 56). The held-out D row above is the historical pre-correction record; the corrected
+held-out matrix is at the top. The gate's comparative case remains
 wrong-shown for fabricating readers, not a large accuracy or coverage gain.
 
 ## Paired tests
@@ -240,12 +285,10 @@ The ceiling is ~52 (32 reachable answerable + 20 partials):
 
 ## Cost and latency
 
-The frozen held-out run recorded per-answer wall time but **not** token usage
-or memory; this report aggregates neither, so no per-arm token, second, or GB
-cost is claimed for those numbers. `bench/arm-compare.mjs` now records token
-usage (`usage`, `tokens`) beside `ms` on every row and prints `s/q` and
-`tok/q`, so the next held-out run will carry per-arm cost;
-`bench/ooh-BENCHMARK.md` lists cost as a benchmark metric.
+The old frozen held-out run recorded per-answer wall time but **not** token
+usage or memory. The 2026-10-30 runs record `usage`, `tokens`, `ms`, and
+provider `cost` on every row; the matrix above reports those. `s/q` is the mean
+in `arm-compare` output; the report’s earlier pilot uses medians.
 
 ## Correct-row sample and second rater
 
@@ -492,10 +535,10 @@ never sees the gold, so the same outputs were scored under both labels.
 - On this pilot D now has a small edge: +1 answerable, 1 versus 4 wrong shown,
   correct shown 57 versus 56 — at $0.07 versus $0.05 per 60 rows and 2,941
   versus 2,297 tokens/q.
-- **The held-out 100 predates this fix.** Its D row (27/40 answerable, 17/20
-  partials, 2/100 wrong) is a pre-fix measurement; a rerun is blocked on the
-  private labels. Do not read the fixed pilot's 12/12 partials as if they were
-  the held-out D result.
+- **The held-out 100 is now re-run.** The old D row (27/40 answerable, 17/20
+  partials, 2/100 wrong) is the historical pre-correction measurement; the
+  corrected held-out matrix is at the top. Do not read the fixed pilot's 12/12
+  partials as if they were the old held-out D result.
 
 Provenance: `bench/ooh-pilot-v2.jsonl` sha256
 `4d96b124253dd34c9f49f483cc7ac4129de8463abb20b96cb7a90462e3f103fd`;
@@ -696,7 +739,7 @@ widened after the first Sonnet DA run (post-hoc, disclosed below).
 costs more time/tokens, and is not pre-registered; the trigger widening was
 post-hoc. Manual support audits exist for Sonnet DA (and Q/D); the Flash, GLM
 and 4B support numbers are the automated strict lower bound, not the measure.
-The held-out 100 is still blocked on private labels.
+The corrected held-out 100 is at the top; the old pre-correction row is historical.
 
 Provenance (gitignored): `bench/results/arm-compare-flash-absence2-pilot-v2.jsonl`,
 `arm-compare-glm53-absence-pilot-v2.jsonl`,
@@ -770,7 +813,7 @@ recorded.
    partials, 1/60 wrong, 97% coverage, at roughly one-seventh the cost of full
    GLM. Its Q is the worst of the five (19/24, 6/12, 15/24 unanswerable, 20/60
    wrong, 53% coverage); the harness, not the label, stabilizes it.
-4. **The gate cuts wrong-shown for fabricating readers** (current held-out:
+4. **The gate cuts wrong-shown for fabricating readers** (historical 6k held-out:
    B 9/100, Q 13/100, D 8/100, DA 6/100), but does not fix false absences or
    wrong answers that carry a valid quote. DA addresses some false absences; it
    is mixed on Flash and fails on the 4B (pilot B 51 > DA 45).

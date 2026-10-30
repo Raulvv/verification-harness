@@ -1,6 +1,6 @@
 {
  "name": "ooh-citation-first-benchmark",
- "version": "1.2.0",
+ "version": "1.2.1",
  "frozen_at": "2026-10-30",
  "status": "public-package-private-test",
  "corpus": {
@@ -40,7 +40,22 @@
   "sha256": "c0a0a8e38de7e3be8f213892b66ad4e43db0f854605f5896975860305a6d7081"
  },
  "private_files": [
+  "bench/results/arm-compare-heldout-deepseek-b-v2-excerpt.jsonl",
+  "bench/results/arm-compare-heldout-deepseek-da-v2-excerpt-pages.jsonl",
+  "bench/results/arm-compare-heldout-deepseek-da-v2-excerpt-table.jsonl",
+  "bench/results/arm-compare-heldout-deepseek-da-v2-excerpt.jsonl",
+  "bench/results/arm-compare-heldout-deepseek-da-v2-fulldocs-rescored.jsonl",
+  "bench/results/arm-compare-heldout-deepseek-da-v2-fulldocs.jsonl",
+  "bench/results/arm-compare-heldout-deepseek-da-v2-globals-pages.jsonl",
+  "bench/results/arm-compare-heldout-deepseek-da-v2-globals-table.jsonl",
+  "bench/results/arm-compare-heldout-deepseek-da-v2-rescored.jsonl",
   "bench/results/arm-compare-heldout-glm53flash-v2.jsonl",
+  "bench/results/arm-compare-heldout-sonnet55-b-v2-excerpt.jsonl",
+  "bench/results/arm-compare-heldout-sonnet55-da-v2-excerpt-pages.jsonl",
+  "bench/results/arm-compare-heldout-sonnet55-da-v2-excerpt-table.jsonl",
+  "bench/results/arm-compare-heldout-sonnet55-da-v2-excerpt.jsonl",
+  "bench/results/arm-compare-heldout-sonnet55-da-v2-globals-pages.jsonl",
+  "bench/results/arm-compare-heldout-sonnet55-da-v2-globals-table.jsonl",
   "bench/results/ooh-pages-deepseek-aggregate-v11.jsonl",
   "bench/results/ooh-pages-deepseek-v11.jsonl",
   "bench/results/ooh-pages-deepseek.jsonl",
@@ -65,18 +80,18 @@
   },
   {
    "path": "README.md",
-   "bytes": 26098,
-   "sha256": "6184247585a8d43726b8c022962cdd56787e8c800f83dfad1ae1f5d1d58da60e"
+   "bytes": 27226,
+   "sha256": "69de94310029e2cb54a427dc9269cdc8c9aac465df781bf18f514adf2c7e2fcc"
   },
   {
    "path": "bench/ARM-COMPARE-REPORT.md",
-   "bytes": 47672,
-   "sha256": "b69bb2f9d10d4e7ccd54dfe96edb9e3fc6e60c9fe6422c6dd235aeab7b129029"
+   "bytes": 50603,
+   "sha256": "a31bec01e0e51a613ded19f52afd9ce1c2b223d31277b8f0ffccd975306415f8"
   },
   {
    "path": "bench/ARM-COMPARE.md",
-   "bytes": 6858,
-   "sha256": "41c9dcd190cd7ccb476fcc5ac7e2843a05164a0a13d5843941b401a88b924e00"
+   "bytes": 7408,
+   "sha256": "c9d46a2daf963d0cf62b8235a17ed2eb6a361223f0d40a7d183423cf9d6f6b21"
   },
   {
    "path": "bench/arm-audit.mjs",
@@ -85,8 +100,8 @@
   },
   {
    "path": "bench/arm-compare.mjs",
-   "bytes": 17503,
-   "sha256": "6cf7286fdad277e6b08925fe86e5016d4c2551afd021c50cc7c9126f893b76ef"
+   "bytes": 19422,
+   "sha256": "b2ad247a00291602032b8429266abfdd2ae57e4e0e25d2b2f59c0fa00129c900"
   },
   {
    "path": "bench/arm-report.mjs",
@@ -100,8 +115,8 @@
   },
   {
    "path": "bench/arm-score.test.mjs",
-   "bytes": 1122,
-   "sha256": "553cdb6139bfd0eb9ff1541b04dd4df239a4fdc6d02544bd88b83a8b765a07ee"
+   "bytes": 1935,
+   "sha256": "ff8ef53a22e1d572314ffd773df6712891e6c45fb99acaa46a983699f04cedb2"
   },
   {
    "path": "bench/arm-second-rater.mjs",
@@ -380,8 +395,18 @@
   },
   {
    "path": "bench/lib/arm-score.mjs",
-   "bytes": 1970,
-   "sha256": "8752bf34267f599e75fdbee0fbb26df47a6056fb0dceb34f4178f8cd7b5c2f24"
+   "bytes": 2217,
+   "sha256": "a31d34b4b6ef50f9c319d75869dcebc801988ee92da523a91d1ca1cf297ee1b3"
+  },
+  {
+   "path": "bench/lib/doc-window.mjs",
+   "bytes": 1702,
+   "sha256": "b5b2e3ef34eeb80603640ccf1d0ffeddb1ec0e8db57bec73035da39a037490c4"
+  },
+  {
+   "path": "bench/lib/ooh-rows.mjs",
+   "bytes": 5804,
+   "sha256": "1e7d785e56a1080a3a3dd8710dca3177ffde0a4766e58c165373fc60c45216c3"
   },
   {
    "path": "bench/manifest-check.mjs",
@@ -390,13 +415,13 @@
   },
   {
    "path": "bench/ooh-BENCHMARK.md",
-   "bytes": 7958,
-   "sha256": "56a10f442ab1a9b11b61963d0f4c5eba6be12ef804fbfedc963bc324262f1983"
+   "bytes": 9231,
+   "sha256": "f133e1f6052c85decfe89ce7d78addd365fbd88508e65c9b52b291516fa6d4ec"
   },
   {
    "path": "bench/ooh-README.md",
-   "bytes": 12561,
-   "sha256": "6b4182e7c1490fef02583270b2eed44646c650888507ed1a628d0bfef4d6acf3"
+   "bytes": 14134,
+   "sha256": "7d4401617e59c454ad2a9cb2986f87a32ee02a3cc4af4df3268b18d1836a6303"
   },
   {
    "path": "bench/ooh-SUBMISSION.md",
@@ -405,8 +430,8 @@
   },
   {
    "path": "bench/ooh-aggregate-spike.mjs",
-   "bytes": 7990,
-   "sha256": "949a56dc0c7aee0a80ff49f41bf728c93f1251cfd3e43ea5e2d53e638bf65376"
+   "bytes": 3702,
+   "sha256": "ff2442ceefcce4953364b7f225decd8c321eeecbbf0b5bce45e76c72b2c0e666"
   },
   {
    "path": "bench/ooh-build.py",
@@ -489,6 +514,11 @@
    "sha256": "494361fab8f1b9b4d8bf6492b1a102c8186b164dbaeec595ae3b507e4202ef21"
   },
   {
+   "path": "bench/test/ooh-rows.test.mjs",
+   "bytes": 3360,
+   "sha256": "f52b715f0870e07381d12e7dfd38a17924006577801e646f9a22aa5970f87077"
+  },
+  {
    "path": "kit/CHANGELOG.md",
    "bytes": 9892,
    "sha256": "219821f9ab91c202f469715e58abc262e42e575cdc307ce80d026b182722ad9e"
@@ -515,8 +545,8 @@
   },
   {
    "path": "kit/lib/answer/absence.mjs",
-   "bytes": 4151,
-   "sha256": "8ed23c087685b21681df1a9ecba28b9b0069330e674a5fce1e71550bcb19d347"
+   "bytes": 4250,
+   "sha256": "846b6054e9e11829523ac27c774029f0babc29b657feeb0874166944216a8727"
   },
   {
    "path": "kit/lib/answer/aggregate.mjs",
@@ -550,8 +580,8 @@
   },
   {
    "path": "kit/lib/receipts/text.mjs",
-   "bytes": 11103,
-   "sha256": "4d0718366531711e0adf472e9a06d9d35d99c63021619fdd8a0141dbf148115a"
+   "bytes": 11109,
+   "sha256": "7a97e26a9cabb2c5ceea4963c43875f1eb871724b22c9a2f460af8abdbd72abe"
   },
   {
    "path": "kit/package.json",
@@ -600,8 +630,8 @@
   },
   {
    "path": "package.json",
-   "bytes": 1019,
-   "sha256": "7896849b6a66b464d2cdccfff86c422ff8e707281d41cb4cc338c13d91a5d9d7"
+   "bytes": 1010,
+   "sha256": "05ee809ea13ba3fed973f3ed1834a2ff558c3dd0646bee50eb0eebbd62310512"
   }
  ],
  "license": {

@@ -11,10 +11,10 @@ evaluation that happens to use the U.S. Bureau of Labor Statistics
 Occupational Outlook Handbook as its corpus. OOH is the testbed, not the
 product.
 
-Status: kit v0.2.0; benchmark v1.2.0, frozen 2026-10-24; ranked pilot 2026-10-29.
-The public dev set is for iteration; the 100-item test labels are private and
-must not be trained on or published. The ranked pilot is the best consolidation
-until the held-out 100 is re-run (blocked on those labels).
+Status: kit v0.2.0; benchmark v1.2.1, corrected 2026-10-30. The public dev set
+is for iteration; the 100-item test labels are private and must not be trained
+on or published. The held-out 100 has been re-run with the corrected harness;
+the old 6k/full-page context rows are historical and not comparable.
 
 ## The problem
 
@@ -44,34 +44,55 @@ What you get is a property: **every shown answer can be independently
 re-verified by a human or a script in seconds**, today and after the corpus,
 the model, and the vendor have changed.
 
-## Current result — held-out 100 (GLM-5.3-Flash, one seed, v2 labels)
+## Current result — held-out 100 (2026-10-30 correction)
 
-| Arm | Ans | Partial | Unans | Wrong | Total |
-|---|---:|---:|---:|---:|---:|
-| A bare | 15/40 | 4/20 | 27/40 | 44/100 | 46 |
-| B status quo | 27/40 | **19/20** | 36/40 | 9/100 | 82 |
-| Q quote prompt | 26/40 | 8/20 | 35/40 | 13/100 | 69 |
-| D gate only | 29/40 | 14/20 | **40/40** | 8/100 | 83 |
-| DA current harness | **31/40** | 17/20 | **40/40** | **6/100** | **88** |
+One seed, v2 labels, the same 100 questions. The harness now uses a page
+**excerpt** (6k head plus question-relevant tail lines) and a deterministic
+aggregate route for the two global questions. **Page aggregate is the primary
+context; table aggregate is the control.** Both agree on both readers.
 
-Tiers, not a precise order: the current harness **DA 88** is the best held-out
-total; **D 83** and the status quo **B 82** are the next tier; **Q 69** is the
-quote prompt without the gate; **A 46** is bare. DA is **+6 total and −3 false
-accepts vs B**, but **−2 partials**; Q is **−13 and +4 false accepts vs B**,
-so the quote prompt alone hurts this reader. The gate alone is nearly flat
-(D 83 vs B 82, −1 false accept); the absence check adds the rest. On the 20-item
-pilot the **4B reverses: B 51 > DA 45**, and the **27B ties at 54** (B 12/12
-partials/3 false vs DA 6/12/0). Cost: DA $0.08/100, 7.9 s/q; B $0.05/100,
-3.2 s/q; Q $0.05; D $0.04. The held-out is one seed; the pilot is 3 seeds and
-is the development fit. The support audit is AI-assisted manual adjudication,
-not an independent human rater; a human second rater is a resource ask.
+| Reader | Arm | Local 98 | + page agg | + table agg | False | Cost |
+|---|---|---:|---:|---:|---:|---:|
+| DeepSeek V4.1 Flash | B | 94 | — | — | 5 | **$0.11** |
+| Sonnet 5.5 | B | 94 | — | — | 4 | **$1.10** |
+| DeepSeek V4.1 Flash | DA | **98** | **100** | **100** | **0** | **$0.23** |
+| Sonnet 5.5 | DA | 94 | **96** | **96** | 4 | **$1.80** |
 
-The kill rule: proceed only if wrong-shown is no worse than the current RAG,
+The local column excludes the two global items; the aggregate columns add them
+deterministically. The 98 local is the reader-only result: 38/40 answerable,
+20/20 partial, 40/40 unanswerable, 1 false accept. The 100 system result is
+40/40, 20/20, 40/40, 0 false.
+
+What the matrix says:
+
+- **DeepSeek B and Sonnet B tie at 94.** DeepSeek is ~10x cheaper; Sonnet has
+  one fewer false accept. This is cost parity, not a DeepSeek reader win.
+- **DeepSeek DA 100 vs Sonnet DA 96**, at ~7.8x lower cost, with 0 vs 4 false
+  accepts. This is a DA/harness plus reader result.
+- **Sonnet DA adds no local gain over Sonnet B**: 94 local both; the +2 to 96
+  is only the deterministic aggregate.
+- **DeepSeek DA adds 4 local rows over DeepSeek B** (94 to 98); the aggregate
+  adds the last 2. That is where the full-system advantage lives.
+- **Do not use the old Sonnet B 89 or Sonnet DA 91 as the comparison.** They
+  predate the excerpt and scoring corrections.
+
+The 2026-10-30 correction has three parts: the old 6k head truncation hid the
+annual-openings sentences (fixed by the excerpt), the scorer missed `master’s`
+and `5 percent` (fixed), and the two globals needed the existing aggregate
+route (fixed by `--aggregate table|pages`). Full 20k pages were an ablation, not
+the fix: they recovered the annual openings but regressed `test-088`/`089`; the
+targeted excerpt avoids that. The page and table aggregate contexts both reach
+100 for DeepSeek and 96 for Sonnet.
+
+The previous GLM-5.3-Flash result — **DA 88, B 82, Q 69, D 83, A 46** — is the
+pre-correction 6k context. It remains useful as the frozen old result but is
+not the current comparison.
+
+**The kill rule:** proceed only if wrong-shown is no worse than the current RAG,
 coverage is at least 80% of the reachable ceiling, and cost is within the
-current setup. If your reader is cautious (errors are false absences, not
-fabrications), or you do not need an independent audit trail, plain RAG with
-citations is cheaper. The harness is an assurance layer, not an accuracy
-upgrade.
+current setup. The harness is an assurance layer, not a universal accuracy
+upgrade. The default reader remains **GLM-5.3-Flash**; DeepSeek and Sonnet are
+evaluation readers, not a default change.
 
 **What the gate checks** — file exists at the cited path, title and date match
 the resolved metadata, the quote exists (tolerant matcher by default; literal
@@ -276,8 +297,8 @@ extra wrong answers. The apparent partial deficit (17/20 vs 20/20) was a
 **pre-fix prompt bug** — the partial rule was never wired into the v45 prompt.
 After the fix, the corrected pilot gives D **21/24 answerable, 12/12 partials,
 1/60 wrong** versus B 20/24, 12/12, 4/60 (correct shown 57 vs 56). The
-held-out table above predates the fix; a rerun is blocked on the private
-labels. (A citation rerun gave D 20/24 and 3/60 wrong versus the fixed run's 21/24 and 1/60; pilot variance.) On the pre-registered citation run, the simple "quote every claim"
+held-out table above is the historical pre-correction record; the corrected
+held-out matrix is at the top. (A citation rerun gave D 20/24 and 3/60 wrong versus the fixed run's 21/24 and 1/60; pilot variance.) On the pre-registered citation run, the simple "quote every claim"
 prompt (Q) was 95.2% exact on raw quotes (100% shown) but covered only 66.7% of
 required operands and left 7 shown answers with no quote; B carries 0 quotes
 (41/60 file mentions, 19/60 none). The contract+gate (D) showed 45/45 exact
@@ -384,19 +405,20 @@ numbers.
   lab effort. The gap is real; this study was not sized to win it.
 - **One corpus, one domain, one snapshot.** 48 BLS pages. Nothing here
   establishes the same result on legal, financial, or internal-policy corpora.
-- **One seed, one reader — the held-out only.** The held-out 100 is one
-  DeepSeek Flash run; the ranked pilot is 3 seeds, 5 readers, and is the current
-  baseline. Three seeds are the bar for a separation claim; the held-out does
-  not meet it.
-- **Underpowered held-out headline.** 2 versus 8 wrong-shown rows; p=0.070; the
-  Wilson intervals overlap. "Comparable, not proven superior" is the correct
-  reading. The pilot is a consolidation, not a separation proof.
+- **One seed, two readers — the held-out.** The corrected held-out 100 is one
+  seed, DeepSeek and Sonnet; the ranked pilot is 3 seeds, 5 readers, and is the
+  development fit. Three seeds are the bar for a separation claim; the held-out
+  does not meet it.
+- **Underpowered historical headline.** The old 6k B/C/D headline was 2 versus 8
+  wrong-shown rows; p=0.070; the Wilson intervals overlap. The corrected
+  held-out is the matrix at the top; the pilot is a consolidation, not a
+  separation proof.
 - **Coverage and partials.** On the pre-fix held-out, D covers less on the
   shown count (46 vs 55) and handles partials worse (17/20 vs 20/20). The
   ranked pilot is the current measurement: DA is 100% coverage on Sonnet/GLM,
   97% on GLM-Flash, 94% on DeepSeek, 100% on the 27B, 69% on the 4B; the 27B
-  and 4B lose partials (6/12 and 0/12). The held-out D row predates the fix; a
-  rerun is blocked on private labels. The gate buys verification, not a large
+  and 4B lose partials (6/12 and 0/12). The held-out D row is the historical pre-correction record; the corrected
+  held-out matrix is at the top. The gate buys verification, not a large
   coverage gain.
 - **Not pre-registered.** Four partial labels and two scorer phrasings were
   corrected post-hoc — all disclosed.

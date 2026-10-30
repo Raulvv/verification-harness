@@ -1,4 +1,4 @@
-# OOH benchmark — v1.1.15
+# OOH benchmark — v1.2.1
 
 > Repository: `verification-harness` · package: `ooh-citation-first-benchmark`
 >
@@ -9,9 +9,7 @@
 A neutral, public-corpus, citation-first benchmark built from the U.S. Bureau
 of Labor Statistics **Occupational Outlook Handbook** (2023–33 edition).
 
-Status: **public package + private held-out test**, benchmark frozen 2026-10-24; package v1.1.15, 2026-10-28. The
-public dev set is for iteration; the 100-item test labels are private and must
-not be trained on or published.
+Status: **public package + private held-out test**; benchmark frozen 2026-10-24, harness corrected 2026-10-30; package v1.2.1. The public dev set is for iteration; the 100-item test labels are private and must not be trained on or published. The old 6k/full-page held-out rows are historical and not comparable to the corrected excerpt results.
 
 ## Quickstart
 
@@ -67,7 +65,7 @@ benchmark. It measures:
 | Pilot | 20 | public; human-reviewed | `bench/ooh-pilot.jsonl` / `bench/ooh-pilot-validation.jsonl` |
 | Public aggregation dev | 14 | public; human-approved 14/14 | `bench/ooh-dev-aggregation.jsonl` / `bench/ooh-dev-validation.json` |
 | Held-out test questions | 100 | public questions; **private labels** | `bench/ooh-test-questions.jsonl` |
-| Held-out test labels | 100 | **private**; frozen; not in the public tree | `bench/results/ooh-test-private.jsonl` (gitignored) |
+| Held-out test labels | 100 | **private**; frozen; not in the public tree | `bench/results/ooh-test-private-v2.jsonl` (gitignored) |
 
 Test composition: 40 answerable / 20 partial / 40 unanswerable; two global
 aggregation questions (46-candidate and 25-candidate). Test labels are private;
@@ -90,27 +88,45 @@ external knowledge**.
   receipts; table or 48-page fixed window.
 - Harness aggregate: deterministic reducer + completeness guard + full
   candidate receipt; table or page map.
-- Baselines: naive deepseek (no contract) and **Mimo 2.6 Flash proxy** (no
-  contract). GPT-4o was unavailable; Mimo is a proxy, not GPT-4o.
+- Reader baselines: **B** RAG-cite, **Q** quote prompt, **DA** current harness;
+  **Sonnet 5.5** and **DeepSeek V4.1 Flash** are the current readers. The old
+  naive/Mimo proxy table is historical v1.1 context, not the current matrix.
 - Reported results are on the private test; the public dev set is reproducible.
 
-Headline (private test, human-corrected):
+Headline (private test, v2 labels, one seed, corrected 2026-10-30):
 
-| context | harness | naive | Mimo proxy |
-|---|---:|---:|---:|
-| full 46-row table | **100/100** | 88/100 | 96/100 |
-| 48 pages, fixed window | **99/100** with aggregate | 89/100 | 89/100 |
+| Reader | Arm | Local 98 | + page aggregate | + table aggregate | False | Cost |
+|---|---|---:|---:|---:|---:|---:|
+| DeepSeek V4.1 Flash | B | 94 | — | — | 5 | $0.11 |
+| Sonnet 5.5 | B | 94 | — | — | 4 | $1.10 |
+| DeepSeek V4.1 Flash | DA | **98** | **100** | **100** | **0** | **$0.23** |
+| Sonnet 5.5 | DA | 94 | **96** | **96** | 4 | **$1.80** |
 
-Citation **title/row support**: harness 60/60 table and 59/60 pages; baselines
-0/60. That is **not** a byte-verbatim claim. The v2 audit gives table
-37/60 verbatim segments (37/60 contiguous) and pages 38/60 segments (26/60
-contiguous). Many receipts are composite; the table local receipt is a row
-selection. The v1.1 page run is **99/100**: `test-030` false-abstained; the
-old v1.0 page 100 was a single run and is not a stable claim. The harness is
-**not** an accuracy leader; the differentiator is proof, abstention, and
-aggregation coverage. The default verifier is deliberately tolerant; use
-`node kit/bin/verify.mjs ... --strict` (or `verify(..., { strict: true })`) for
-literal case/punctuation. Published OOH numbers use the default tolerant mode.
+**Page aggregate is primary; table aggregate is the control.** The local column
+excludes the two global items; the aggregate columns add them deterministically.
+DeepSeek B and Sonnet B tie at 94; DeepSeek is ~10x cheaper, Sonnet has one
+fewer false accept. DeepSeek DA 100 vs Sonnet DA 96 at ~7.8x lower cost, 0 vs 4
+false accepts. The +2 from Sonnet DA over Sonnet B is the aggregate only; the
+DeepSeek DA adds 4 local rows plus the 2 aggregate. The two globals are not
+reader wins.
+
+The 2026-10-30 correction: the old 6k head hid the annual-openings facts;
+the scorer missed `master’s`/`5 percent`; the two globals had no aggregate
+route. The corrected excerpt + table/page aggregate fixes all three. Full 20k
+pages were an ablation, not the fix: they recovered the annual openings but
+regressed `088`/`089`.
+
+Citation **title/row support** in the older v1.1 context: harness 60/60 table
+and 59/60 pages; baselines 0/60. That is **not** a byte-verbatim claim. The v2
+audit gives table 37/60 verbatim segments (37/60 contiguous) and pages 38/60
+segments (26/60 contiguous). Many receipts are composite; the table local
+receipt is a row selection. The corrected page/table aggregate is **100/100**
+for DeepSeek and **96/100** for Sonnet; the old v1.1 page 99/100 (`test-030`
+false abstention) is historical. The harness is **not** an accuracy leader; the
+differentiator is proof, abstention, and aggregation coverage. The default
+verifier is deliberately tolerant; use `node kit/bin/verify.mjs ... --strict`
+(or `verify(..., { strict: true })`) for literal case/punctuation. Published OOH
+numbers use the default tolerant mode.
 
 ## Reproduce the public dev set
 
@@ -155,8 +171,8 @@ node kit/bin/retrieval-kit.mjs ask "What is the refund window?" --quote
 
 - The default `reference` retriever needs no embedding model; `dense`/`router`
   opt into Ollama `nomic-embed-text` and fail loud without it.
-- `--quote` returns the full verbatim receipt; the default `source-v45` returns
-  a Source receipt.
+- The default `v45` receipt includes the verbatim quote; `--source` returns the
+  lighter Source receipt.
 - `--json` for machines; `--minimal-receipt` for shorter local receipts.
 - Hosted OpenAI-compatible endpoints use `--base-url` and
   `RETRIEVAL_API_KEY`; never store a literal key in the workspace.
@@ -165,18 +181,19 @@ node kit/bin/retrieval-kit.mjs ask "What is the refund window?" --quote
 ## Reader model setup (kit only)
 
 The public benchmark and dev commands need **no model**. Only
-`retrieval-kit ask` needs one. There is **no default hosted model** and **no
-Opencode dependency**; any OpenAI-compatible `/chat/completions` endpoint works.
+`retrieval-kit ask` needs one. The default reader is **GLM-5.3-Flash** via an
+OpenAI-compatible endpoint (the example uses the OpenCode gateway; set
+`OPENCODE_API_KEY`). Any compatible `/chat/completions` endpoint works.
 
 Defaults when no config or flags are set:
 
 | Setting | Default | Notes |
 |---|---|---|
-| Base URL | `http://localhost:11434/v1` | Assumes Ollama |
-| Model | `qwen3.5:4b` | Only when the base URL looks like Ollama |
-| API key | `ollama` | Other endpoints need `RETRIEVAL_API_KEY` or `--api-key-env` |
+| Base URL | `https://opencode.ai/inference/openai/v1` | The default reader gateway |
+| Model | `glm-5.3-flash` | The best cost/efficient reader in the pilot |
+| API key | `OPENCODE_API_KEY` | Set in the shell; never committed |
 | Retriever | `reference` | Embedder-free; `dense`/`router` need Ollama `nomic-embed-text` |
-| Tier | `source-v45` | `--quote` switches to `v45` |
+| Tier | `v45` + absence | `--source` = Source receipt; `--no-absence` = gate-only |
 
 ### Option A — Ollama
 
@@ -265,16 +282,19 @@ validated by the public package.
 
 - 48 pages, 100 test items, two global aggregation questions (46- and
   25-candidate); not full wiki.
-- Strong-reader arm comparison (DeepSeek V4.1 Flash, K=3, held-out 100):
-  D-gate **2%** audited false accepts vs B RAG-cite **8%** and C RAG-cite +
-  MiniCheck **3%**. D has 100% unanswerable abstention, 46/100 coverage, and
-  adds receipts; C achieves 3% with only 28/100 coverage. Comparable, not
-  proven superior to entailment.
+- Corrected reader comparison (held-out 100, one seed, v2 labels, excerpt +
+  aggregate): DeepSeek DA **100/100**, Sonnet DA **96/100**, both B arms
+  **94/100**. DeepSeek DA $0.23 vs Sonnet DA $1.80; DeepSeek B $0.11 vs
+  Sonnet B $1.10. The 2 global items are deterministic aggregate, not reader
+  wins; DeepSeek B ties Sonnet B. Page aggregate is primary; table is the
+  control. The old D-gate 2% vs B 8% result is the pre-correction historical
+  row.
 - OOH numbers are BLS estimates for 2023–33; frozen snapshot, not current data.
 - State/city/employer/historical/2033-specific questions are intentionally
   unanswerable when the snapshot does not state them.
 - No accuracy/SOTA claim. Current models and validation-centered RAG systems
   can match closed-corpus factual accuracy; see the limitations below.
-- The page run has one false abstention (`test-030`) in v1.1; the old page 100
-  was a single run. The old 60/60/58/60 number is title/row support, not
-  byte-verbatim. Aggregation and abstention are the strongest evidence.
+- The v1.1 page run had one false abstention (`test-030`); the 2026-10-30
+  corrected page aggregate is 100/100 for DeepSeek and 96/100 for Sonnet. The
+  old 60/60/58/60 number is title/row support, not byte-verbatim. Aggregation
+  and abstention are the strongest evidence.

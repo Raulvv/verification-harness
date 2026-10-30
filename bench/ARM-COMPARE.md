@@ -14,6 +14,11 @@ Runner: `bench/arm-compare.mjs`. Offline plumbing check: `node bench/arm-compare
 Same reader, corpus and retrieval window in every arm (`--k`, reference retriever);
 the default arms are `A,Q,DA`; B/C/D are opt-in; D is the gate-only ablation.
 
+Context flags: `--doc-mode excerpt|head|full` (default `excerpt`: 6k head plus
+tail lines for question terms absent from the head), `--doc-chars 20000`,
+`--aggregate off|table|pages` for global items, and `--ids id1,id2` for a
+subset. `excerpt` is the corrected local context; `full` is an ablation.
+
 ## Protocol (fix before running)
 
 1. Tune C's judge and threshold on the pilot/dev items only. Freeze. Run the held-out set once.
@@ -46,27 +51,30 @@ D-gate **40%** false accepts vs B/C **0%** after the scorer fix. This is a
 weak-reader warning, not product evidence; the 4B does not follow the contract
 well enough for the gate to matter.
 
-### Strong-reader held-out (DeepSeek V4.1 Flash, 100, one seed, K=3)
+### Corrected held-out 100 (2026-10-30)
 
-The published held-out run used **one seed**; the 3-seed protocol above is
-the bar for a separation claim, and no separation is claimed.
+DeepSeek V4.1 Flash and Sonnet 5.5, one seed, v2 labels, K=3 excerpt. Page
+aggregate is primary; table aggregate is the deterministic control. The local
+column excludes the two global items; the aggregate columns add them.
 
-| Arm | Answerable | Unanswerable | Partial | Audited wrong-shown | Coverage |
-|---|---:|---:|---:|---:|---:|
-| B RAG-cite | 27/40 | 38/40 | 20/20 | **8% [4–15]** | 55/100 |
-| C RAG-cite + MiniCheck | 20/40 | 38/40 | 5/20 | **3% [1–8]** | 28/100 |
-| D harness + gate | 27/40 | 40/40 | 17/20 | **2% [1–7]** | 46/100 |
+| Reader | Arm | Local 98 | + page agg | + table agg | False | Cost |
+|---|---|---:|---:|---:|---:|---:|
+| DeepSeek V4.1 Flash | B | 94 | — | — | 5 | $0.11 |
+| Sonnet 5.5 | B | 94 | — | — | 4 | $1.10 |
+| DeepSeek V4.1 Flash | DA | **98** | **100** | **100** | **0** | **$0.23** |
+| Sonnet 5.5 | DA | 94 | **96** | **96** | 4 | **$1.80** |
 
-D and B tie on answerable; D has 1 wrong answer vs B's 6. D's partials are
-17/20 after audit, not 7 wrong. C's low false-accept rate comes with the lowest
-coverage. Intervals overlap; do not claim separation. Raw held-out outputs stay
-private.
-
-D is comparable to C on false accepts with much higher coverage (46 vs 28),
-and better answerable/partial accuracy; C abstains more. D is comparable to B
-on answerable accuracy with lower false accepts and lower coverage; B is better
-on partials. D is not proven superior to entailment. Raw held-out outputs stay
-private.
+- **Reader-only:** DeepSeek B and Sonnet B tie at 94. DeepSeek is ~10x cheaper;
+  Sonnet has one fewer false accept. Not a DeepSeek reader win.
+- **DA:** DeepSeek 100 vs Sonnet 96 at ~7.8x lower cost, 0 vs 4 false accepts.
+  The DeepSeek DA adds 4 local rows over its B; the aggregate adds 2.
+- **Aggregate is deterministic:** the two global items are not reader wins.
+  Page and table agree.
+- **Old result:** the earlier DeepSeek/GLM-Flash 6k held-out rows are historical
+  and not comparable; the 6k head hid the annual-openings facts. Full 20k pages
+  are an ablation that recovered those facts but regressed `088`/`089`.
+- The remaining Sonnet DA misses are `041`, `088`, `091`, `093`; DeepSeek DA
+  has none after the aggregate.
 
 ### Reader robustness pilots (2026-10-29, public 20-item pilot)
 
