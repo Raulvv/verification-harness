@@ -21,7 +21,7 @@ subset. `excerpt` is the corrected local context; `full` is an ablation.
 
 ## Protocol (fix before running)
 
-1. Tune C's judge and threshold on the pilot/dev items only. Freeze. Run the held-out set once.
+1. Tune C's judge and threshold on the pilot/dev items only. Freeze. Run the post-correction 100 once; the clean held-out set is deferred.
 2. 3 seeds (`--seeds 3`). The hosted judge flips ~1 in 10 labels; report the spread, not one run.
 3. Primary metric: false-accept rate, i.e. a wrong answer, or any answer to an unanswerable
    or incompletely-flagged partial question, shown as if it were fine. Secondary: answerable
@@ -41,7 +41,7 @@ subset. `excerpt` is the corrected local context; `full` is an ablation.
 ## Known limits
 
 - Wilson intervals here pool seeds, which are not independent questions. Treat them as optimistic.
-- The pilot has 20 items. Use the held-out 100 for any claim.
+- The pilot has 20 items. Use the current post-correction 100 for development; use a clean held-out set for a claim (deferred).
 
 ## Results
 
@@ -51,30 +51,31 @@ D-gate **40%** false accepts vs B/C **0%** after the scorer fix. This is a
 weak-reader warning, not product evidence; the 4B does not follow the contract
 well enough for the gate to matter.
 
-### Corrected held-out 100 (2026-10-30)
+### Post-correction 100 — 3 seeds (2026-10-30)
 
-DeepSeek V4.1 Flash and Sonnet 5.5, one seed, v2 labels, K=3 excerpt. Page
-aggregate is primary; table aggregate is the deterministic control. The local
-column excludes the two global items; the aggregate columns add them.
+DeepSeek V4.1 Flash, Sonnet 5.5, and GLM-5.3-Flash (default), three seeds, v2
+labels, K=3 excerpt. Page aggregate is primary; table aggregate is the control.
+The current 100 is post-correction and development-informed, not held out.
 
-| Reader | Arm | Local 98 | + page agg | + table agg | False | Cost |
-|---|---|---:|---:|---:|---:|---:|
-| DeepSeek V4.1 Flash | B | 94 | — | — | 5 | $0.11 |
-| Sonnet 5.5 | B | 94 | — | — | 4 | $1.10 |
-| DeepSeek V4.1 Flash | DA | **98** | **100** | **100** | **0** | **$0.23** |
-| Sonnet 5.5 | DA | 94 | **96** | **96** | 4 | **$1.80** |
+| Reader | B local | DA local | DA + page | DA + table | B false | DA false | B $/100 | DA $/100 | DA/B |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| DeepSeek V4.1 Flash | 93.7 | **98.0** | **100** | **100** | 4.7 | **1.0** | $0.11 | **$0.24** | **2.24× pass** |
+| Sonnet 5.5 | 93.7 | **98.0** | **100** | **100** | 4.0 | **1.0** | $0.51 | $1.96 | **3.84× fail** |
+| GLM-5.3-Flash (default) | 86.3 | **95.3** | **97** | **97** | 11.0 | 4.3 | $0.04 | **$0.09** | **2.25× pass** |
 
-- **Reader-only:** DeepSeek B and Sonnet B tie at 94. DeepSeek is ~10x cheaper;
-  Sonnet has one fewer false accept. Not a DeepSeek reader win.
-- **DA:** DeepSeek 100 vs Sonnet 96 at ~7.8x lower cost, 0 vs 4 false accepts.
-  The DeepSeek DA adds 4 local rows over its B; the aggregate adds 2.
+- **Reader-only:** DeepSeek B and Sonnet B tie at 94. DeepSeek is ~4.8× cheaper
+  on B; Sonnet has slightly fewer false accepts. Not a DeepSeek reader win.
+- **DA:** DeepSeek and Sonnet tie at 98 local / 100 system; DeepSeek is ~8.2×
+  cheaper on DA. The Sonnet DA premium fails the 2.5× / $0.50 rule.
 - **Aggregate is deterministic:** the two global items are not reader wins.
   Page and table agree.
-- **Old result:** the earlier DeepSeek/GLM-Flash 6k held-out rows are historical
-  and not comparable; the 6k head hid the annual-openings facts. Full 20k pages
-  are an ablation that recovered those facts but regressed `088`/`089`.
-- The remaining Sonnet DA misses are `041`, `088`, `091`, `093`; DeepSeek DA
-  has none after the aggregate.
+- **The exact McNemar is suggestive, not separated:** local correctness 4–5
+  discordant vs 0, p=0.0625–0.125; local false accepts p=0.0625–0.25.
+- **Old result:** the earlier 6k held-out rows are historical and not
+  comparable. The current 100 is a development set; the clean held-out is
+  deferred.
+- **The generic fixes:** “do not give” scoring, gate-abstained absence trigger.
+  Sonnet DA moved from 94 local to 98; DeepSeek DA stayed 98.
 
 ### Reader robustness pilots (2026-10-29, public 20-item pilot)
 
@@ -97,7 +98,7 @@ robustness.
 ## Held-out report
 
 See `bench/ARM-COMPARE-REPORT.md` for per-condition shown/abstained/wrong,
-retrieval misses, intervals, coverage, strict-mode delta, and the held-out hash.
+retrieval misses, intervals, coverage, strict-mode delta, and the post-correction output hash.
 
 ## Citation metrics — pre-registered 2026-10-29 (before the run)
 

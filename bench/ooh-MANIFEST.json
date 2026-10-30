@@ -1,6 +1,6 @@
 {
  "name": "ooh-citation-first-benchmark",
- "version": "1.2.1",
+ "version": "1.2.2",
  "frozen_at": "2026-10-30",
  "status": "public-package-private-test",
  "corpus": {
@@ -40,6 +40,12 @@
   "sha256": "c0a0a8e38de7e3be8f213892b66ad4e43db0f854605f5896975860305a6d7081"
  },
  "private_files": [
+  "bench/results/arm-compare-3seed-deepseek-b-v2.jsonl",
+  "bench/results/arm-compare-3seed-deepseek-da-v2.jsonl",
+  "bench/results/arm-compare-3seed-glm53flash-b-v2.jsonl",
+  "bench/results/arm-compare-3seed-glm53flash-da-v2.jsonl",
+  "bench/results/arm-compare-3seed-sonnet55-b-v2.jsonl",
+  "bench/results/arm-compare-3seed-sonnet55-da-v2.jsonl",
   "bench/results/arm-compare-heldout-deepseek-b-v2-excerpt.jsonl",
   "bench/results/arm-compare-heldout-deepseek-da-v2-excerpt-pages.jsonl",
   "bench/results/arm-compare-heldout-deepseek-da-v2-excerpt-table.jsonl",
@@ -79,19 +85,24 @@
    "sha256": "04c19d15d9d5054437db93380217c6fa5911d2cf85926394b48d2b34d4d8ff47"
   },
   {
+   "path": "HISTORY.md",
+   "bytes": 9332,
+   "sha256": "878adabbdeb9dd845d281f8aa7066fbea29c8383374a2aaf7ad31dea663fd59e"
+  },
+  {
    "path": "README.md",
-   "bytes": 27226,
-   "sha256": "69de94310029e2cb54a427dc9269cdc8c9aac465df781bf18f514adf2c7e2fcc"
+   "bytes": 18027,
+   "sha256": "327b0235234c7fac9a126ab65c8a002a526922b37f618d55fdd64339a43cfe24"
   },
   {
    "path": "bench/ARM-COMPARE-REPORT.md",
-   "bytes": 50603,
-   "sha256": "a31bec01e0e51a613ded19f52afd9ce1c2b223d31277b8f0ffccd975306415f8"
+   "bytes": 51288,
+   "sha256": "2212a3fb549164ff14398228a61f66a23010e7a9d82f912828a3b9fbce16e586"
   },
   {
    "path": "bench/ARM-COMPARE.md",
-   "bytes": 7408,
-   "sha256": "c9d46a2daf963d0cf62b8235a17ed2eb6a361223f0d40a7d183423cf9d6f6b21"
+   "bytes": 7818,
+   "sha256": "aec8795f3b2f1864e0fed05b76908c2232c3e13bf311dc8dfd09080963529e8d"
   },
   {
    "path": "bench/arm-audit.mjs",
@@ -100,8 +111,8 @@
   },
   {
    "path": "bench/arm-compare.mjs",
-   "bytes": 19422,
-   "sha256": "b2ad247a00291602032b8429266abfdd2ae57e4e0e25d2b2f59c0fa00129c900"
+   "bytes": 19444,
+   "sha256": "ed2daa379fcc989b1e857c7903004d261a8632d1963fb2e9919435711b6e99a2"
   },
   {
    "path": "bench/arm-report.mjs",
@@ -115,8 +126,8 @@
   },
   {
    "path": "bench/arm-score.test.mjs",
-   "bytes": 1935,
-   "sha256": "ff8ef53a22e1d572314ffd773df6712891e6c45fb99acaa46a983699f04cedb2"
+   "bytes": 2178,
+   "sha256": "9eaeb8dd3c3d5941cc01d64c989214a707e4cb03a8254d28e393aa2529a93b44"
   },
   {
    "path": "bench/arm-second-rater.mjs",
@@ -395,8 +406,8 @@
   },
   {
    "path": "bench/lib/arm-score.mjs",
-   "bytes": 2217,
-   "sha256": "a31d34b4b6ef50f9c319d75869dcebc801988ee92da523a91d1ca1cf297ee1b3"
+   "bytes": 2222,
+   "sha256": "4635832542ff7f5d0aca8c4d280a20d05838c2d9108549cf2ce5567b05e80904"
   },
   {
    "path": "bench/lib/doc-window.mjs",
@@ -415,13 +426,13 @@
   },
   {
    "path": "bench/ooh-BENCHMARK.md",
-   "bytes": 9231,
-   "sha256": "f133e1f6052c85decfe89ce7d78addd365fbd88508e65c9b52b291516fa6d4ec"
+   "bytes": 9637,
+   "sha256": "a51532312a5ef77827d2e0048e8780ca94d58646403a1e52e0312d4c9e7b3f9d"
   },
   {
    "path": "bench/ooh-README.md",
-   "bytes": 14134,
-   "sha256": "7d4401617e59c454ad2a9cb2986f87a32ee02a3cc4af4df3268b18d1836a6303"
+   "bytes": 14626,
+   "sha256": "a0c77850f2184a7865f8c144ecec57562929add64ce4045076430bca97342c33"
   },
   {
    "path": "bench/ooh-SUBMISSION.md",
@@ -545,8 +556,8 @@
   },
   {
    "path": "kit/lib/answer/absence.mjs",
-   "bytes": 4250,
-   "sha256": "846b6054e9e11829523ac27c774029f0babc29b657feeb0874166944216a8727"
+   "bytes": 4255,
+   "sha256": "9c9d2aeb434ed995d69e40d620a4d45b27c3cb2ebd55345e081688c2446a5c43"
   },
   {
    "path": "kit/lib/answer/aggregate.mjs",
@@ -595,8 +606,8 @@
   },
   {
    "path": "kit/test/answer/absence.test.mjs",
-   "bytes": 2451,
-   "sha256": "e1e69654d1a23313fc456cf2483b628ed3903be1acecce7bb89ac4840112d788"
+   "bytes": 2538,
+   "sha256": "02af6e76e85641a1a7ec4963338a3c136886056775f401868dd070499c8c9657"
   },
   {
    "path": "kit/test/answer/aggregate.test.mjs",
@@ -631,7 +642,7 @@
   {
    "path": "package.json",
    "bytes": 1010,
-   "sha256": "05ee809ea13ba3fed973f3ed1834a2ff558c3dd0646bee50eb0eebbd62310512"
+   "sha256": "c3bf841ac21e23eb2cfcce934e86ddfe9642a2449aaba3c9a918adafae85d434"
   }
  ],
  "license": {

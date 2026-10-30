@@ -1,8 +1,8 @@
-# Arm comparison — latest pilot + held-out report
+# Arm comparison — latest pilot + post-correction report
 
-The held-out section is aggregate only. Raw held-out outputs, labels, audit
+The post-correction section is aggregate only. Raw outputs, labels, audit
 sheets, and second-rater results are private. Hashes commit to the exact files
-used.
+used. The current 100 is development-informed, not held out.
 
 ## Provenance
 
@@ -16,25 +16,37 @@ used.
 - Not pre-registered; one seed; n=100. Treat intervals as descriptive.
 - **2026-10-30 correction run:** working tree (commit follows); excerpt context; page and table aggregate. Private outputs: DeepSeek DA excerpt `ae0540f53611c24eb9f9c8562bc80a8a5fc7c126a547d80ab94dc338c1d49b61`; DeepSeek DA excerpt+page `5dbe92fc6aea7afb8eb9bc167540e63813df9de4a5e724d3c5b9ecbff237ccf5`; DeepSeek DA excerpt+table `253f2295d2852665648ee2a86aa0ec01a3ce0bdcc789f00c7cfffc8b92233aa1`; Sonnet DA excerpt `0f23fdb701a6bcb5a9d8ce08408cbcdebb916c0903141afb9ad2468a93876fd2`; Sonnet DA excerpt+page `80914d593652c63e9d7c5fe6108d2cdb9541690264eb130308675b3d5034d195`; Sonnet DA excerpt+table `cb197ad488d36043cc103577c5a89968622bb7cd6736bdbf81a800d092c707b5`; DeepSeek B `73d1a5270dc89fb9953493361d2bdf464335afe627b22a619e018f9084beef80`; Sonnet B `f1442e0b409e428e4b73866127389f613e5b71b39b34a7ffffe0ce652ba46d41`.
 
-## Held-out 100 — corrected harness (2026-10-30)
+## Post-correction 100 — 3 seeds (2026-10-30)
 
-DeepSeek V4.1 Flash and Sonnet 5.5, one seed, v2 labels, frozen questions.
-**Page aggregate is primary; table aggregate is the control.** C dropped.
-Labels hash
-`c0a0a8e38de7e3be8f213892b66ad4e43db0f854605f5896975860305a6d7081`.
+DeepSeek V4.1 Flash, Sonnet 5.5, and GLM-5.3-Flash (the shipped default), three
+seeds, v2 labels. **The current 100 is post-correction and development-informed,
+not held out.** The clean held-out set is deferred. Page aggregate is primary;
+table is the control. Values are per-100 means across seeds.
 
-| Reader | Arm | Local 98 | + page agg | + table agg | False | Cost |
-|---|---|---:|---:|---:|---:|---:|
-| DeepSeek V4.1 Flash | B | 94 | — | — | 5 | **$0.11** |
-| Sonnet 5.5 | B | 94 | — | — | 4 | **$1.10** |
-| DeepSeek V4.1 Flash | DA | **98** | **100** | **100** | **0** | **$0.23** |
-| Sonnet 5.5 | DA | 94 | **96** | **96** | 4 | **$1.80** |
+| Reader | B local | DA local | DA + page | DA + table | B false | DA false | B $/100 | DA $/100 | DA/B |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| DeepSeek V4.1 Flash | 93.7 | **98.0** | **100** | **100** | 4.7 | **1.0** | $0.11 | **$0.24** | **2.24× pass** |
+| Sonnet 5.5 | 93.7 | **98.0** | **100** | **100** | 4.0 | **1.0** | $0.51 | $1.96 | **3.84× fail** |
+| GLM-5.3-Flash (default) | 86.3 | **95.3** | **97** | **97** | 11.0 | 4.3 | $0.04 | **$0.09** | **2.25× pass** |
 
-The local column excludes the two global items; the aggregate columns add them
-deterministically. DeepSeek DA local: 38/40 answerable, 20/20 partial, 40/40
-unanswerable, 1 false. Sonnet DA local: 36/40, 19/20, 39/40, 5 false. With the
-two globals: DeepSeek 40/40, 20/20, 40/40, 0 false; Sonnet 38/40, 19/20, 39/40,
-4 false (`041`, `088`, `091`, `093`).
+The local column is 98 questions; the system columns add the 2 deterministic
+aggregate answers. The local headline is **DeepSeek DA 98 vs B 94**, not 100.
+The 100 is the system with the aggregate; B does not get it.
+
+### Reader-only reading
+
+- **DeepSeek and Sonnet DA tie at 98 local and 100 with aggregate.** DeepSeek is
+  ~8.2× cheaper on DA ($0.24 vs $1.96) and ~4.8× cheaper on B ($0.11 vs $0.51).
+- **DeepSeek B and Sonnet B tie at 94.** The DA premium is 2.24× for DeepSeek,
+  3.84× for Sonnet; the Sonnet DA premium fails the 2.5× / $0.50 rule.
+- **The exact McNemar is suggestive, not separated.** Local correctness is 4–5
+  discordant pairs vs 0, p=0.0625–0.125; local false accepts p=0.0625–0.25. The
+  system’s 0 vs 4.7 false accepts gives p=0.03–0.125. Three seeds show the same
+  direction but not a stable separation.
+- **GLM-5.3-Flash, the shipped default, is now measured:** B 86, DA 95 local, 97
+  with aggregate; 11 vs 4.3 false accepts. The old 88/82 is historical.
+- **No clean held-out claim.** The current 100 is the post-correction
+  development set. The clean 60-question/second-corpus test is deferred.
 
 ### What changed on 2026-10-30
 
@@ -43,27 +55,15 @@ two globals: DeepSeek 40/40, 20/20, 40/40, 0 false; Sonnet 38/40, 19/20, 39/40,
    head and adds tail lines for question terms missing from the head. Full 20k
    pages were an ablation: they recovered the annual openings but regressed
    `088`/`089`; the targeted excerpt avoids that.
-2. **Scorer normalization.** `master’s` vs `Master's` and `5 percent` vs `5%`
-   were false partial misses. The mechanical scorer now treats them as equal.
-3. **Aggregate route for the two globals.** `095` and `100` are 46-candidate
+2. **Scorer normalization.** `master’s` vs `Master's`, `5 percent` vs `5%`, and
+   “do not give” vs “do not state” are now equivalent/recognized.
+3. **Gate-abstained trigger.** The absence re-read now runs when the gate says
+   `abstained: true`, even if the answer text is not phrased as a refusal. This
+   fixed the one-sided `041`/`088` answers.
+4. **Aggregate route for the two globals.** `095` and `100` are 46-candidate
    global questions; a K=3 page window cannot answer them. The existing
-   `askAggregate` path now runs on the complete table or page map, with a
+   `askAggregate` path runs on the complete table or page map, with a
    completeness guard and full candidate receipt.
-
-The six annual-opening items are fixed. The remaining Sonnet DA misses are
-local (`041`, `088`, `091`, `093`); the remaining DeepSeek DA local miss is
-none after the aggregate. Page and table contexts agree.
-
-### Reader-only reading
-
-- **DeepSeek B and Sonnet B tie at 94.** DeepSeek is ~10x cheaper; Sonnet has
-  one fewer false accept. This is cost parity, not a DeepSeek reader win.
-- **Sonnet DA adds no local gain over Sonnet B** (94 both); the +2 to 96 is the
-  aggregate only.
-- **DeepSeek DA adds 4 local rows over DeepSeek B** (94 to 98); the aggregate
-  adds the last 2.
-- **DeepSeek DA 100 vs Sonnet DA 96** at ~7.8x lower cost; 0 vs 4 false
-  accepts. That is a DA/harness plus reader result.
 
 ### Previous held-out — pre-correction (do not compare)
 
@@ -260,8 +260,8 @@ D partial is **17/20**, not 7 wrong. C buys its 3% with the lowest coverage.
 partial deficit (17/20 vs B's 20/20) was a **pre-fix prompt bug**: the partial
 rule was never wired into the v45 prompt. After the fix the corrected pilot is
 D **21/24 answerable, 12/12 partials, 1/60 wrong** versus B 20/24, 12/12,
-4/60 (correct shown 57 vs 56). The held-out D row above is the historical pre-correction record; the corrected
-held-out matrix is at the top. The gate's comparative case remains
+4/60 (correct shown 57 vs 56). The held-out D row above is the historical pre-correction record; the current
+post-correction matrix is at the top. The gate's comparative case remains
 wrong-shown for fabricating readers, not a large accuracy or coverage gain.
 
 ## Paired tests
@@ -535,9 +535,9 @@ never sees the gold, so the same outputs were scored under both labels.
 - On this pilot D now has a small edge: +1 answerable, 1 versus 4 wrong shown,
   correct shown 57 versus 56 — at $0.07 versus $0.05 per 60 rows and 2,941
   versus 2,297 tokens/q.
-- **The held-out 100 is now re-run.** The old D row (27/40 answerable, 17/20
-  partials, 2/100 wrong) is the historical pre-correction measurement; the
-  corrected held-out matrix is at the top. Do not read the fixed pilot's 12/12
+- **The current 100 is now re-run (3 seeds).** The old D row (27/40 answerable,
+  17/20 partials, 2/100 wrong) is the historical pre-correction measurement;
+  the post-correction matrix is at the top. Do not read the fixed pilot's 12/12
   partials as if they were the old held-out D result.
 
 Provenance: `bench/ooh-pilot-v2.jsonl` sha256
@@ -843,10 +843,11 @@ recorded.
 ### What we cannot claim
 
 - A universal best arm; DA on 4B/Flash; a simple prompt universally failing;
-  accuracy SOTA/leader; the post-fix held-out; local quantized equivalence;
-  statistical separation (p=0.070 held-out; pilots n=20, correlated seeds);
-  a human second rater; generalisation beyond one corpus; 27B/hosted parity
-  (the local probe has no matched 3-seed D). (The earlier Sonnet DA 75/81 was
+  accuracy SOTA/leader; a clean held-out claim (the current 100 is
+  post-correction; the clean set is deferred); local quantized equivalence;
+  statistical separation (3-seed McNemar p=0.0625–0.125; pilots n=20,
+  correlated seeds); a human second rater; generalisation beyond one corpus;
+  27B/hosted parity (the local probe has no matched 3-seed D). (The earlier Sonnet DA 75/81 was
   a raw-index reporting artifact; the assembled citations are 81/81.)
 
 ## Default, article, and ask
@@ -855,8 +856,8 @@ The shipped default is the current harness **DA** (quote + gate + absence); the
 default reader is **GLM-5.3-Flash** (OpenCode gateway; `OPENCODE_API_KEY`), with
 `qwen3.5:4b` as the zero-config local demo and `qwen3.8-27b` q4 as the best
 local. `--source` and `--no-absence` are the opt-outs. The ranked pilot is the
-best consolidation until the held-out 100 is re-run; the held-out labels are
-private. The governance/CTO article and the CTO/mid-management email ask for
+best consolidation of the current post-correction development set; the clean
+held-out set is deferred, and the labels are private. The governance/CTO article and the CTO/mid-management email ask for
 the funded experiment, a consultancy pilot, and allocated working time; the
 trial has a kill rule. See `drafts/receipts-not-confidence.md` and
 `drafts/email-cto-quotes-not-accuracy.md` (gitignored).

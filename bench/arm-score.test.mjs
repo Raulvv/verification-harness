@@ -18,6 +18,11 @@ test('arm score: partial needs stated value plus missing-part disclosure', () =>
   assert.equal(score(item, 'The US median is $61,270.').correct, false)
 })
 
+test('arm score: do not give is a valid unanswerable abstention', () => {
+  const item = { condition: 'unanswerable' }
+  assert.equal(score(item, 'The documents do not give a 2033-only figure; they give an annual average.').correct, true)
+})
+
 test('arm score: percent and percent-word are equivalent for partial values', () => {
   const item = { condition: 'partial', gold: { parts: [{ part: 'growth', value: '5%', status: 'stated' }, { part: '2010 employment', value: null, status: 'not stated' }] } }
   assert.equal(score(item, 'Grounds Maintenance Workers are projected to grow 5 percent; the 2010 employment is not stated.').correct, true)

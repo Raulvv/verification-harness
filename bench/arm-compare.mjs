@@ -194,7 +194,7 @@ async function runArm(arm, item) {
   if (arm === 'D') return runDWith(docs)
   if (arm === 'DA') {
     const d = await runDWith(docs)
-    const triggered = d.gate.mechanicalPass && !d.text.startsWith('NOT FOUND (gate rejected') && shouldRunAbsence(d.text)
+    const triggered = d.gate.mechanicalPass && !d.text.startsWith('NOT FOUND (gate rejected') && (d.gate.abstained || shouldRunAbsence(d.text))
     if (!triggered) return d
     const a = await runAbsence({ question: item.question, docs, corpusRoot: corpus, chat: ask, read: runDWith, docChars: DOC_CHARS })
     const base = a.fixed ?? d

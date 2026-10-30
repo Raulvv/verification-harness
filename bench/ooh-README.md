@@ -1,4 +1,4 @@
-# OOH benchmark — v1.2.1
+# OOH benchmark — v1.2.2
 
 > Repository: `verification-harness` · package: `ooh-citation-first-benchmark`
 >
@@ -9,7 +9,7 @@
 A neutral, public-corpus, citation-first benchmark built from the U.S. Bureau
 of Labor Statistics **Occupational Outlook Handbook** (2023–33 edition).
 
-Status: **public package + private held-out test**; benchmark frozen 2026-10-24, harness corrected 2026-10-30; package v1.2.1. The public dev set is for iteration; the 100-item test labels are private and must not be trained on or published. The old 6k/full-page held-out rows are historical and not comparable to the corrected excerpt results.
+Status: **public package + private test labels**; benchmark frozen 2026-10-24, post-correction consolidation 2026-10-30; package v1.2.2. The public dev set is for iteration; the 100-item test labels are private and must not be trained on or published. **The current 100 is post-correction and development-informed, not held out; the clean held-out set is deferred.** The old 6k/full-page rows are historical and not comparable.
 
 ## Quickstart
 
@@ -64,8 +64,8 @@ benchmark. It measures:
 |---|---:|---|---|
 | Pilot | 20 | public; human-reviewed | `bench/ooh-pilot.jsonl` / `bench/ooh-pilot-validation.jsonl` |
 | Public aggregation dev | 14 | public; human-approved 14/14 | `bench/ooh-dev-aggregation.jsonl` / `bench/ooh-dev-validation.json` |
-| Held-out test questions | 100 | public questions; **private labels** | `bench/ooh-test-questions.jsonl` |
-| Held-out test labels | 100 | **private**; frozen; not in the public tree | `bench/results/ooh-test-private-v2.jsonl` (gitignored) |
+| Test questions (post-correction; not held out) | 100 | public questions; **private labels** | `bench/ooh-test-questions.jsonl` |
+| Test labels (post-correction; not held out) | 100 | **private**; frozen; not in the public tree | `bench/results/ooh-test-private-v2.jsonl` (gitignored) |
 
 Test composition: 40 answerable / 20 partial / 40 unanswerable; two global
 aggregation questions (46-candidate and 25-candidate). Test labels are private;
@@ -93,27 +93,28 @@ external knowledge**.
   naive/Mimo proxy table is historical v1.1 context, not the current matrix.
 - Reported results are on the private test; the public dev set is reproducible.
 
-Headline (private test, v2 labels, one seed, corrected 2026-10-30):
+Headline (private test, v2 labels, **3 seeds**, post-correction 2026-10-30;
+**development-informed, not held out**):
 
-| Reader | Arm | Local 98 | + page aggregate | + table aggregate | False | Cost |
-|---|---|---:|---:|---:|---:|---:|
-| DeepSeek V4.1 Flash | B | 94 | — | — | 5 | $0.11 |
-| Sonnet 5.5 | B | 94 | — | — | 4 | $1.10 |
-| DeepSeek V4.1 Flash | DA | **98** | **100** | **100** | **0** | **$0.23** |
-| Sonnet 5.5 | DA | 94 | **96** | **96** | 4 | **$1.80** |
+| Reader | B local | DA local | DA + page | DA + table | B false | DA false | B $/100 | DA $/100 | DA/B |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| DeepSeek V4.1 Flash | 93.7 | **98.0** | **100** | **100** | 4.7 | **1.0** | $0.11 | **$0.24** | **2.24× pass** |
+| Sonnet 5.5 | 93.7 | **98.0** | **100** | **100** | 4.0 | **1.0** | $0.51 | $1.96 | **3.84× fail** |
+| GLM-5.3-Flash (default) | 86.3 | **95.3** | **97** | **97** | 11.0 | 4.3 | $0.04 | **$0.09** | **2.25× pass** |
 
-**Page aggregate is primary; table aggregate is the control.** The local column
-excludes the two global items; the aggregate columns add them deterministically.
-DeepSeek B and Sonnet B tie at 94; DeepSeek is ~10x cheaper, Sonnet has one
-fewer false accept. DeepSeek DA 100 vs Sonnet DA 96 at ~7.8x lower cost, 0 vs 4
-false accepts. The +2 from Sonnet DA over Sonnet B is the aggregate only; the
-DeepSeek DA adds 4 local rows plus the 2 aggregate. The two globals are not
-reader wins.
+**Page aggregate is primary; table is the control.** The local column is 98
+questions; the system columns add the 2 deterministic aggregate answers. The
+local headline is **DeepSeek DA 98 vs B 94**, not 100. DeepSeek and Sonnet DA
+tie at 98 local / 100 system; DeepSeek is ~8.2× cheaper on DA. B ties at 94;
+the Sonnet DA premium fails the 2.5× / $0.50 rule. Exact McNemar on local
+correctness is 4–5 discordant vs 0, p=0.0625–0.125; suggestive, not separated.
+The two globals are not reader wins.
 
 The 2026-10-30 correction: the old 6k head hid the annual-openings facts;
-the scorer missed `master’s`/`5 percent`; the two globals had no aggregate
-route. The corrected excerpt + table/page aggregate fixes all three. Full 20k
-pages were an ablation, not the fix: they recovered the annual openings but
+the scorer missed `master’s`/`5 percent`/“do not give”; the gate-abstained
+absence trigger was missing; the two globals had no aggregate route. The
+corrected excerpt, scorer, trigger, and table/page aggregate fix these. Full
+20k pages were an ablation, not the fix: they recovered the annual openings but
 regressed `088`/`089`.
 
 Citation **title/row support** in the older v1.1 context: harness 60/60 table
@@ -121,12 +122,12 @@ and 59/60 pages; baselines 0/60. That is **not** a byte-verbatim claim. The v2
 audit gives table 37/60 verbatim segments (37/60 contiguous) and pages 38/60
 segments (26/60 contiguous). Many receipts are composite; the table local
 receipt is a row selection. The corrected page/table aggregate is **100/100**
-for DeepSeek and **96/100** for Sonnet; the old v1.1 page 99/100 (`test-030`
-false abstention) is historical. The harness is **not** an accuracy leader; the
-differentiator is proof, abstention, and aggregation coverage. The default
-verifier is deliberately tolerant; use `node kit/bin/verify.mjs ... --strict`
-(or `verify(..., { strict: true })`) for literal case/punctuation. Published OOH
-numbers use the default tolerant mode.
+for DeepSeek and Sonnet, **97/97** for the GLM default; the old v1.1 page 99/100
+(`test-030` false abstention) is historical. The harness is **not** an accuracy
+leader; the differentiator is proof, abstention, and aggregation coverage. The
+default verifier is deliberately tolerant; use `node kit/bin/verify.mjs ...
+--strict` (or `verify(..., { strict: true })`) for literal case/punctuation.
+Published OOH numbers use the default tolerant mode.
 
 ## Reproduce the public dev set
 
@@ -282,19 +283,19 @@ validated by the public package.
 
 - 48 pages, 100 test items, two global aggregation questions (46- and
   25-candidate); not full wiki.
-- Corrected reader comparison (held-out 100, one seed, v2 labels, excerpt +
-  aggregate): DeepSeek DA **100/100**, Sonnet DA **96/100**, both B arms
-  **94/100**. DeepSeek DA $0.23 vs Sonnet DA $1.80; DeepSeek B $0.11 vs
-  Sonnet B $1.10. The 2 global items are deterministic aggregate, not reader
-  wins; DeepSeek B ties Sonnet B. Page aggregate is primary; table is the
-  control. The old D-gate 2% vs B 8% result is the pre-correction historical
-  row.
+- Post-correction 3-seed reader comparison (development-informed, not held out;
+  excerpt + aggregate): DeepSeek DA **98 local / 100 system**, Sonnet DA
+  **98/100**, both B arms **94/94**, GLM-Flash default **95/97**. DeepSeek DA
+  $0.24 vs Sonnet DA $1.96; DeepSeek B $0.11 vs Sonnet B $0.51. The 2 global
+  items are deterministic aggregate, not reader wins; DeepSeek B ties Sonnet B.
+  Page aggregate is primary; table is the control. The old D-gate 2% vs B 8%
+  result is pre-correction historical.
 - OOH numbers are BLS estimates for 2023–33; frozen snapshot, not current data.
 - State/city/employer/historical/2033-specific questions are intentionally
   unanswerable when the snapshot does not state them.
 - No accuracy/SOTA claim. Current models and validation-centered RAG systems
   can match closed-corpus factual accuracy; see the limitations below.
-- The v1.1 page run had one false abstention (`test-030`); the 2026-10-30
-  corrected page aggregate is 100/100 for DeepSeek and 96/100 for Sonnet. The
-  old 60/60/58/60 number is title/row support, not byte-verbatim. Aggregation
-  and abstention are the strongest evidence.
+- The v1.1 page run had one false abstention (`test-030`); the post-correction
+  3-seed page aggregate is 100/100 for DeepSeek and Sonnet, 97/97 for the GLM
+  default. The old 60/60/58/60 number is title/row support, not byte-verbatim.
+  Aggregation and abstention are the strongest evidence.

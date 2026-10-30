@@ -1,6 +1,6 @@
-# OOH benchmark specification — v1.2.1
+# OOH benchmark specification — v1.2.2
 
-Date: 2026-10-30. Package: v1.2.1, 2026-10-30. Status: frozen public package; private held-out test; corrected harness.
+Date: 2026-10-30. Package: v1.2.2, 2026-10-30. Status: frozen public package; private test labels; post-correction consolidation; the current 100 is development-informed, not held out; clean held-out deferred.
 This is the single document that defines the benchmark’s scope, labels,
 metrics, scoring, aggregation contract, baselines, and limits. If a number is
 published, this spec plus the README caveats must back it.
@@ -38,8 +38,8 @@ citation breadth/candidate coverage, deterministic aggregation, and cost.
 |---|---:|---|---|
 | Pilot | 20 | public | human-reviewed |
 | Public aggregation dev | 14 | public | human-approved 14/14 |
-| Held-out test questions | 100 | public | none (questions only) |
-| Held-out test labels | 100 | **private** | condition, gold, evidence, sources |
+| Test questions (post-correction; not held out) | 100 | public | none (questions only) |
+| Test labels (post-correction; not held out) | 100 | **private** | condition, gold, evidence, sources |
 
 Test composition: **40 answerable / 20 partial / 40 unanswerable**; two global
 aggregation questions (46-candidate and 25-candidate). The test questions are in
@@ -127,29 +127,29 @@ library is `kit/lib/answer/aggregate.mjs`; the CLI is
   GLM-5.3-Flash. The old naive/Mimo proxy table is historical v1.1 context,
   not part of the corrected matrix.
 
-Corrected reference results (private test, v2 labels, one seed, 2026-10-30;
-counts only, no labels):
+Post-correction reference results (private test, v2 labels, 3 seeds, 2026-10-30;
+counts only, no labels; development-informed, not held out):
 
-| Reader | Arm | Local 98 | + page aggregate | + table aggregate | False | Cost |
-|---|---|---:|---:|---:|---:|---:|
-| DeepSeek V4.1 Flash | B | 94 | — | — | 5 | $0.11 |
-| Sonnet 5.5 | B | 94 | — | — | 4 | $1.10 |
-| DeepSeek V4.1 Flash | DA | **98** | **100** | **100** | **0** | **$0.23** |
-| Sonnet 5.5 | DA | 94 | **96** | **96** | 4 | **$1.80** |
+| Reader | B local | DA local | DA + page | DA + table | B false | DA false | B $/100 | DA $/100 | DA/B |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| DeepSeek V4.1 Flash | 93.7 | **98.0** | **100** | **100** | 4.7 | **1.0** | $0.11 | **$0.24** | **2.24× pass** |
+| Sonnet 5.5 | 93.7 | **98.0** | **100** | **100** | 4.0 | **1.0** | $0.51 | $1.96 | **3.84× fail** |
+| GLM-5.3-Flash (default) | 86.3 | **95.3** | **97** | **97** | 11.0 | 4.3 | $0.04 | **$0.09** | **2.25× pass** |
 
-The local column excludes the two globals; the aggregate columns add them
-deterministically. **Page aggregate is primary; table is the control.**
-DeepSeek B and Sonnet B tie at 94 (DeepSeek ~10x cheaper; Sonnet one fewer
-false). DeepSeek DA 100 vs Sonnet DA 96 at ~7.8x lower cost, 0 vs 4 false.
-The Sonnet DA’s +2 over Sonnet B is the aggregate only; the DeepSeek DA’s +6
-is +4 local and +2 aggregate. The aggregate is not a reader win.
+The local column is 98 questions; the aggregate columns add the 2 deterministic
+globals. **Page aggregate is primary; table is the control.** The local headline
+is DeepSeek DA 98 vs B 94, not 100. DeepSeek and Sonnet DA tie at 98 local /
+100 system; DeepSeek is ~8.2× cheaper on DA. B ties at 94; Sonnet DA’s premium
+fails the 2.5× / $0.50 rule. Exact McNemar on local correctness is 4–5
+discordant vs 0, p=0.0625–0.125; suggestive, not separated. The aggregate is
+not a reader win.
 
 Citation **title/row support** in the older v1.1 context: harness 60/60 table,
 59/60 pages; baselines 0/60. That is **not** a byte-verbatim claim. v2 gives
 table 37/60 verbatim segments (37/60 contiguous) and pages 38/60 segments
 (26/60 contiguous). The old v1.1 page run was 99/100 (`test-030` false
-abstention); the corrected page aggregate is 100/100 for DeepSeek and 96/100
-for Sonnet. Public dev: 14/14 table and pages. Held-out two-document sums:
+abstention); the post-correction page aggregate is 100/100 for DeepSeek and
+Sonnet, 97/97 for the GLM default. Public dev: 14/14 table and pages. Post-correction two-document sums:
 three questions (`test-019`, `test-081`, `test-089`); private audit. These are
 **not** an accuracy leadership claim; the benchmark is not an accuracy
 leaderboard. The old naive/Mimo proxy table is historical v1.1 context and is
@@ -189,7 +189,7 @@ maintainer-audited, not reproducible from this tree.
 
 ## 13. Version and provenance
 
-- Version: **1.2.1**, benchmark frozen 2026-10-24; harness corrected 2026-10-30; package 2026-10-30.
+- Version: **1.2.2**, benchmark frozen 2026-10-24; post-correction 3-seed consolidation 2026-10-30; package 2026-10-30.
 - Manifest: `bench/ooh-MANIFEST.json` (public files + hashes; private test
   boundary).
 - Prior art / positioning: The benchmark is not an accuracy leaderboard.

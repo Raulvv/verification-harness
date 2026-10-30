@@ -7,7 +7,7 @@ import { join } from 'node:path'
 import { rank } from '../retrieval/locate.mjs'
 import { leadAbstain } from '../receipts/text.mjs'
 
-export const ABSENCE_RE = /not (?:stated|provided|included|listed|available|covered)|(?:does|do) not (?:state|provide|include|list|contain|specify)|no (?:record|data|information|mention|pay|salary|wage|figure|value)|(?:only|just) (?:one|two|three|four|\d+) [^.]*(?:have|has|are|is)|cannot be (?:determined|calculated|computed|confirmed|completed|made|ranked)/i
+export const ABSENCE_RE = /not (?:stated|provided|included|listed|available|covered)|(?:does|do) not (?:state|provide|include|list|contain|specify|give)|no (?:record|data|information|mention|pay|salary|wage|figure|value)|(?:only|just) (?:one|two|three|four|\d+) [^.]*(?:have|has|are|is)|cannot be (?:determined|calculated|computed|confirmed|completed|made|ranked)/i
 
 export const shouldRunAbsence = (text) => leadAbstain(text) || ABSENCE_RE.test(text)
 

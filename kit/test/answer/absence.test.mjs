@@ -49,4 +49,5 @@ test('absence: the trigger recognises the abstention shapes and the absence sent
   assert.equal(shouldRunAbsence('The documents do not state the California pay.'), true)
   assert.equal(shouldRunAbsence('The median pay is 86,070.'), false)
   assert.equal(ABSENCE_RE.test('The figure is not stated.'), true)
+  assert.equal(ABSENCE_RE.test('The documents do not give a 2033-only figure.'), true)
 })
