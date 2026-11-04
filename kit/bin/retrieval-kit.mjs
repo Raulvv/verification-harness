@@ -32,7 +32,7 @@ function usage() {
   console.log([
     'retrieval-kit — ask a folder of documents and get a checkable answer',
     '',
-    '  retrieval-kit config --corpus <dir> [--model <id>] [--base-url <url>]',
+    '  retrieval-kit config --corpus <dir> [--model <id>] [--base-url <url>] [--formal-cmd <cmd>]',
     '  retrieval-kit ask "<question>"',
     '  retrieval-kit ask <dir> "<question>"      # one-off, no workspace',
     '  retrieval-kit ask --aggregate --table <rows.json> --spec <spec.json> [question]',

@@ -59,5 +59,6 @@ export function formatWorkspace(ws) {
     row('retriever', c.retriever ?? '(default: reference)'),
     row('tier', c.tier ?? '(default: v45)'),
     row('absence', c.absence === false ? 'off' : '(default: on)'),
+    row('formalCmd', c.formalCmd ?? '(not set)'),
   ].join('\n')
 }

@@ -11,6 +11,7 @@ import { judgeSufficiency, judgeByCommand, judgeGrade } from '../receipts/suffic
 import { judgeEvidenceFor } from '../receipts/evidence.mjs'
 import { runAbsence, shouldRunAbsence } from '../answer/absence.mjs'
 import { resolveAsk } from './resolve.mjs'
+import { findWorkspace } from './workspace.mjs'
 import { validateFlags, ASK_FLAGS, ASK_BOOLEAN } from '../cli.mjs'
 
 // Formal path: delegate to an external deterministic verifier. The kit stays
@@ -49,9 +50,10 @@ async function runFormalAsk({ question, flags, env, cwd, formalFn }) {
     const formal = gateFormalCitations(out.formal ?? {}, { question, corpus: flags.corpus })
     return { ...out, formal, question: out.question ?? question, ms: out.ms ?? (Date.now() - started) }
   }
-  const cmd = flags.formalCmd ?? env.RETRIEVAL_FORMAL_CMD
+  const workspace = findWorkspace(cwd)
+  const cmd = flags.formalCmd ?? env.RETRIEVAL_FORMAL_CMD ?? workspace?.config?.formalCmd
   if (!cmd) {
-    throw new Error('--formal needs --formal-cmd <cmd> or RETRIEVAL_FORMAL_CMD (the command must read JSON on stdin and write JSON on stdout)')
+    throw new Error('--formal needs --formal-cmd <cmd>, RETRIEVAL_FORMAL_CMD, or a sealed workspace with formalCmd (the command must read JSON on stdin and write JSON on stdout)')
   }
   const payload = JSON.stringify({ question, no_defaults: flags.noDefaults === true })
   const r = spawnSync('sh', ['-c', cmd], {

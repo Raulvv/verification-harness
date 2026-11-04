@@ -7,6 +7,7 @@ import { mkdtempSync, writeFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { runAsk, formatAsk } from '../../lib/cli/ask.mjs'
+import { runConfig } from '../../lib/cli/config.mjs'
 
 const stubChat = (json) => async () => ({ content: JSON.stringify(json), usage: { prompt_tokens: 5, completion_tokens: 5 } })
 const withCorpus = (fn) => {
@@ -352,6 +353,24 @@ test('ask --formal: without a corpus the quote is labeled ungated', async () => 
   })
   assert.equal(res.formal.citations[0].gate.passed, null)
   assert.match(formatAsk(res), /gate: ungated/)
+})
+
+test('ask --formal: a sealed workspace can carry the formal command', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'formal-cfg-'))
+  try {
+    writeFileSync(join(root, 'docs.md'), '# Doc\n')
+    const stub = join(root, 'stub.mjs')
+    writeFileSync(
+      stub,
+      "let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{console.log(JSON.stringify({answer:'stub answer',verdict:'ENTAILED',assumptions:[],citations:[],spec_version:'spec-v1',spec_id:'x'}))})\n",
+    )
+    runConfig({ flags: { corpus: '.', formalCmd: `${process.execPath} ${stub}` }, cwd: root })
+    const res = await runAsk({ question: 'q', flags: { formal: true }, env: {}, cwd: root })
+    assert.equal(res.formal.verdict, 'ENTAILED')
+    assert.equal(res.formal.answer, 'stub answer')
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
 })
 
 test('ask --formal: a missing formal command fails loud', async () => {

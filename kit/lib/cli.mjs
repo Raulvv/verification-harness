@@ -40,7 +40,7 @@ export const ASK_BOOLEAN = ['aggregate', 'formal', 'json', 'minimalReceipt', 'no
 // The config surface (runConfig).
 export const CONFIG_FLAGS = [
   'absence', 'apiKey', 'apiKeyEnv', 'at', 'baseUrl', 'corpus', 'embedModel',
-  'model', 'noAbsence', 'retriever', 'reset', 'show', 'source', 'tier',
+  'formalCmd', 'model', 'noAbsence', 'retriever', 'reset', 'show', 'source', 'tier',
 ]
 export const CONFIG_BOOLEAN = ['noAbsence', 'reset', 'show', 'source']
 

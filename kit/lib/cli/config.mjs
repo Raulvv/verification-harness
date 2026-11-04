@@ -8,7 +8,7 @@ import { resolve, relative } from 'node:path'
 import { findWorkspace, writeWorkspace, clearWorkspace, formatWorkspace } from './workspace.mjs'
 import { validateFlags, CONFIG_FLAGS, CONFIG_BOOLEAN } from '../cli.mjs'
 
-const FIELDS = ['model', 'baseUrl', 'apiKeyEnv', 'embedModel', 'retriever', 'tier', 'absence']
+const FIELDS = ['model', 'baseUrl', 'apiKeyEnv', 'embedModel', 'retriever', 'tier', 'absence', 'formalCmd']
 
 export function runConfig({ flags = {}, cwd = process.cwd() } = {}) {
   validateFlags(flags, CONFIG_FLAGS, { booleans: CONFIG_BOOLEAN })
@@ -23,7 +23,7 @@ export function runConfig({ flags = {}, cwd = process.cwd() } = {}) {
     clearWorkspace(ws.dir)
     return { action: 'reset', output: `workspace removed: ${resolve(ws.dir, '.retrieval')}` }
   }
-  if (!flags.corpus) throw new Error('usage: retrieval-kit config --corpus <dir> [--model <id>] [--base-url <url>] [--retriever dense|reference|router] [--tier v45|source-v45|full] [--source] [--no-absence]')
+  if (!flags.corpus) throw new Error('usage: retrieval-kit config --corpus <dir> [--model <id>] [--base-url <url>] [--retriever dense|reference|router] [--tier v45|source-v45|full] [--source] [--no-absence] [--formal-cmd <cmd>]')
   if (flags.apiKey) throw new Error('refusing to write a literal key — use `--api-key-env <VAR>` and set that variable instead (RN-G12)')
   const corpusRoot = resolve(cwd, flags.corpus)
   if (!existsSync(corpusRoot)) throw new Error(`corpus not found: ${corpusRoot}`)

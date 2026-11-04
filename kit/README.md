@@ -84,6 +84,14 @@ With `--corpus`, every citation is checked by the existing mechanical gate and
 the output shows `gate: verified` or `gate: REJECTED`. Without a corpus, quotes
 are explicitly labeled `gate: ungated`.
 
+Seal the command once instead of repeating it:
+
+```sh
+node kit/bin/retrieval-kit.mjs config --corpus <corpus-dir> \
+  --formal-cmd "<your verifier command>"
+node kit/bin/retrieval-kit.mjs ask --formal "your question"
+```
+
 The command receives `{"question": "...", "no_defaults": false}`. It must emit:
 
 ```json

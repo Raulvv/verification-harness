@@ -17,7 +17,7 @@ test('config: seal in the cwd (corpus recorded), show it, reset it; a literal ke
     // unknown config flags are refused, never silently ignored
     assert.throws(() => runConfig({ flags: { corpus: 'docs', modeel: 'qwen3.5:4b' }, cwd: root }), /unknown flag: --modeel/)
 
-    const w = runConfig({ flags: { corpus: 'docs', model: 'qwen3.5:4b', apiKeyEnv: 'OPENAI_API_KEY' }, cwd: root })
+    const w = runConfig({ flags: { corpus: 'docs', model: 'qwen3.5:4b', apiKeyEnv: 'OPENAI_API_KEY', formalCmd: 'python -m formal.cli --stdin-json' }, cwd: root })
     assert.equal(w.action, 'write')
     assert.ok(existsSync(w.file))
     assert.ok(w.file.startsWith(root), 'the seat is written where you ran config')
@@ -30,6 +30,8 @@ test('config: seal in the cwd (corpus recorded), show it, reset it; a literal ke
     assert.equal(show.action, 'show')
     assert.match(show.output, /qwen3\.5:4b/)
     assert.match(show.output, /docs/)
+    assert.match(show.output, /formalCmd/)
+    assert.match(show.output, /formal\.cli/)
 
     // discovery walks up from inside the corpus too
     assert.equal(findWorkspace(corpus).dir, root)

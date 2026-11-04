@@ -13,6 +13,8 @@
 - `ask --formal --corpus <dir>` gates every displayed quote with the existing
   mechanical verifier. The output marks each quote `gate: verified`,
   `gate: REJECTED`, or `gate: ungated`; a fabricated quote cannot pass silently.
+- `config --formal-cmd <cmd>` seals the formal verifier command in the
+  workspace, so `ask --formal` does not need the long flag every time.
 
 ## 0.2.0 — DA default + GLM-5.3-Flash
 
