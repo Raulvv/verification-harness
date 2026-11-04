@@ -49,6 +49,22 @@ The current TF-IDF detector returns sentence windows, not minimal clause spans,
 so this is a floor. It validates the official metric harness; it is not a
 competitive span-extraction result.
 
+## Fine-tuned span model
+
+The leaderboard-comparable path uses a CUAD fine-tuned extractive QA model:
+
+```bash
+.venv-detectors/bin/python -m formal.cuad_qa \
+  --model akdeniz27/roberta-base-cuad
+```
+
+It writes n-best spans to `legal/cuad/out/cuad-qa-nbest.jsonl` and official
+metrics to `legal/cuad/out/cuad-qa-metrics.json`. Recompute metrics from a
+saved prediction file with `--from-jsonl`.
+
+This is the reader layer. It is separate from the verifier, which checks the
+quote and the closed-corpus absence receipt.
+
 ## Legal-BERT encoder (optional)
 
 The encoder is opt-in and needs `torch` and `transformers`. Use a separate

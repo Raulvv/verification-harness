@@ -60,6 +60,7 @@ only way to use the formal layer.
 | `formal/server.py` | Minimal HTTP API |
 | `formal/legal.py` | Synthetic legal playbook demo (second schema) |
 | `formal/cuad.py` | CUAD clause-presence adapter: TF-IDF baseline + quote/absence receipts |
+| `formal/cuad_qa.py` | CUAD fine-tuned span extractor + official AUPR/P@80/P@90 metrics |
 | `formal/negative.py` | 17 adversarial cases for test-041/088/091/093/095/100 |
 | `formal/evaluate.py` | Inventory, agreement, mutation tests, determinism, runtime |
 | `competitive/` | Frozen claim sets, detector runners, audit forms, pre-registration |
@@ -139,7 +140,7 @@ quote support 0.602**. This is a baseline, not a CUAD leaderboard result and
 not legal advice. Details: `legal/CUAD-PILOT.md`.
 
 `--mode span` runs the official-style Jaccard ≥ 0.5 / AUPR / P@80 / P@90
-harness. The TF-IDF sentence-window floor is macro AUPR 0.136 / P@80 0.023 /
+harness. The TF-IDF sentence-window floor is macro AUPR 0.157 / P@80 0.023 /
 P@90 0.000; it validates the metric harness, not a competitive span result.
 `--encoder legal-bert` is an optional, slower Legal-BERT baseline; it needs the
 separate `legal/cuad/requirements-legal.txt` venv. Full run: precision 0.947,

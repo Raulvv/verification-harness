@@ -107,7 +107,7 @@ detector returns sentence windows, not minimal clause spans, so it is a floor:
 
 | System | Macro AUPR | P@80 | P@90 |
 |---|---:|---:|---:|
-| TF-IDF sentence windows | 0.136 | 0.023 | 0.000 |
+| TF-IDF sentence windows | 0.157 | 0.023 | 0.000 |
 
 This validates the metric harness. It is not a competitive span-extraction
 result.
