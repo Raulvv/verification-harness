@@ -72,6 +72,31 @@ slice is local-only (gitignored):
   --title "Natural reader-error gold"
 ```
 
+## Multi-reader held-out slice
+
+A two-reader natural-error set is generated from cached Sonnet 5.5 DA and
+GLM-5.3-Flash DA outputs:
+
+```bash
+.venv/bin/python competitive/build_multireader.py
+.venv/bin/python competitive/build_gold_form.py \
+  --input competitive/private/multireader-160.jsonl \
+  --output competitive/private/multireader-gold-form.html \
+  --title "Multi-reader natural gold"
+```
+
+160 claims: 80 Sonnet DA + 80 GLM DA, 80 answerable + 80 unanswerable. The
+provisional labels are hidden in the form. Preliminary (pre-audit) results:
+
+| System | Binary | False accepts | False rejects |
+|---|---:|---:|---:|
+| Formal | 1.00 | 0 | 0 |
+| MiniCheck | 0.84 | 9 | 17 |
+| LettuceDetect | 0.28 | 100 | 16 |
+| HHEM | 0.88 | 4 | 15 |
+
+These are **provisional** until the multi-reader gold form is audited.
+
 ## Apply the audit
 
 After exporting `gold-results-combined.json` from the browser:
