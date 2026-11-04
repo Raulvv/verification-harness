@@ -215,6 +215,34 @@ After the second-rater export:
 This reports raw agreement, Cohen's kappa, the confusion matrix, and
 disagreements.
 
+### Fresh 300-question candidate set
+
+A deterministic candidate set for a question-held-out run:
+
+```bash
+.venv/bin/python competitive/build_fresh_300.py
+.venv/bin/python competitive/validate_fresh_300.py
+```
+
+It writes `private/fresh-300.jsonl` and a manifest with a SHA-256. The set is:
+
+- 120 answerable
+- 60 partial
+- 120 unanswerable
+- 50 lookup, 25 difference, 10 sum, 15 compare, 15 extremum, 5 count,
+  60 partial, 120 absence
+
+The validator checks:
+
+- question parses to the expected QIR kind,
+- gold matches the canonical derived answer,
+- evidence quotes exist in the named source,
+- no duplicate of the existing 100 or within the set.
+
+The set is **mechanically validated, not human-reviewed**. It is marked
+`validation: candidate` and should be reviewed before use as a held-out set.
+It has not been run on any reader yet.
+
 ## Apply the audit
 
 After exporting `gold-results-combined.json` from the browser:
