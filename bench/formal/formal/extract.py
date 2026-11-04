@@ -11,11 +11,11 @@ import re
 from dataclasses import dataclass
 
 from .model import AnswerIR, AnswerPart, Claim, QIR, Term, Verification
-from .parse import parse_question
+from .parse import find_entities, parse_question
 from .rows import Dataset
 from .z3check import Premises, check_answer
 
-_NUMBER_RE = re.compile(r"\b(\d{1,3}(?:,\d{3})+|\d{4,})\b")
+_NUMBER_RE = re.compile(r"(-?\d{1,3}(?:,\d{3})+|-?\d+)")
 _YEAR_RE = {"2010", "2012", "2022", "2023", "2033"}
 
 
@@ -68,6 +68,12 @@ class RuleBasedExtractor:
             return self._difference(qir, text)
         if qir.kind == "sum":
             return self._sum(qir, text)
+        if qir.kind == "compare":
+            return self._compare(qir, text)
+        if qir.kind == "extremum":
+            return self._extremum(qir, text)
+        if qir.kind == "count":
+            return self._count(qir, text)
         return ExtractionResult(qir, None, (), ("unsupported_question",))
 
     # ------------------------------------------------------------------
@@ -151,6 +157,111 @@ class RuleBasedExtractor:
             qir,
             AnswerIR(parts=(AnswerPart(part_id="q", status="stated", claim=claim),)),
             (ExtractedClaim(text=raw, start=start, end=end),),
+        )
+
+    # ------------------------------------------------------------------
+    def _compare(self, qir: QIR, text: str) -> ExtractionResult:
+        assert qir.field and len(qir.entities) == 2
+        found = find_entities(text, self.dataset)
+        winner = found[0] if found else None
+        if winner not in qir.entities:
+            return ExtractionResult(qir, None, (), ("no_winner",))
+        loser = qir.entities[0] if winner == qir.entities[1] else qir.entities[1]
+        m = re.search(r"difference (?:is|of|was)\s*\$?([\d,]+)", text, re.I)
+        if not m:
+            return ExtractionResult(qir, None, (), ("no_difference_value",))
+        value = _num(m.group(1))
+        winner_claim = Claim(
+            Term(kind="field", entity=winner, field=qir.field),
+            ">",
+            Term(kind="field", entity=loser, field=qir.field),
+            label="reader_comparison_winner",
+        )
+        diff_claim = Claim(
+            Term(
+                kind="diff",
+                terms=(
+                    Term(kind="field", entity=winner, field=qir.field),
+                    Term(kind="field", entity=loser, field=qir.field),
+                ),
+            ),
+            "=",
+            Term(kind="const", value=value),
+            label="reader_comparison_difference",
+        )
+        return ExtractionResult(
+            qir,
+            AnswerIR(
+                parts=(
+                    AnswerPart(part_id="q", status="stated", claim=winner_claim),
+                    AnswerPart(part_id="q.diff", status="stated", claim=diff_claim),
+                )
+            ),
+            (
+                ExtractedClaim(text=winner, start=text.find(winner), end=text.find(winner) + len(winner)),
+                ExtractedClaim(text=m.group(1), start=m.start(1), end=m.end(1)),
+            ),
+        )
+
+    # ------------------------------------------------------------------
+    def _extremum(self, qir: QIR, text: str) -> ExtractionResult:
+        assert qir.field and qir.op in ("max", "min")
+        found = find_entities(text, self.dataset)
+        winner = found[0] if found else None
+        if winner is None:
+            return ExtractionResult(qir, None, (), ("no_winner",))
+        value_found = self._lookup_value(qir.field, text)
+        if value_found is None:
+            return ExtractionResult(qir, None, (), ("no_value",))
+        value, start, end, raw = value_found
+        winner_claim = Claim(
+            Term(
+                kind="argmax" if qir.op == "max" else "argmin",
+                field=qir.field,
+                candidate_set=qir.candidate_set,
+                filter=qir.filter,
+            ),
+            "=",
+            Term(kind="const", value=winner),
+            label="reader_extremum_winner",
+        )
+        value_claim = Claim(
+            Term(kind="field", entity=winner, field=qir.field),
+            "=",
+            Term(kind="const", value=value),
+            label="reader_extremum_value",
+        )
+        return ExtractionResult(
+            qir,
+            AnswerIR(
+                parts=(
+                    AnswerPart(part_id="q", status="stated", claim=winner_claim),
+                    AnswerPart(part_id="q.value", status="stated", claim=value_claim),
+                )
+            ),
+            (
+                ExtractedClaim(text=winner, start=text.find(winner), end=text.find(winner) + len(winner)),
+                ExtractedClaim(text=raw, start=start, end=end),
+            ),
+        )
+
+    # ------------------------------------------------------------------
+    def _count(self, qir: QIR, text: str) -> ExtractionResult:
+        assert qir.candidate_set and qir.filter
+        found = _first_number(text)
+        if found is None:
+            return ExtractionResult(qir, None, (), ("no_value",))
+        value, start, end = found
+        claim = Claim(
+            Term(kind="count", candidate_set=qir.candidate_set, filter=qir.filter),
+            "=",
+            Term(kind="const", value=value),
+            label="reader_count",
+        )
+        return ExtractionResult(
+            qir,
+            AnswerIR(parts=(AnswerPart(part_id="q", status="stated", claim=claim),)),
+            (ExtractedClaim(text=text[start:end], start=start, end=end),),
         )
 
     # ------------------------------------------------------------------

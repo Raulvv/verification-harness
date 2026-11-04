@@ -51,14 +51,14 @@ specification receipts, and a measured fallback for the rest.
 | 1.6 — citation gate in formal path | complete | `ask --formal --corpus` gates every displayed quote; ungated quotes are labeled; fabricated quotes rejected |
 | 2 — deterministic registry | partial | defaults + user overrides for quantifier, metric, utility, direction, unit |
 | 2.5 — independent competitive benchmark | not started | head-to-head vs HHEM, MiniCheck, LettuceDetect on the same claims |
-| 3 — prose extraction | partial | `formal/extract.py`: reader-first baseline for lookup, difference, sum; unsupported questions explicit |
+| 3 — prose extraction | partial | `formal/extract.py`: reader-first baseline for lookup, difference, sum, compare, extremum, count; unsupported questions explicit |
 | 4 — closed-corpus absence | not started | open-world absence returns `NEEDS_SPECIFICATION` |
 | 5 — router/NLI/integration | not started | — |
 | 5.5 — productionization | not started | API/SDK, batch, observability, integrations |
 | 6 — evaluation/report | not started | — |
 
-Current test evidence: **46 Python tests** (17 original + 21 spec-layer +
-8 reader-first extraction) and **212 kit tests** pass; the EPIC-FORMAL-001
+Current test evidence: **52 Python tests** (17 original + 21 spec-layer +
+14 reader-first extraction) and **212 kit tests** pass; the EPIC-FORMAL-001
 100-question and dev-14 results are unchanged (59 `ENTAILED`, 40
 `ABSENT_CONFIRMED`, 1 `UNKNOWN`, 0 false `ENTAILED`). The default `ask` path is
 unchanged; the formal path is opt-in.
@@ -703,14 +703,15 @@ Exit criteria:
 
 Status: **partial**. `formal/extract.py` now provides the reader-first baseline:
 `RuleBasedExtractor` turns a reader answer into typed claims for lookup,
-difference and sum, with spans; `verify_reader_answer` closes the loop through
-the formal verifier. Unsupported question types are explicit.
+difference, sum, compare, extremum and count, with spans; `verify_reader_answer`
+closes the loop through the formal verifier. Unsupported question types are
+explicit.
 
 Deliverables:
 
 - `ClaimExtractor` interface: prose → partial IR + spans + confidence. (baseline)
 - Rule-based baseline for the OOH prose templates. (baseline: lookup, difference,
-  sum)
+  sum, compare, extremum, count)
 - Optional LLM extractor behind a flag; cached fixtures for tests.
 - Evaluation set of prose answers with atomic-claim annotations.
 - Hole detection: every unresolved quantifier/metric/scope is flagged.
