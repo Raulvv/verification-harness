@@ -6,6 +6,7 @@ import unittest
 
 from formal.extract import RuleBasedExtractor, verify_reader_answer
 from formal.rows import build_dataset
+from formal.spec_examples import best_stability, most_bachelors_pay_over_60k
 from formal.z3check import Premises
 
 
@@ -136,6 +137,47 @@ class ReaderFirstTest(unittest.TestCase):
         self.assertIsNone(extraction.answer)
         self.assertIn("absence_overclaim", extraction.notes)
         self.assertEqual(verification.verdict, "INCOMPLETE")
+
+    def test_quantified_yes_is_entailed_under_assumptions(self) -> None:
+        _, verification = verify_reader_answer(
+            "Most occupations with a bachelor's degree pay more than $60,000.",
+            "Yes — 16 of 17 matching occupations satisfy the condition.",
+            self.dataset,
+            self.premises,
+            qir=most_bachelors_pay_over_60k(),
+        )
+        self.assertEqual(verification.verdict, "ENTAILED_UNDER_ASSUMPTIONS")
+        self.assertTrue(verification.assumptions)
+
+    def test_quantified_no_is_contradicted(self) -> None:
+        _, verification = verify_reader_answer(
+            "Most occupations with a bachelor's degree pay more than $60,000.",
+            "No — only 16 of 17 matching occupations satisfy the condition.",
+            self.dataset,
+            self.premises,
+            qir=most_bachelors_pay_over_60k(),
+        )
+        self.assertEqual(verification.verdict, "CONTRADICTION")
+
+    def test_rank_correct(self) -> None:
+        _, verification = verify_reader_answer(
+            "This is the best career for someone who wants stability.",
+            "Using the default definitions, the top-ranked occupation is Software Developers, Quality Assurance Analysts, and Testers (score 63.8).",
+            self.dataset,
+            self.premises,
+            qir=best_stability(),
+        )
+        self.assertEqual(verification.verdict, "ENTAILED_UNDER_ASSUMPTIONS")
+
+    def test_rank_wrong_winner(self) -> None:
+        _, verification = verify_reader_answer(
+            "This is the best career for someone who wants stability.",
+            "Using the default definitions, the top-ranked occupation is Accountants and Auditors (score 79.88).",
+            self.dataset,
+            self.premises,
+            qir=best_stability(),
+        )
+        self.assertEqual(verification.verdict, "CONTRADICTION")
 
     def test_abstention_has_no_typed_claim(self) -> None:
         extraction, verification = verify_reader_answer(

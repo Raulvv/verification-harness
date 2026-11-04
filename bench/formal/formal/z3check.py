@@ -618,7 +618,7 @@ def _shape_ok(
             and lhs.condition == sub.condition
             and lhs.threshold_num == sub.threshold_num
             and lhs.threshold_den == sub.threshold_den
-            and claim.op == ">"
+            and claim.op in (">", "<=")
             and claim.rhs.kind == "const"
             and claim.rhs.value == 0
         )

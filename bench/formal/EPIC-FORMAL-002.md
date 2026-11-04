@@ -51,14 +51,14 @@ specification receipts, and a measured fallback for the rest.
 | 1.6 — citation gate in formal path | complete | `ask --formal --corpus` gates every displayed quote; ungated quotes are labeled; fabricated quotes rejected |
 | 2 — deterministic registry | partial | defaults + user overrides for quantifier, metric, utility, direction, unit |
 | 2.5 — independent competitive benchmark | partial | `formal/competitive.py` + frozen public claim fixture + detector score format; HHEM/MiniCheck/LettuceDetect runs pending |
-| 3 — prose extraction | partial | `formal/extract.py`: reader-first baseline for lookup, difference, sum, compare, extremum, count; unsupported questions explicit |
+| 3 — prose extraction | partial | `formal/extract.py`: reader-first baseline for lookup, difference, sum, compare, extremum, count, quantified, rank; unsupported questions explicit |
 | 4 — closed-corpus absence | partial | `formal/coverage.py`: declared corpus index, coverage receipt, `NOT_FOUND_IN_CORPUS`; seeded-mention tests; API language guard pending |
 | 5 — router/NLI/integration | not started | — |
 | 5.5 — productionization | not started | API/SDK, batch, observability, integrations |
 | 6 — evaluation/report | not started | — |
 
-Current test evidence: **63 Python tests** (17 original + 21 spec-layer +
-14 reader-first extraction + 5 closed-corpus absence + 6 competitive harness)
+Current test evidence: **67 Python tests** (17 original + 21 spec-layer +
+18 reader-first extraction + 5 closed-corpus absence + 6 competitive harness)
 and **212 kit tests** pass; the EPIC-FORMAL-001 100-question and dev-14 results
 are unchanged (59 `ENTAILED`, 40 `ABSENT_CONFIRMED`, 1 `UNKNOWN`, 0 false
 `ENTAILED`). The default `ask` path is unchanged; the formal path is opt-in.
@@ -710,15 +710,15 @@ Exit criteria:
 
 Status: **partial**. `formal/extract.py` now provides the reader-first baseline:
 `RuleBasedExtractor` turns a reader answer into typed claims for lookup,
-difference, sum, compare, extremum and count, with spans; `verify_reader_answer`
-closes the loop through the formal verifier. Unsupported question types are
-explicit.
+difference, sum, compare, extremum, count, quantified and rank, with spans;
+`verify_reader_answer` closes the loop through the formal verifier. Unsupported
+question types are explicit.
 
 Deliverables:
 
 - `ClaimExtractor` interface: prose → partial IR + spans + confidence. (baseline)
 - Rule-based baseline for the OOH prose templates. (baseline: lookup, difference,
-  sum, compare, extremum, count)
+  sum, compare, extremum, count, quantified, rank)
 - Optional LLM extractor behind a flag; cached fixtures for tests.
 - Evaluation set of prose answers with atomic-claim annotations.
 - Hole detection: every unresolved quantifier/metric/scope is flagged.
@@ -1119,7 +1119,7 @@ and the gate integration — not on the 100-question development set alone.
 - `bench/formal/formal/negative.py` — known-row adversarial cases.
 - `bench/formal/formal/evaluate.py` — inventory, agreement, mutations.
 - `bench/formal/tests/test_spec.py` — 21 specification-layer tests.
-- `bench/formal/tests/test_extract.py` — 14 reader-first extraction tests.
+- `bench/formal/tests/test_extract.py` — 18 reader-first extraction tests.
 - `bench/formal/tests/test_coverage.py` — 5 closed-corpus absence tests.
 - `bench/formal/tests/test_competitive.py` — 4 competitive harness tests.
 - `PLAN.md` — separate 300-question clean-set plan; read-only, not part of this

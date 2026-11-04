@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from .model import AnswerIR, AnswerPart, Claim, QIR, Term, Verification
 from .parse import find_entities, parse_question
 from .rows import Dataset
+from .spec import SpecRegistry, close_qir
 from .z3check import Premises, check_answer
 
 _NUMBER_RE = re.compile(r"(-?\d{1,3}(?:,\d{3})+|-?\d+)")
@@ -55,8 +56,8 @@ class RuleBasedExtractor:
     def __init__(self, dataset: Dataset):
         self.dataset = dataset
 
-    def extract(self, question: str, answer: str) -> ExtractionResult:
-        qir = parse_question("reader", question, self.dataset)
+    def extract(self, question: str, answer: str, qir: QIR | None = None) -> ExtractionResult:
+        qir = qir or parse_question("reader", question, self.dataset)
         text = str(answer or "")
         abstention = bool(re.search(r"\bNOT FOUND\b", text[:120], re.I))
         if qir.kind == "not_formalizable":
@@ -84,6 +85,10 @@ class RuleBasedExtractor:
             return self._extremum(qir, text)
         if qir.kind == "count":
             return self._count(qir, text)
+        if qir.kind == "quantified":
+            return self._quantified(qir, text)
+        if qir.kind == "rank":
+            return self._rank(qir, text)
         return ExtractionResult(qir, None, (), ("unsupported_question",))
 
     # ------------------------------------------------------------------
@@ -275,6 +280,73 @@ class RuleBasedExtractor:
         )
 
     # ------------------------------------------------------------------
+    def _quantified(self, qir: QIR, text: str) -> ExtractionResult:
+        assert qir.threshold_num is not None and qir.threshold_den is not None
+        negative = bool(re.search(r"\bno\b|\bfalse\b|does not hold|not the case", text, re.I))
+        positive = bool(re.search(r"\byes\b|\btrue\b|\bholds\b", text, re.I))
+        if not positive and not negative:
+            return ExtractionResult(qir, None, (), ("no_boolean",))
+        claim = Claim(
+            Term(
+                kind="quantified",
+                candidate_set=qir.candidate_set,
+                filter=qir.filter,
+                condition=qir.condition,
+                threshold_num=qir.threshold_num,
+                threshold_den=qir.threshold_den,
+            ),
+            "<=" if negative else ">",
+            Term(kind="const", value=0),
+            label="reader_quantified",
+        )
+        return ExtractionResult(
+            qir,
+            AnswerIR(parts=(AnswerPart(part_id="q", status="stated", claim=claim),)),
+            (ExtractedClaim(text=text.strip(), start=0, end=len(text.strip())),),
+        )
+
+    # ------------------------------------------------------------------
+    def _rank(self, qir: QIR, text: str) -> ExtractionResult:
+        assert qir.metric is not None
+        found = find_entities(text, self.dataset)
+        winner = found[0] if found else None
+        if winner is None:
+            return ExtractionResult(qir, None, (), ("no_winner",))
+        score_match = re.search(r"score\s*([\d.]+)", text, re.I)
+        if not score_match:
+            return ExtractionResult(qir, None, (), ("no_score",))
+        score = float(score_match.group(1))
+        winner_claim = Claim(
+            Term(
+                kind="metric_argmax" if qir.op != "min" else "metric_argmin",
+                metric=qir.metric,
+                candidate_set=qir.candidate_set,
+            ),
+            "=",
+            Term(kind="const", value=winner),
+            label="reader_rank_winner",
+        )
+        score_claim = Claim(
+            Term(kind="metric", entity=winner, metric=qir.metric),
+            "=",
+            Term(kind="const", value=score),
+            label="reader_rank_score",
+        )
+        return ExtractionResult(
+            qir,
+            AnswerIR(
+                parts=(
+                    AnswerPart(part_id="q", status="stated", claim=winner_claim),
+                    AnswerPart(part_id="q.score", status="stated", claim=score_claim),
+                )
+            ),
+            (
+                ExtractedClaim(text=winner, start=text.find(winner), end=text.find(winner) + len(winner)),
+                ExtractedClaim(text=score_match.group(1), start=score_match.start(1), end=score_match.end(1)),
+            ),
+        )
+
+    # ------------------------------------------------------------------
     def _sum(self, qir: QIR, text: str) -> ExtractionResult:
         assert qir.field and qir.entities
         m = re.search(r"(?:combined|total)[^.]*?(?:was|is)\s*\$?([\d,]+)", text, re.I)
@@ -308,10 +380,34 @@ def verify_reader_answer(
     answer_text: str,
     dataset: Dataset,
     premises: Premises | None = None,
+    qir: QIR | None = None,
+    registry: SpecRegistry | None = None,
+    overrides: dict[str, object] | None = None,
+    allow_defaults: bool = True,
 ) -> tuple[ExtractionResult, Verification]:
     """Reader-first path: prose answer -> typed claims -> formal verdict."""
     premises = premises or Premises(dataset)
-    extraction = RuleBasedExtractor(dataset).extract(question, answer_text)
+    qir = qir or parse_question("reader", question, dataset)
+    resolution = close_qir(
+        qir,
+        registry=registry,
+        overrides=overrides,
+        allow_defaults=allow_defaults,
+    )
+    if resolution.unresolved:
+        return (
+            ExtractionResult(resolution.qir, None, (), ("needs_specification",)),
+            Verification(
+                verdict="NEEDS_SPECIFICATION",
+                reason="unresolved specification: "
+                + ", ".join(f"{u.kind}:{u.symbol}" for u in resolution.unresolved),
+                unresolved=resolution.unresolved,
+                assumptions=resolution.assumptions,
+            ),
+        )
+    extraction = RuleBasedExtractor(dataset).extract(
+        question, answer_text, qir=resolution.qir
+    )
     if extraction.qir.kind == "not_formalizable":
         return extraction, Verification(
             verdict="NOT_FORMALIZABLE",
@@ -322,5 +418,10 @@ def verify_reader_answer(
             verdict="INCOMPLETE",
             reason=", ".join(extraction.notes) or "no typed claim extracted",
         )
-    verification = check_answer(extraction.qir, extraction.answer, premises)
+    verification = check_answer(
+        extraction.qir,
+        extraction.answer,
+        premises,
+        coverage_receipts=(),
+    )
     return extraction, verification
