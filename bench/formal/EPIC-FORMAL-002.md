@@ -1141,6 +1141,7 @@ and the gate integration — not on the 100-question development set alone.
 - `bench/formal/tests/test_competitive.py` — 4 competitive harness tests.
 - `bench/formal/tests/test_router.py` — 6 router tests.
 - `bench/formal/tests/test_nli.py` — 6 NLI fallback tests.
+- `bench/formal/EPIC-FORMAL-003.md` — proposed legal/private-corpus pilot.
 - `PLAN.md` — separate 300-question clean-set plan; read-only, not part of this
   epic.
 

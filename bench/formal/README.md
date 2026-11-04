@@ -67,6 +67,13 @@ NOT_FORMALIZABLE             no deterministic compiler or formal theory
 `INCOMPLETE` also covers structural mismatch: a true claim about the wrong
 field, wrong candidate set, or unfiltered set is not an answer to this question.
 
+## Epics
+
+- `EPIC-FORMAL-002.md` — specification layer, reader-first verification,
+  gate integration, coverage receipts, competitive harness, router.
+- `EPIC-FORMAL-003.md` — proposed legal/private-corpus pilot: contract playbook
+  compliance and data-room completeness.
+
 ## Specification layer
 
 Ambiguity is a typed state, not a guess. A QIR with an unresolved slot returns
