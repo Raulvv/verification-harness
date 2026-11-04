@@ -9,6 +9,7 @@ from pathlib import Path
 
 from formal.cuad import (
     CuadSpan,
+    SpanPrediction,
     contract_vectors,
     evaluate,
     fit_models,
@@ -17,6 +18,8 @@ from formal.cuad import (
     predict,
     quote_supports,
     sentences,
+    span_jaccard,
+    span_metrics,
 )
 
 
@@ -211,6 +214,50 @@ class CuadTest(unittest.TestCase):
         self.assertEqual(len(windows), 2)
         for window in windows:
             self.assertEqual(text[window.start : window.end], window.text)
+
+    def test_span_jaccard(self) -> None:
+        self.assertEqual(
+            span_jaccard("the laws of Delaware", "the laws of Delaware"), 1.0
+        )
+        self.assertEqual(
+            span_jaccard("the laws of Delaware", "maintain insurance"), 0.0
+        )
+
+    def test_span_metrics_scores_matches_and_false_accepts(self) -> None:
+        gold = CuadSpan("governed by the laws of Delaware", 0, 34)
+        other = CuadSpan("governed by the laws of New York", 0, 33)
+        wrong = CuadSpan("the Company shall maintain insurance", 0, 37)
+        predictions = [
+            SpanPrediction(
+                contract="c1",
+                category="Governing Law",
+                gold_spans=(gold,),
+                pred=gold,
+                score=0.9,
+            ),
+            SpanPrediction(
+                contract="c2",
+                category="Governing Law",
+                gold_spans=(other,),
+                pred=wrong,
+                score=0.8,
+            ),
+            SpanPrediction(
+                contract="c3",
+                category="Governing Law",
+                gold_spans=(),
+                pred=wrong,
+                score=0.1,
+            ),
+        ]
+        metrics = span_metrics(predictions)
+        category = metrics["per_category"]["Governing Law"]
+        self.assertEqual(category["claims"], 3)
+        self.assertEqual(category["gold_spans"], 2)
+        self.assertGreaterEqual(category["aupr"], 0.0)
+        self.assertLessEqual(category["aupr"], 1.0)
+        self.assertGreaterEqual(category["p_at_80"], 0.0)
+        self.assertLessEqual(category["p_at_80"], 1.0)
 
 
 if __name__ == "__main__":

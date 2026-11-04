@@ -138,6 +138,12 @@ quote support 0.552** on 4,182 claims. At the precision-first point:
 quote support 0.602**. This is a baseline, not a CUAD leaderboard result and
 not legal advice. Details: `legal/CUAD-PILOT.md`.
 
+`--mode span` runs the official-style Jaccard ≥ 0.5 / AUPR / P@80 / P@90
+harness. The TF-IDF sentence-window floor is macro AUPR 0.136 / P@80 0.023 /
+P@90 0.000; it validates the metric harness, not a competitive span result.
+`--encoder legal-bert` is an optional, slower Legal-BERT baseline; it needs the
+separate `legal/cuad/requirements-legal.txt` venv.
+
 **Caveats.** The natural set is reader-held-out, not question-held-out; it uses
 the same 100 development-informed questions. One auditor labelled it, with no
 second rater. It is one corpus, one snapshot, and has only 15 contradicted

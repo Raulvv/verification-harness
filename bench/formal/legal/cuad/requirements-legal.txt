@@ -1,0 +1,6 @@
+# Optional Legal-BERT encoder for formal/cuad.py.
+# The normal formal layer needs only ../requirements.txt.
+# This file adds the heavy encoder dependencies for a separate venv.
+z3-solver>=4.12
+torch>=2.0
+transformers>=4.40

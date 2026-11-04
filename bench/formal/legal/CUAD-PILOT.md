@@ -99,6 +99,40 @@ for an assurance layer but also a coverage cost.
   errors. It establishes that the legal adapter can run, receipt, and report
   honestly on a public corpus.
 
+## Span-level harness (official metric floor)
+
+The presence pilot is not leaderboard-comparable. The span mode uses CUAD's
+Jaccard ≥ 0.5 matching and reports AUPR / P@80 / P@90. The current TF-IDF
+detector returns sentence windows, not minimal clause spans, so it is a floor:
+
+| System | Macro AUPR | P@80 | P@90 |
+|---|---:|---:|---:|
+| TF-IDF sentence windows | 0.136 | 0.023 | 0.000 |
+
+This validates the metric harness. It is not a competitive span-extraction
+result.
+
+## Legal-BERT smoke (5 contracts)
+
+A 5-contract smoke run of the optional Legal-BERT encoder (205 claims) gives:
+
+| Encoder | Precision | Recall | F1 | False accepts | False rejects | Quote support |
+|---|---:|---:|---:|---:|---:|---:|
+| TF-IDF | 0.875 | 0.700 | 0.778 | 6 | 18 | 0.542 |
+| Legal-BERT | 0.957 | 0.367 | 0.530 | 1 | 38 | 0.739 |
+
+On this small sample, Legal-BERT is more precise but much more conservative:
+it cuts false accepts from 6 to 1 and raises quote support, but recall falls
+from 0.700 to 0.367. This is **not** a final result; the full 102-contract run
+is the comparison that matters.
+
+## Reader vs harness
+
+The clause detector is the **reader**. The verifier checks the quote and the
+closed-corpus absence receipt. A legal encoder or legal reader can improve
+recall, but that is a reader improvement. Report reader-only and
+verifier-checked results separately.
+
 ## Reproduce
 
 ```bash

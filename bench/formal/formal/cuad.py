@@ -22,18 +22,20 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import random
 import re
 from collections import Counter
 from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import Iterable
+from typing import Any, Iterable
 
 from .model import CoverageReceipt
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_DATA = HERE.parent / "legal" / "cuad" / "data"
 DEFAULT_OUT = HERE.parent / "legal" / "cuad" / "out" / "cuad-results.json"
+DEFAULT_SPAN_OUT = HERE.parent / "legal" / "cuad" / "out" / "cuad-span-results.json"
 
 _CATEGORY_RE = re.compile(r'related to "([^"]+)"')
 _WORD_RE = re.compile(r"[a-z0-9]+")
@@ -297,6 +299,9 @@ def sentences(text: str, max_sentences: int = 1) -> list[Sentence]:
     return out
 
 
+Vector = dict[Any, float]
+
+
 class TfidfSpace:
     """A small stdlib TF-IDF space with cosine scoring."""
 
@@ -311,7 +316,7 @@ class TfidfSpace:
             for term, count in df.items()
         }
 
-    def vector(self, text: str) -> dict[str, float]:
+    def vector(self, text: str) -> Vector:
         counts = Counter(tokens(text))
         raw = {
             term: (1.0 + math.log(count)) * self.idf[term]
@@ -323,10 +328,13 @@ class TfidfSpace:
             return {}
         return {term: value / norm for term, value in raw.items()}
 
-    def centroid(self, documents: Iterable[str]) -> dict[str, float]:
+    def embed_many(self, texts: Iterable[str]) -> list[Vector]:
+        return [self.vector(text) for text in texts]
+
+    def centroid(self, documents: Iterable[str]) -> Vector:
         acc: Counter[str] = Counter()
-        for document in documents:
-            for term, value in self.vector(document).items():
+        for vector in self.embed_many(documents):
+            for term, value in vector.items():
                 acc[term] += value
         norm = math.sqrt(sum(value * value for value in acc.values()))
         if not norm:
@@ -334,28 +342,131 @@ class TfidfSpace:
         return {term: value / norm for term, value in acc.items()}
 
 
+class LegalBertSpace:
+    """Optional Legal-BERT sentence embeddings, loaded lazily.
+
+    Requires `torch` and `transformers`. Run it from a venv that also has the
+    package's normal dependencies (or install z3-solver there).
+    """
+
+    def __init__(
+        self,
+        model_name: str = "nlpaueb/legal-bert-base-uncased",
+        batch_size: int = 16,
+        max_length: int = 256,
+    ):
+        self.model_name = model_name
+        self.batch_size = batch_size
+        self.max_length = max_length
+        self._tokenizer: Any = None
+        self._model: Any = None
+        self._torch: Any = None
+        self._device = "cpu"
+
+    def _load(self) -> None:
+        if self._model is not None:
+            return
+        try:
+            import torch
+            from transformers import AutoModel, AutoTokenizer
+        except ImportError as exc:  # pragma: no cover - optional dependency
+            raise SystemExit(
+                "the legal-bert encoder needs torch and transformers; "
+                "install legal/cuad/requirements-legal.txt in a separate venv"
+            ) from exc
+        self._torch = torch
+        requested = os.environ.get("LEGAL_BERT_DEVICE", "auto").lower()
+        if requested == "auto":
+            self._device = "mps" if torch.backends.mps.is_available() else "cpu"
+        else:
+            self._device = requested
+        self._tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+        self._model = AutoModel.from_pretrained(self.model_name).to(self._device)
+        self._model.eval()
+
+    def embed_many(self, texts: Iterable[str]) -> list[Vector]:
+        items = list(texts)
+        if not items:
+            return []
+        self._load()
+        torch = self._torch
+        vectors: list[Vector] = []
+        for start in range(0, len(items), self.batch_size):
+            batch = items[start : start + self.batch_size]
+            encoded = self._tokenizer(
+                batch,
+                padding=True,
+                truncation=True,
+                max_length=self.max_length,
+                return_tensors="pt",
+            ).to(self._device)
+            with torch.no_grad():
+                hidden = self._model(**encoded).last_hidden_state
+            mask = encoded["attention_mask"].unsqueeze(-1)
+            summed = (hidden * mask).sum(dim=1)
+            counts = mask.sum(dim=1).clamp(min=1)
+            pooled = summed / counts
+            pooled = torch.nn.functional.normalize(pooled, p=2, dim=1)
+            for row in pooled.cpu().tolist():
+                vectors.append({index: value for index, value in enumerate(row)})
+        return vectors
+
+    def vector(self, text: str) -> Vector:
+        return self.embed_many([text])[0]
+
+    def centroid(self, documents: Iterable[str]) -> Vector:
+        vectors = self.embed_many(documents)
+        if not vectors:
+            return {}
+        acc: Counter[int] = Counter()
+        for vector in vectors:
+            for index, value in vector.items():
+                acc[index] += value
+        norm = math.sqrt(sum(value * value for value in acc.values()))
+        if not norm:
+            return {}
+        return {index: value / norm for index, value in acc.items()}
+
+
+def make_space(
+    encoder: str,
+    documents: Iterable[str],
+    encoder_model: str | None = None,
+) -> TfidfSpace | LegalBertSpace:
+    if encoder == "tfidf":
+        return TfidfSpace(documents)
+    if encoder == "legal-bert":
+        return LegalBertSpace(encoder_model or "nlpaueb/legal-bert-base-uncased")
+    raise ValueError(f"unknown encoder {encoder!r}; use tfidf or legal-bert")
+
+
 @dataclass(frozen=True)
 class CategoryModel:
     category: str
-    positive: dict[str, float]
-    negative: dict[str, float]
+    positive: Vector
+    negative: Vector
     seed_count: int
     threshold: float = 0.0
 
-    def score(self, vector: dict[str, float]) -> float:
+    def score(self, vector: Vector) -> float:
         return score_vector(self.positive, vector) - score_vector(self.negative, vector)
 
 
 @dataclass(frozen=True)
 class SentenceVector:
     sentence: Sentence
-    vector: dict[str, float]
+    vector: Vector
 
 
-def contract_vectors(space: TfidfSpace, item: CuadItem) -> list[SentenceVector]:
+def contract_vectors(
+    space: TfidfSpace | LegalBertSpace,
+    item: CuadItem,
+) -> list[SentenceVector]:
+    sentence_list = sentences(item.context)
+    vectors = space.embed_many([sentence.text for sentence in sentence_list])
     return [
-        SentenceVector(sentence, space.vector(sentence.text))
-        for sentence in sentences(item.context)
+        SentenceVector(sentence, vector)
+        for sentence, vector in zip(sentence_list, vectors)
     ]
 
 
@@ -363,9 +474,11 @@ def fit_models(
     train: list[CuadItem],
     categories: set[str] | None = None,
     *,
+    encoder: str = "tfidf",
+    encoder_model: str | None = None,
     negative_per_category: int = 20,
     negative_sentences: int = 5,
-) -> tuple[TfidfSpace, dict[str, CategoryModel]]:
+) -> tuple[TfidfSpace | LegalBertSpace, dict[str, CategoryModel]]:
     selected = [item for item in train if not categories or item.category in categories]
     positives: dict[str, list[str]] = {}
     negatives: dict[str, list[str]] = {}
@@ -393,7 +506,7 @@ def fit_models(
 
     all_docs = [doc for docs in positives.values() for doc in docs]
     all_docs.extend(doc for docs in negatives.values() for doc in docs)
-    space = TfidfSpace(all_docs)
+    space = make_space(encoder, all_docs, encoder_model)
     models: dict[str, CategoryModel] = {}
     for category, spans in sorted(positives.items()):
         models[category] = CategoryModel(
@@ -405,7 +518,7 @@ def fit_models(
     return space, models
 
 
-def score_vector(centroid: dict[str, float], vector: dict[str, float]) -> float:
+def score_vector(centroid: Vector, vector: Vector) -> float:
     if not vector or not centroid:
         return 0.0
     return sum(value * centroid.get(term, 0.0) for term, value in vector.items())
@@ -516,6 +629,238 @@ def _add(counts: Counts, updates: dict[str, int]) -> Counts:
     return Counts(**data)
 
 
+@dataclass(frozen=True)
+class SpanPrediction:
+    contract: str
+    category: str
+    gold_spans: tuple[CuadSpan, ...]
+    pred: CuadSpan | None
+    score: float
+
+
+@dataclass(frozen=True)
+class SpanCounts:
+    tp: int = 0
+    fp: int = 0
+    fn: int = 0
+
+    @property
+    def precision(self) -> float:
+        denom = self.tp + self.fp
+        return self.tp / denom if denom else 0.0
+
+    @property
+    def recall(self) -> float:
+        denom = self.tp + self.fn
+        return self.tp / denom if denom else 0.0
+
+    @property
+    def f1(self) -> float:
+        p, r = self.precision, self.recall
+        return 2 * p * r / (p + r) if p + r else 0.0
+
+
+def top_span(
+    item: CuadItem,
+    model: CategoryModel | None,
+    vectors: list[SentenceVector],
+) -> tuple[CuadSpan | None, float]:
+    best: CuadSpan | None = None
+    best_score = 0.0
+    if model is not None:
+        guard = category_pattern(item.category)
+        for entry in vectors:
+            if guard is not None and not guard.search(entry.sentence.text):
+                continue
+            score = model.score(entry.vector)
+            if score > best_score:
+                best = CuadSpan(
+                    entry.sentence.text,
+                    entry.sentence.start,
+                    entry.sentence.end,
+                )
+                best_score = score
+    return best, best_score
+
+
+def span_predictions(
+    test: list[CuadItem],
+    models: dict[str, CategoryModel],
+    vectors_by_contract: dict[str, list[SentenceVector]],
+) -> list[SpanPrediction]:
+    out: list[SpanPrediction] = []
+    for item in test:
+        pred, score = top_span(
+            item,
+            models.get(item.category),
+            vectors_by_contract[item.contract],
+        )
+        out.append(
+            SpanPrediction(
+                contract=item.contract,
+                category=item.category,
+                gold_spans=item.gold_spans,
+                pred=pred,
+                score=score,
+            )
+        )
+    return out
+
+
+def span_jaccard(gold: str, pred: str) -> float:
+    def normalize(value: str) -> set[str]:
+        value = str(value or "").lower()
+        for token in (".", ",", ";", ":"):
+            value = value.replace(token, "")
+        value = value.replace("/", " ")
+        return set(value.split())
+
+    left = normalize(gold)
+    right = normalize(pred)
+    if not left or not right:
+        return 0.0
+    return len(left & right) / len(left | right)
+
+
+def span_matches(category: str, gold: CuadSpan, pred: CuadSpan) -> bool:
+    if "Parties" in category:
+        return (
+            span_jaccard(gold.text, pred.text) >= 0.5
+            or gold.text in pred.text
+        )
+    return span_jaccard(gold.text, pred.text) >= 0.5
+
+
+def _span_counts_at(predictions: list[SpanPrediction], threshold: float) -> SpanCounts:
+    tp = fp = fn = 0
+    for row in predictions:
+        preds = [row.pred] if row.pred is not None and row.score >= threshold else []
+        golds = list(row.gold_spans)
+        if not golds:
+            fp += len(preds)
+            continue
+        for gold in golds:
+            if any(span_matches(row.category, gold, pred) for pred in preds):
+                tp += 1
+            else:
+                fn += 1
+        for pred in preds:
+            if not any(span_matches(row.category, gold, pred) for gold in golds):
+                fp += 1
+    return SpanCounts(tp=tp, fp=fp, fn=fn)
+
+
+def _process_precisions(precisions: list[float]) -> list[float]:
+    best = precisions[::-1]
+    for index in range(1, len(best)):
+        best[index] = max(best[index - 1], best[index])
+    return best[::-1]
+
+
+def _auc(recalls: list[float], precisions: list[float]) -> float:
+    area = 0.0
+    for index in range(1, len(recalls)):
+        area += (recalls[index] - recalls[index - 1]) * (
+            precisions[index] + precisions[index - 1]
+        ) / 2.0
+    return area
+
+
+def _precision_at_recall(
+    precisions: list[float],
+    recalls: list[float],
+    target: float,
+) -> float:
+    for precision, recall in zip(precisions, recalls):
+        if recall >= target:
+            return precision
+    return 0.0
+
+
+def span_metrics(predictions: list[SpanPrediction]) -> dict[str, Any]:
+    by_category: dict[str, list[SpanPrediction]] = {}
+    for row in predictions:
+        by_category.setdefault(row.category, []).append(row)
+    per_category: dict[str, dict[str, float | int]] = {}
+    for category, rows in sorted(by_category.items()):
+        thresholds = sorted({row.score for row in rows} | {0.0}, reverse=True)
+        precisions: list[float] = []
+        recalls: list[float] = []
+        for threshold in thresholds:
+            counts = _span_counts_at(rows, threshold)
+            precisions.append(counts.precision)
+            recalls.append(counts.recall)
+        processed = _process_precisions(precisions)
+        per_category[category] = {
+            "aupr": _auc(recalls, processed),
+            "p_at_80": _precision_at_recall(processed, recalls, 0.80),
+            "p_at_90": _precision_at_recall(processed, recalls, 0.90),
+            "claims": len(rows),
+            "gold_spans": sum(len(row.gold_spans) for row in rows),
+        }
+    macro = {
+        key: (
+            sum(float(values[key]) for values in per_category.values())
+            / len(per_category)
+            if per_category
+            else 0.0
+        )
+        for key in ("aupr", "p_at_80", "p_at_90")
+    }
+    return {
+        "macro": macro,
+        "per_category": per_category,
+        "claims": len(predictions),
+        "categories": len(per_category),
+    }
+
+
+def run_span(
+    data_dir: Path | str = DEFAULT_DATA,
+    *,
+    categories: set[str] | None = None,
+    max_contracts: int | None = None,
+    encoder: str = "tfidf",
+    encoder_model: str | None = None,
+) -> dict:
+    train, test = load_official_split(data_dir)
+    if categories:
+        train = [item for item in train if item.category in categories]
+        test = [item for item in test if item.category in categories]
+    if max_contracts:
+        titles = sorted({item.contract for item in test})[:max_contracts]
+        keep = set(titles)
+        test = [item for item in test if item.contract in keep]
+    space, models = fit_models(
+        train, categories, encoder=encoder, encoder_model=encoder_model
+    )
+    vectors_by_contract = {
+        title: contract_vectors(
+            space, next(item for item in test if item.contract == title)
+        )
+        for title in sorted({item.contract for item in test})
+    }
+    predictions = span_predictions(test, models, vectors_by_contract)
+    metrics = span_metrics(predictions)
+    return {
+        "benchmark": "CUAD",
+        "mode": "span",
+        "version": "aok_v1.0",
+        "split": "official test (102 contracts)",
+        "train_contracts": len({item.contract for item in train}),
+        "test_contracts": len({item.contract for item in test}),
+        "encoder": encoder,
+        "encoder_model": encoder_model,
+        **metrics,
+        "notes": [
+            "Official CUAD-style span matching: Jaccard >= 0.5.",
+            "Predictions are sentence windows, not minimal clause spans; this is a floor.",
+            "AUPR and precision-at-recall are macro-averaged across categories.",
+            "Not legal advice.",
+        ],
+    }
+
+
 def _macro_f1(per_category: dict[str, Counts]) -> float:
     values = [counts.f1 for counts in per_category.values() if counts.total]
     return sum(values) / len(values) if values else 0.0
@@ -542,6 +887,8 @@ def tune_thresholds(
     seed: int = 0,
     max_dev_contracts: int = 20,
     min_precision: float = 0.85,
+    encoder: str = "tfidf",
+    encoder_model: str | None = None,
 ) -> tuple[dict[str, float], float, int, int]:
     """Tune per-category thresholds on a held-out slice of the training split."""
     titles = sorted({item.contract for item in train})
@@ -557,7 +904,9 @@ def tune_thresholds(
     dev = [item for item in train if item.contract in dev_titles]
     kept_dev_titles = set(dev_title_order[:max_dev_contracts])
     dev = [item for item in dev if item.contract in kept_dev_titles]
-    space, models = fit_models(fit, categories)
+    space, models = fit_models(
+        fit, categories, encoder=encoder, encoder_model=encoder_model
+    )
     vectors_by_contract = {
         item.contract: contract_vectors(space, item)
         for item in dev
@@ -620,6 +969,8 @@ def run(
     max_contracts: int | None = None,
     seed: int = 0,
     min_precision: float = 0.85,
+    encoder: str = "tfidf",
+    encoder_model: str | None = None,
 ) -> dict:
     train, test = load_official_split(data_dir)
     if categories:
@@ -633,11 +984,18 @@ def run(
     thresholds: dict[str, float] = {}
     if tuned:
         thresholds, dev_f1, fit_n, dev_n = tune_thresholds(
-            train, categories, seed, min_precision=min_precision
+            train,
+            categories,
+            seed,
+            min_precision=min_precision,
+            encoder=encoder,
+            encoder_model=encoder_model,
         )
     else:
         dev_f1, fit_n, dev_n = 0.0, 0, 0
-    space, models = fit_models(train, categories)
+    space, models = fit_models(
+        train, categories, encoder=encoder, encoder_model=encoder_model
+    )
     if tuned:
         models = {
             category: replace(model, threshold=thresholds.get(category, 0.0))
@@ -673,6 +1031,8 @@ def run(
         "threshold": threshold,
         "threshold_source": "per-category tuned" if tuned else "manual",
         "min_precision": min_precision,
+        "encoder": encoder,
+        "encoder_model": encoder_model,
         "thresholds": thresholds,
         "dev_macro_f1": dev_f1,
         "dev_contracts": dev_n,
@@ -692,9 +1052,12 @@ def run(
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Run the CUAD clause-presence adapter")
+    parser = argparse.ArgumentParser(description="Run the CUAD adapter")
     parser.add_argument("--data", type=Path, default=DEFAULT_DATA)
-    parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    parser.add_argument("--out", type=Path)
+    parser.add_argument("--mode", choices=("presence", "span"), default="presence")
+    parser.add_argument("--encoder", choices=("tfidf", "legal-bert"), default="tfidf")
+    parser.add_argument("--encoder-model")
     parser.add_argument("--threshold", type=float)
     parser.add_argument("--categories", help="comma-separated category names")
     parser.add_argument("--max-contracts", type=int)
@@ -707,29 +1070,52 @@ def main(argv: list[str] | None = None) -> int:
         if args.categories
         else None
     )
-    result = run(
-        args.data,
-        threshold=args.threshold,
-        categories=categories,
-        max_contracts=args.max_contracts,
-        seed=args.seed,
-        min_precision=args.min_precision,
-    )
-    args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-    overall = result["overall"]
-    threshold = result["threshold"]
-    threshold_text = f"{threshold:.2f}" if threshold is not None else "per-category"
-    print(
-        f"CUAD: {result['claims']} claims, {result['test_contracts']} test contracts, "
-        f"threshold={threshold_text}"
-    )
-    print(
-        f"presence: precision={overall['precision']:.3f} recall={overall['recall']:.3f} "
-        f"f1={overall['f1']:.3f} false_accepts={overall['false_accepts']} "
-        f"false_rejects={overall['false_rejects']} quote_support={overall['quote_support']:.3f}"
-    )
-    print(f"wrote {args.out}")
+    out = args.out or (DEFAULT_SPAN_OUT if args.mode == "span" else DEFAULT_OUT)
+    if args.mode == "span":
+        result = run_span(
+            args.data,
+            categories=categories,
+            max_contracts=args.max_contracts,
+            encoder=args.encoder,
+            encoder_model=args.encoder_model,
+        )
+    else:
+        result = run(
+            args.data,
+            threshold=args.threshold,
+            categories=categories,
+            max_contracts=args.max_contracts,
+            seed=args.seed,
+            min_precision=args.min_precision,
+            encoder=args.encoder,
+            encoder_model=args.encoder_model,
+        )
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    if args.mode == "span":
+        macro = result["macro"]
+        print(
+            f"CUAD span: {result['claims']} claims, {result['test_contracts']} test contracts, "
+            f"encoder={result['encoder']}"
+        )
+        print(
+            f"macro AUPR={macro['aupr']:.3f} P@80={macro['p_at_80']:.3f} "
+            f"P@90={macro['p_at_90']:.3f}"
+        )
+    else:
+        overall = result["overall"]
+        threshold = result["threshold"]
+        threshold_text = f"{threshold:.2f}" if threshold is not None else "per-category"
+        print(
+            f"CUAD: {result['claims']} claims, {result['test_contracts']} test contracts, "
+            f"threshold={threshold_text}, encoder={result['encoder']}"
+        )
+        print(
+            f"presence: precision={overall['precision']:.3f} recall={overall['recall']:.3f} "
+            f"f1={overall['f1']:.3f} false_accepts={overall['false_accepts']} "
+            f"false_rejects={overall['false_rejects']} quote_support={overall['quote_support']:.3f}"
+        )
+    print(f"wrote {out}")
     return 0
 
 

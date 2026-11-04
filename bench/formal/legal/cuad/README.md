@@ -34,6 +34,44 @@ The default is the balanced operating point (`--min-precision 0.85`). Use
 `--min-precision 0.95` for the precision-first point. Output:
 `legal/cuad/out/cuad-results.json`.
 
+## Span mode (official CUAD-style metrics)
+
+The presence pilot is not leaderboard-comparable. The span mode uses the
+official CUAD-style Jaccard ≥ 0.5 matching and reports AUPR, P@80, and P@90:
+
+```bash
+.venv/bin/python -m formal.cuad --mode span
+```
+
+Output: `legal/cuad/out/cuad-span-results.json`.
+
+The current TF-IDF detector returns sentence windows, not minimal clause spans,
+so this is a floor. It validates the official metric harness; it is not a
+competitive span-extraction result.
+
+## Legal-BERT encoder (optional)
+
+The encoder is opt-in and needs `torch` and `transformers`. Use a separate
+venv so the normal formal layer stays small:
+
+```bash
+cd bench/formal
+python3 -m venv .venv-legal
+.venv-legal/bin/pip install -r requirements.txt -r legal/cuad/requirements-legal.txt
+.venv-legal/bin/python -m formal.cuad --encoder legal-bert
+```
+
+Model: `nlpaueb/legal-bert-base-uncased`. The first run downloads the model.
+The full run is substantially slower than TF-IDF; it is an experiment, not the
+default path.
+
+## Reader vs harness
+
+The clause detector is the **reader**. The verifier checks the quote and the
+closed-corpus absence receipt. A legal encoder or legal reader can improve
+recall, but that is a reader improvement. Report reader-only and
+verifier-checked results separately.
+
 Quick smoke run:
 
 ```bash
