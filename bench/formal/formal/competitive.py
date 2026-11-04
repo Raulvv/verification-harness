@@ -53,7 +53,19 @@ def load_jsonl(path: Path | str) -> list[dict[str, Any]]:
 
 
 def load_claims(path: Path | str = DEFAULT_CLAIMS) -> list[ClaimItem]:
-    return [ClaimItem(**row) for row in load_jsonl(path)]
+    out: list[ClaimItem] = []
+    for row in load_jsonl(path):
+        out.append(
+            ClaimItem(
+                id=str(row["id"]),
+                category=str(row.get("category", "unknown")),
+                question=str(row["question"]),
+                answer=str(row.get("answer", "")),
+                gold=str(row.get("gold", "unknown")),
+                evidence=str(row.get("evidence", "")),
+            )
+        )
+    return out
 
 
 def load_detector(path: Path | str) -> dict[str, DetectorRecord]:

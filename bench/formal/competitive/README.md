@@ -66,11 +66,30 @@ slice is local-only (gitignored):
 
 ```bash
 .venv/bin/python competitive/build_natural.py
-.venv/bin/python competitive/build_audit_html.py \
+.venv/bin/python competitive/build_gold_form.py \
   --input competitive/private/natural-80.jsonl \
-  --output competitive/private/natural-audit.html \
-  --title "Natural reader-error audit"
+  --output competitive/private/natural-gold-form.html \
+  --title "Natural reader-error gold"
 ```
+
+## Apply the audit
+
+After exporting `gold-results-combined.json` from the browser:
+
+```bash
+.venv/bin/python competitive/apply_audit.py
+```
+
+This writes:
+
+- `pilot-160-human.jsonl` — public human labels; 160/160 matched provisional.
+- `private/natural-80-human.jsonl` — private natural-reader labels.
+
+Natural-reader audit result: 31 supported, 47 absent, 2 partial; 10
+disagreements with the provisional labels, including one likely mislabel
+(`natural-test-100`) and two real formal extraction failures (`natural-test-030`
+and `natural-test-089`). The private report is
+`private/NATURAL-AUDIT-REPORT.md`.
 
 ```bash
 .venv/bin/python -m formal.competitive \

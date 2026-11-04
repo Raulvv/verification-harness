@@ -18,6 +18,18 @@ Value categories: 40 lookup, 14 difference, 8 compare, 12 extremum, 6 sum.
 Evidence is the relevant page text or the public table, truncated to 6,000
 characters. No private labels.
 
+## Human audit
+
+All 160 claims were audited through the one-question gold form. The human labels
+match the provisional labels **160/160**:
+
+- 40 supported
+- 80 contradicted
+- 40 absent
+
+This is one auditor, no second rater. The public labels are in
+`pilot-160-human.jsonl`.
+
 ## Results — all 160 claims
 
 | System | Binary | Exact | False accepts | False rejects | Coverage |
@@ -101,7 +113,7 @@ absence claims as supported, which is the most dangerous failure mode.
 - 160 claims, one public corpus, one run.
 - Contradicted variants are deliberate perturbations, not natural reader errors.
 - Evidence truncated to 6,000 characters.
-- No human audit; no inter-annotator agreement.
+- Human-audited by one auditor; no second rater or inter-annotator agreement.
 - Per-category counts are small (compare 8, sum 6).
 - This is not a final leaderboard.
 

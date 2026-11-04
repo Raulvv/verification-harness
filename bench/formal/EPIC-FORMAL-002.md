@@ -50,7 +50,7 @@ specification receipts, and a measured fallback for the rest.
 | 1.5 — presentation + `ask` bridge | complete | humanized assumptions in the answer; `ask --formal-cmd` prints answer, assumptions, evidence quotes, verdict, spec receipt |
 | 1.6 — citation gate in formal path | complete | `ask --formal --corpus` gates every displayed quote; ungated quotes are labeled; fabricated quotes rejected |
 | 2 — deterministic registry | partial | defaults + user overrides for quantifier, metric, utility, direction, unit |
-| 2.5 — independent competitive benchmark | complete (160-claim public pilot) | formal 0.99 binary / 0 false accepts; MiniCheck 0.84 / 3; LettuceDetect 0.46 / 66; HHEM 0.81 / 9 at 0.5; natural slice generated; human audit pending |
+| 2.5 — independent competitive benchmark | complete (160 public + 80 natural, human-audited) | 160: formal 0.99/0 false accepts; MiniCheck 0.84/3; LettuceDetect 0.46/66; HHEM 0.81/9. Natural 80: formal 0.975/1; MiniCheck 0.7875/2; LettuceDetect 0.2375/47; HHEM 0.825/0 |
 | 3 — prose extraction | partial | `formal/extract.py`: reader-first baseline for lookup, difference, sum, compare, extremum, count, quantified, rank; unsupported questions explicit |
 | 4 — closed-corpus absence | partial | `formal/coverage.py`: declared corpus index, coverage receipt, `NOT_FOUND_IN_CORPUS`; seeded-mention tests; API language guard pending |
 | 5 — router/NLI/integration | partial | `formal/router.py` + `formal/nli.py`: deterministic route and command-based fallback; real detector wiring pending |
@@ -702,9 +702,18 @@ Absence-only (80 claims): formal 1.00 binary / 0 false accepts at 0.50 coverage;
 LettuceDetect 49 false accepts. HHEM at 0.8 cuts value false accepts from 9 to 2
 but raises false rejects from 22 to 28.
 
-Natural-reader-error set and human audit are still pending. The
-pre-registration and audit sheet are in `competitive/PRE-REGISTRATION.md` and
-`competitive/AUDIT-SHEET.csv`.
+The 160-claim public set is human-audited: 160/160 labels matched provisional
+(40 supported, 80 contradicted, 40 absent). The 80-claim natural-reader set is
+also human-audited: 31 supported, 47 absent, 2 partial; 10 disagreements with
+the provisional labels. Formal on the natural slice: 0.975 binary, 1 false
+accept (test-030, a false sub-claim the extractor missed), 1 false reject
+(test-100, likely audit mislabel), 0.9125 coverage. Test-089 is a real verbose
+arithmetic extraction failure (formal CONTRADICTION on a correct 479,500
+derivation).
+
+The pre-registration and audit tooling are in
+`competitive/PRE-REGISTRATION.md`, `competitive/GOLD-FORM.html`,
+`competitive/apply_audit.py` and `competitive/private/NATURAL-AUDIT-REPORT.md`.
 
 Deliverables:
 
