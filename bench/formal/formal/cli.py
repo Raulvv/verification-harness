@@ -16,6 +16,7 @@ import re
 import sys
 
 from .model import Assumption, Metric, QIR, SpecEntry
+from .nli import CommandNLI, route_with_fallback
 from .router import route_verification
 from .rows import build_dataset
 from .spec import SpecRegistry
@@ -281,6 +282,10 @@ def main(argv: list[str] | None = None) -> int:
         default=8,
         help="max evidence quotes to print in human output",
     )
+    parser.add_argument(
+        "--nli-cmd",
+        help="optional command for the fallback_nli route (JSON stdin/stdout)",
+    )
     args = parser.parse_args(argv)
 
     if args.stdin_json:
@@ -305,6 +310,18 @@ def main(argv: list[str] | None = None) -> int:
     assumptions = _assumptions_json(verification)
     citations = _citations_json(answer)
     route = route_verification(verification)
+    nli_result = None
+    if route.action == "fallback_nli" and args.nli_cmd:
+        evidence = "\n".join(str(c.get("quote", "")) for c in citations)
+        decision = route_with_fallback(
+            verification,
+            args.question,
+            answer_text,
+            evidence,
+            CommandNLI(args.nli_cmd),
+        )
+        route = decision.route
+        nli_result = decision.nli
 
     if args.json or args.stdin_json:
         print(
@@ -314,6 +331,7 @@ def main(argv: list[str] | None = None) -> int:
                     "answer": answer_text,
                     "verdict": verification.verdict,
                     "route": route.to_dict(),
+                    "nli": nli_result.to_dict() if nli_result else None,
                     "assumptions": assumptions,
                     "citations": citations,
                     "spec_version": resolution.qir.spec.version if resolution.qir.spec else None,
@@ -331,6 +349,12 @@ def main(argv: list[str] | None = None) -> int:
     print(f"ANSWER: {answer_text}")
     print(f"VERDICT: {verification.verdict}")
     print(f"ROUTE: {route.action} — {route.reason}")
+    if nli_result:
+        print(
+            f"NLI: {nli_result.verdict}"
+            + (f" (score {nli_result.score})" if nli_result.score is not None else "")
+            + (f" · {nli_result.model}" if nli_result.model else "")
+        )
     print("ASSUMPTIONS:")
     if not assumptions:
         print("  (none)")

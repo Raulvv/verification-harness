@@ -25,6 +25,7 @@ from .model import (
 )
 from .coverage import CorpusIndex, absence_from_receipt, verify_corpus_absence
 from .extract import ExtractedClaim, ExtractionResult, RuleBasedExtractor, verify_reader_answer
+from .nli import CommandNLI, FallbackDecision, NLIResult, StubNLI, route_with_fallback
 from .router import Route, route_verification
 from .spec import QuantifierPolicy, SpecRegistry, SpecResolution, UtilityPolicy, close_qir
 from .z3check import check_answer, verify_question
@@ -38,11 +39,14 @@ __all__ = [
     "Claim",
     "ClaimCheck",
     "CorpusIndex",
+    "CommandNLI",
     "CoverageReceipt",
     "ExtractedClaim",
     "ExtractionResult",
     "Filter",
+    "FallbackDecision",
     "Metric",
+    "NLIResult",
     "QIR",
     "QuantifierPolicy",
     "Route",
@@ -52,6 +56,7 @@ __all__ = [
     "SpecEntry",
     "SpecRegistry",
     "SpecResolution",
+    "StubNLI",
     "Term",
     "Unresolved",
     "UtilityPolicy",
@@ -61,6 +66,7 @@ __all__ = [
     "check_answer",
     "close_qir",
     "route_verification",
+    "route_with_fallback",
     "verify_corpus_absence",
     "verify_question",
     "verify_reader_answer",

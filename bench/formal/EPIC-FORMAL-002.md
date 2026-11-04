@@ -53,16 +53,16 @@ specification receipts, and a measured fallback for the rest.
 | 2.5 — independent competitive benchmark | partial | `formal/competitive.py` + frozen public claim fixture + detector score format; HHEM/MiniCheck/LettuceDetect runs pending |
 | 3 — prose extraction | partial | `formal/extract.py`: reader-first baseline for lookup, difference, sum, compare, extremum, count, quantified, rank; unsupported questions explicit |
 | 4 — closed-corpus absence | partial | `formal/coverage.py`: declared corpus index, coverage receipt, `NOT_FOUND_IN_CORPUS`; seeded-mention tests; API language guard pending |
-| 5 — router/NLI/integration | partial | `formal/router.py`: show/reject/ask_specification/fallback_nli/escalate_human/abstain; NLI adapter pending |
+| 5 — router/NLI/integration | partial | `formal/router.py` + `formal/nli.py`: deterministic route and command-based fallback; real detector wiring pending |
 | 5.5 — productionization | not started | API/SDK, batch, observability, integrations |
 | 6 — evaluation/report | not started | — |
 
-Current test evidence: **73 Python tests** (17 original + 21 spec-layer +
+Current test evidence: **79 Python tests** (17 original + 21 spec-layer +
 18 reader-first extraction + 5 closed-corpus absence + 6 competitive harness +
-6 router) and **212 kit tests** pass; the EPIC-FORMAL-001 100-question and
-dev-14 results are unchanged (59 `ENTAILED`, 40 `ABSENT_CONFIRMED`, 1 `UNKNOWN`,
-0 false `ENTAILED`). The default `ask` path is unchanged; the formal path is
-opt-in.
+6 router + 6 NLI fallback) and **212 kit tests** pass; the EPIC-FORMAL-001
+100-question and dev-14 results are unchanged (59 `ENTAILED`, 40
+`ABSENT_CONFIRMED`, 1 `UNKNOWN`, 0 false `ENTAILED`). The default `ask` path is
+unchanged; the formal path is opt-in.
 
 ---
 
@@ -761,8 +761,10 @@ Exit criteria:
 
 Status: **partial**. `formal/router.py` maps verdicts to deterministic actions:
 show, reject, ask_specification, fallback_nli, escalate_human, abstain. The
-`ask --formal` output includes the route. The NLI adapter itself is pending; the
-router only names the fallback.
+`ask --formal` output includes the route. `formal/nli.py` provides a
+command-based `CommandNLI` fallback (JSON stdin/stdout) and a `StubNLI` for
+tests; `formal.cli --nli-cmd` executes it for `NOT_FORMALIZABLE` claims. Real
+detector wiring into `ask --formal` is still pending.
 
 Deliverables:
 
@@ -1122,6 +1124,7 @@ and the gate integration — not on the 100-question development set alone.
 - `bench/formal/formal/competitive.py` — formal-vs-detector benchmark harness.
 - `bench/formal/competitive/` — frozen claim fixture and detector score format.
 - `bench/formal/formal/router.py` — verdict → product action router.
+- `bench/formal/formal/nli.py` — command-based NLI fallback adapter.
 - `bench/formal/formal/z3check.py` — current Z3 checks and `verify_question`.
 - `bench/formal/formal/negative.py` — known-row adversarial cases.
 - `bench/formal/formal/evaluate.py` — inventory, agreement, mutations.
@@ -1130,6 +1133,7 @@ and the gate integration — not on the 100-question development set alone.
 - `bench/formal/tests/test_coverage.py` — 5 closed-corpus absence tests.
 - `bench/formal/tests/test_competitive.py` — 4 competitive harness tests.
 - `bench/formal/tests/test_router.py` — 6 router tests.
+- `bench/formal/tests/test_nli.py` — 6 NLI fallback tests.
 - `PLAN.md` — separate 300-question clean-set plan; read-only, not part of this
   epic.
 
