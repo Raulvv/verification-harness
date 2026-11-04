@@ -140,6 +140,23 @@ The four-reader set is a sample-size step, not a final claim: at the current
 ~9% natural contradicted rate it yields roughly 30 contradicted claims, not the
 ≥100 target.
 
+Reader-only results on the same 100 test questions, before formal verification:
+
+| Reader | Answerable | Unanswerable | Partial | Total correct | False accepts | Median latency |
+|---|---:|---:|---:|---:|---:|---:|
+| DeepSeek 4.1 Flash DA | 32/40 | 40/40 | 19/20 | 91 | 1 | 4.1 s |
+| Sonnet 5.5 DA | 31/40 | 40/40 | 20/20 | 91 | 2 | 4.4 s |
+| GLM-5.3-Flash DA | 31/40 | 40/40 | 17/20 | 88 | 6 | 5.8 s |
+| Qwen 3.8 27B DA | 37/40 | 40/40 | 12/20 | 89 | 2 | 47.0 s |
+
+Qwen has the best answerable coverage and the weakest partial coverage. This is
+reader capability, not the harness result.
+
+Provisional formal result on 320 claims (labels not yet human-audited):
+**1.00 binary, 0.99 exact, 0 false accepts, 0 false rejects, 0.99 coverage**.
+The provisional label set has 38 contradicted claims. These numbers are not
+final until the four forms are audited.
+
 ## Apply the audit
 
 After exporting `gold-results-combined.json` from the browser:
