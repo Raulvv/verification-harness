@@ -57,6 +57,8 @@ def find_entities(question: str, dataset: Dataset) -> tuple[str, ...]:
 
 def field_from_phrase(phrase: str) -> str | None:
     p = str(phrase or "").lower()
+    if "2033 employment" in p or "employment in 2033" in p or "projected 2033" in p:
+        return "jobs2033"
     if "growth" in p:
         return "outlook_pct"
     if "annual pay" in p or "annual wage" in p or p.strip() in {"pay", "wage"}:
@@ -401,7 +403,7 @@ def parse_question(qid: str, question: str, dataset: Dataset) -> QIR:
     # Extremum: select / all / paid / filtered.
     # ------------------------------------------------------------------
     m = re.search(
-        r"which (?:occupation )?has the (highest|lowest) (.+?)(?: from 2023 to 2033)?(?:, and what is that (?:pay|rate))?\?$",
+        r"which (?:occupation )?has the (highest|lowest) (.+?)(?: from 2023 to 2033)?(?:, and what is that (?:pay|rate|employment|number|value))?\?$",
         ql,
     )
     if m and ql.startswith("among "):
