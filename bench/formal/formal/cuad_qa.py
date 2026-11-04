@@ -363,11 +363,19 @@ def run(
     device: str = "auto",
     max_contracts: int | None = None,
     max_questions: int | None = None,
+    contracts_file: Path | str | None = None,
     max_length: int = 512,
     stride: int = 128,
     top_k: int = 20,
 ) -> tuple[list[QAResult], dict[str, Any], str]:
     test = load_cuad(Path(data_dir) / "test.json", "test")
+    if contracts_file:
+        keep = {
+            line.strip()
+            for line in Path(contracts_file).read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        }
+        test = [item for item in test if item.contract in keep]
     if max_contracts:
         keep = set(sorted({item.contract for item in test})[:max_contracts])
         test = [item for item in test if item.contract in keep]
@@ -405,12 +413,17 @@ def run(
     return results, metrics(results), _device(torch, device)
 
 
-def load_results(path: Path | str) -> list[QAResult]:
+def load_results(
+    path: Path | str,
+    contracts: set[str] | None = None,
+) -> list[QAResult]:
     results: list[QAResult] = []
     for line in Path(path).read_text(encoding="utf-8").splitlines():
         if not line.strip():
             continue
         row = json.loads(line)
+        if contracts and str(row.get("contract", "")) not in contracts:
+            continue
         results.append(
             QAResult(
                 id=str(row["id"]),
@@ -461,14 +474,22 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--device", default="auto")
     parser.add_argument("--max-contracts", type=int)
     parser.add_argument("--max-questions", type=int)
+    parser.add_argument("--contracts-file", type=Path)
     parser.add_argument("--max-length", type=int, default=512)
     parser.add_argument("--stride", type=int, default=128)
     parser.add_argument("--top-k", type=int, default=20)
     parser.add_argument("--from-jsonl", type=Path, help="recompute metrics only")
     args = parser.parse_args(argv)
 
+    contracts = None
+    if args.contracts_file:
+        contracts = {
+            line.strip()
+            for line in args.contracts_file.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        }
     if args.from_jsonl:
-        results = load_results(args.from_jsonl)
+        results = load_results(args.from_jsonl, contracts=contracts)
         metrics_data = metrics(results)
         device = "recomputed"
     else:
@@ -478,6 +499,7 @@ def main(argv: list[str] | None = None) -> int:
             device=args.device,
             max_contracts=args.max_contracts,
             max_questions=args.max_questions,
+            contracts_file=args.contracts_file,
             max_length=args.max_length,
             stride=args.stride,
             top_k=args.top_k,
