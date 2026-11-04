@@ -16,6 +16,7 @@ import re
 import sys
 
 from .model import Assumption, Metric, QIR, SpecEntry
+from .router import route_verification
 from .rows import build_dataset
 from .spec import SpecRegistry
 from .spec_examples import (
@@ -303,6 +304,7 @@ def main(argv: list[str] | None = None) -> int:
     answer_text = human_answer(resolution.qir, answer, verification)
     assumptions = _assumptions_json(verification)
     citations = _citations_json(answer)
+    route = route_verification(verification)
 
     if args.json or args.stdin_json:
         print(
@@ -311,6 +313,7 @@ def main(argv: list[str] | None = None) -> int:
                     "question": args.question,
                     "answer": answer_text,
                     "verdict": verification.verdict,
+                    "route": route.to_dict(),
                     "assumptions": assumptions,
                     "citations": citations,
                     "spec_version": resolution.qir.spec.version if resolution.qir.spec else None,
@@ -327,6 +330,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"QUESTION: {args.question}")
     print(f"ANSWER: {answer_text}")
     print(f"VERDICT: {verification.verdict}")
+    print(f"ROUTE: {route.action} — {route.reason}")
     print("ASSUMPTIONS:")
     if not assumptions:
         print("  (none)")

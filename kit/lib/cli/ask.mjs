@@ -268,6 +268,7 @@ function formatFormal(res, { json = false } = {}) {
   const spec = f.spec_version ? ` · spec ${f.spec_version}` : ''
   const id = f.spec_id ? ` · ${f.spec_id}` : ''
   lines.push('', `formal: ${f.verdict}${spec}${id}`)
+  if (f.route?.action) lines.push(`route: ${f.route.action} — ${f.route.reason ?? ''}`)
   return lines.join('\n')
 }
 

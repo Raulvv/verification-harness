@@ -283,6 +283,7 @@ test('ask --formal: deterministic answer with assumptions and quotes, no model c
     spec_version: 'spec-v1',
     spec_id: 'abc123',
     unresolved: [],
+    route: { action: 'show', reason: 'the claim follows from the premises' },
   }
   const res = await runAsk({
     question: 'best stability',
@@ -300,9 +301,11 @@ test('ask --formal: deterministic answer with assumptions and quotes, no model c
   assert.match(out, /Evidence:\n {2}\[1\] Software Developers · computer__software · outlook_pct/)
   assert.match(out, /Job Outlook, 2023-33 \| 17%/)
   assert.match(out, /formal: ENTAILED_UNDER_ASSUMPTIONS · spec spec-v1 · abc123/)
+  assert.match(out, /route: show — the claim follows from the premises/)
   const j = JSON.parse(formatAsk(res, { json: true }))
   assert.equal(j.formal.spec_id, 'abc123')
   assert.equal(j.formal.assumptions[0].human, 'stability = 1×projected growth')
+  assert.equal(j.formal.route.action, 'show')
 })
 
 test('ask --formal: citations are gate-verified when --corpus is supplied', async () => {

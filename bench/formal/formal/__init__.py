@@ -25,6 +25,7 @@ from .model import (
 )
 from .coverage import CorpusIndex, absence_from_receipt, verify_corpus_absence
 from .extract import ExtractedClaim, ExtractionResult, RuleBasedExtractor, verify_reader_answer
+from .router import Route, route_verification
 from .spec import QuantifierPolicy, SpecRegistry, SpecResolution, UtilityPolicy, close_qir
 from .z3check import check_answer, verify_question
 
@@ -44,6 +45,7 @@ __all__ = [
     "Metric",
     "QIR",
     "QuantifierPolicy",
+    "Route",
     "RuleBasedExtractor",
     "Scope",
     "Spec",
@@ -58,6 +60,7 @@ __all__ = [
     "absence_from_receipt",
     "check_answer",
     "close_qir",
+    "route_verification",
     "verify_corpus_absence",
     "verify_question",
     "verify_reader_answer",
