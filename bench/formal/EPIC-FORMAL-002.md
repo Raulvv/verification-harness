@@ -52,16 +52,16 @@ specification receipts, and a measured fallback for the rest.
 | 2 — deterministic registry | partial | defaults + user overrides for quantifier, metric, utility, direction, unit |
 | 2.5 — independent competitive benchmark | not started | head-to-head vs HHEM, MiniCheck, LettuceDetect on the same claims |
 | 3 — prose extraction | partial | `formal/extract.py`: reader-first baseline for lookup, difference, sum, compare, extremum, count; unsupported questions explicit |
-| 4 — closed-corpus absence | not started | open-world absence returns `NEEDS_SPECIFICATION` |
+| 4 — closed-corpus absence | partial | `formal/coverage.py`: declared corpus index, coverage receipt, `NOT_FOUND_IN_CORPUS`; seeded-mention tests; API language guard pending |
 | 5 — router/NLI/integration | not started | — |
 | 5.5 — productionization | not started | API/SDK, batch, observability, integrations |
 | 6 — evaluation/report | not started | — |
 
-Current test evidence: **52 Python tests** (17 original + 21 spec-layer +
-14 reader-first extraction) and **212 kit tests** pass; the EPIC-FORMAL-001
-100-question and dev-14 results are unchanged (59 `ENTAILED`, 40
-`ABSENT_CONFIRMED`, 1 `UNKNOWN`, 0 false `ENTAILED`). The default `ask` path is
-unchanged; the formal path is opt-in.
+Current test evidence: **57 Python tests** (17 original + 21 spec-layer +
+14 reader-first extraction + 5 closed-corpus absence) and **212 kit tests**
+pass; the EPIC-FORMAL-001 100-question and dev-14 results are unchanged
+(59 `ENTAILED`, 40 `ABSENT_CONFIRMED`, 1 `UNKNOWN`, 0 false `ENTAILED`). The
+default `ask` path is unchanged; the formal path is opt-in.
 
 ---
 
@@ -728,6 +728,13 @@ Exit criteria:
 
 ### Phase 4 — Closed-corpus absence
 
+Status: **partial**. `formal/coverage.py` provides a declared corpus index,
+exhaustive phrase search, a `CoverageReceipt`, and `NOT_FOUND_IN_CORPUS`.
+`check_answer` consumes a matching receipt and returns `NEEDS_SPECIFICATION`
+without one. Seeded-mention tests confirm a known mention is not reported
+absent. The API-level “never say does not exist” language guard is still
+pending.
+
 Deliverables:
 
 - Declared corpus id and exhaustive search procedure.
@@ -1097,10 +1104,14 @@ and the gate integration — not on the 100-question development set alone.
 - `bench/formal/formal/model.py` — current IR.
 - `bench/formal/formal/spec.py` — specification registry and `close_qir`.
 - `bench/formal/formal/spec_examples.py` — direct IR examples for the spec layer.
+- `bench/formal/formal/extract.py` — reader-first claim extraction baseline.
+- `bench/formal/formal/coverage.py` — closed-corpus index and coverage receipt.
 - `bench/formal/formal/z3check.py` — current Z3 checks and `verify_question`.
 - `bench/formal/formal/negative.py` — known-row adversarial cases.
 - `bench/formal/formal/evaluate.py` — inventory, agreement, mutations.
 - `bench/formal/tests/test_spec.py` — 21 specification-layer tests.
+- `bench/formal/tests/test_extract.py` — 14 reader-first extraction tests.
+- `bench/formal/tests/test_coverage.py` — 5 closed-corpus absence tests.
 - `PLAN.md` — separate 300-question clean-set plan; read-only, not part of this
   epic.
 

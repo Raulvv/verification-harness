@@ -145,6 +145,7 @@ class CoverageReceipt:
     hits: int
     exclusions: tuple[str, ...] = ()
     digest: str = ""
+    complete: bool = True
 
     def to_dict(self) -> dict[str, Any]:
         return _clean(self)

@@ -20,6 +20,7 @@ from dataclasses import replace
 import z3
 
 from .compile import candidate_rows, filter_fields, filter_matches, metric_score
+from .coverage import absence_from_receipt
 from .model import (
     AnswerIR,
     AnswerPart,
@@ -27,6 +28,7 @@ from .model import (
     CandidateSet,
     Claim,
     ClaimCheck,
+    CoverageReceipt,
     Filter,
     Metric,
     QIR,
@@ -751,10 +753,13 @@ def check_answer(
     qir: QIR,
     answer: AnswerIR,
     premises: Premises,
+    coverage_receipts: tuple[CoverageReceipt, ...] = (),
 ) -> Verification:
     """Check a CLOSED QIR.  Unclosed QIRs return NEEDS_SPECIFICATION.
 
-    Use ``verify_question`` to close, derive and check in one call.
+    Use ``verify_question`` to close, derive and check in one call.  Corpus
+    absence requires a matching coverage receipt; without one it stays
+    NEEDS_SPECIFICATION.
     """
     start = time.perf_counter()
     assumptions: tuple[Assumption, ...] = ()
@@ -822,12 +827,31 @@ def check_answer(
             # exhaustive search and a coverage receipt; until one is attached,
             # the honest verdict is NEEDS_SPECIFICATION, never ABSENT_CONFIRMED.
             if sub.corpus_id is not None:
-                verdicts.append("NEEDS_SPECIFICATION")
+                receipt = next(
+                    (r for r in coverage_receipts if r.corpus_id == sub.corpus_id),
+                    None,
+                )
+                if receipt is None:
+                    verdicts.append("NEEDS_SPECIFICATION")
+                    checks.append(
+                        ClaimCheck(
+                            claim=None,
+                            verdict="NEEDS_SPECIFICATION",
+                            reason="corpus absence requires a coverage receipt",
+                            part_id=part.part_id,
+                        )
+                    )
+                    continue
+                verdict = absence_from_receipt(receipt)
+                verdicts.append(verdict)
                 checks.append(
                     ClaimCheck(
                         claim=None,
-                        verdict="NEEDS_SPECIFICATION",
-                        reason="corpus absence requires a coverage receipt",
+                        verdict=verdict,
+                        reason=(
+                            f"{receipt.corpus_id}: {receipt.hits} hit(s) in "
+                            f"{receipt.files_searched} file(s)"
+                        ),
                         part_id=part.part_id,
                     )
                 )
@@ -953,4 +977,5 @@ def check_answer(
         runtime_ms=(time.perf_counter() - start) * 1000,
         assumptions=assumptions,
         spec_id=spec_id,
+        coverage_receipts=coverage_receipts,
     )
