@@ -689,10 +689,10 @@ def _shape_ok(
         ok = (
             winner is not None
             and _term_is_field(claim.lhs, winner, sub.field)
-            and claim.op == "="
+            and claim.op in ("=", ">=")
             and claim.rhs.kind == "const"
         )
-        return (ok, "extremum value claim must be winner.field = const")
+        return (ok, "extremum value claim must be winner.field = const or >= const")
 
     return (True, "")
 

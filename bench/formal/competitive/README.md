@@ -86,16 +86,23 @@ GLM-5.3-Flash DA outputs:
 ```
 
 160 claims: 80 Sonnet DA + 80 GLM DA, 80 answerable + 80 unanswerable. The
-provisional labels are hidden in the form. Preliminary (pre-audit) results:
+set is human-audited and corrected (8 confirmed corrections). Results:
 
-| System | Binary | False accepts | False rejects |
-|---|---:|---:|---:|
-| Formal | 1.00 | 0 | 0 |
-| MiniCheck | 0.84 | 9 | 17 |
-| LettuceDetect | 0.28 | 100 | 16 |
-| HHEM | 0.88 | 4 | 15 |
+| System | Binary | Exact | False accepts | False rejects | Coverage |
+|---|---:|---:|---:|---:|---:|
+| **Formal** | **1.00** | 0.98 | **0** | **0** | **1.00** |
+| MiniCheck | 0.75 | 0.27 | 7 | 33 | 1.00 |
+| LettuceDetect | 0.21 | 0.21 | 96 | 30 | 1.00 |
+| HHEM | 0.79 | 0.28 | 2 | 31 | 1.00 |
 
-These are **provisional** until the multi-reader gold form is audited.
+Apply the export with:
+
+```bash
+.venv/bin/python competitive/apply_multireader_audit.py
+```
+
+Details: `private/MULTIREADER-AUDIT-REPORT.md`. This is reader-held-out, not
+question-held-out.
 
 ## Apply the audit
 

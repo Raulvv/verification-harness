@@ -188,6 +188,51 @@ class ReaderFirstTest(unittest.TestCase):
         )
         self.assertEqual(verification.verdict, "CONTRADICTION")
 
+    def test_doc_reference_does_not_become_the_value(self) -> None:
+        _, verification = verify_reader_answer(
+            "What is the projected employment change for Musicians and Singers from 2023 to 2033?",
+            "Doc 1 projects that employment of Musicians and Singers will change by 3,500 jobs from 2023 to 2033. That is a 2% increase, described as slower than average, from a base of 169,300 jobs in 2023.",
+            self.dataset,
+            self.premises,
+        )
+        self.assertEqual(verification.verdict, "ENTAILED")
+
+    def test_arithmetic_difference_takes_the_result(self) -> None:
+        _, verification = verify_reader_answer(
+            "What is the difference in projected employment change between School and Career Counselors and Advisors and Chemists and Materials Scientists from 2023 to 2033?",
+            "School and Career Counselors and Advisors have a change of 16,200 jobs. Chemists and Materials Scientists have a change of 7,500 jobs. The difference is 16,200 − 7,500 = 8,700 jobs.",
+            self.dataset,
+            self.premises,
+        )
+        self.assertEqual(verification.verdict, "ENTAILED")
+
+    def test_arithmetic_sum_takes_the_result(self) -> None:
+        _, verification = verify_reader_answer(
+            "What is the combined 2023 employment of Financial Analysts and Customer Service Representatives?",
+            "Financial Analysts had 404,800 jobs in 2023, and Customer Service Representatives had 2,954,600 jobs in 2023. Combined, that is 404,800 + 2,954,600 = 3,359,400 jobs.",
+            self.dataset,
+            self.premises,
+        )
+        self.assertEqual(verification.verdict, "ENTAILED")
+
+    def test_percentage_points_more_wording(self) -> None:
+        _, verification = verify_reader_answer(
+            "Which has the higher projected growth rate, Machinists and Tool and Die Makers or Heating, Air Conditioning, and Refrigeration Mechanics and Installers, and by how many percentage points?",
+            "Heating, Air Conditioning, and Refrigeration Mechanics and Installers has the higher projected growth rate. Their outlook is 9%, while Machinists and Tool and Die Makers have 0%. Therefore, HVAC Mechanics and Installers are projected to grow by 9 percentage points more than Machinists and Tool and Die Makers.",
+            self.dataset,
+            self.premises,
+        )
+        self.assertEqual(verification.verdict, "ENTAILED")
+
+    def test_top_coded_lower_bound_is_supported(self) -> None:
+        _, verification = verify_reader_answer(
+            "Among all 46 occupations in this snapshot that report a median annual pay, which has the highest median annual pay, and what is that pay?",
+            "Among the occupations shown, physicians and surgeons have the highest median annual pay: their 2023 median pay is equal to or greater than $239,200 per year, which exceeds the medians for accountants and auditors ($79,880), chefs and head cooks ($58,920), and machinists and tool and die makers ($53,180).",
+            self.dataset,
+            self.premises,
+        )
+        self.assertEqual(verification.verdict, "ENTAILED")
+
     def test_verbose_sum_extracts_the_combined_value(self) -> None:
         _, verification = verify_reader_answer(
             "What is the combined projected 2033 employment of Financial Analysts and Actuaries?",

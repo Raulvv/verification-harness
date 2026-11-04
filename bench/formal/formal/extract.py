@@ -19,6 +19,33 @@ from .z3check import Premises, check_answer
 _NUMBER_RE = re.compile(r"(-?\d{1,3}(?:,\d{3})+|-?\d+)")
 _YEAR_RE = {"2010", "2012", "2022", "2023", "2033"}
 VALUE_KINDS = {"lookup", "compare", "difference", "sum", "extremum", "count"}
+_DOC_REF_RE = re.compile(r"\b(?:Doc(?:ument)?\s*\.?\s*\d+|\[\d+\])\b", re.I)
+
+
+def _clean_refs(text: str) -> str:
+    return _DOC_REF_RE.sub(" ", text)
+
+
+def _last_equals_number(text: str):
+    """The result of an arithmetic expression, e.g. ``a − b = c`` -> c."""
+    matches = list(re.finditer(r"=\s*\$?(-?[\d,]+)", text))
+    if not matches:
+        return None
+    m = matches[-1]
+    return _num(m.group(1)), m.start(1), m.end(1), m.group(1)
+
+
+def _result_after_anchor(text: str, anchor: str):
+    """The first ``= number`` after an anchor, e.g. ``difference ... = 8,700``."""
+    a = re.search(anchor, text, re.I)
+    if not a:
+        return None
+    m = re.search(r"=\s*\$?(-?[\d,]+)", text[a.end() :])
+    if not m:
+        return None
+    start = a.end() + m.start(1)
+    end = a.end() + m.end(1)
+    return _num(m.group(1)), start, end, m.group(1)
 
 
 @dataclass(frozen=True)
@@ -188,11 +215,12 @@ class RuleBasedExtractor:
                 return None
             return _num(m.group(1)), m.start(1), m.end(1), m.group(1)
         if field in ("jobs", "change", "annual_openings"):
-            found = _first_number(text)
+            clean = _clean_refs(text)
+            found = _first_number(clean)
             if found is None:
                 return None
             value, start, end = found
-            return value, start, end, text[start:end]
+            return value, start, end, clean[start:end]
         if field == "education":
             values = {r.education for r in self.dataset.rows}
             for value in sorted(values, key=len, reverse=True):
@@ -205,16 +233,22 @@ class RuleBasedExtractor:
     # ------------------------------------------------------------------
     def _difference(self, qir: QIR, text: str) -> ExtractionResult:
         assert qir.field and len(qir.entities) == 2
-        m = re.search(r"difference (?:is|of|was)\s*\$?([\d,]+)", text, re.I)
-        if not m:
-            found = _first_number(text)
-            if found is None:
-                return ExtractionResult(qir, None, (), ("no_value",))
-            value, start, end = found
-            raw = text[start:end]
+        result = _result_after_anchor(text, r"difference")
+        if result is None:
+            result = _last_equals_number(text)
+        if result is not None:
+            value, start, end, raw = result
         else:
-            value = _num(m.group(1))
-            start, end, raw = m.start(1), m.end(1), m.group(1)
+            m = re.search(r"difference (?:is|of|was)\s*\$?([\d,]+)", text, re.I)
+            if not m:
+                found = _first_number(_clean_refs(text))
+                if found is None:
+                    return ExtractionResult(qir, None, (), ("no_value",))
+                value, start, end = found
+                raw = text[start:end]
+            else:
+                value = _num(m.group(1))
+                start, end, raw = m.start(1), m.end(1), m.group(1)
         a, b = qir.entities
         signed = qir.direction == "signed"
         claim = Claim(
@@ -260,10 +294,29 @@ class RuleBasedExtractor:
         if winner not in qir.entities:
             return ExtractionResult(qir, None, (), ("no_winner",))
         loser = qir.entities[0] if winner == qir.entities[1] else qir.entities[1]
-        m = re.search(r"difference (?:is|of|was)\s*\$?([\d,]+)", text, re.I)
-        if not m:
-            return ExtractionResult(qir, None, (), ("no_difference_value",))
-        value = _num(m.group(1))
+        result = _result_after_anchor(text, r"difference")
+        if result is None:
+            result = _last_equals_number(text)
+        if result is not None:
+            value, start, end, raw = result
+        else:
+            m = re.search(r"difference (?:is|of|was)\s*\$?([\d,]+)", text, re.I)
+            if not m:
+                m = re.search(
+                    r"(-?\d+(?:\.\d+)?)\s*percentage points?\s+more",
+                    text,
+                    re.I,
+                )
+            if not m:
+                m = re.search(
+                    r"(?:grow|grew|increase|higher)\s+by\s+(-?\d+(?:\.\d+)?)\s*percentage points?",
+                    text,
+                    re.I,
+                )
+            if not m:
+                return ExtractionResult(qir, None, (), ("no_difference_value",))
+            value = _num(m.group(1))
+            start, end, raw = m.start(1), m.end(1), m.group(1)
         winner_claim = Claim(
             Term(kind="field", entity=winner, field=qir.field),
             ">",
@@ -300,7 +353,7 @@ class RuleBasedExtractor:
             ),
             (
                 ExtractedClaim(text=winner, start=text.find(winner), end=text.find(winner) + len(winner)),
-                ExtractedClaim(text=m.group(1), start=m.start(1), end=m.end(1)),
+                ExtractedClaim(text=raw, start=start, end=end),
             ),
         )
 
@@ -315,6 +368,9 @@ class RuleBasedExtractor:
         if value_found is None:
             return ExtractionResult(qir, None, (), ("no_value",))
         value, start, end, raw = value_found
+        lower_bound = bool(
+            re.search(r"equal to or greater than|at least|>=", text, re.I)
+        )
         winner_claim = Claim(
             Term(
                 kind="argmax" if qir.op == "max" else "argmin",
@@ -328,7 +384,7 @@ class RuleBasedExtractor:
         )
         value_claim = Claim(
             Term(kind="field", entity=winner, field=qir.field),
-            "=",
+            ">=" if lower_bound else "=",
             Term(kind="const", value=value),
             label="reader_extremum_value",
         )
@@ -437,22 +493,26 @@ class RuleBasedExtractor:
     # ------------------------------------------------------------------
     def _sum(self, qir: QIR, text: str) -> ExtractionResult:
         assert qir.field and qir.entities
-        m = re.search(
-            r"(?:combined|total)[^.]*?(?:was|is)"
-            r"(?:\s+(?:therefore|roughly|about|approximately|around))*"
-            r"\s*\$?([\d,]+)",
-            text,
-            re.I,
-        )
-        if m:
-            value = _num(m.group(1))
-            start, end, raw = m.start(1), m.end(1), m.group(1)
+        result = _result_after_anchor(text, r"combined|total|added together|sum")
+        if result is not None:
+            value, start, end, raw = result
         else:
-            found = _first_number(text)
-            if found is None:
-                return ExtractionResult(qir, None, (), ("no_value",))
-            value, start, end = found
-            raw = text[start:end]
+            m = re.search(
+                r"(?:combined|total)[^.]*?(?:was|is)"
+                r"(?:\s+(?:therefore|roughly|about|approximately|around))*"
+                r"\s*\$?([\d,]+)",
+                text,
+                re.I,
+            )
+            if m:
+                value = _num(m.group(1))
+                start, end, raw = m.start(1), m.end(1), m.group(1)
+            else:
+                found = _first_number(_clean_refs(text))
+                if found is None:
+                    return ExtractionResult(qir, None, (), ("no_value",))
+                value, start, end = found
+                raw = text[start:end]
         claim = Claim(
             Term(
                 kind="sum",
