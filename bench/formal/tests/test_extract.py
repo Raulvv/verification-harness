@@ -116,6 +116,27 @@ class ReaderFirstTest(unittest.TestCase):
         )
         self.assertEqual(verification.verdict, "CONTRADICTION")
 
+    def test_absence_abstention_is_absent_confirmed(self) -> None:
+        extraction, verification = verify_reader_answer(
+            "What is the median annual pay for Information Security Analysts in New York?",
+            "NOT FOUND — the corpus does not state the median annual pay for Information Security Analysts in New York.",
+            self.dataset,
+            self.premises,
+        )
+        self.assertIsNotNone(extraction.answer)
+        self.assertEqual(verification.verdict, "ABSENT_CONFIRMED")
+
+    def test_absence_overclaim_is_incomplete(self) -> None:
+        extraction, verification = verify_reader_answer(
+            "What is the median annual pay for Information Security Analysts in New York?",
+            "The median annual pay in New York is $100,000.",
+            self.dataset,
+            self.premises,
+        )
+        self.assertIsNone(extraction.answer)
+        self.assertIn("absence_overclaim", extraction.notes)
+        self.assertEqual(verification.verdict, "INCOMPLETE")
+
     def test_abstention_has_no_typed_claim(self) -> None:
         extraction, verification = verify_reader_answer(
             "What is the median annual wage for Writers and Authors?",

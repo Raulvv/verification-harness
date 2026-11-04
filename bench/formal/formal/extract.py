@@ -58,10 +58,20 @@ class RuleBasedExtractor:
     def extract(self, question: str, answer: str) -> ExtractionResult:
         qir = parse_question("reader", question, self.dataset)
         text = str(answer or "")
-        if re.search(r"\bNOT FOUND\b", text[:120], re.I):
-            return ExtractionResult(qir, None, (), ("abstention",))
+        abstention = bool(re.search(r"\bNOT FOUND\b", text[:120], re.I))
         if qir.kind == "not_formalizable":
             return ExtractionResult(qir, None, (), ("not_formalizable",))
+        if qir.kind == "absence":
+            if abstention:
+                return ExtractionResult(
+                    qir,
+                    AnswerIR(parts=(AnswerPart(part_id="q", status="not_stated"),)),
+                    (),
+                    ("abstention",),
+                )
+            return ExtractionResult(qir, None, (), ("absence_overclaim",))
+        if abstention:
+            return ExtractionResult(qir, None, (), ("abstention",))
         if qir.kind == "lookup":
             return self._lookup(qir, text)
         if qir.kind == "difference":
