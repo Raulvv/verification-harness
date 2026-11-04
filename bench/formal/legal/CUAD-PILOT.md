@@ -112,19 +112,37 @@ detector returns sentence windows, not minimal clause spans, so it is a floor:
 This validates the metric harness. It is not a competitive span-extraction
 result.
 
-## Legal-BERT smoke (5 contracts)
+## Legal-BERT full run
 
-A 5-contract smoke run of the optional Legal-BERT encoder (205 claims) gives:
+The optional Legal-BERT encoder is more precise but much more conservative:
 
-| Encoder | Precision | Recall | F1 | False accepts | False rejects | Quote support |
-|---|---:|---:|---:|---:|---:|---:|
-| TF-IDF | 0.875 | 0.700 | 0.778 | 6 | 18 | 0.542 |
-| Legal-BERT | 0.957 | 0.367 | 0.530 | 1 | 38 | 0.739 |
+| Encoder | Precision | Recall | Micro F1 | Macro F1 | False accepts | False rejects | Quote support | Categories with no positive prediction |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| TF-IDF balanced | 0.882 | 0.660 | 0.755 | 0.455 | 110 | 423 | 0.552 | 10 |
+| TF-IDF precision-first | 0.911 | 0.568 | 0.700 | 0.400 | 69 | 537 | 0.602 | 13 |
+| Legal-BERT | 0.947 | 0.415 | 0.577 | 0.258 | 29 | 728 | 0.602 | 16 |
 
-On this small sample, Legal-BERT is more precise but much more conservative:
-it cuts false accepts from 6 to 1 and raises quote support, but recall falls
-from 0.700 to 0.367. This is **not** a final result; the full 102-contract run
-is the comparison that matters.
+Legal-BERT cuts false accepts from 110 to 29, but recall falls from 0.660 to
+0.415 and macro F1 from 0.455 to 0.258. It does **not** solve the weak
+categories; it mostly abstains on them.
+
+Where it helps:
+
+- IP Ownership: F1 0.21 → 0.51
+- ROFROFR: 0.21 → 0.30
+- Governing Law: 0.96 → 0.98
+- Anti-Assignment: 0.92 → 0.93
+
+Where it collapses:
+
+- License Grant: 0.92 → 0.46
+- Renewal Term: 0.89 → 0.42
+- Audit Rights: 0.88 → 0.42
+- Agreement Date: 0.81 → 0.12
+
+This is a reader/encoder tradeoff, not a verifier improvement. The next
+leaderboard-comparable step is a CUAD fine-tuned span model, not a generic
+legal encoder.
 
 ## Reader vs harness
 
