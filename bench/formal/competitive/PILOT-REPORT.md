@@ -1,6 +1,7 @@
 # Competitive pilot — 50 public OOH claims
 
-**Status:** preliminary, local, no API cost.  
+**Status:** preliminary calibration; superseded by the 160-claim pilot in
+[`PILOT-160-REPORT.md`](PILOT-160-REPORT.md).  
 **Claim set:** `competitive/pilot-50.jsonl`  
 **Systems:** formal verifier, MiniCheck (Ollama), LettuceDetect (ModernBERT base), HHEM-2.1-Open.
 

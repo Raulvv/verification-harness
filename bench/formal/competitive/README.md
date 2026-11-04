@@ -13,7 +13,10 @@ cd bench/formal
 ```
 
 The frozen 50-claim public pilot and its results are in
-[`PILOT-REPORT.md`](PILOT-REPORT.md).
+[`PILOT-REPORT.md`](PILOT-REPORT.md). The larger 160-claim public pilot is in
+[`PILOT-160-REPORT.md`](PILOT-160-REPORT.md). The pre-registration and audit
+sheet are [`PRE-REGISTRATION.md`](PRE-REGISTRATION.md) and
+[`AUDIT-SHEET.csv`](AUDIT-SHEET.csv).
 
 ```bash
 .venv/bin/python -m formal.competitive \

@@ -47,6 +47,22 @@ class CompetitiveTest(unittest.TestCase):
         categories = {c.category for c in claims}
         self.assertTrue({"lookup", "difference", "compare", "extremum", "count", "sum", "absence"} <= categories)
 
+    def test_pilot_160_and_audit_sheet(self) -> None:
+        import csv
+        from formal.competitive import load_claims
+
+        pilot = DEFAULT_CLAIMS.parent / "pilot-160.jsonl"
+        claims = load_claims(pilot)
+        self.assertEqual(len(claims), 160)
+        self.assertEqual(sum(c.gold == "contradicted" for c in claims), 80)
+        sheet = DEFAULT_CLAIMS.parent / "AUDIT-SHEET.csv"
+        with sheet.open(encoding="utf-8") as fh:
+            rows = list(csv.DictReader(fh))
+        self.assertEqual(len(rows), 160)
+        required = [r for r in rows if r["audit_required"] == "yes"]
+        self.assertEqual(sum(1 for r in required if r["gold"] == "contradicted"), 80)
+        self.assertGreaterEqual(len(required), 80)
+
     def test_verdict_mapping(self) -> None:
         self.assertEqual(map_verdict("ENTAILED"), "supported")
         self.assertEqual(map_verdict("ENTAILED_UNDER_ASSUMPTIONS"), "supported")

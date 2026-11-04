@@ -186,10 +186,16 @@ def run(
     claims_path: Path | str = DEFAULT_CLAIMS,
     detector_paths: list[Path | str] | None = None,
     threshold: float = 0.5,
+    categories: list[str] | None = None,
+    exclude_categories: list[str] | None = None,
 ) -> dict[str, Any]:
     dataset = build_dataset()
     premises = Premises(dataset)
     claims = load_claims(claims_path)
+    if categories:
+        claims = [c for c in claims if c.category in categories]
+    if exclude_categories:
+        claims = [c for c in claims if c.category not in exclude_categories]
     formal, raw = formal_predictions(claims, dataset, premises)
     systems: dict[str, Any] = {
         "formal": {
@@ -235,9 +241,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--claims", type=Path, default=DEFAULT_CLAIMS)
     parser.add_argument("--detector", type=Path, action="append", default=[])
     parser.add_argument("--threshold", type=float, default=0.5)
+    parser.add_argument("--category", action="append", default=[])
+    parser.add_argument("--exclude-category", action="append", default=[])
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
-    result = run(args.claims, args.detector, args.threshold)
+    result = run(
+        args.claims,
+        args.detector,
+        args.threshold,
+        categories=args.category,
+        exclude_categories=args.exclude_category,
+    )
     if args.json:
         print(json.dumps(result, indent=2, sort_keys=True))
     else:
