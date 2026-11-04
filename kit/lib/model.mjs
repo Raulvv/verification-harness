@@ -66,16 +66,25 @@ async function complete(m, body) {
           ? { response_format: { type: 'json_schema', json_schema: { name: 'out', strict: true, schema: jsonSchema } } }
           : body.format ? { format: undefined, response_format: { type: 'json_object' } } : {}),
       }
+  const timeoutMs = Number(process.env.RETRIEVAL_TIMEOUT_MS ?? 180_000)
   for (let attempt = 0; ; attempt++) {
     const headers = { 'content-type': 'application/json', authorization: m.auth ?? `Bearer ${keyFor(m)}` }
     // The opencode zen gateway routes by session id; without it the request 400s.
     if (m.provider === 'opencode' || /opencode\.ai/.test(m.baseUrl || '')) headers['x-opencode-session'] = 'ses_' + randomBytes(12).toString('hex')
-    const res = await fetch(url, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(payload),
-    })
-    if (res.status === 429 && attempt < 2) { await sleep(2000 * (attempt + 1)); continue }
+    let res
+    try {
+      res = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(timeoutMs),
+      })
+    } catch (err) {
+      const transient = err?.name === 'TimeoutError' || err?.name === 'AbortError' || err?.cause?.code === 'ECONNRESET' || err?.code === 'ECONNRESET'
+      if (transient && attempt < 2) { await sleep(2000 * (attempt + 1)); continue }
+      throw err
+    }
+    if ((res.status === 429 || res.status >= 500) && attempt < 2) { await sleep(2000 * (attempt + 1)); continue }
     if (!res.ok) throw new Error(`${m.model}: HTTP ${res.status} ${await res.text().then((t) => t.slice(0, 200))}`)
     const j = await res.json()
     return ollama ? normalizeOllama(j) : j
