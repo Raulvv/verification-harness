@@ -140,6 +140,7 @@ stays standalone.
 ```bash
 node kit/bin/retrieval-kit.mjs ask \
   --formal-cmd "cd bench/formal && .venv/bin/python -m formal.cli --stdin-json" \
+  --corpus bench/corpus/ooh-v1 \
   "This is the best career for someone who wants stability."
 ```
 
@@ -155,11 +156,11 @@ Assumptions:
   - best = highest stability score [default]
 
 Evidence:
-  [1] Software Developers, Quality Assurance Analysts, and Testers · computer-and-information-technology__software-developers · outlook_pct
+  [1] Software Developers, Quality Assurance Analysts, and Testers · computer-and-information-technology__software-developers · outlook_pct  (gate: verified)
       Job Outlook, 2023-33 | 17% (Much faster than average)
-  [2] Software Developers, Quality Assurance Analysts, and Testers · computer-and-information-technology__software-developers · change
+  [2] Software Developers, Quality Assurance Analysts, and Testers · computer-and-information-technology__software-developers · change  (gate: verified)
       Employment Change, 2023-33 | 327,900
-  [3] Software Developers, Quality Assurance Analysts, and Testers · computer-and-information-technology__software-developers · annual_openings
+  [3] Software Developers, Quality Assurance Analysts, and Testers · computer-and-information-technology__software-developers · annual_openings  (gate: verified)
       About 140,100 openings for software developers, quality assurance analysts, and testers are projected each year, on average, over the decade.
 
 formal: ENTAILED_UNDER_ASSUMPTIONS · spec spec-v1 · ded593b4...
@@ -174,6 +175,11 @@ Positioning: this is a deterministic verifier for **closed structured claims**,
 not a replacement for HHEM, MiniCheck, or LettuceDetect on general prose. The
 competitive assessment and the gaps are in
 `bench/formal/EPIC-FORMAL-002.md` §1.7.
+
+The product path is reader-first: a reader answer goes through
+`formal/extract.py` (prose → typed claims) and then the formal verifier. The
+`ask --formal` command is a demo/debug path for the same verifier; it is not the
+only way to use it.
 
 ## Use it on your own private corpus
 

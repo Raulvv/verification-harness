@@ -10,6 +10,9 @@
   quotes, the formal verdict and the spec receipt. `--no-defaults` is forwarded.
   The default `ask` path is unchanged, and the kit does not depend on a parent
   repo package.
+- `ask --formal --corpus <dir>` gates every displayed quote with the existing
+  mechanical verifier. The output marks each quote `gate: verified`,
+  `gate: REJECTED`, or `gate: ungated`; a fabricated quote cannot pass silently.
 
 ## 0.2.0 — DA default + GLM-5.3-Flash
 

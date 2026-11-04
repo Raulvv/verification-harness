@@ -305,6 +305,52 @@ test('ask --formal: deterministic answer with assumptions and quotes, no model c
   assert.equal(j.formal.assumptions[0].human, 'stability = 1×projected growth')
 })
 
+test('ask --formal: citations are gate-verified when --corpus is supplied', async () => {
+  await withCorpus(async (dir) => {
+    const formal = {
+      answer: 'The fact is 42.', verdict: 'ENTAILED_UNDER_ASSUMPTIONS',
+      assumptions: [], citations: [{ title: 'Doc A', slug: 'a', field: 'fact', quote: 'the fact is 42' }],
+      spec_version: 'spec-v1', spec_id: 'x',
+    }
+    const res = await runAsk({
+      question: 'what is the fact?', flags: { formal: true, corpus: dir }, env: {}, cwd: dir,
+      formalFn: async () => ({ formal, ms: 1 }),
+    })
+    assert.equal(res.formal.citations[0].gate.passed, true)
+    assert.match(formatAsk(res), /\(gate: verified\)/)
+  })
+})
+
+test('ask --formal: a fabricated quote is rejected by the gate', async () => {
+  await withCorpus(async (dir) => {
+    const formal = {
+      answer: 'The fact is 7.', verdict: 'ENTAILED_UNDER_ASSUMPTIONS',
+      assumptions: [], citations: [{ title: 'Doc A', slug: 'a', field: 'fact', quote: 'the fact is 7' }],
+      spec_version: 'spec-v1', spec_id: 'x',
+    }
+    const res = await runAsk({
+      question: 'what is the fact?', flags: { formal: true, corpus: dir }, env: {}, cwd: dir,
+      formalFn: async () => ({ formal, ms: 1 }),
+    })
+    assert.equal(res.formal.citations[0].gate.passed, false)
+    assert.match(formatAsk(res), /gate: REJECTED/)
+  })
+})
+
+test('ask --formal: without a corpus the quote is labeled ungated', async () => {
+  const formal = {
+    answer: 'The fact is 42.', verdict: 'ENTAILED_UNDER_ASSUMPTIONS',
+    assumptions: [], citations: [{ title: 'Doc A', slug: 'a', field: 'fact', quote: 'the fact is 42' }],
+    spec_version: 'spec-v1', spec_id: 'x',
+  }
+  const res = await runAsk({
+    question: 'what is the fact?', flags: { formal: true }, env: {}, cwd: process.cwd(),
+    formalFn: async () => ({ formal, ms: 1 }),
+  })
+  assert.equal(res.formal.citations[0].gate.passed, null)
+  assert.match(formatAsk(res), /gate: ungated/)
+})
+
 test('ask --formal: a missing formal command fails loud', async () => {
   await assert.rejects(
     runAsk({ question: 'x', flags: { formal: true }, env: {}, cwd: process.cwd() }),

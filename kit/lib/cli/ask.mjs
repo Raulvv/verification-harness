@@ -17,11 +17,37 @@ import { validateFlags, ASK_FLAGS, ASK_BOOLEAN } from '../cli.mjs'
 // standalone — it never hardcodes the parent repo's Python package. The caller
 // supplies the command (or RETRIEVAL_FORMAL_CMD). Protocol: JSON on stdin,
 // JSON on stdout with {answer, verdict, assumptions, citations, ...}.
+function gateFormalCitations(formal, { question, corpus }) {
+  const citations = formal.citations ?? []
+  if (!citations.length) return formal
+  if (!corpus) {
+    return {
+      ...formal,
+      citations: citations.map((c) => ({ ...c, gate: { passed: null, why: 'ungated: no --corpus supplied' } })),
+    }
+  }
+  return {
+    ...formal,
+    citations: citations.map((c) => {
+      const rel = c.rel ?? (c.slug ? `${c.slug}.md` : '')
+      if (!rel || !c.quote) return { ...c, gate: { passed: false, why: 'ungated: missing rel or quote' } }
+      const gate = verify(
+        { id: 'formal-cite', question, not_found: false },
+        '',
+        corpus,
+        { citations: [{ title: c.title, date: '', rel, quote: c.quote }] },
+      )
+      return { ...c, gate: { passed: gate.mechanicalPass, why: gate.why } }
+    }),
+  }
+}
+
 async function runFormalAsk({ question, flags, env, cwd, formalFn }) {
   const started = Date.now()
   if (formalFn) {
     const out = await formalFn({ question, flags, env, cwd })
-    return { ...out, question: out.question ?? question, ms: out.ms ?? (Date.now() - started) }
+    const formal = gateFormalCitations(out.formal ?? {}, { question, corpus: flags.corpus })
+    return { ...out, formal, question: out.question ?? question, ms: out.ms ?? (Date.now() - started) }
   }
   const cmd = flags.formalCmd ?? env.RETRIEVAL_FORMAL_CMD
   if (!cmd) {
@@ -42,6 +68,7 @@ async function runFormalAsk({ question, flags, env, cwd, formalFn }) {
   } catch {
     throw new Error('formal command did not emit JSON')
   }
+  formal = gateFormalCitations(formal, { question, corpus: flags.corpus })
   return { question, formal, ms: Date.now() - started }
 }
 
@@ -223,7 +250,14 @@ function formatFormal(res, { json = false } = {}) {
   else {
     for (let i = 0; i < cites.length; i++) {
       const c = cites[i]
-      lines.push(`  [${i + 1}] ${c.title} · ${c.slug} · ${c.field}`)
+      const gate = c.gate
+        ? c.gate.passed === true
+          ? 'gate: verified'
+          : c.gate.passed === false
+            ? `gate: REJECTED — ${c.gate.why}`
+            : 'gate: ungated'
+        : 'gate: ungated'
+      lines.push(`  [${i + 1}] ${c.title} · ${c.slug} · ${c.field}  (${gate})`)
       for (const line of String(c.quote ?? '').split('\n')) lines.push(`      ${line}`)
     }
   }

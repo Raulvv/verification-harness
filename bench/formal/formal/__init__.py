@@ -23,6 +23,7 @@ from .model import (
     Verification,
     VERDICTS,
 )
+from .extract import ExtractedClaim, ExtractionResult, RuleBasedExtractor, verify_reader_answer
 from .spec import QuantifierPolicy, SpecRegistry, SpecResolution, UtilityPolicy, close_qir
 from .z3check import check_answer, verify_question
 
@@ -35,10 +36,13 @@ __all__ = [
     "Claim",
     "ClaimCheck",
     "CoverageReceipt",
+    "ExtractedClaim",
+    "ExtractionResult",
     "Filter",
     "Metric",
     "QIR",
     "QuantifierPolicy",
+    "RuleBasedExtractor",
     "Scope",
     "Spec",
     "SpecEntry",
@@ -52,4 +56,5 @@ __all__ = [
     "check_answer",
     "close_qir",
     "verify_question",
+    "verify_reader_answer",
 ]

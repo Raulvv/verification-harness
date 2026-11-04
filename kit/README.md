@@ -76,8 +76,13 @@ standalone.
 ```sh
 node kit/bin/retrieval-kit.mjs ask \
   --formal-cmd "<your verifier command>" \
+  --corpus <corpus-dir> \
   "your question"
 ```
+
+With `--corpus`, every citation is checked by the existing mechanical gate and
+the output shows `gate: verified` or `gate: REJECTED`. Without a corpus, quotes
+are explicitly labeled `gate: ungated`.
 
 The command receives `{"question": "...", "no_defaults": false}`. It must emit:
 
