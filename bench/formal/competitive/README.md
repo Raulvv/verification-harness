@@ -170,6 +170,42 @@ Formal exact is 0.99 because four `partial` answers are judged
 one-sided 95% upper bound of 10.9%; synthetic + natural 0/106 gives 2.8%. The
 combined figure mixes synthetic perturbations with natural reader errors.
 
+### Error-enriched and second-rater slices
+
+The four-reader set has only 26 audited contradicted claims, below the
+pre-registered 40 minimum. Two follow-up slices are prepared:
+
+```bash
+.venv/bin/python competitive/build_error_enriched.py
+.venv/bin/python competitive/build_gold_form.py \
+  --input competitive/private/error-enriched-38.jsonl \
+  --output competitive/private/error-enriched-38-gold.html \
+  --title "Error-enriched natural — 38 claims" --audit-all
+
+.venv/bin/python competitive/build_second_rater.py
+.venv/bin/python competitive/build_gold_form.py \
+  --input competitive/private/second-rater-60.jsonl \
+  --output competitive/private/second-rater-60-gold.html \
+  --title "Second rater — 60 claims" --audit-all
+```
+
+- **Error-enriched slice:** 38 provisional contradicted claims (34
+  `CONTRADICTION`, 4 `INCOMPLETE`). This is a stress test, not a random natural
+  sample. It does not reach 100.
+- **Second-rater sample:** 60 claims — all contradicted/partial plus random
+  supported/absent claims. Labels and formal verdicts are removed from the
+  second-rater file.
+
+After the second-rater export:
+
+```bash
+.venv/bin/python competitive/compare_raters.py \
+  --second ~/Downloads/second-rater-results.json
+```
+
+This reports raw agreement, Cohen's kappa, the confusion matrix, and
+disagreements.
+
 ## Apply the audit
 
 After exporting `gold-results-combined.json` from the browser:
