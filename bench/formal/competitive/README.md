@@ -17,7 +17,38 @@ The frozen 50-claim public pilot and its results are in
 [`PILOT-160-REPORT.md`](PILOT-160-REPORT.md). The pre-registration is
 [`PRE-REGISTRATION.md`](PRE-REGISTRATION.md).
 
-## Human audit
+## One-question gold form (recommended)
+
+Open [`GOLD-FORM.html`](GOLD-FORM.html) in a browser. It shows **one claim at a
+time** and asks you to choose the gold label:
+
+- `1` Supported — correct and supported by the evidence
+- `2` Contradicted — wrong or contradicted by the evidence
+- `3` Absent — correctly says the fact is not stated
+- `4` Partial — some parts correct, some missing
+- `5` Ambiguous — cannot decide from the evidence
+- `6` Skip
+
+Clicking a label stays on the claim so you can add notes; keyboard selection
+advances. The provisional gold and formal verdict are hidden until you toggle
+**Show provisional hints**. Export JSON/CSV when done.
+
+```bash
+open bench/formal/competitive/GOLD-FORM.html
+open bench/formal/competitive/private/natural-gold-form.html
+```
+
+The natural form is generated from the local, gitignored natural-reader slice:
+
+```bash
+.venv/bin/python competitive/build_natural.py
+.venv/bin/python competitive/build_gold_form.py \
+  --input competitive/private/natural-80.jsonl \
+  --output competitive/private/natural-gold-form.html \
+  --title "Natural reader-error gold"
+```
+
+## Card-based audit (alternative)
 
 Open [`AUDIT-SHEET.html`](AUDIT-SHEET.html) in a browser. It is a self-contained
 audit tool:

@@ -57,8 +57,8 @@ specification receipts, and a measured fallback for the rest.
 | 5.5 — productionization | partial | workspace `formalCmd`, JSONL batch, minimal HTTP `/health` `/verify` `/batch`; observability pending |
 | 6 — evaluation/report | not started | — |
 
-Current test evidence: **97 Python tests** (17 original + 21 spec-layer +
-18 reader-first extraction + 5 closed-corpus absence + 9 competitive harness +
+Current test evidence: **98 Python tests** (17 original + 21 spec-layer +
+18 reader-first extraction + 5 closed-corpus absence + 10 competitive harness +
 6 router + 6 NLI fallback + 4 batch + 6 legal demo + 5 API) and **213 kit
 tests** pass; the EPIC-FORMAL-001 100-question and dev-14 results are unchanged
 (59 `ENTAILED`, 40 `ABSENT_CONFIRMED`, 1 `UNKNOWN`, 0 false `ENTAILED`). The
@@ -1148,8 +1148,8 @@ and the gate integration — not on the 100-question development set alone.
 - `bench/formal/formal/competitive.py` — formal-vs-detector benchmark harness.
 - `bench/formal/competitive/` — frozen claim fixtures, detector runners,
   `PILOT-REPORT.md`, `PILOT-160-REPORT.md`, `PRE-REGISTRATION.md`,
-  `AUDIT-SHEET.csv`, `AUDIT-SHEET.html`, `build_natural.py`,
-  `build_audit_html.py`.
+  `AUDIT-SHEET.csv`, `AUDIT-SHEET.html`, `GOLD-FORM.html`,
+  `build_natural.py`, `build_audit_html.py`, `build_gold_form.py`.
 - `bench/formal/formal/router.py` — verdict → product action router.
 - `bench/formal/formal/nli.py` — command-based NLI fallback adapter.
 - `bench/formal/formal/batch.py` — JSONL batch verification boundary.

@@ -63,6 +63,14 @@ class CompetitiveTest(unittest.TestCase):
         self.assertEqual(sum(1 for r in required if r["gold"] == "contradicted"), 80)
         self.assertGreaterEqual(len(required), 80)
 
+    def test_gold_form_is_one_question_at_a_time(self) -> None:
+        html = (DEFAULT_CLAIMS.parent / "GOLD-FORM.html").read_text(encoding="utf-8")
+        self.assertIn("const DATA", html)
+        self.assertIn("data-gold", html)
+        self.assertIn("gold-results.json", html)
+        self.assertIn("localStorage", html)
+        self.assertIn("Show provisional hints", html)
+
     def test_audit_html_is_self_contained(self) -> None:
         html = (DEFAULT_CLAIMS.parent / "AUDIT-SHEET.html").read_text(encoding="utf-8")
         self.assertIn("const DATA", html)
