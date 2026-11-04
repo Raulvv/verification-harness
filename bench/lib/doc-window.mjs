@@ -15,9 +15,17 @@ const excerpt = (text, question, limit) => {
   if (!missing.length) return head
   const seen = new Set()
   const tail = []
+  // Quick Facts fields are not always in the 6k head, and a generic term can
+  // appear earlier in unrelated prose. Force the openings sentence when the
+  // question asks about openings.
+  const forced = []
+  if (/\bopenings?\b/i.test(question)) {
+    forced.push(/openings for .* projected each year/i, /^about .* openings\b/i)
+  }
   for (const line of text.slice(head.length).split('\n')) {
     const l = line.toLowerCase()
-    if (!missing.some((t) => l.includes(t))) continue
+    const isForced = forced.some((re) => re.test(line))
+    if (!isForced && !missing.some((t) => l.includes(t))) continue
     const key = line.trim()
     if (!key || seen.has(key)) continue
     seen.add(key)
