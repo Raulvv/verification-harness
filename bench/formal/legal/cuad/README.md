@@ -1,9 +1,10 @@
-# CUAD clause-presence pilot
+# CUAD benchmark adapter
 
 This is a public-benchmark adapter for **CUAD v1** (Contract Understanding
 Atticus Dataset): 510 commercial contracts, 41 clause categories, expert-labeled
-spans. It is a deterministic clause-presence baseline with quote receipts. It
-is **not legal advice** and not a SOTA clause extractor.
+spans. It has a deterministic clause-presence baseline with quote receipts, an
+official-style span harness, and a CUAD fine-tuned span model. It is **not legal
+advice** and not a SOTA clause extractor.
 
 CUAD source: <https://github.com/The-Atticus-Project/cuad>  
 Paper: <https://arxiv.org/abs/2103.06268>
@@ -101,6 +102,9 @@ Quick smoke run:
 - False rejects: predicted absent when CUAD says present.
 - Quote support: the predicted quote contains the gold span or has token
   Jaccard ≥ 0.5.
+- Span mode: official-style Jaccard ≥ 0.5, AUPR, P@80, P@90.
+- Fine-tuned mode: the same span metrics plus question-level presence and
+  no-answer false-accept rates.
 - Per-category results.
 
 The baseline is deliberately simple. The purpose is to test the **assurance

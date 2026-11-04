@@ -39,9 +39,10 @@ corrections, formal scored **1.00 binary, 0 false accepts, 0 false rejects,
 0.80 / 1 / 15. Details: `private/NATURAL-AUDIT-REPORT.md`.
 
 A 160-claim two-reader slice (Sonnet 5.5 DA + GLM-5.3-Flash DA) was then
-audited. Formal scored **1.00 binary, 0.98 exact, 0 false accepts, 0 false
-rejects, 1.00 coverage**; MiniCheck 0.75 / 7 / 33; LettuceDetect 0.21 / 96 /
-30; HHEM 0.79 / 2 / 31. Details: `private/MULTIREADER-AUDIT-REPORT.md`.
+audited; it is now historical, superseded by the four-reader set below. Formal
+scored **1.00 binary, 0.98 exact, 0 false accepts, 0 false rejects, 1.00
+coverage**; MiniCheck 0.75 / 7 / 33; LettuceDetect 0.21 / 96 / 30; HHEM 0.79 /
+2 / 31. Details: `private/MULTIREADER-AUDIT-REPORT.md`.
 
 A 320-claim four-reader slice (DeepSeek 4.1 Flash DA + Sonnet 5.5 DA +
 GLM-5.3-Flash DA + Qwen 3.8 27B DA) was then audited and corrected: 130

@@ -250,9 +250,17 @@ receipt, not a legal-advice system.
 | Balanced | 0.882 | 0.660 | 0.755 | 110 (3.7% of absent) | 423 | 0.552 |
 | Precision-first | 0.911 | 0.568 | 0.700 | 69 (2.4% of absent) | 537 | 0.602 |
 
+The optional Legal-BERT encoder is more precise but much more conservative:
+**precision 0.947, recall 0.415, micro F1 0.577, 29 false accepts, 728 false
+rejects, quote support 0.602**. It does not solve the weak categories; it
+mostly abstains on them.
+
 This is a baseline, not a CUAD leaderboard result. The detector is TF-IDF, not a
 legal language model; the weak categories are the ones that need legal
-interpretation. Details: [`bench/formal/legal/CUAD-PILOT.md`](bench/formal/legal/CUAD-PILOT.md).
+interpretation. A CUAD fine-tuned span-model comparison
+(`akdeniz27/roberta-base-cuad`) is in progress; its official AUPR / P@80 / P@90
+will be reported separately from the verifier's false-accept behavior. Details:
+[`bench/formal/legal/CUAD-PILOT.md`](bench/formal/legal/CUAD-PILOT.md).
 
 ## Use it on your own private corpus
 
@@ -427,11 +435,13 @@ numbers.
 - **Author-defined ceiling.** "88% of the reachable ceiling" uses a 52-item
   ceiling we defined. A descriptive denominator, not a law.
 - **Formal pilot is not a final claim.** The formal verifier has 0 observed
-  false accepts on 103 human-audited contradicted claims, but the natural-only
-  set has 15 contradicted claims (18.1% one-sided 95% upper bound), one
-  auditor, one corpus, and the same development-informed 100 questions. It is
-  reader-held-out, not question-held-out. It does not establish general NLI,
-  open-world absence, or a population false-accept rate.
+  false accepts on 106 human-audited contradicted claims, but the natural-only
+  set has 26 contradicted claims (10.9% one-sided 95% upper bound), one
+  auditor, and the same development-informed 100 questions. The OOH natural
+  set is one corpus and one snapshot; CUAD is a public second-domain baseline,
+  not a private legal pilot. The result is reader-held-out, not
+  question-held-out. It does not establish general NLI, open-world absence, or
+  a population false-accept rate.
 
 What survives all of this is the narrower claim: **the gate is mechanically
 checkable at inference time.** Whether a quote exists in the cited file does

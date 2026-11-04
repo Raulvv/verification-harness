@@ -74,8 +74,11 @@ slice is local-only (gitignored):
 
 ## Multi-reader held-out slice
 
-A two-reader natural-error set is generated from cached Sonnet 5.5 DA and
-GLM-5.3-Flash DA outputs:
+### Two-reader set (historical)
+
+The two-reader set is kept for the audit trail; the four-reader set below
+supersedes it. It is generated from cached Sonnet 5.5 DA and GLM-5.3-Flash DA
+outputs:
 
 ```bash
 .venv/bin/python competitive/build_multireader.py

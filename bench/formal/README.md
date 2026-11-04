@@ -148,11 +148,17 @@ recall 0.415, micro F1 0.577, 29 false accepts, 728 false rejects, quote
 support 0.602. It is more precise but much more conservative than TF-IDF; it
 does not solve the weak categories.
 
+`formal/cuad_qa.py` runs a CUAD fine-tuned span model
+(`akdeniz27/roberta-base-cuad`) with official-style AUPR / P@80 / P@90 and
+question-level presence/no-answer metrics. That is the reader layer; the
+verifier layer remains separate. Results are pending.
+
 **Caveats.** The natural set is reader-held-out, not question-held-out; it uses
 the same 100 development-informed questions. One auditor labelled it, with no
-second rater. It is one corpus, one snapshot, and has only 15 contradicted
-natural claims. It does not establish a population false-accept rate, general
-NLI, open-world absence, or a second domain.
+second rater. The OOH natural set is one corpus and one snapshot, and has only
+26 contradicted natural claims. CUAD is a public second-domain baseline, not a
+private legal pilot. It does not establish a population false-accept rate,
+general NLI, open-world absence, or a second production domain.
 
 ## Reproduce
 

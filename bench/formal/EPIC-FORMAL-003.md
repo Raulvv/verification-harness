@@ -12,7 +12,7 @@
 | Synthetic contract + playbook | complete | `legal/contract.md`, `legal/playbook.json` |
 | Deterministic legal fact extraction | complete (demo) | `formal/legal.py` extracts 6 fields with clause/quote |
 | Rule engine + receipts | complete (demo) | `verify_playbook`, `verify_contract`; `ENTAILED`/`CONTRADICTION`/`INCOMPLETE` |
-| CUAD public benchmark adapter | complete (baseline pilot) | `formal/cuad.py`, `legal/CUAD-PILOT.md`; 4,182 claims on the official 408/102 split |
+| CUAD public benchmark adapter | complete (presence baseline + fine-tuned span runner; span results pending) | `formal/cuad.py`, `formal/cuad_qa.py`, `legal/CUAD-PILOT.md`; 4,182 claims on the official 408/102 split |
 | Legal expert review | not started | required before any pilot claim |
 | Real document ingestion | not started | PDF/DOCX/OCR/clause segmentation |
 | Private deployment/security | not started | required before private data |
@@ -34,14 +34,17 @@ At the balanced operating point on 4,182 test claims: **precision 0.882,
 recall 0.660, micro F1 0.755, 110 false accepts (3.7% of absent clauses), 423
 false rejects, quote support 0.552**. At the precision-first point: **precision
 0.911, recall 0.568, 69 false accepts (2.4%), 537 false rejects, quote support
-0.602**. The weak categories are the ones that need legal interpretation rather
-than lexical matching. Full method, per-category results, and caveats:
-`legal/CUAD-PILOT.md`.
+0.602**. Legal-BERT is more precise but more conservative: **0.947 / 0.415 /
+0.577, 29 false accepts, 728 false rejects, quote support 0.602**. The weak
+categories are the ones that need legal interpretation rather than lexical
+matching. A CUAD fine-tuned span runner (`formal/cuad_qa.py`) is implemented;
+its official AUPR / P@80 / P@90 results are pending. Full method, per-category
+results, and caveats: `legal/CUAD-PILOT.md`.
 
 The current formal evidence remains the OOH pilot described in
-`EPIC-FORMAL-002.md` and the root `README.md`: 0 observed false accepts on 103
-human-audited contradicted claims (80 synthetic + 23 natural), with 0 false
-rejects and 1.00 coverage on the 160-claim two-reader natural set. That result
+`EPIC-FORMAL-002.md` and the root `README.md`: 0 observed false accepts on 106
+human-audited contradicted claims (80 synthetic + 26 natural), with 0 false
+rejects and 1.00 coverage on the 320-claim four-reader natural set. That result
 does not transfer to legal documents without a real legal pilot, expert labels,
 and a private deployment/security review.
 

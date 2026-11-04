@@ -1,7 +1,8 @@
-# CUAD clause-presence pilot
+# CUAD benchmark pilot
 
-**Status:** deterministic public-benchmark pilot, not legal advice, not a SOTA
-clause extractor.  
+**Status:** public-benchmark pilot: deterministic presence baseline + fine-tuned
+span model (span results pending). Not legal advice, not a SOTA clause
+extractor.
 **Dataset:** CUAD v1 — 510 commercial contracts, 41 clause categories,
 expert-labeled spans.  
 **Split:** official CUAD split — 408 train contracts, 102 test contracts.  
@@ -144,6 +145,16 @@ This is a reader/encoder tradeoff, not a verifier improvement. The next
 leaderboard-comparable step is a CUAD fine-tuned span model, not a generic
 legal encoder.
 
+## Fine-tuned span model
+
+The leaderboard-comparable path uses `akdeniz27/roberta-base-cuad`, a
+CUAD-trained extractive QA checkpoint. `formal/cuad_qa.py` runs it on the
+official 102-contract test split with sliding windows, n-best spans, and
+official-style Jaccard/AUPR/P@80/P@90 matching. It also reports question-level
+presence and no-answer false-accept rates at a zero threshold and at
+precision-first operating points. This is the reader layer; the verifier layer
+is separate.
+
 ## Reader vs harness
 
 The clause detector is the **reader**. The verifier checks the quote and the
@@ -166,11 +177,12 @@ is downloaded under `legal/cuad/data/` and is also gitignored.
 
 ## Next steps
 
-1. **Reader-first CUAD pilot.** Use a local reader to propose the clause and
-   quote; the verifier checks the quote and absence. This should improve recall
-   on the weak categories.
-2. **Span-level evaluation.** Add CUAD's Jaccard ≥ 0.5 span metric so the
-   result is comparable to the standard extraction task.
+1. **Finish the fine-tuned span model.** Run `formal/cuad_qa.py` on the
+   official test split and report AUPR / P@80 / P@90 next to the public
+   RoBERTa/DeBERTa baselines.
+2. **Verifier-wrapped CUAD.** Report question-level presence and no-answer
+   false-accept rates at zero, best-F1, and precision-first thresholds. This is
+   the harness result, not the reader's span score.
 3. **Human audit.** Sample predicted quotes and absent claims; measure
    precision on the audit sample.
 4. **Category-specific extractors.** Replace the generic TF-IDF guard with

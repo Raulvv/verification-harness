@@ -50,7 +50,7 @@ specification receipts, and a measured fallback for the rest.
 | 1.5 — presentation + `ask` bridge | complete | humanized assumptions in the answer; `ask --formal-cmd` prints answer, assumptions, evidence quotes, verdict, spec receipt |
 | 1.6 — citation gate in formal path | complete | `ask --formal --corpus` gates every displayed quote; ungated quotes are labeled; fabricated quotes rejected |
 | 2 — deterministic registry | partial | defaults + user overrides for quantifier, metric, utility, direction, unit |
-| 2.5 — independent competitive benchmark | complete (160 public + 80 natural + 160 two-reader natural, human-audited) | 160 public: formal 0.99/0 false accepts; natural 80: formal 1.00/0/0; multi-reader 160: formal 1.00/0/0, 1.00 coverage; MiniCheck 0.75/7/33; LettuceDetect 0.21/96/30; HHEM 0.79/2/31 |
+| 2.5 — independent competitive benchmark | complete (160 public + 320 four-reader natural, human-audited) | 160 public: formal 0.99/0 false accepts; 320 natural: formal 1.00/0.99 exact/0 false accepts/0 false rejects/1.00 coverage; MiniCheck 0.72/13/75; LettuceDetect 0.21/186/66; HHEM 0.76/4/73 |
 | 3 — prose extraction | partial | `formal/extract.py`: reader-first baseline for lookup, difference, sum, compare, extremum, count, quantified, rank; unsupported questions explicit |
 | 4 — closed-corpus absence | partial | `formal/coverage.py`: declared corpus index, coverage receipt, `NOT_FOUND_IN_CORPUS`; seeded-mention tests; API language guard pending |
 | 5 — router/NLI/integration | partial | `formal/router.py` + `formal/nli.py`: deterministic route and command-based fallback; real detector wiring pending |
