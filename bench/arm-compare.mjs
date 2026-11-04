@@ -34,6 +34,7 @@ const argv = process.argv.slice(2)
 const flag = (n) => argv.includes('--' + n)
 const opt = (n, d) => { const i = argv.indexOf('--' + n); return i >= 0 ? argv[i + 1] : d }
 const FAKE = flag('fake')
+const NO_SUPPORT = flag('no-support')
 const arms = opt('arms', 'A,Q,DA').split(',')
 const seeds = Number(opt('seeds', FAKE ? 1 : 3))
 const K = Number(opt('k', 3))
@@ -232,7 +233,7 @@ for (let s = 0; s < seeds; s++) for (const item of items) for (const arm of arms
     if (arm === 'Q') {
       out.citationRaw = citationStats({ item, answer: out.text, quotes: out.quotes ?? [], docs })
       out.citationShown = shown ? citationStats({ item, answer: out.text, quotes: out.quotes ?? [], docs }) : null
-      out.support = shown ? await supportFor(item, out.text, (out.quotes ?? []).map((q) => q.quote).join(' | ')) : null
+      out.support = !NO_SUPPORT && shown ? await supportFor(item, out.text, (out.quotes ?? []).map((q) => q.quote).join(' | ')) : null
     } else {
       const shownQuotes = shown ? (out.citations ?? []).map((c) => ({ rel: c.rel, quote: c.quote })) : []
       // DA reads counter-documents added after the original window; resolve the
@@ -241,7 +242,7 @@ for (let s = 0; s < seeds; s++) for (const item of items) for (const arm of arms
       const shownDocs = cited.map((rel) => ({ rel, content: readFileSync(join(corpus, rel), 'utf8') }))
       out.citationRaw = arm === 'DA' ? null : citationStats({ item, answer: out.rawAnswer ?? out.text, quotes: out.rawQuotes ?? [], docs })
       out.citationShown = shown ? citationStats({ item, answer: out.text, quotes: shownQuotes, docs: shownDocs }) : null
-      out.support = shownQuotes.length ? await supportFor(item, out.text, shownQuotes.map((q) => q.quote).join(' | ')) : null
+      out.support = !NO_SUPPORT && shownQuotes.length ? await supportFor(item, out.text, shownQuotes.map((q) => q.quote).join(' | ')) : null
     }
   }
   rows.push({ seed: s, arm, id: item.id, condition: item.condition, reader: reader.model, judge: judgeCmd ? 'cmd' : judge.model, ...out, cost: out.usage?.cost ?? null, ...score(item, out.text) })

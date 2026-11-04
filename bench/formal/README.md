@@ -1,8 +1,12 @@
-# Formal verification spike (OOH)
+# Formal verification layer (OOH)
 
-Python-only prototype for deterministic claim verification over the OOH
-structured snapshot. **No Node, no model calls, no default reader/judge
-changes.** Everything lives under `bench/formal/`.
+Python-only assurance layer for deterministic claim verification over the OOH
+structured snapshot. **No Node, no model calls, and no default reader/judge
+changes in the deterministic path.** Everything lives under `bench/formal/`.
+
+This is an **add-on to a reader**, not a replacement for HHEM, MiniCheck, or
+LettuceDetect. It checks closed structured claims; it is not a general NLI
+system.
 
 ## Install and run
 
@@ -22,6 +26,21 @@ The private v2 labels are read only for aggregate scoring when present at
 `/Users/raulvegadelvalle/Documents/linea-cero-metro/bench/results/ooh-test-private-v2.jsonl`.
 Use `--no-private` to run without them. Labels are never written to `out/`.
 
+## Reader-first pipeline
+
+The product path is:
+
+```text
+reader answer
+  -> formal/extract.py      prose -> typed claims
+  -> formal/spec.py         close unresolved slots, record assumptions
+  -> formal/z3check.py      entailment, relevance, coverage receipt
+  -> formal/router.py       show / reject / ask / fallback / human
+```
+
+`ask --formal-cmd` is a demo/debug bridge for the same verifier. It is not the
+only way to use the formal layer.
+
 ## Layout
 
 | File | Role |
@@ -30,11 +49,20 @@ Use `--no-private` to run without them. Labels are never written to `out/`.
 | `formal/rows.py` | JSON rows, markdown table cross-check, quote→row/field mapping, schema |
 | `formal/parse.py` | Deterministic English question → `QIR` |
 | `formal/compile.py` | `QIR` → canonical `AnswerIR` (derivation) |
+| `formal/extract.py` | Reader prose → claims; lookup, difference, sum, compare, extremum, count, quantified, rank |
 | `formal/spec.py` | Specification layer: `SpecRegistry`, `close_qir`, assumptions |
 | `formal/spec_examples.py` | Direct IR examples for “most”, “stability”, direction, unit, causal, normative, open-world absence |
 | `formal/z3check.py` | Z3 premises + 3-valued entailment + structural relevance |
+| `formal/coverage.py` | Closed-corpus index and coverage receipts |
+| `formal/router.py` | Deterministic verdict → route |
+| `formal/nli.py` | `CommandNLI` fallback adapter |
+| `formal/batch.py` | JSONL batch interface |
+| `formal/server.py` | Minimal HTTP API |
+| `formal/legal.py` | Synthetic legal playbook demo (second schema) |
 | `formal/negative.py` | 17 adversarial cases for test-041/088/091/093/095/100 |
 | `formal/evaluate.py` | Inventory, agreement, mutation tests, determinism, runtime |
+| `competitive/` | Frozen claim sets, detector runners, audit forms, pre-registration |
+| `legal/` | Synthetic contract + playbook |
 
 ## Semantics
 
@@ -52,7 +80,7 @@ Use `--no-private` to run without them. Labels are never written to `out/`.
 
 ## Verdicts
 
-```
+```text
 ENTAILED                     P ∧ C sat, P ∧ ¬C unsat
 ENTAILED_UNDER_ASSUMPTIONS   same, but a recorded spec was used
 CONTRADICTION                P ∧ C unsat
@@ -67,12 +95,75 @@ NOT_FORMALIZABLE             no deterministic compiler or formal theory
 `INCOMPLETE` also covers structural mismatch: a true claim about the wrong
 field, wrong candidate set, or unfiltered set is not an answer to this question.
 
-## Epics
+## Current evidence (2026-11-04)
 
-- `EPIC-FORMAL-002.md` — specification layer, reader-first verification,
-  gate integration, coverage receipts, competitive harness, router.
-- `EPIC-FORMAL-003.md` — proposed legal/private-corpus pilot: contract playbook
-  compliance and data-room completeness.
+Human-audited pilot, not a final benchmark claim:
+
+| Set | Contradicted | False accepts | False rejects | Coverage | One-sided 95% upper bound |
+|---|---:|---:|---:|---:|---:|
+| 160 public synthetic | 80 | **0** | 1 | 0.74 | 3.7% |
+| 80 DeepSeek natural | 8 | **0** | 0 | 1.00 | 31.2% |
+| 160 two-reader natural | 15 | **0** | 0 | 1.00 | 18.1% |
+| Natural combined | 23 | **0** | 0 | 1.00 | 12.2% |
+| Synthetic + natural | 103 | **0** | — | — | 2.9% |
+
+The two-reader natural set is Sonnet 5.5 DA + GLM-5.3-Flash DA, human-audited
+and corrected: **1.00 binary, 0.98 exact, 0 false accepts, 0 false rejects,
+1.00 coverage**. The 0.98 exact is three `partial` answers (one operand, no
+computed difference) judged `CONTRADICTION`; binary is correct.
+
+On the same 160 natural claims:
+
+| System | Binary | Exact | False accepts | False rejects | Coverage |
+|---|---:|---:|---:|---:|---:|
+| **Formal** | **1.00** | 0.98 | **0** | **0** | **1.00** |
+| MiniCheck | 0.75 | 0.27 | 7 | 33 | 1.00 |
+| LettuceDetect | 0.21 | 0.21 | 96 | 30 | 1.00 |
+| HHEM-2.1-Open | 0.79 | 0.28 | 2 | 31 | 1.00 |
+
+The synthetic set's coverage is 0.74 because formal abstains on the 40
+contradicted absence claims (`INCOMPLETE`); binary accuracy is 1.00. The one
+false reject is the top-coded Physicians maximum.
+
+**Caveats.** The natural set is reader-held-out, not question-held-out; it uses
+the same 100 development-informed questions. One auditor labelled it, with no
+second rater. It is one corpus, one snapshot, and has only 15 contradicted
+natural claims. It does not establish a population false-accept rate, general
+NLI, open-world absence, or a second domain.
+
+## Reproduce
+
+Public synthetic slice:
+
+```bash
+cd bench/formal
+.venv/bin/python competitive/build_pilot_160.py
+.venv/bin/python -m formal.competitive \
+  --claims competitive/pilot-160-human.jsonl \
+  --detector competitive/detectors/minicheck-160.jsonl \
+  --detector competitive/detectors/lettucedetect-160.jsonl \
+  --detector competitive/detectors/hhem-160.jsonl
+```
+
+The natural slices are local and gitignored. Reports contain aggregates only:
+`competitive/private/NATURAL-AUDIT-REPORT.md` and
+`competitive/private/MULTIREADER-AUDIT-REPORT.md`.
+
+## Competitive audit workflow
+
+Build a claim set, export a one-question form, audit it, then merge the export:
+
+```bash
+.venv/bin/python competitive/build_multireader.py
+.venv/bin/python competitive/build_gold_form.py \
+  --input competitive/private/multireader-320.jsonl \
+  --output competitive/private/multireader-gold.html \
+  --title "Four-reader natural gold"
+.venv/bin/python competitive/apply_multireader_audit.py
+```
+
+The gold form hides provisional labels by default. The human label is
+authoritative; corrections are recorded alongside the raw export.
 
 ## Specification layer
 
@@ -101,3 +192,10 @@ Set `allow_defaults=False` to require an explicit policy. Open-world absence
 stays `NEEDS_SPECIFICATION` until a declared corpus and coverage receipt exist;
 a causal or normative claim needs an explicit model/theory, and without a
 formal theory it remains `NOT_FORMALIZABLE`. Neither is ever silently accepted.
+
+## Epics
+
+- `EPIC-FORMAL-002.md` — specification layer, reader-first verification,
+  gate integration, coverage receipts, competitive harness, router.
+- `EPIC-FORMAL-003.md` — legal/private-corpus pilot: contract playbook
+  compliance and data-room completeness. Synthetic demo only; no real pilot.

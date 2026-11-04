@@ -280,6 +280,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--title", default="Gold-label audit")
     parser.add_argument("--evidence-chars", type=int, default=4000)
+    parser.add_argument("--reader", help="only include claims from this reader")
+    parser.add_argument(
+        "--audit-all",
+        action="store_true",
+        help="mark every included claim as needing audit",
+    )
     args = parser.parse_args(argv)
 
     rows = [
@@ -287,10 +293,14 @@ def main(argv: list[str] | None = None) -> int:
         for line in args.input.read_text(encoding="utf-8").splitlines()
         if line.strip()
     ]
+    if args.reader:
+        rows = [row for row in rows if row.get("reader") == args.reader]
     supported_seen = 0
     for row in rows:
         row["evidence"] = str(row.get("evidence", ""))[: args.evidence_chars]
-        if row.get("audit_required") not in ("yes", "no"):
+        if args.audit_all or args.reader:
+            row["audit_required"] = "yes"
+        elif row.get("audit_required") not in ("yes", "no"):
             if row.get("gold") == "contradicted":
                 row["audit_required"] = "yes"
             else:

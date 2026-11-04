@@ -1,8 +1,10 @@
-"""Build a two-reader natural-error set for the held-out replication.
+"""Build the four-reader natural-error set for the held-out replication.
 
 Readers:
+  - DeepSeek 4.1 Flash DA
   - Sonnet 5.5 DA
   - GLM-5.3-Flash DA
+  - Qwen 3.8 27B DA
 
 The outputs are cached model results, not private labels. The set is kept under
 competitive/private/ (gitignored).
@@ -10,6 +12,7 @@ competitive/private/ (gitignored).
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 from collections import Counter
@@ -27,11 +30,25 @@ QUESTIONS = ROOT / "bench" / "ooh-test-questions.jsonl"
 CORPUS = ROOT / "bench" / "corpus" / "ooh-v1"
 TABLE = ROOT / "bench" / "ooh-table-v1.md"
 READERS = {
-    "sonnet-da": ROOT / "bench" / "results" / "arm-compare-heldout-sonnet55-da-v2.jsonl",
-    "glm-da": ROOT / "bench" / "results" / "arm-compare-heldout-glm53flash-v2.jsonl",
+    "deepseek-da": (
+        ROOT / "bench" / "results" / "arm-compare-heldout-deepseek-da-v2.jsonl",
+        "DA",
+    ),
+    "sonnet-da": (
+        ROOT / "bench" / "results" / "arm-compare-heldout-sonnet55-da-v2.jsonl",
+        "DA",
+    ),
+    "glm-da": (
+        ROOT / "bench" / "results" / "arm-compare-heldout-glm53flash-v2.jsonl",
+        "DA",
+    ),
+    "qwen-da": (
+        ROOT / "bench" / "results" / "arm-compare-heldout-qwen38-27b-da-v2.jsonl",
+        "DA",
+    ),
 }
 OUT_DIR = Path(__file__).resolve().parent / "private"
-OUT = OUT_DIR / "multireader-160.jsonl"
+OUT = OUT_DIR / "multireader-320.jsonl"
 VALUE_KINDS = {"lookup", "compare", "difference", "sum", "extremum", "count"}
 
 
@@ -80,8 +97,9 @@ def main() -> None:
         )
     }
     out = []
-    for reader, path in READERS.items():
-        arm = "DA" if reader == "glm-da" else None
+    for reader, (path, arm) in READERS.items():
+        if not path.exists():
+            raise SystemExit(f"missing reader output for {reader}: {path}")
         answers = load_reader(path, arm)
         for qid, item in questions.items():
             if qid not in answers:
@@ -125,6 +143,7 @@ def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     OUT.write_text("".join(json.dumps(r) + "\n" for r in out), encoding="utf-8")
     print(f"wrote {len(out)} claims -> {OUT}")
+    print("sha256:", hashlib.sha256(OUT.read_bytes()).hexdigest())
     print("readers:", dict(Counter(r["reader"] for r in out)))
     print("conditions:", dict(Counter(r["condition"] for r in out)))
     print("provisional:", dict(Counter(r["gold"] for r in out)))

@@ -683,11 +683,11 @@ Exit criteria:
 
 ### Phase 2.5 — Independent competitive benchmark
 
-Status: **complete for a 160-claim public pilot**. `formal/competitive.py`
-loads a frozen claim set and detector score files, runs the formal verifier and
-the detectors on the same claims, and reports binary/exact accuracy, false
-accepts, false rejects, coverage, and per-category results. Results are in
-`competitive/PILOT-160-REPORT.md`:
+Status: **complete for a 160-claim public pilot and two human-audited natural
+pilots**. `formal/competitive.py` loads a frozen claim set and detector score
+files, runs the formal verifier and the detectors on the same claims, and
+reports binary/exact accuracy, false accepts, false rejects, coverage, and
+per-category results. Results are in `competitive/PILOT-160-REPORT.md`:
 
 | System | Binary | False accepts | False rejects |
 |---|---:|---:|---:|
@@ -722,7 +722,19 @@ is reader-held-out, not question-held-out.
 
 The pre-registration and audit tooling are in
 `competitive/PRE-REGISTRATION.md`, `competitive/GOLD-FORM.html`,
-`competitive/apply_audit.py` and `competitive/private/NATURAL-AUDIT-REPORT.md`.
+`competitive/apply_audit.py`, `competitive/apply_multireader_audit.py`, and
+`competitive/private/NATURAL-AUDIT-REPORT.md` /
+`competitive/private/MULTIREADER-AUDIT-REPORT.md`.
+
+Remaining gaps before a final false-accept claim:
+
+- ≥100 natural contradicted claims (the two-reader set has 15).
+- A second rater and adjudication (the pilot has one auditor).
+- A question-held-out set (the pilot reuses the 100 development-informed
+  questions).
+- A second domain (only OOH and a synthetic legal demo exist).
+- A four-reader natural set (DeepSeek 4.1 Flash, Sonnet 5.5, GLM-5.3-Flash,
+  Qwen 3.8 27B) is the next sample-size step; it is not itself a final claim.
 
 Deliverables:
 

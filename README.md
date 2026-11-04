@@ -181,6 +181,62 @@ The product path is reader-first: a reader answer goes through
 `ask --formal` command is a demo/debug path for the same verifier; it is not the
 only way to use it.
 
+### Current formal pilot (2026-11-04)
+
+The formal layer has a **human-audited pilot**, not a final benchmark claim.
+
+| Set | Contradicted | False accepts | False rejects | Coverage | One-sided 95% upper bound |
+|---|---:|---:|---:|---:|---:|
+| 160 public synthetic | 80 | **0** | 1 | 0.74 | 3.7% |
+| 80 DeepSeek natural | 8 | **0** | 0 | 1.00 | 31.2% |
+| 160 two-reader natural | 15 | **0** | 0 | 1.00 | 18.1% |
+| Natural combined | 23 | **0** | 0 | 1.00 | 12.2% |
+| Synthetic + natural | 103 | **0** | — | — | 2.9% |
+
+The two-reader natural set is Sonnet 5.5 DA + GLM-5.3-Flash DA, human-audited
+and corrected: **1.00 binary, 0.98 exact, 0 false accepts, 0 false rejects,
+1.00 coverage**. The 0.98 exact is three `partial` answers (one operand, no
+computed difference) judged `CONTRADICTION`; the binary endpoint is correct.
+
+On the same 160 natural claims, the general detectors are materially weaker:
+
+| System | Binary | Exact | False accepts | False rejects | Coverage |
+|---|---:|---:|---:|---:|---:|
+| **Formal** | **1.00** | 0.98 | **0** | **0** | **1.00** |
+| MiniCheck | 0.75 | 0.27 | 7 | 33 | 1.00 |
+| LettuceDetect | 0.21 | 0.21 | 96 | 30 | 1.00 |
+| HHEM-2.1-Open | 0.79 | 0.28 | 2 | 31 | 1.00 |
+
+The synthetic set's coverage is 0.74 because formal abstains on the 40
+contradicted absence claims (`INCOMPLETE`); its binary accuracy is 1.00. The
+one false reject is the top-coded Physicians maximum, where the source says
+“equal to or greater than $239,200”.
+
+**What this supports:** a deterministic verifier for closed structured claims
+can be the assurance layer for a reader, with a mechanically checkable
+false-accept record on a pilot. **What it does not support:** a population
+false-accept rate, general NLI, open-world absence, question-held-out
+evaluation, a second domain, or replacement of the detectors. The natural set
+is reader-held-out, not question-held-out; one auditor labelled it; the same
+100 development-informed questions are used.
+
+Reproduce the public synthetic slice:
+
+```bash
+cd bench/formal
+.venv/bin/python -m formal.competitive \
+  --claims competitive/pilot-160-human.jsonl \
+  --detector competitive/detectors/minicheck-160.jsonl \
+  --detector competitive/detectors/lettucedetect-160.jsonl \
+  --detector competitive/detectors/hhem-160.jsonl
+```
+
+The natural slices are local and gitignored; only aggregate results are
+published. Details: [`bench/formal/EPIC-FORMAL-002.md`](bench/formal/EPIC-FORMAL-002.md),
+[`bench/formal/competitive/PILOT-160-REPORT.md`](bench/formal/competitive/PILOT-160-REPORT.md),
+[`bench/formal/competitive/PRE-REGISTRATION.md`](bench/formal/competitive/PRE-REGISTRATION.md),
+and [`bench/formal/EPIC-FORMAL-003.md`](bench/formal/EPIC-FORMAL-003.md).
+
 ## Use it on your own private corpus
 
 The benchmark is public; the same kit runs on a private folder. Do not put
@@ -353,6 +409,12 @@ numbers.
   adjudication, not human); the automated MiniCheck over-refused.
 - **Author-defined ceiling.** "88% of the reachable ceiling" uses a 52-item
   ceiling we defined. A descriptive denominator, not a law.
+- **Formal pilot is not a final claim.** The formal verifier has 0 observed
+  false accepts on 103 human-audited contradicted claims, but the natural-only
+  set has 15 contradicted claims (18.1% one-sided 95% upper bound), one
+  auditor, one corpus, and the same development-informed 100 questions. It is
+  reader-held-out, not question-held-out. It does not establish general NLI,
+  open-world absence, or a population false-accept rate.
 
 What survives all of this is the narrower claim: **the gate is mechanically
 checkable at inference time.** Whether a quote exists in the cited file does
@@ -382,6 +444,9 @@ cost is within the current setup. Miss any one and we stop. See
   standalone; published as its own package.
 - `bench/` — the OOH benchmark: corpus, questions, scorer, arm comparison, and
   its own README/spec/manifest.
+- `bench/formal/` — the opt-in deterministic verification layer: reader-first
+  extraction, Z3 entailment, specification receipts, coverage, router, and the
+  competitive pilot. See `bench/formal/README.md`.
 - `drafts/` — local article/email working copies (gitignored; never published).
 - `kit/retrieval.config.example.json`, `.env.example` — the default corpus +
   GLM-Flash/DA configuration example; `bench/arm-table.mjs` regenerates the

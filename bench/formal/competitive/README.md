@@ -98,11 +98,50 @@ set is human-audited and corrected (8 confirmed corrections). Results:
 Apply the export with:
 
 ```bash
-.venv/bin/python competitive/apply_multireader_audit.py
+.venv/bin/python competitive/apply_multireader_audit.py \
+  --input competitive/private/multireader-160.jsonl \
+  --export ~/Downloads/gold-results.json \
+  --out competitive/private/multireader-160-human.jsonl
 ```
 
 Details: `private/MULTIREADER-AUDIT-REPORT.md`. This is reader-held-out, not
 question-held-out.
+
+### Four-reader set (in progress)
+
+The next set adds DeepSeek 4.1 Flash DA and Qwen 3.8 27B DA to the existing
+Sonnet 5.5 DA and GLM-5.3-Flash DA claims:
+
+```bash
+.venv/bin/python competitive/build_multireader.py
+```
+
+It writes `private/multireader-320.jsonl` (4 readers × 80 answerable/unanswerable
+claims). Build one form per reader so the audit stays one question at a time:
+
+```bash
+.venv/bin/python competitive/build_gold_form.py \
+  --input competitive/private/multireader-320.jsonl \
+  --reader deepseek-da \
+  --output competitive/private/multireader-deepseek-gold.html \
+  --title "DeepSeek 4.1 Flash — 80 claims"
+```
+
+Repeat for `sonnet-da`, `glm-da`, and `qwen-da`, then merge the exports:
+
+```bash
+.venv/bin/python competitive/apply_multireader_audit.py \
+  --input competitive/private/multireader-320.jsonl \
+  --export ~/Downloads/gold-results-deepseek.json \
+  --export ~/Downloads/gold-results-sonnet.json \
+  --export ~/Downloads/gold-results-glm.json \
+  --export ~/Downloads/gold-results-qwen.json \
+  --out competitive/private/multireader-320-human.jsonl
+```
+
+The four-reader set is a sample-size step, not a final claim: at the current
+~9% natural contradicted rate it yields roughly 30 contradicted claims, not the
+≥100 target.
 
 ## Apply the audit
 

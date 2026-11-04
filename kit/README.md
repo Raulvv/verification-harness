@@ -110,6 +110,21 @@ the formal verdict. `--no-defaults` is forwarded to the verifier. If no command
 is configured, `ask --formal` fails loud instead of silently falling back. The
 default `ask` path is unchanged.
 
+The kit does **not** bundle a verifier. It invokes the external command you
+configure; the verifier lives in `bench/formal/` in this repository, but the kit
+stays standalone. Citation gating is separate from the formal verdict:
+
+- `gate: verified` — the quote was re-opened and matched in the named file.
+- `gate: REJECTED` — the quote did not match; the answer is not shown as valid.
+- `gate: ungated` — no corpus was supplied, so the quote was not checked.
+
+Current formal evidence is a human-audited pilot, not a final benchmark claim:
+0 observed false accepts on 103 contradicted claims (80 synthetic + 23 natural),
+with 0 false rejects and 1.00 coverage on the 160-claim two-reader natural set.
+The natural-only upper bound is 18.1% (0/15, one-sided 95%); the set is
+reader-held-out, not question-held-out, and has one auditor. See the root
+`README.md` and `bench/formal/EPIC-FORMAL-002.md`.
+
 ## Reader model setup — defaults, Ollama, non-Ollama
 
 The boundary is OpenAI-compatible (`/chat/completions`); Ollama is special-cased

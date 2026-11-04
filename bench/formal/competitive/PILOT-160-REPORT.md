@@ -1,7 +1,8 @@
 # Competitive pilot — 160 public OOH claims
 
-**Status:** larger public pilot; still synthetic and not human-audited.  
-**Claim set:** `competitive/pilot-160.jsonl`  
+**Status:** larger public pilot; human-audited synthetic slice plus private,
+human-audited natural-reader slices.
+**Claim set:** `competitive/pilot-160.jsonl`
 **Systems:** formal verifier, MiniCheck (Ollama), LettuceDetect (ModernBERT base), HHEM-2.1-Open.
 
 ## Claim set
@@ -45,6 +46,12 @@ rejects, 1.00 coverage**; MiniCheck 0.75 / 7 / 33; LettuceDetect 0.21 / 96 /
 The natural slices found and fixed parser issues (Doc references, arithmetic
 expressions, percentage-point wording, top-coded lower bounds) and one false
 sub-claim. They are **reader-held-out**, not question-held-out.
+
+Sample-size note: the one-sided 95% upper bound for zero false accepts is 3.7%
+on the 80 synthetic contradicted claims, 18.1% on the 15 two-reader natural
+contradicted claims, and 2.9% on the 103 combined contradicted claims. The
+combined figure mixes synthetic perturbations with natural reader errors; it is
+not a single population estimate.
 
 ## Results — all 160 claims
 
@@ -139,7 +146,7 @@ absence claims as supported, which is the most dangerous failure mode.
 cd bench/formal
 .venv/bin/python competitive/build_pilot_160.py
 .venv/bin/python -m formal.competitive \
-  --claims competitive/pilot-160.jsonl \
+  --claims competitive/pilot-160-human.jsonl \
   --detector competitive/detectors/minicheck-160.jsonl \
   --detector competitive/detectors/lettucedetect-160.jsonl \
   --detector competitive/detectors/hhem-160.jsonl

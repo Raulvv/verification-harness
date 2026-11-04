@@ -103,6 +103,26 @@ No threshold tuning on the final set. Report all pre-registered thresholds.
 - The natural-error slice behaves materially worse than the synthetic slice.
 - The second domain fails the same protocol.
 
+## Four-reader replication (registered 2026-11-04)
+
+This is the next natural-reader replication. It is **reader-held-out, not
+question-held-out**: it reuses the same 100 development-informed questions.
+
+- Readers: DeepSeek 4.1 Flash DA, Sonnet 5.5 DA, GLM-5.3-Flash DA, Qwen 3.8
+  27B DA.
+- Claim set: 4 readers × 80 answerable/unanswerable claims = 320 claims.
+- Qwen 3.8 27B is local (`oamazonasgabriel/qwen3.8-27b:q4-km-32gbGPU`), DA,
+  one seed, `k=3`, excerpt window, 1,200-token cap.
+- Primary endpoint: false accepts on contradicted value claims. Minimum 40
+  contradicted claims for a primary claim; target 80+. If the audited set has
+  fewer than 40, it is reported as a pilot and the primary claim is not made.
+- Detectors are rerun on all 320 claims with the pre-registered thresholds.
+- Partial questions are excluded, as in the two-reader set. Ambiguous labels
+  are excluded from the primary endpoint with the count reported.
+- The same analysis plan, exclusions, and falsification conditions apply. No
+  threshold tuning on this set.
+- The claim set hash and reader-output hashes are recorded before the audit.
+
 ## Freeze
 
 - Claim set hash: recorded in the run report.

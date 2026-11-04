@@ -20,6 +20,13 @@
 The demo is **synthetic only**: no client data, no legal advice, no expert
 review. It proves the architecture on a second schema; it is not a legal pilot.
 
+The current formal evidence remains the OOH pilot described in
+`EPIC-FORMAL-002.md` and the root `README.md`: 0 observed false accepts on 103
+human-audited contradicted claims (80 synthetic + 23 natural), with 0 false
+rejects and 1.00 coverage on the 160-claim two-reader natural set. That result
+does not transfer to legal documents without a real legal pilot, expert labels,
+and a private deployment/security review.
+
 ---
 
 ## 0. One-page summary
