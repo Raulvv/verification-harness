@@ -196,6 +196,15 @@ pre-registered 40 minimum. Two follow-up slices are prepared:
   supported/absent claims. Labels and formal verdicts are removed from the
   second-rater file.
 
+After audit, the error-enriched slice is 26 contradicted, 4 partial, and 8
+supported. Formal is **1.00 binary, 0.89 exact, 0 false accepts, 0 false
+rejects, 1.00 coverage**. Exact is 0.89 because the four `partial` answers are
+judged `CONTRADICTION`.
+
+This slice is **not independent** of the 320-claim set: it is a selected
+subset of the same claims. It confirms the same 26 contradicted claims and does
+not move the sample-size target.
+
 After the second-rater export:
 
 ```bash
