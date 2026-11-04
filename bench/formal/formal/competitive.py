@@ -33,6 +33,7 @@ class ClaimItem:
     question: str
     answer: str
     gold: str
+    evidence: str = ""
 
 
 @dataclass(frozen=True)
@@ -102,7 +103,11 @@ def detector_predictions(
 ) -> dict[str, str]:
     out: dict[str, str] = {}
     for cid, rec in records.items():
-        if rec.label:
+        # A score is thresholded; a label is the fallback. This lets HHEM be
+        # swept without rewriting its score file.
+        if rec.score is not None:
+            out[cid] = "supported" if rec.score >= threshold else "contradicted"
+        elif rec.label:
             label = rec.label.lower()
             if label in ("supported", "entailed", "yes", "true", "1"):
                 out[cid] = "supported"
@@ -112,8 +117,6 @@ def detector_predictions(
                 out[cid] = "absent"
             else:
                 out[cid] = "unknown"
-        elif rec.score is not None:
-            out[cid] = "supported" if rec.score >= threshold else "contradicted"
         else:
             out[cid] = "unknown"
     return out

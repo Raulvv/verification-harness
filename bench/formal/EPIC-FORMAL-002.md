@@ -50,15 +50,15 @@ specification receipts, and a measured fallback for the rest.
 | 1.5 — presentation + `ask` bridge | complete | humanized assumptions in the answer; `ask --formal-cmd` prints answer, assumptions, evidence quotes, verdict, spec receipt |
 | 1.6 — citation gate in formal path | complete | `ask --formal --corpus` gates every displayed quote; ungated quotes are labeled; fabricated quotes rejected |
 | 2 — deterministic registry | partial | defaults + user overrides for quantifier, metric, utility, direction, unit |
-| 2.5 — independent competitive benchmark | partial | `formal/competitive.py` + frozen public claim fixture + detector score format; HHEM/MiniCheck/LettuceDetect runs pending |
+| 2.5 — independent competitive benchmark | complete (50-claim local pilot) | formal 1.00 binary / 0 false accepts; MiniCheck 0.70 / 0 false accepts; LettuceDetect 0.48 / 13 false accepts; HHEM 0.62 / 5 false accepts at 0.5 |
 | 3 — prose extraction | partial | `formal/extract.py`: reader-first baseline for lookup, difference, sum, compare, extremum, count, quantified, rank; unsupported questions explicit |
 | 4 — closed-corpus absence | partial | `formal/coverage.py`: declared corpus index, coverage receipt, `NOT_FOUND_IN_CORPUS`; seeded-mention tests; API language guard pending |
 | 5 — router/NLI/integration | partial | `formal/router.py` + `formal/nli.py`: deterministic route and command-based fallback; real detector wiring pending |
 | 5.5 — productionization | partial | workspace `formalCmd`, JSONL batch, minimal HTTP `/health` `/verify` `/batch`; observability pending |
 | 6 — evaluation/report | not started | — |
 
-Current test evidence: **94 Python tests** (17 original + 21 spec-layer +
-18 reader-first extraction + 5 closed-corpus absence + 6 competitive harness +
+Current test evidence: **95 Python tests** (17 original + 21 spec-layer +
+18 reader-first extraction + 5 closed-corpus absence + 7 competitive harness +
 6 router + 6 NLI fallback + 4 batch + 6 legal demo + 5 API) and **213 kit
 tests** pass; the EPIC-FORMAL-001 100-question and dev-14 results are unchanged
 (59 `ENTAILED`, 40 `ABSENT_CONFIRMED`, 1 `UNKNOWN`, 0 false `ENTAILED`). The
@@ -683,12 +683,21 @@ Exit criteria:
 
 ### Phase 2.5 — Independent competitive benchmark
 
-Status: **partial**. `formal/competitive.py` loads a frozen claim set and
-detector score files, runs the formal verifier and the detectors on the same
-claims, and reports binary/exact accuracy, false accepts, false rejects,
-coverage, and per-category results. `competitive/` contains a public OOH fixture
-and an NLI-style score file. Real HHEM/MiniCheck/LettuceDetect runs are pending;
-the harness does not call a model.
+Status: **complete for a 50-claim local pilot**. `formal/competitive.py` loads
+a frozen claim set and detector score files, runs the formal verifier and the
+detectors on the same claims, and reports binary/exact accuracy, false accepts,
+false rejects, coverage, and per-category results. The pilot results are in
+`competitive/PILOT-REPORT.md`:
+
+| System | Binary | False accepts | False rejects |
+|---|---:|---:|---:|
+| Formal | 1.00 | 0 | 0 |
+| MiniCheck | 0.70 | 0 | 15 |
+| LettuceDetect | 0.48 | 13 | 13 |
+| HHEM-2.1-Open | 0.62 | 5 | 14 |
+
+HHEM at threshold 0.9 reaches 0 false accepts but 18 false rejects. Broader
+claim sets and human audit are still pending.
 
 Deliverables:
 
@@ -1130,7 +1139,8 @@ and the gate integration — not on the 100-question development set alone.
 - `bench/formal/formal/extract.py` — reader-first claim extraction baseline.
 - `bench/formal/formal/coverage.py` — closed-corpus index and coverage receipt.
 - `bench/formal/formal/competitive.py` — formal-vs-detector benchmark harness.
-- `bench/formal/competitive/` — frozen claim fixture and detector score format.
+- `bench/formal/competitive/` — frozen claim fixtures, detector runners, and
+  `PILOT-REPORT.md`.
 - `bench/formal/formal/router.py` — verdict → product action router.
 - `bench/formal/formal/nli.py` — command-based NLI fallback adapter.
 - `bench/formal/formal/batch.py` — JSONL batch verification boundary.

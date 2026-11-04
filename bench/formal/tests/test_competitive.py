@@ -35,6 +35,18 @@ class CompetitiveTest(unittest.TestCase):
         self.assertIn("nli", report)
         self.assertIn("by category", report)
 
+    def test_pilot_set_has_evidence_and_both_polarities(self) -> None:
+        from formal.competitive import load_claims
+
+        pilot = DEFAULT_CLAIMS.parent / "pilot-50.jsonl"
+        claims = load_claims(pilot)
+        self.assertEqual(len(claims), 50)
+        self.assertTrue(all(c.evidence for c in claims))
+        golds = {c.gold for c in claims}
+        self.assertEqual(golds, {"supported", "contradicted", "absent"})
+        categories = {c.category for c in claims}
+        self.assertTrue({"lookup", "difference", "compare", "extremum", "count", "sum", "absence"} <= categories)
+
     def test_verdict_mapping(self) -> None:
         self.assertEqual(map_verdict("ENTAILED"), "supported")
         self.assertEqual(map_verdict("ENTAILED_UNDER_ASSUMPTIONS"), "supported")

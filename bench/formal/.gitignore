@@ -1,4 +1,5 @@
 .venv/
+.venv-detectors/
 __pycache__/
 out/
 *.pyc

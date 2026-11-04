@@ -12,6 +12,17 @@ cd bench/formal
   --detector competitive/detectors/nli.jsonl
 ```
 
+The frozen 50-claim public pilot and its results are in
+[`PILOT-REPORT.md`](PILOT-REPORT.md).
+
+```bash
+.venv/bin/python -m formal.competitive \
+  --claims competitive/pilot-50.jsonl \
+  --detector competitive/detectors/minicheck.jsonl \
+  --detector competitive/detectors/lettucedetect.jsonl \
+  --detector competitive/detectors/hhem.jsonl
+```
+
 ```text
 system           binary    exact   false+   false-    cover
 formal             1.00     1.00        0        0     1.00
