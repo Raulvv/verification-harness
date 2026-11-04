@@ -50,15 +50,15 @@ specification receipts, and a measured fallback for the rest.
 | 1.5 — presentation + `ask` bridge | complete | humanized assumptions in the answer; `ask --formal-cmd` prints answer, assumptions, evidence quotes, verdict, spec receipt |
 | 1.6 — citation gate in formal path | complete | `ask --formal --corpus` gates every displayed quote; ungated quotes are labeled; fabricated quotes rejected |
 | 2 — deterministic registry | partial | defaults + user overrides for quantifier, metric, utility, direction, unit |
-| 2.5 — independent competitive benchmark | complete (160 public + 80 natural, human-audited) | 160: formal 0.99/0 false accepts; MiniCheck 0.84/3; LettuceDetect 0.46/66; HHEM 0.81/9. Natural 80: formal 0.975/1; MiniCheck 0.7875/2; LettuceDetect 0.2375/47; HHEM 0.825/0 |
+| 2.5 — independent competitive benchmark | complete (160 public + 80 natural, human-audited) | 160: formal 0.99/0 false accepts; MiniCheck 0.84/3; LettuceDetect 0.46/66; HHEM 0.81/9. Natural 80: formal 1.00/0/0, 1.00 coverage; MiniCheck 0.76/3/16; LettuceDetect 0.21/48/15; HHEM 0.80/1/15 |
 | 3 — prose extraction | partial | `formal/extract.py`: reader-first baseline for lookup, difference, sum, compare, extremum, count, quantified, rank; unsupported questions explicit |
 | 4 — closed-corpus absence | partial | `formal/coverage.py`: declared corpus index, coverage receipt, `NOT_FOUND_IN_CORPUS`; seeded-mention tests; API language guard pending |
 | 5 — router/NLI/integration | partial | `formal/router.py` + `formal/nli.py`: deterministic route and command-based fallback; real detector wiring pending |
 | 5.5 — productionization | partial | workspace `formalCmd`, JSONL batch, minimal HTTP `/health` `/verify` `/batch`; observability pending |
 | 6 — evaluation/report | not started | — |
 
-Current test evidence: **98 Python tests** (17 original + 21 spec-layer +
-18 reader-first extraction + 5 closed-corpus absence + 10 competitive harness +
+Current test evidence: **101 Python tests** (17 original + 21 spec-layer +
+21 reader-first extraction + 5 closed-corpus absence + 10 competitive harness +
 6 router + 6 NLI fallback + 4 batch + 6 legal demo + 5 API) and **213 kit
 tests** pass; the EPIC-FORMAL-001 100-question and dev-14 results are unchanged
 (59 `ENTAILED`, 40 `ABSENT_CONFIRMED`, 1 `UNKNOWN`, 0 false `ENTAILED`). The
@@ -704,12 +704,13 @@ but raises false rejects from 22 to 28.
 
 The 160-claim public set is human-audited: 160/160 labels matched provisional
 (40 supported, 80 contradicted, 40 absent). The 80-claim natural-reader set is
-also human-audited: 31 supported, 47 absent, 2 partial; 10 disagreements with
-the provisional labels. Formal on the natural slice: 0.975 binary, 1 false
-accept (test-030, a false sub-claim the extractor missed), 1 false reject
-(test-100, likely audit mislabel), 0.9125 coverage. Test-089 is a real verbose
-arithmetic extraction failure (formal CONTRADICTION on a correct 479,500
-derivation).
+also human-audited and corrected: 31 supported, 40 absent, 8 contradicted,
+1 partial. The audit found three real formal issues, now fixed: a false
+sub-claim (test-030), verbose arithmetic (test-089), and false abstention on
+answerable `NOT FOUND` answers. Formal on the corrected natural slice:
+**1.00 binary, 0 false accepts, 0 false rejects, 1.00 coverage**; exact is 0.99
+because test-030 is gold `partial` and the verdict is `CONTRADICTION`.
+MiniCheck: 0.76 / 3 / 16; LettuceDetect: 0.21 / 48 / 15; HHEM: 0.80 / 1 / 15.
 
 The pre-registration and audit tooling are in
 `competitive/PRE-REGISTRATION.md`, `competitive/GOLD-FORM.html`,
@@ -1158,7 +1159,10 @@ and the gate integration — not on the 100-question development set alone.
 - `bench/formal/competitive/` — frozen claim fixtures, detector runners,
   `PILOT-REPORT.md`, `PILOT-160-REPORT.md`, `PRE-REGISTRATION.md`,
   `AUDIT-SHEET.csv`, `AUDIT-SHEET.html`, `GOLD-FORM.html`,
-  `build_natural.py`, `build_audit_html.py`, `build_gold_form.py`.
+  `pilot-160-human.jsonl`, `apply_audit.py`, `build_natural.py`,
+  `build_audit_html.py`, `build_gold_form.py`.
+- `bench/formal/competitive/private/NATURAL-AUDIT-REPORT.md` — local
+  natural-reader audit report (gitignored).
 - `bench/formal/formal/router.py` — verdict → product action router.
 - `bench/formal/formal/nli.py` — command-based NLI fallback adapter.
 - `bench/formal/formal/batch.py` — JSONL batch verification boundary.

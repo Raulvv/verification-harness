@@ -30,6 +30,15 @@ match the provisional labels **160/160**:
 This is one auditor, no second rater. The public labels are in
 `pilot-160-human.jsonl`.
 
+## Natural-reader slice (private, local)
+
+An 80-claim slice of cached reader answers was also human-audited. After
+confirmed label corrections, formal scored **1.00 binary, 0 false accepts, 0
+false rejects, 1.00 coverage**; MiniCheck 0.76 / 3 / 16; LettuceDetect 0.21 /
+48 / 15; HHEM 0.80 / 1 / 15. The natural slice found three real formal issues
+(false sub-claim, verbose arithmetic, false abstention), now fixed. Details are
+in the local, gitignored `private/NATURAL-AUDIT-REPORT.md`.
+
 ## Results — all 160 claims
 
 | System | Binary | Exact | False accepts | False rejects | Coverage |

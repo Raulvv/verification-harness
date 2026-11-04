@@ -12,12 +12,13 @@ from dataclasses import dataclass
 
 from .model import AnswerIR, AnswerPart, Claim, QIR, Term, Verification
 from .parse import find_entities, parse_question
-from .rows import Dataset
+from .rows import Dataset, field_value
 from .spec import SpecRegistry, close_qir
 from .z3check import Premises, check_answer
 
 _NUMBER_RE = re.compile(r"(-?\d{1,3}(?:,\d{3})+|-?\d+)")
 _YEAR_RE = {"2010", "2012", "2022", "2023", "2033"}
+VALUE_KINDS = {"lookup", "compare", "difference", "sum", "extremum", "count"}
 
 
 @dataclass(frozen=True)
@@ -34,6 +35,7 @@ class ExtractionResult:
     answer: AnswerIR | None
     claims: tuple[ExtractedClaim, ...] = ()
     notes: tuple[str, ...] = ()
+    forced_verdict: str | None = None
 
 
 def _num(text: str) -> int | float:
@@ -73,6 +75,10 @@ class RuleBasedExtractor:
             return ExtractionResult(qir, None, (), ("absence_overclaim",))
         if abstention:
             return ExtractionResult(qir, None, (), ("abstention",))
+        if qir.kind in VALUE_KINDS:
+            false_absence = self._false_absence_subclaim(qir, text)
+            if false_absence is not None:
+                return false_absence
         if qir.kind == "lookup":
             return self._lookup(qir, text)
         if qir.kind == "difference":
@@ -90,6 +96,51 @@ class RuleBasedExtractor:
         if qir.kind == "rank":
             return self._rank(qir, text)
         return ExtractionResult(qir, None, (), ("unsupported_question",))
+
+    # ------------------------------------------------------------------
+    def _false_absence_subclaim(self, qir: QIR, text: str) -> ExtractionResult | None:
+        """Catch a false “the table does not state …” sub-claim.
+
+        A reader can give the right final answer while asserting a false
+        absence in the same answer. That is not fully supported, even when the
+        final claim is true.
+        """
+        # jobs2033 is derived from jobs + change, so “not stated directly” can be
+        # true even when the derived value is valid.
+        if qir.field == "jobs2033":
+            return None
+        if not re.search(
+            r"\b(?:do not|does not|did not|not)\s+(?:state|provide|include|list|report|give)\b"
+            r"|\bnot stated\b|\bcannot be determined\b",
+            text,
+            re.I,
+        ):
+            return None
+        relevant: list[str] = []
+        if qir.entity:
+            relevant.append(qir.entity)
+        relevant.extend(qir.entities)
+        mentioned = [e for e in find_entities(text, self.dataset) if e in relevant]
+        if mentioned:
+            for entity in mentioned:
+                if qir.field and field_value(self.dataset.by_title[entity], qir.field) is not None:
+                    return ExtractionResult(
+                        qir,
+                        None,
+                        (),
+                        (
+                            "false_absence_subclaim",
+                            f"the table states {qir.field} for {entity}",
+                        ),
+                        forced_verdict="CONTRADICTION",
+                    )
+        return ExtractionResult(
+            qir,
+            None,
+            (),
+            ("false_absence_subclaim",),
+            forced_verdict="CONTRADICTION",
+        )
 
     # ------------------------------------------------------------------
     def _lookup(self, qir: QIR, text: str) -> ExtractionResult:
@@ -386,7 +437,13 @@ class RuleBasedExtractor:
     # ------------------------------------------------------------------
     def _sum(self, qir: QIR, text: str) -> ExtractionResult:
         assert qir.field and qir.entities
-        m = re.search(r"(?:combined|total)[^.]*?(?:was|is)\s*\$?([\d,]+)", text, re.I)
+        m = re.search(
+            r"(?:combined|total)[^.]*?(?:was|is)"
+            r"(?:\s+(?:therefore|roughly|about|approximately|around))*"
+            r"\s*\$?([\d,]+)",
+            text,
+            re.I,
+        )
         if m:
             value = _num(m.group(1))
             start, end, raw = m.start(1), m.end(1), m.group(1)
@@ -466,7 +523,17 @@ def verify_reader_answer(
             verdict="NOT_FORMALIZABLE",
             reason=extraction.qir.reason or "question has no deterministic compiler",
         )
+    if extraction.forced_verdict is not None:
+        return extraction, Verification(
+            verdict=extraction.forced_verdict,
+            reason=", ".join(extraction.notes) or "forced verdict",
+        )
     if extraction.answer is None:
+        if "abstention" in extraction.notes and extraction.qir.kind in VALUE_KINDS:
+            return extraction, Verification(
+                verdict="CONTRADICTION",
+                reason="the answer abstains on a question the table answers",
+            )
         return extraction, Verification(
             verdict="INCOMPLETE",
             reason=", ".join(extraction.notes) or "no typed claim extracted",

@@ -85,10 +85,13 @@ This writes:
 - `pilot-160-human.jsonl` — public human labels; 160/160 matched provisional.
 - `private/natural-80-human.jsonl` — private natural-reader labels.
 
-Natural-reader audit result: 31 supported, 47 absent, 2 partial; 10
-disagreements with the provisional labels, including one likely mislabel
-(`natural-test-100`) and two real formal extraction failures (`natural-test-030`
-and `natural-test-089`). The private report is
+Natural-reader audit result after confirmed corrections: 31 supported, 40
+absent, 8 contradicted, 1 partial. The natural slice found and fixed three real
+formal issues: a false sub-claim (`natural-test-030`), verbose arithmetic
+(`natural-test-089`), and false abstention on answerable questions. Formal now
+scores 1.00 binary, 0 false accepts, 0 false rejects, 1.00 coverage on the 80
+natural claims; exact is 0.99 because `natural-test-030` is gold `partial` and
+the verdict is `CONTRADICTION`. The private report is
 `private/NATURAL-AUDIT-REPORT.md`.
 
 ```bash

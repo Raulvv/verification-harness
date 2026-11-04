@@ -179,6 +179,33 @@ class ReaderFirstTest(unittest.TestCase):
         )
         self.assertEqual(verification.verdict, "CONTRADICTION")
 
+    def test_answerable_not_found_is_contradiction(self) -> None:
+        _, verification = verify_reader_answer(
+            "How many more annual openings does Graphic Designers have than Waiters and Waitresses?",
+            "NOT FOUND — the corpus does not state how many more annual openings Graphic Designers have than Waiters and Waitresses.",
+            self.dataset,
+            self.premises,
+        )
+        self.assertEqual(verification.verdict, "CONTRADICTION")
+
+    def test_verbose_sum_extracts_the_combined_value(self) -> None:
+        _, verification = verify_reader_answer(
+            "What is the combined projected 2033 employment of Financial Analysts and Actuaries?",
+            "The documents do not state projected 2033 employment levels directly, but they give the 2023 job counts and the projected 2023–33 employment change for each occupation, so the figure can be derived. Financial analysts: 404,800 jobs in 2023 plus an employment change of 37,900 over 2023–33, giving about 442,700 jobs in 2033. Actuaries: 30,200 jobs in 2023 plus an employment change of 6,600, giving about 36,800 jobs in 2033. Combined projected 2033 employment is therefore roughly 479,500 (442,700 + 36,800).",
+            self.dataset,
+            self.premises,
+        )
+        self.assertEqual(verification.verdict, "ENTAILED")
+
+    def test_false_absence_subclaim_is_contradiction(self) -> None:
+        _, verification = verify_reader_answer(
+            "Among Electricians, Automotive Service Technicians and Mechanics, and Financial Analysts, which occupation has the highest median annual pay?",
+            "The documents state that financial analysts had a 2023 median annual pay of $99,890 and automotive service technicians and mechanics had $47,770. They do not state the median annual pay for electricians, so the highest among all three cannot be determined from the corpus; among the two occupations whose pay is stated, financial analysts are higher.",
+            self.dataset,
+            self.premises,
+        )
+        self.assertEqual(verification.verdict, "CONTRADICTION")
+
     def test_abstention_has_no_typed_claim(self) -> None:
         extraction, verification = verify_reader_answer(
             "What is the median annual wage for Writers and Authors?",
@@ -188,7 +215,7 @@ class ReaderFirstTest(unittest.TestCase):
         )
         self.assertIsNone(extraction.answer)
         self.assertIn("abstention", extraction.notes)
-        self.assertEqual(verification.verdict, "INCOMPLETE")
+        self.assertEqual(verification.verdict, "CONTRADICTION")
 
     def test_unsupported_question_is_explicit(self) -> None:
         extraction, verification = verify_reader_answer(

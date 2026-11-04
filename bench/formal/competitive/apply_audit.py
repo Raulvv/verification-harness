@@ -25,6 +25,19 @@ SOURCES = {
     ),
 }
 
+# Confirmed by the auditor after the first pass. The raw export stays intact.
+CORRECTIONS = {
+    "natural-test-100": "contradicted",
+    "natural-test-041": "contradicted",
+    "natural-test-050": "contradicted",
+    "natural-test-062": "contradicted",
+    "natural-test-076": "contradicted",
+    "natural-test-077": "contradicted",
+    "natural-test-087": "contradicted",
+    "natural-test-095": "contradicted",
+    "natural-test-089": "supported",
+}
+
 
 def normalize(condition: str, gold: str) -> str:
     if condition == "answerable" and gold == "absent":
@@ -45,12 +58,17 @@ def main() -> None:
             if line.strip()
         ]
         disagreements = []
+        corrections = []
         for row in rows:
             human = labels.get(row["id"], {})
+            raw = human.get("gold")
+            corrected = CORRECTIONS.get(row["id"], raw)
             row["gold_provisional"] = row.get("gold")
-            row["gold_human"] = human.get("gold")
+            row["gold_raw"] = raw
+            row["gold_human"] = corrected
+            row["gold_correction"] = CORRECTIONS.get(row["id"])
             row["notes_human"] = human.get("notes", "")
-            row["gold"] = human.get("gold") or row.get("gold")
+            row["gold"] = corrected or row.get("gold")
             row["gold_normalized"] = normalize(
                 row.get("condition", "answerable"), row["gold"]
             )
@@ -60,10 +78,13 @@ def main() -> None:
                         "id": row["id"],
                         "provisional": row["gold_provisional"],
                         "human": row["gold_human"],
+                        "raw": row["gold_raw"],
                         "normalized": row["gold_normalized"],
                         "formal": row.get("formal_verdict"),
                     }
                 )
+            if row["gold_correction"]:
+                corrections.append({"id": row["id"], "from": raw, "to": corrected})
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
         print(f"== {key}")
@@ -73,6 +94,9 @@ def main() -> None:
         print("disagreements:", len(disagreements))
         for d in disagreements:
             print(" ", d)
+        print("confirmed corrections:", len(corrections))
+        for c in corrections:
+            print(" ", c)
 
 
 if __name__ == "__main__":
