@@ -197,6 +197,7 @@ The four-reader natural set is DeepSeek 4.1 Flash DA + Sonnet 5.5 DA +
 GLM-5.3-Flash DA + Qwen 3.8 27B DA, human-audited and corrected: **1.00 binary,
 0.99 exact, 0 false accepts, 0 false rejects, 1.00 coverage**. The 0.99 exact is
 four `partial` answers judged `CONTRADICTION`; the binary endpoint is correct.
+The 80 and 160 rows are historical subsets; the 320 row is the audited set.
 
 On the same 320 natural claims, the general detectors are materially weaker:
 
