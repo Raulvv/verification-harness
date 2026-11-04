@@ -1,7 +1,15 @@
-# Legal playbook demo (synthetic)
+# Legal verification
 
-This is a **synthetic** contract and playbook for the EPIC-FORMAL-003 proof of
-concept. It is not legal advice and contains no client data.
+Two legal artifacts live here:
+
+1. **Synthetic playbook demo** — a small contract and playbook for the
+   EPIC-FORMAL-003 proof of concept. It is not legal advice and contains no
+   client data.
+2. **CUAD clause-presence pilot** — a public-benchmark adapter over 510 real
+   commercial contracts and 41 expert-labeled clause categories. See
+   [`CUAD-PILOT.md`](CUAD-PILOT.md) and [`cuad/README.md`](cuad/README.md).
+
+The synthetic demo:
 
 ```bash
 cd bench/formal

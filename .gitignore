@@ -17,6 +17,10 @@ __pycache__/
 drafts/
 PLAN.md
 
+# CUAD public data and local outputs (download with legal/cuad/download_cuad.py)
+bench/formal/legal/cuad/data/
+bench/formal/legal/cuad/out/
+
 # local secrets
 .env
 .env.*

@@ -237,6 +237,22 @@ published. Details: [`bench/formal/EPIC-FORMAL-002.md`](bench/formal/EPIC-FORMAL
 [`bench/formal/competitive/PRE-REGISTRATION.md`](bench/formal/competitive/PRE-REGISTRATION.md),
 and [`bench/formal/EPIC-FORMAL-003.md`](bench/formal/EPIC-FORMAL-003.md).
 
+### CUAD legal pilot
+
+The formal layer also has a public legal-benchmark adapter for **CUAD v1**:
+510 commercial contracts, 41 clause categories, official 408/102 split. It is a
+deterministic clause-presence baseline with a quote and a closed-corpus coverage
+receipt, not a legal-advice system.
+
+| Operating point | Precision | Recall | Micro F1 | False accepts | False rejects | Quote support |
+|---|---:|---:|---:|---:|---:|---:|
+| Balanced | 0.882 | 0.660 | 0.755 | 110 (3.7% of absent) | 423 | 0.552 |
+| Precision-first | 0.911 | 0.568 | 0.700 | 69 (2.4% of absent) | 537 | 0.602 |
+
+This is a baseline, not a CUAD leaderboard result. The detector is TF-IDF, not a
+legal language model; the weak categories are the ones that need legal
+interpretation. Details: [`bench/formal/legal/CUAD-PILOT.md`](bench/formal/legal/CUAD-PILOT.md).
+
 ## Use it on your own private corpus
 
 The benchmark is public; the same kit runs on a private folder. Do not put

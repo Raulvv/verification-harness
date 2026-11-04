@@ -120,14 +120,11 @@ It writes `private/multireader-320.jsonl` (4 readers × 80 answerable/unanswerab
 claims). Build one form per reader so the audit stays one question at a time:
 
 ```bash
-.venv/bin/python competitive/build_gold_form.py \
-  --input competitive/private/multireader-320.jsonl \
-  --reader deepseek-da \
-  --output competitive/private/multireader-deepseek-gold.html \
-  --title "DeepSeek 4.1 Flash — 80 claims"
+.venv/bin/python competitive/build_multireader_forms.py
 ```
 
-Repeat for `sonnet-da`, `glm-da`, and `qwen-da`, then merge the exports:
+This writes `private/multireader-{deepseek,sonnet,glm,qwen}-gold.html`, each
+with 80 claims. Then merge the exports:
 
 ```bash
 .venv/bin/python competitive/apply_multireader_audit.py \

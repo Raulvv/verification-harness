@@ -59,10 +59,11 @@ only way to use the formal layer.
 | `formal/batch.py` | JSONL batch interface |
 | `formal/server.py` | Minimal HTTP API |
 | `formal/legal.py` | Synthetic legal playbook demo (second schema) |
+| `formal/cuad.py` | CUAD clause-presence adapter: TF-IDF baseline + quote/absence receipts |
 | `formal/negative.py` | 17 adversarial cases for test-041/088/091/093/095/100 |
 | `formal/evaluate.py` | Inventory, agreement, mutation tests, determinism, runtime |
 | `competitive/` | Frozen claim sets, detector runners, audit forms, pre-registration |
-| `legal/` | Synthetic contract + playbook |
+| `legal/` | Synthetic contract + playbook, CUAD adapter, and CUAD pilot report |
 
 ## Semantics
 
@@ -125,6 +126,18 @@ The synthetic set's coverage is 0.74 because formal abstains on the 40
 contradicted absence claims (`INCOMPLETE`); binary accuracy is 1.00. The one
 false reject is the top-coded Physicians maximum.
 
+### CUAD legal pilot
+
+The CUAD adapter is a separate public-benchmark pilot, not part of the OOH
+claim. It uses the official 408/102 contract split and a deterministic
+per-category TF-IDF clause detector with a lexical guard, quote, and coverage
+receipt. At the balanced operating point: **precision 0.882, recall 0.660,
+micro F1 0.755, 110 false accepts (3.7% of absent clauses), 423 false rejects,
+quote support 0.552** on 4,182 claims. At the precision-first point:
+**precision 0.911, recall 0.568, 69 false accepts (2.4%), 537 false rejects,
+quote support 0.602**. This is a baseline, not a CUAD leaderboard result and
+not legal advice. Details: `legal/CUAD-PILOT.md`.
+
 **Caveats.** The natural set is reader-held-out, not question-held-out; it uses
 the same 100 development-informed questions. One auditor labelled it, with no
 second rater. It is one corpus, one snapshot, and has only 15 contradicted
@@ -155,11 +168,14 @@ Build a claim set, export a one-question form, audit it, then merge the export:
 
 ```bash
 .venv/bin/python competitive/build_multireader.py
-.venv/bin/python competitive/build_gold_form.py \
+.venv/bin/python competitive/build_multireader_forms.py
+.venv/bin/python competitive/apply_multireader_audit.py \
   --input competitive/private/multireader-320.jsonl \
-  --output competitive/private/multireader-gold.html \
-  --title "Four-reader natural gold"
-.venv/bin/python competitive/apply_multireader_audit.py
+  --export ~/Downloads/gold-results-deepseek.json \
+  --export ~/Downloads/gold-results-sonnet.json \
+  --export ~/Downloads/gold-results-glm.json \
+  --export ~/Downloads/gold-results-qwen.json \
+  --out competitive/private/multireader-320-human.jsonl
 ```
 
 The gold form hides provisional labels by default. The human label is

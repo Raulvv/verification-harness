@@ -1,6 +1,6 @@
 # EPIC-FORMAL-003 — Closed-schema legal verification for private corpora
 
-**Status:** proposed; synthetic proof of concept implemented  
+**Status:** proposed; synthetic proof of concept and public CUAD baseline implemented
 **Prepared:** 2026-11-04  
 **Predecessor:** EPIC-FORMAL-002 (specification layer, reader-first verification, gate integration, coverage receipts)  
 **Related:** `bench/formal/EPIC-FORMAL-002.md` §1.7 (market assessment), `bench/formal/REPORT.md`
@@ -12,13 +12,31 @@
 | Synthetic contract + playbook | complete | `legal/contract.md`, `legal/playbook.json` |
 | Deterministic legal fact extraction | complete (demo) | `formal/legal.py` extracts 6 fields with clause/quote |
 | Rule engine + receipts | complete (demo) | `verify_playbook`, `verify_contract`; `ENTAILED`/`CONTRADICTION`/`INCOMPLETE` |
+| CUAD public benchmark adapter | complete (baseline pilot) | `formal/cuad.py`, `legal/CUAD-PILOT.md`; 4,182 claims on the official 408/102 split |
 | Legal expert review | not started | required before any pilot claim |
 | Real document ingestion | not started | PDF/DOCX/OCR/clause segmentation |
 | Private deployment/security | not started | required before private data |
 | Pilot evaluation | not started | 50–100 expert-labeled requirements |
 
-The demo is **synthetic only**: no client data, no legal advice, no expert
+The synthetic demo contains no client data, no legal advice, and no expert
 review. It proves the architecture on a second schema; it is not a legal pilot.
+The CUAD adapter runs on a public legal corpus, but it is a deterministic
+clause-presence baseline, not a CUAD leaderboard result and not legal advice.
+
+### CUAD public benchmark adapter
+
+CUAD v1 provides 510 commercial contracts, 41 clause categories, and expert
+spans. The adapter uses the official 408/102 contract split and a train-only
+per-category TF-IDF detector with a lexical guard. Every claim returns either a
+supporting sentence with offsets or a closed-corpus absence receipt.
+
+At the balanced operating point on 4,182 test claims: **precision 0.882,
+recall 0.660, micro F1 0.755, 110 false accepts (3.7% of absent clauses), 423
+false rejects, quote support 0.552**. At the precision-first point: **precision
+0.911, recall 0.568, 69 false accepts (2.4%), 537 false rejects, quote support
+0.602**. The weak categories are the ones that need legal interpretation rather
+than lexical matching. Full method, per-category results, and caveats:
+`legal/CUAD-PILOT.md`.
 
 The current formal evidence remains the OOH pilot described in
 `EPIC-FORMAL-002.md` and the root `README.md`: 0 observed false accepts on 103
