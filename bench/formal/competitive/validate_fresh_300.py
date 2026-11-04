@@ -149,6 +149,9 @@ def main() -> None:
         print(f"  {rid}: {reason}")
     if errors:
         raise SystemExit(1)
+    human_approved = all(
+        str(row.get("validation", "")) == "human-approved" for row in rows
+    )
     MANIFEST.write_text(
         json.dumps(
             {
@@ -157,7 +160,11 @@ def main() -> None:
                 "count": len(rows),
                 "conditions": dict(conditions),
                 "categories": dict(kinds),
-                "validation": "mechanically validated; human review required",
+                "validation": (
+                    "human-approved"
+                    if human_approved
+                    else "mechanically validated; human review required"
+                ),
             },
             indent=2,
         )

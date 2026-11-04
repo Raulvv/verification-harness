@@ -381,7 +381,8 @@ def run(
         test = [item for item in test if item.contract in keep]
     if max_questions:
         test = test[:max_questions]
-    torch, tokenizer, model = _load_model(model_name, _device(_load_torch(), device))
+    device_name = _device(_load_torch(), device)
+    torch, tokenizer, model = _load_model(model_name, device_name)
     results: list[QAResult] = []
     started = time.perf_counter()
     for index, item in enumerate(test, 1):
@@ -390,11 +391,13 @@ def run(
             tokenizer,
             model,
             torch,
-            _device(torch, device),
+            device_name,
             max_length=max_length,
             stride=stride,
             top_k=top_k,
         )
+        if device_name == "mps":
+            torch.mps.empty_cache()
         results.append(
             QAResult(
                 id=f"{item.contract}__{item.category}",
