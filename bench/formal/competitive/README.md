@@ -157,6 +157,15 @@ Provisional formal result on 320 claims (labels not yet human-audited):
 The provisional label set has 38 contradicted claims. These numbers are not
 final until the four forms are audited.
 
+Provisional detector comparison:
+
+| System | Binary | Exact | False accepts | False rejects | Coverage |
+|---|---:|---:|---:|---:|---:|
+| **Formal** | **1.00** | 0.99 | **0** | **0** | 0.99 |
+| MiniCheck | 0.72 | 0.25 | 17 | 71 | 1.00 |
+| LettuceDetect | 0.21 | 0.21 | 190 | 62 | 1.00 |
+| HHEM | 0.77 | 0.27 | 6 | 67 | 1.00 |
+
 ## Apply the audit
 
 After exporting `gold-results-combined.json` from the browser:
