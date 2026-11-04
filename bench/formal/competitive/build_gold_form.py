@@ -91,6 +91,8 @@ TEMPLATE = """<!doctype html>
       <option value="unreviewed">Unreviewed</option>
     </select>
     <label class="small"><input id="hints-toggle" type="checkbox"> Show provisional hints</label>
+    <button id="export-json-top" class="primary">Export JSON</button>
+    <button id="export-csv-top">Export CSV</button>
   </div>
   <div class="progress"><div id="progress"></div></div>
 </header>
@@ -161,7 +163,8 @@ function counts() {
   const total = DATA.length;
   const reviewed = DATA.filter(r => state[r.id]?.gold).length;
   const required = DATA.filter(r => r.audit_required === "yes").length;
-  document.getElementById("counts").textContent = `${reviewed}/${total} reviewed · ${required} required`;
+  const complete = reviewed === total ? " · complete" : "";
+  document.getElementById("counts").textContent = `${reviewed}/${total} reviewed · ${required} required${complete}`;
   document.getElementById("progress").style.width = (total ? Math.round(100*reviewed/total) : 0) + "%";
 }
 function render() {
@@ -254,6 +257,8 @@ document.getElementById("notes").oninput = (e) => {
 };
 document.getElementById("export-json").onclick = exportJSON;
 document.getElementById("export-csv").onclick = exportCSV;
+document.getElementById("export-json-top").onclick = exportJSON;
+document.getElementById("export-csv-top").onclick = exportCSV;
 document.getElementById("reset").onclick = () => { if (confirm("Reset all labels?")) { state = {}; save(); render(); } };
 document.addEventListener("keydown", (e) => {
   if (e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;

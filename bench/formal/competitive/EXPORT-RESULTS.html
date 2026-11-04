@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Export gold-form results</title>
+<style>
+  :root { --bg:#0f172a; --panel:#16213a; --text:#e6edf7; --muted:#93a4c3; --line:#263451; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+  main { max-width:980px; margin:0 auto; padding:24px 18px 80px; }
+  h1 { font-size:20px; margin:0 0 8px; }
+  p { color:var(--muted); }
+  button { border:1px solid var(--line); background:#1b2742; color:var(--text); border-radius:8px; padding:9px 14px; cursor:pointer; font-size:14px; }
+  button.primary { background:#2f80ed; border-color:#2f80ed; }
+  button:hover { background:#23345a; }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px; margin:14px 0; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th,td { text-align:left; border-bottom:1px solid var(--line); padding:7px 6px; }
+  th { color:var(--muted); font-weight:500; }
+  textarea { width:100%; min-height:260px; background:#0b1222; color:var(--text); border:1px solid var(--line); border-radius:8px; padding:10px; font:13px/1.4 ui-monospace,monospace; }
+  code { background:#0b1222; border:1px solid var(--line); border-radius:6px; padding:2px 5px; }
+  pre { white-space:pre-wrap; background:#0b1222; border:1px solid var(--line); border-radius:8px; padding:10px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Export gold-form results</h1>
+  <p>Open this file in the <strong>same Chrome profile</strong> you used for the gold forms. It reads the form data from this page's localStorage and lets you download one combined JSON file.</p>
+
+  <div class="panel">
+    <div id="status">Checking localStorage…</div>
+    <table id="keys" style="display:none">
+      <thead><tr><th>Key</th><th>Entries</th><th>Bytes</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+      <button id="download" class="primary">Download combined JSON</button>
+      <button id="copy">Copy JSON</button>
+    </div>
+    <textarea id="out" readonly placeholder="No gold-form data found yet."></textarea>
+  </div>
+
+  <div class="panel" id="fallback" style="display:none">
+    <h3 style="margin-top:0">If no data appears</h3>
+    <p>Chrome may isolate <code>file://</code> localStorage. In that case, open the gold form, open DevTools (⌥⌘I), go to Console, and run:</p>
+    <pre>copy(JSON.stringify(Object.fromEntries(Object.keys(localStorage).filter(k =&gt; k.startsWith('gold-form-')).map(k =&gt; [k, localStorage.getItem(k)])), null, 2))</pre>
+    <p>Paste the result into a file, or run the same in the natural form. Then send that file.</p>
+  </div>
+</main>
+<script>
+const KEYS = ["gold-form-", "formal-audit-"];
+function load() {
+  const rows = [];
+  const sources = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (!KEYS.some(prefix => key.startsWith(prefix))) continue;
+    const raw = localStorage.getItem(key);
+    let parsed = null;
+    try { parsed = JSON.parse(raw); } catch (e) { parsed = null; }
+    sources[key] = parsed ?? raw;
+    const entries = parsed && typeof parsed === "object" ? Object.keys(parsed).length : null;
+    rows.push({key, entries, bytes: new Blob([raw]).size});
+  }
+  const status = document.getElementById("status");
+  const table = document.getElementById("keys");
+  const tbody = table.querySelector("tbody");
+  tbody.innerHTML = "";
+  if (!rows.length) {
+    status.textContent = "No gold-form data found in this page's localStorage.";
+    document.getElementById("fallback").style.display = "block";
+    document.getElementById("out").value = "";
+    return;
+  }
+  status.textContent = `Found ${rows.length} source(s).`;
+  table.style.display = "table";
+  rows.forEach(r => {
+    const tr = document.createElement("tr");
+    [r.key, r.entries ?? "?", r.bytes].forEach(v => {
+      const td = document.createElement("td"); td.textContent = v; tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  const payload = {exported_at: new Date().toISOString(), sources};
+  document.getElementById("out").value = JSON.stringify(payload, null, 2);
+}
+function download() {
+  const text = document.getElementById("out").value;
+  if (!text) return;
+  const blob = new Blob([text], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "gold-results-combined.json";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+async function copy() {
+  const text = document.getElementById("out").value;
+  if (!text) return;
+  try { await navigator.clipboard.writeText(text); alert("Copied."); }
+  catch (e) { alert("Copy failed; select the textarea and copy manually."); }
+}
+document.getElementById("download").onclick = download;
+document.getElementById("copy").onclick = copy;
+load();
+</script>
+</body>
+</html>
