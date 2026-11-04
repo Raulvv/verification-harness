@@ -64,7 +64,7 @@ only way to use the formal layer.
 | `formal/negative.py` | 17 adversarial cases for test-041/088/091/093/095/100 |
 | `formal/evaluate.py` | Inventory, agreement, mutation tests, determinism, runtime |
 | `competitive/` | Frozen claim sets, detector runners, audit forms, pre-registration |
-| `legal/` | Synthetic contract + playbook, CUAD adapter, and CUAD pilot report |
+| `legal/` | Synthetic contract + playbook, CUAD adapter, CUAD pilot, and CUAD QA report |
 
 ## Semantics
 
@@ -151,8 +151,11 @@ does not solve the weak categories.
 
 `formal/cuad_qa.py` runs a CUAD fine-tuned span model
 (`akdeniz27/roberta-base-cuad`) with official-style AUPR / P@80 / P@90 and
-question-level presence/no-answer metrics. That is the reader layer; the
-verifier layer remains separate. Results are pending.
+question-level presence/no-answer metrics. Reader: **AUPR 0.531 / P@80 0.308 /
+P@90 0.129**. Harness: no-answer false accepts **34.5% at zero threshold**,
+**7.5% at best F1**, and **3.0% at precision-first** (21% coverage). That is
+the reader layer; the verifier layer remains separate. Details:
+`legal/CUAD-QA-REPORT.md`.
 
 **Caveats.** The natural set is reader-held-out, not question-held-out; it uses
 the same 100 development-informed questions. One auditor labelled it, with no

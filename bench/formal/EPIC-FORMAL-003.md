@@ -12,7 +12,7 @@
 | Synthetic contract + playbook | complete | `legal/contract.md`, `legal/playbook.json` |
 | Deterministic legal fact extraction | complete (demo) | `formal/legal.py` extracts 6 fields with clause/quote |
 | Rule engine + receipts | complete (demo) | `verify_playbook`, `verify_contract`; `ENTAILED`/`CONTRADICTION`/`INCOMPLETE` |
-| CUAD public benchmark adapter | complete (presence baseline + fine-tuned span runner; span results pending) | `formal/cuad.py`, `formal/cuad_qa.py`, `legal/CUAD-PILOT.md`; 4,182 claims on the official 408/102 split |
+| CUAD public benchmark adapter | complete (presence baseline + fine-tuned span runner) | `formal/cuad.py`, `formal/cuad_qa.py`, `legal/CUAD-PILOT.md`, `legal/CUAD-QA-REPORT.md`; 4,182 claims on the official 408/102 split |
 | Legal expert review | not started | required before any pilot claim |
 | Real document ingestion | not started | PDF/DOCX/OCR/clause segmentation |
 | Private deployment/security | not started | required before private data |
@@ -37,9 +37,12 @@ false rejects, quote support 0.552**. At the precision-first point: **precision
 0.602**. Legal-BERT is more precise but more conservative: **0.947 / 0.415 /
 0.577, 29 false accepts, 728 false rejects, quote support 0.602**. The weak
 categories are the ones that need legal interpretation rather than lexical
-matching. A CUAD fine-tuned span runner (`formal/cuad_qa.py`) is implemented;
-its official AUPR / P@80 / P@90 results are pending. Full method, per-category
-results, and caveats: `legal/CUAD-PILOT.md`.
+matching. The public CUAD fine-tuned checkpoint `akdeniz27/roberta-base-cuad`
+gives **AUPR 0.531 / P@80 0.308 / P@90 0.129**. The harness tradeoff is
+**34.5% no-answer false accepts at the zero threshold**, **7.5% at best F1**,
+and **3.0% at precision-first** (21% coverage). This is a reader result plus a
+harness tradeoff, not a legal claim. Full method, per-category results, and
+caveats: `legal/CUAD-QA-REPORT.md` and `legal/CUAD-PILOT.md`.
 
 The current formal evidence remains the OOH pilot described in
 `EPIC-FORMAL-002.md` and the root `README.md`: 0 observed false accepts on 106

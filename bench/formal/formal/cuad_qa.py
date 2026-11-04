@@ -482,11 +482,12 @@ def main(argv: list[str] | None = None) -> int:
             stride=args.stride,
             top_k=args.top_k,
         )
-    args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text(
-        "".join(json.dumps(result.to_dict()) + "\n" for result in results),
-        encoding="utf-8",
-    )
+    if not args.from_jsonl:
+        args.out.parent.mkdir(parents=True, exist_ok=True)
+        args.out.write_text(
+            "".join(json.dumps(result.to_dict()) + "\n" for result in results),
+            encoding="utf-8",
+        )
     metrics_data.update(
         {
             "benchmark": "CUAD",

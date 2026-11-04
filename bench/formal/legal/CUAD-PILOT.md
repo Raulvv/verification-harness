@@ -155,6 +155,16 @@ presence and no-answer false-accept rates at a zero threshold and at
 precision-first operating points. This is the reader layer; the verifier layer
 is separate.
 
+| Metric | Result |
+|---|---:|
+| Macro AUPR | **0.531** |
+| P@80 | **0.308** |
+| P@90 | **0.129** |
+
+Harness tradeoff: no-answer false accepts **34.5% at zero threshold**, **7.5%
+at best F1**, and **3.0% at precision-first** (21% coverage). Full report:
+`legal/CUAD-QA-REPORT.md`.
+
 ## Reader vs harness
 
 The clause detector is the **reader**. The verifier checks the quote and the

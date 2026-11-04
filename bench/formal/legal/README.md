@@ -8,7 +8,8 @@ Two legal artifacts live here:
 2. **CUAD benchmark pilot** — a public-benchmark adapter over 510 real
    commercial contracts and 41 expert-labeled clause categories. It includes a
    deterministic presence baseline, an official-style span harness, and a
-   fine-tuned span model. See [`CUAD-PILOT.md`](CUAD-PILOT.md) and
+   fine-tuned span model. See [`CUAD-PILOT.md`](CUAD-PILOT.md),
+   [`CUAD-QA-REPORT.md`](CUAD-QA-REPORT.md), and
    [`cuad/README.md`](cuad/README.md).
 
 The synthetic demo:

@@ -258,10 +258,16 @@ mostly abstains on them.
 
 This is a baseline, not a CUAD leaderboard result. The detector is TF-IDF, not a
 legal language model; the weak categories are the ones that need legal
-interpretation. A CUAD fine-tuned span-model comparison
-(`akdeniz27/roberta-base-cuad`) is in progress; its official AUPR / P@80 / P@90
-will be reported separately from the verifier's false-accept behavior. Details:
-[`bench/formal/legal/CUAD-PILOT.md`](bench/formal/legal/CUAD-PILOT.md).
+interpretation.
+
+The public CUAD fine-tuned checkpoint `akdeniz27/roberta-base-cuad` is the
+reader comparison: **macro AUPR 0.531, P@80 0.308, P@90 0.129** on the official
+test split. That is in the published RoBERTa-base/RoBERTa-large range, below
+DeBERTa-xlarge. The harness result is the absence/threshold tradeoff: no-answer
+false accepts fall from **34.5% at the zero threshold** to **7.5% at best F1**
+and **3.0% at a precision-first threshold**, at **21% coverage**. Details:
+[`bench/formal/legal/CUAD-QA-REPORT.md`](bench/formal/legal/CUAD-QA-REPORT.md)
+and [`bench/formal/legal/CUAD-PILOT.md`](bench/formal/legal/CUAD-PILOT.md).
 
 ## Use it on your own private corpus
 

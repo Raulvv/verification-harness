@@ -59,6 +59,14 @@ The leaderboard-comparable path uses a CUAD fine-tuned extractive QA model:
   --model akdeniz27/roberta-base-cuad
 ```
 
+The official paper checkpoints can be downloaded and passed as local paths:
+
+```bash
+.venv/bin/python legal/cuad/download_models.py --model roberta-large
+.venv-detectors/bin/python -m formal.cuad_qa \
+  --model legal/cuad/models/roberta-large
+```
+
 It writes n-best spans to `legal/cuad/out/cuad-qa-nbest.jsonl` and official
 metrics to `legal/cuad/out/cuad-qa-metrics.json`. Recompute metrics from a
 saved prediction file with `--from-jsonl`.
