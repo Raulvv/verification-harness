@@ -784,8 +784,8 @@ def span_metrics(predictions: list[SpanPrediction]) -> dict[str, Any]:
     per_category: dict[str, dict[str, float | int]] = {}
     for category, rows in sorted(by_category.items()):
         thresholds = sorted({row.score for row in rows} | {0.0}, reverse=True)
-        precisions: list[float] = []
-        recalls: list[float] = []
+        precisions: list[float] = [1.0]
+        recalls: list[float] = [0.0]
         for threshold in thresholds:
             counts = _span_counts_at(rows, threshold)
             precisions.append(counts.precision)
