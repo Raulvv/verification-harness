@@ -63,6 +63,13 @@ class CompetitiveTest(unittest.TestCase):
         self.assertEqual(sum(1 for r in required if r["gold"] == "contradicted"), 80)
         self.assertGreaterEqual(len(required), 80)
 
+    def test_audit_html_is_self_contained(self) -> None:
+        html = (DEFAULT_CLAIMS.parent / "AUDIT-SHEET.html").read_text(encoding="utf-8")
+        self.assertIn("const DATA", html)
+        self.assertIn("test-001-supported", html)
+        self.assertIn("export-json", html)
+        self.assertIn("localStorage", html)
+
     def test_verdict_mapping(self) -> None:
         self.assertEqual(map_verdict("ENTAILED"), "supported")
         self.assertEqual(map_verdict("ENTAILED_UNDER_ASSUMPTIONS"), "supported")

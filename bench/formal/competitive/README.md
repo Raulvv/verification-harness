@@ -14,9 +14,32 @@ cd bench/formal
 
 The frozen 50-claim public pilot and its results are in
 [`PILOT-REPORT.md`](PILOT-REPORT.md). The larger 160-claim public pilot is in
-[`PILOT-160-REPORT.md`](PILOT-160-REPORT.md). The pre-registration and audit
-sheet are [`PRE-REGISTRATION.md`](PRE-REGISTRATION.md) and
-[`AUDIT-SHEET.csv`](AUDIT-SHEET.csv).
+[`PILOT-160-REPORT.md`](PILOT-160-REPORT.md). The pre-registration is
+[`PRE-REGISTRATION.md`](PRE-REGISTRATION.md).
+
+## Human audit
+
+Open [`AUDIT-SHEET.html`](AUDIT-SHEET.html) in a browser. It is a self-contained
+audit tool:
+
+- shows question, answer, evidence, gold, and formal verdict
+- **Correct / Incorrect / Ambiguous / Skip** buttons
+- notes per claim
+- filters (needs audit, unreviewed, contradicted, supported, absent)
+- keyboard shortcuts `1`–`4`
+- export JSON/CSV, import JSON
+- decisions saved in localStorage
+
+`AUDIT-SHEET.csv` is the same sheet for spreadsheet users. The natural-reader
+slice is local-only (gitignored):
+
+```bash
+.venv/bin/python competitive/build_natural.py
+.venv/bin/python competitive/build_audit_html.py \
+  --input competitive/private/natural-80.jsonl \
+  --output competitive/private/natural-audit.html \
+  --title "Natural reader-error audit"
+```
 
 ```bash
 .venv/bin/python -m formal.competitive \

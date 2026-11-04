@@ -50,15 +50,15 @@ specification receipts, and a measured fallback for the rest.
 | 1.5 — presentation + `ask` bridge | complete | humanized assumptions in the answer; `ask --formal-cmd` prints answer, assumptions, evidence quotes, verdict, spec receipt |
 | 1.6 — citation gate in formal path | complete | `ask --formal --corpus` gates every displayed quote; ungated quotes are labeled; fabricated quotes rejected |
 | 2 — deterministic registry | partial | defaults + user overrides for quantifier, metric, utility, direction, unit |
-| 2.5 — independent competitive benchmark | complete (160-claim public pilot) | formal 0.99 binary / 0 false accepts; MiniCheck 0.84 / 3; LettuceDetect 0.46 / 66; HHEM 0.81 / 9 at 0.5; natural-error + audit pending |
+| 2.5 — independent competitive benchmark | complete (160-claim public pilot) | formal 0.99 binary / 0 false accepts; MiniCheck 0.84 / 3; LettuceDetect 0.46 / 66; HHEM 0.81 / 9 at 0.5; natural slice generated; human audit pending |
 | 3 — prose extraction | partial | `formal/extract.py`: reader-first baseline for lookup, difference, sum, compare, extremum, count, quantified, rank; unsupported questions explicit |
 | 4 — closed-corpus absence | partial | `formal/coverage.py`: declared corpus index, coverage receipt, `NOT_FOUND_IN_CORPUS`; seeded-mention tests; API language guard pending |
 | 5 — router/NLI/integration | partial | `formal/router.py` + `formal/nli.py`: deterministic route and command-based fallback; real detector wiring pending |
 | 5.5 — productionization | partial | workspace `formalCmd`, JSONL batch, minimal HTTP `/health` `/verify` `/batch`; observability pending |
 | 6 — evaluation/report | not started | — |
 
-Current test evidence: **96 Python tests** (17 original + 21 spec-layer +
-18 reader-first extraction + 5 closed-corpus absence + 8 competitive harness +
+Current test evidence: **97 Python tests** (17 original + 21 spec-layer +
+18 reader-first extraction + 5 closed-corpus absence + 9 competitive harness +
 6 router + 6 NLI fallback + 4 batch + 6 legal demo + 5 API) and **213 kit
 tests** pass; the EPIC-FORMAL-001 100-question and dev-14 results are unchanged
 (59 `ENTAILED`, 40 `ABSENT_CONFIRMED`, 1 `UNKNOWN`, 0 false `ENTAILED`). The
@@ -1148,7 +1148,8 @@ and the gate integration — not on the 100-question development set alone.
 - `bench/formal/formal/competitive.py` — formal-vs-detector benchmark harness.
 - `bench/formal/competitive/` — frozen claim fixtures, detector runners,
   `PILOT-REPORT.md`, `PILOT-160-REPORT.md`, `PRE-REGISTRATION.md`,
-  `AUDIT-SHEET.csv`.
+  `AUDIT-SHEET.csv`, `AUDIT-SHEET.html`, `build_natural.py`,
+  `build_audit_html.py`.
 - `bench/formal/formal/router.py` — verdict → product action router.
 - `bench/formal/formal/nli.py` — command-based NLI fallback adapter.
 - `bench/formal/formal/batch.py` — JSONL batch verification boundary.

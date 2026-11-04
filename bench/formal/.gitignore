@@ -1,5 +1,6 @@
 .venv/
 .venv-detectors/
 __pycache__/
+competitive/private/
 out/
 *.pyc
