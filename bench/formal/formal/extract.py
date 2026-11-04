@@ -17,6 +17,9 @@ from .spec import SpecRegistry, close_qir
 from .z3check import Premises, check_answer
 
 _NUMBER_RE = re.compile(r"(-?\d{1,3}(?:,\d{3})+|-?\d+)")
+_DIFF_VALUE_RE = re.compile(
+    r"difference[^.]{0,120}?(?:is|of|was)\s*\$?(-?[\d,]+)", re.I
+)
 _YEAR_RE = {"2010", "2012", "2022", "2023", "2033"}
 VALUE_KINDS = {"lookup", "compare", "difference", "sum", "extremum", "count"}
 _DOC_REF_RE = re.compile(r"\b(?:Doc(?:ument)?\s*\.?\s*\d+|\[\d+\])\b", re.I)
@@ -210,7 +213,7 @@ class RuleBasedExtractor:
                 return None
             return _num(m.group(1)), m.start(1), m.end(1), m.group(1)
         if field == "outlook_pct":
-            m = re.search(r"(-?\d+(?:\.\d+)?)\s*%", text)
+            m = re.search(r"(-?\d+(?:\.\d+)?)\s*(?:%|percent\b)", text, re.I)
             if not m:
                 return None
             return _num(m.group(1)), m.start(1), m.end(1), m.group(1)
@@ -239,7 +242,7 @@ class RuleBasedExtractor:
         if result is not None:
             value, start, end, raw = result
         else:
-            m = re.search(r"difference (?:is|of|was)\s*\$?([\d,]+)", text, re.I)
+            m = _DIFF_VALUE_RE.search(text)
             if not m:
                 found = _first_number(_clean_refs(text))
                 if found is None:
@@ -300,7 +303,7 @@ class RuleBasedExtractor:
         if result is not None:
             value, start, end, raw = result
         else:
-            m = re.search(r"difference (?:is|of|was)\s*\$?([\d,]+)", text, re.I)
+            m = _DIFF_VALUE_RE.search(text)
             if not m:
                 m = re.search(
                     r"(-?\d+(?:\.\d+)?)\s*percentage points?\s+more",

@@ -123,6 +123,13 @@ question-held-out**: it reuses the same 100 development-informed questions.
   threshold tuning on this set.
 - The claim set hash and reader-output hashes are recorded before the audit.
 
+**Outcome (2026-11-04):** the audited set has 26 contradicted claims, below the
+pre-registered minimum of 40. It is therefore reported as a pilot, not a
+primary false-accept claim. Formal: 1.00 binary, 0.99 exact, 0 false accepts,
+0 false rejects, 1.00 coverage. Label distribution: 130 supported, 160 absent,
+26 contradicted, 4 partial. The 26 natural contradicted claims give a
+one-sided 95% upper bound of 10.9%; synthetic + natural 0/106 gives 2.8%.
+
 ## Freeze
 
 - Claim set hash: recorded in the run report.

@@ -43,13 +43,21 @@ audited. Formal scored **1.00 binary, 0.98 exact, 0 false accepts, 0 false
 rejects, 1.00 coverage**; MiniCheck 0.75 / 7 / 33; LettuceDetect 0.21 / 96 /
 30; HHEM 0.79 / 2 / 31. Details: `private/MULTIREADER-AUDIT-REPORT.md`.
 
+A 320-claim four-reader slice (DeepSeek 4.1 Flash DA + Sonnet 5.5 DA +
+GLM-5.3-Flash DA + Qwen 3.8 27B DA) was then audited and corrected: 130
+supported, 160 absent, 26 contradicted, 4 partial. Formal scored **1.00 binary,
+0.99 exact, 0 false accepts, 0 false rejects, 1.00 coverage**; MiniCheck 0.72 /
+13 / 75; LettuceDetect 0.21 / 186 / 66; HHEM 0.76 / 4 / 73. Details:
+`private/MULTIREADER-320-REPORT.md`.
+
 The natural slices found and fixed parser issues (Doc references, arithmetic
-expressions, percentage-point wording, top-coded lower bounds) and one false
-sub-claim. They are **reader-held-out**, not question-held-out.
+expressions, “difference between … is X”, “7 percent”, percentage-point
+wording, top-coded lower bounds) and one false sub-claim. They are
+**reader-held-out**, not question-held-out.
 
 Sample-size note: the one-sided 95% upper bound for zero false accepts is 3.7%
-on the 80 synthetic contradicted claims, 18.1% on the 15 two-reader natural
-contradicted claims, and 2.9% on the 103 combined contradicted claims. The
+on the 80 synthetic contradicted claims, 10.9% on the 26 four-reader natural
+contradicted claims, and 2.8% on the 106 combined contradicted claims. The
 combined figure mixes synthetic perturbations with natural reader errors; it is
 not a single population estimate.
 

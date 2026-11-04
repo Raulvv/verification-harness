@@ -119,9 +119,9 @@ stays standalone. Citation gating is separate from the formal verdict:
 - `gate: ungated` — no corpus was supplied, so the quote was not checked.
 
 Current formal evidence is a human-audited pilot, not a final benchmark claim:
-0 observed false accepts on 103 contradicted claims (80 synthetic + 23 natural),
-with 0 false rejects and 1.00 coverage on the 160-claim two-reader natural set.
-The natural-only upper bound is 18.1% (0/15, one-sided 95%); the set is
+0 observed false accepts on 106 contradicted claims (80 synthetic + 26 natural),
+with 0 false rejects and 1.00 coverage on the 320-claim four-reader natural set.
+The natural-only upper bound is 10.9% (0/26, one-sided 95%); the set is
 reader-held-out, not question-held-out, and has one auditor. See the root
 `README.md` and `bench/formal/EPIC-FORMAL-002.md`.
 

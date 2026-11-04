@@ -107,10 +107,10 @@ Apply the export with:
 Details: `private/MULTIREADER-AUDIT-REPORT.md`. This is reader-held-out, not
 question-held-out.
 
-### Four-reader set (in progress)
+### Four-reader set (human-audited)
 
-The next set adds DeepSeek 4.1 Flash DA and Qwen 3.8 27B DA to the existing
-Sonnet 5.5 DA and GLM-5.3-Flash DA claims:
+The four-reader set adds DeepSeek 4.1 Flash DA and Qwen 3.8 27B DA to the
+existing Sonnet 5.5 DA and GLM-5.3-Flash DA claims:
 
 ```bash
 .venv/bin/python competitive/build_multireader.py
@@ -133,12 +133,13 @@ with 80 claims. Then merge the exports:
   --export ~/Downloads/gold-results-sonnet.json \
   --export ~/Downloads/gold-results-glm.json \
   --export ~/Downloads/gold-results-qwen.json \
+  --corrections competitive/private/multireader-320-corrections.json \
   --out competitive/private/multireader-320-human.jsonl
 ```
 
-The four-reader set is a sample-size step, not a final claim: at the current
-~9% natural contradicted rate it yields roughly 30 contradicted claims, not the
-≥100 target.
+The audited label distribution is 130 supported, 160 absent, 26 contradicted,
+and 4 partial. The 26 contradicted claims are below the pre-registered minimum
+of 40, so this remains a pilot, not a primary false-accept claim.
 
 Reader-only results on the same 100 test questions, before formal verification:
 
@@ -152,19 +153,19 @@ Reader-only results on the same 100 test questions, before formal verification:
 Qwen has the best answerable coverage and the weakest partial coverage. This is
 reader capability, not the harness result.
 
-Provisional formal result on 320 claims (labels not yet human-audited):
-**1.00 binary, 0.99 exact, 0 false accepts, 0 false rejects, 0.99 coverage**.
-The provisional label set has 38 contradicted claims. These numbers are not
-final until the four forms are audited.
-
-Provisional detector comparison:
+Final audited comparison:
 
 | System | Binary | Exact | False accepts | False rejects | Coverage |
 |---|---:|---:|---:|---:|---:|
-| **Formal** | **1.00** | 0.99 | **0** | **0** | 0.99 |
-| MiniCheck | 0.72 | 0.25 | 17 | 71 | 1.00 |
-| LettuceDetect | 0.21 | 0.21 | 190 | 62 | 1.00 |
-| HHEM | 0.77 | 0.27 | 6 | 67 | 1.00 |
+| **Formal** | **1.00** | 0.99 | **0** | **0** | **1.00** |
+| MiniCheck | 0.72 | 0.24 | 13 | 75 | 1.00 |
+| LettuceDetect | 0.21 | 0.21 | 186 | 66 | 1.00 |
+| HHEM | 0.76 | 0.25 | 4 | 73 | 1.00 |
+
+Formal exact is 0.99 because four `partial` answers are judged
+`CONTRADICTION`; the binary endpoint is correct. Natural-only 0/26 gives a
+one-sided 95% upper bound of 10.9%; synthetic + natural 0/106 gives 2.8%. The
+combined figure mixes synthetic perturbations with natural reader errors.
 
 ## Apply the audit
 

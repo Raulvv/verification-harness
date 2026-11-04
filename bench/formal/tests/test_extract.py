@@ -215,6 +215,24 @@ class ReaderFirstTest(unittest.TestCase):
         )
         self.assertEqual(verification.verdict, "ENTAILED")
 
+    def test_difference_between_phrasing(self) -> None:
+        _, verification = verify_reader_answer(
+            "What is the difference in projected employment change between School and Career Counselors and Advisors and Chemists and Materials Scientists from 2023 to 2033?",
+            "The projected employment change for School and Career Counselors and Advisors from 2023 to 2033 is 16,200 jobs, while for Chemists and Materials Scientists it is 7,500 jobs. The difference between these two projected employment changes is 8,700 jobs.",
+            self.dataset,
+            self.premises,
+        )
+        self.assertEqual(verification.verdict, "ENTAILED")
+
+    def test_percent_word_lookup(self) -> None:
+        _, verification = verify_reader_answer(
+            "What is the projected percent growth for Barbers, Hairstylists, and Cosmetologists from 2023 to 2033?",
+            "The projected percent growth for Barbers, Hairstylists, and Cosmetologists from 2023 to 2033 is 7 percent.",
+            self.dataset,
+            self.premises,
+        )
+        self.assertEqual(verification.verdict, "ENTAILED")
+
     def test_percentage_points_more_wording(self) -> None:
         _, verification = verify_reader_answer(
             "Which has the higher projected growth rate, Machinists and Tool and Die Makers or Heating, Air Conditioning, and Refrigeration Mechanics and Installers, and by how many percentage points?",

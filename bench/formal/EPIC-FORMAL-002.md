@@ -720,6 +720,15 @@ partial. Formal: **1.00 binary, 0.98 exact, 0 false accepts, 0 false rejects,
 expression results, percentage-point wording, and top-coded lower bounds. This
 is reader-held-out, not question-held-out.
 
+A 320-claim four-reader set (DeepSeek 4.1 Flash DA + Sonnet 5.5 DA +
+GLM-5.3-Flash DA + Qwen 3.8 27B DA) was then human-audited and corrected:
+130 supported, 160 absent, 26 contradicted, 4 partial. Formal: **1.00 binary,
+0.99 exact, 0 false accepts, 0 false rejects, 1.00 coverage**; MiniCheck 0.72 /
+13 / 75; LettuceDetect 0.21 / 186 / 66; HHEM 0.76 / 4 / 73. The audit exposed
+and fixed two more parser gaps: “difference between … is X” and “7 percent”.
+The 26 natural contradicted claims give a one-sided 95% upper bound of 10.9%;
+synthetic + natural 0/106 gives 2.8%.
+
 The pre-registration and audit tooling are in
 `competitive/PRE-REGISTRATION.md`, `competitive/GOLD-FORM.html`,
 `competitive/apply_audit.py`, `competitive/apply_multireader_audit.py`, and
@@ -728,13 +737,15 @@ The pre-registration and audit tooling are in
 
 Remaining gaps before a final false-accept claim:
 
-- ≥100 natural contradicted claims (the two-reader set has 15).
+- ≥100 natural contradicted claims (the four-reader set has 26, below the
+  pre-registered minimum of 40).
 - A second rater and adjudication (the pilot has one auditor).
 - A question-held-out set (the pilot reuses the 100 development-informed
   questions).
-- A second domain (only OOH and a synthetic legal demo exist).
-- A four-reader natural set (DeepSeek 4.1 Flash, Sonnet 5.5, GLM-5.3-Flash,
-  Qwen 3.8 27B) is the next sample-size step; it is not itself a final claim.
+- A real second domain; CUAD is now a public legal baseline, but there is no
+  expert-reviewed private legal pilot.
+- An error-enriched or question-held-out natural set is the next sample-size
+  step; the four-reader set is not itself a final claim.
 
 Deliverables:
 

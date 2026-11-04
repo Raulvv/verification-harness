@@ -188,24 +188,24 @@ The formal layer has a **human-audited pilot**, not a final benchmark claim.
 | Set | Contradicted | False accepts | False rejects | Coverage | One-sided 95% upper bound |
 |---|---:|---:|---:|---:|---:|
 | 160 public synthetic | 80 | **0** | 1 | 0.74 | 3.7% |
-| 80 DeepSeek natural | 8 | **0** | 0 | 1.00 | 31.2% |
-| 160 two-reader natural | 15 | **0** | 0 | 1.00 | 18.1% |
-| Natural combined | 23 | **0** | 0 | 1.00 | 12.2% |
-| Synthetic + natural | 103 | **0** | — | — | 2.9% |
+| 80 DeepSeek natural (subset of 320) | 8 | **0** | 0 | 1.00 | 31.2% |
+| 160 two-reader natural (subset of 320) | 15 | **0** | 0 | 1.00 | 18.1% |
+| **320 four-reader natural (audited)** | **26** | **0** | **0** | **1.00** | **10.9%** |
+| Synthetic + natural | 106 | **0** | — | — | 2.8% |
 
-The two-reader natural set is Sonnet 5.5 DA + GLM-5.3-Flash DA, human-audited
-and corrected: **1.00 binary, 0.98 exact, 0 false accepts, 0 false rejects,
-1.00 coverage**. The 0.98 exact is three `partial` answers (one operand, no
-computed difference) judged `CONTRADICTION`; the binary endpoint is correct.
+The four-reader natural set is DeepSeek 4.1 Flash DA + Sonnet 5.5 DA +
+GLM-5.3-Flash DA + Qwen 3.8 27B DA, human-audited and corrected: **1.00 binary,
+0.99 exact, 0 false accepts, 0 false rejects, 1.00 coverage**. The 0.99 exact is
+four `partial` answers judged `CONTRADICTION`; the binary endpoint is correct.
 
-On the same 160 natural claims, the general detectors are materially weaker:
+On the same 320 natural claims, the general detectors are materially weaker:
 
 | System | Binary | Exact | False accepts | False rejects | Coverage |
 |---|---:|---:|---:|---:|---:|
-| **Formal** | **1.00** | 0.98 | **0** | **0** | **1.00** |
-| MiniCheck | 0.75 | 0.27 | 7 | 33 | 1.00 |
-| LettuceDetect | 0.21 | 0.21 | 96 | 30 | 1.00 |
-| HHEM-2.1-Open | 0.79 | 0.28 | 2 | 31 | 1.00 |
+| **Formal** | **1.00** | 0.99 | **0** | **0** | **1.00** |
+| MiniCheck | 0.72 | 0.24 | 13 | 75 | 1.00 |
+| LettuceDetect | 0.21 | 0.21 | 186 | 66 | 1.00 |
+| HHEM-2.1-Open | 0.76 | 0.25 | 4 | 73 | 1.00 |
 
 The synthetic set's coverage is 0.74 because formal abstains on the 40
 contradicted absence claims (`INCOMPLETE`); its binary accuracy is 1.00. The
@@ -218,7 +218,8 @@ false-accept record on a pilot. **What it does not support:** a population
 false-accept rate, general NLI, open-world absence, question-held-out
 evaluation, a second domain, or replacement of the detectors. The natural set
 is reader-held-out, not question-held-out; one auditor labelled it; the same
-100 development-informed questions are used.
+100 development-informed questions are used. The 26 natural contradicted claims
+are below the pre-registered minimum of 40, so this is still a pilot.
 
 Reproduce the public synthetic slice:
 
