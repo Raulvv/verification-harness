@@ -54,15 +54,15 @@ specification receipts, and a measured fallback for the rest.
 | 3 — prose extraction | partial | `formal/extract.py`: reader-first baseline for lookup, difference, sum, compare, extremum, count, quantified, rank; unsupported questions explicit |
 | 4 — closed-corpus absence | partial | `formal/coverage.py`: declared corpus index, coverage receipt, `NOT_FOUND_IN_CORPUS`; seeded-mention tests; API language guard pending |
 | 5 — router/NLI/integration | partial | `formal/router.py` + `formal/nli.py`: deterministic route and command-based fallback; real detector wiring pending |
-| 5.5 — productionization | partial | `config --formal-cmd` seals the verifier in the workspace; batch/API/observability pending |
+| 5.5 — productionization | partial | workspace `formalCmd`, JSONL batch boundary; API/observability pending |
 | 6 — evaluation/report | not started | — |
 
-Current test evidence: **79 Python tests** (17 original + 21 spec-layer +
+Current test evidence: **83 Python tests** (17 original + 21 spec-layer +
 18 reader-first extraction + 5 closed-corpus absence + 6 competitive harness +
-6 router + 6 NLI fallback) and **213 kit tests** pass; the EPIC-FORMAL-001
-100-question and dev-14 results are unchanged (59 `ENTAILED`, 40
-`ABSENT_CONFIRMED`, 1 `UNKNOWN`, 0 false `ENTAILED`). The default `ask` path is
-unchanged; the formal path is opt-in.
+6 router + 6 NLI fallback + 4 batch) and **213 kit tests** pass; the
+EPIC-FORMAL-001 100-question and dev-14 results are unchanged (59 `ENTAILED`,
+40 `ABSENT_CONFIRMED`, 1 `UNKNOWN`, 0 false `ENTAILED`). The default `ask` path
+is unchanged; the formal path is opt-in.
 
 ---
 
@@ -784,8 +784,9 @@ Exit criteria:
 
 Status: **partial**. `retrieval-kit config --formal-cmd <cmd>` seals the formal
 verifier command in the workspace; `ask --formal` uses it without a long flag.
-The command still spawns a process per question. Batch/API/observability are
-pending.
+`formal/batch.py` provides a JSONL in/out batch boundary with per-item error
+isolation and route output. The command still spawns a process per question;
+API/observability are pending.
 
 Deliverables:
 
@@ -1130,6 +1131,7 @@ and the gate integration — not on the 100-question development set alone.
 - `bench/formal/competitive/` — frozen claim fixture and detector score format.
 - `bench/formal/formal/router.py` — verdict → product action router.
 - `bench/formal/formal/nli.py` — command-based NLI fallback adapter.
+- `bench/formal/formal/batch.py` — JSONL batch verification boundary.
 - `bench/formal/formal/z3check.py` — current Z3 checks and `verify_question`.
 - `kit/lib/cli/ask.mjs` — `ask --formal` bridge, gate integration, route output.
 - `kit/lib/cli/config.mjs` — workspace `formalCmd` sealing.
@@ -1141,6 +1143,7 @@ and the gate integration — not on the 100-question development set alone.
 - `bench/formal/tests/test_competitive.py` — 4 competitive harness tests.
 - `bench/formal/tests/test_router.py` — 6 router tests.
 - `bench/formal/tests/test_nli.py` — 6 NLI fallback tests.
+- `bench/formal/tests/test_batch.py` — 4 batch tests.
 - `bench/formal/EPIC-FORMAL-003.md` — proposed legal/private-corpus pilot.
 - `PLAN.md` — separate 300-question clean-set plan; read-only, not part of this
   epic.

@@ -104,9 +104,19 @@ class RuleBasedExtractor:
             Term(kind="const", value=value),
             label="reader_lookup",
         )
+        citation = self.dataset.citation(qir.entity, qir.field)
         return ExtractionResult(
             qir,
-            AnswerIR(parts=(AnswerPart(part_id="q", status="stated", claim=claim),)),
+            AnswerIR(
+                parts=(
+                    AnswerPart(
+                        part_id="q",
+                        status="stated",
+                        claim=claim,
+                        citations=(citation,) if citation else (),
+                    ),
+                )
+            ),
             (ExtractedClaim(text=raw, start=start, end=end),),
         )
 
@@ -168,9 +178,26 @@ class RuleBasedExtractor:
             Term(kind="const", value=value),
             label="reader_difference",
         )
+        cites = tuple(
+            c
+            for c in (
+                self.dataset.citation(a, qir.field),
+                self.dataset.citation(b, qir.field),
+            )
+            if c
+        )
         return ExtractionResult(
             qir,
-            AnswerIR(parts=(AnswerPart(part_id="q", status="stated", claim=claim),)),
+            AnswerIR(
+                parts=(
+                    AnswerPart(
+                        part_id="q",
+                        status="stated",
+                        claim=claim,
+                        citations=cites,
+                    ),
+                )
+            ),
             (ExtractedClaim(text=raw, start=start, end=end),),
         )
 
@@ -204,12 +231,20 @@ class RuleBasedExtractor:
             Term(kind="const", value=value),
             label="reader_comparison_difference",
         )
+        cites = tuple(
+            c
+            for c in (
+                self.dataset.citation(winner, qir.field),
+                self.dataset.citation(loser, qir.field),
+            )
+            if c
+        )
         return ExtractionResult(
             qir,
             AnswerIR(
                 parts=(
-                    AnswerPart(part_id="q", status="stated", claim=winner_claim),
-                    AnswerPart(part_id="q.diff", status="stated", claim=diff_claim),
+                    AnswerPart(part_id="q", status="stated", claim=winner_claim, citations=cites),
+                    AnswerPart(part_id="q.diff", status="stated", claim=diff_claim, citations=cites),
                 )
             ),
             (
@@ -246,12 +281,14 @@ class RuleBasedExtractor:
             Term(kind="const", value=value),
             label="reader_extremum_value",
         )
+        citation = self.dataset.citation(winner, qir.field)
+        cites = (citation,) if citation else ()
         return ExtractionResult(
             qir,
             AnswerIR(
                 parts=(
-                    AnswerPart(part_id="q", status="stated", claim=winner_claim),
-                    AnswerPart(part_id="q.value", status="stated", claim=value_claim),
+                    AnswerPart(part_id="q", status="stated", claim=winner_claim, citations=cites),
+                    AnswerPart(part_id="q.value", status="stated", claim=value_claim, citations=cites),
                 )
             ),
             (
@@ -368,9 +405,25 @@ class RuleBasedExtractor:
             Term(kind="const", value=value),
             label="reader_sum",
         )
+        cites = []
+        for entity in qir.entities:
+            fields = ("jobs", "change") if qir.field == "jobs2033" else (qir.field,)
+            for field in fields:
+                citation = self.dataset.citation(entity, field)
+                if citation is not None and citation not in cites:
+                    cites.append(citation)
         return ExtractionResult(
             qir,
-            AnswerIR(parts=(AnswerPart(part_id="q", status="stated", claim=claim),)),
+            AnswerIR(
+                parts=(
+                    AnswerPart(
+                        part_id="q",
+                        status="stated",
+                        claim=claim,
+                        citations=tuple(cites),
+                    ),
+                )
+            ),
             (ExtractedClaim(text=raw, start=start, end=end),),
         )
 

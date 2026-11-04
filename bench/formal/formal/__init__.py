@@ -23,6 +23,7 @@ from .model import (
     Verification,
     VERDICTS,
 )
+from .batch import BatchItem, BatchResult, verify_batch, verify_one
 from .coverage import CorpusIndex, absence_from_receipt, verify_corpus_absence
 from .extract import ExtractedClaim, ExtractionResult, RuleBasedExtractor, verify_reader_answer
 from .nli import CommandNLI, FallbackDecision, NLIResult, StubNLI, route_with_fallback
@@ -34,6 +35,8 @@ __all__ = [
     "AnswerIR",
     "AnswerPart",
     "Assumption",
+    "BatchItem",
+    "BatchResult",
     "CandidateSet",
     "Citation",
     "Claim",
@@ -67,7 +70,9 @@ __all__ = [
     "close_qir",
     "route_verification",
     "route_with_fallback",
+    "verify_batch",
     "verify_corpus_absence",
+    "verify_one",
     "verify_question",
     "verify_reader_answer",
 ]
