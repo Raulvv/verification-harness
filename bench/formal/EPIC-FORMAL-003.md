@@ -1,9 +1,24 @@
 # EPIC-FORMAL-003 — Closed-schema legal verification for private corpora
 
-**Status:** proposed; not started  
+**Status:** proposed; synthetic proof of concept implemented  
 **Prepared:** 2026-11-04  
 **Predecessor:** EPIC-FORMAL-002 (specification layer, reader-first verification, gate integration, coverage receipts)  
 **Related:** `bench/formal/EPIC-FORMAL-002.md` §1.7 (market assessment), `bench/formal/REPORT.md`
+
+### Implementation status
+
+| Piece | Status | Evidence |
+|---|---|---|
+| Synthetic contract + playbook | complete | `legal/contract.md`, `legal/playbook.json` |
+| Deterministic legal fact extraction | complete (demo) | `formal/legal.py` extracts 6 fields with clause/quote |
+| Rule engine + receipts | complete (demo) | `verify_playbook`, `verify_contract`; `ENTAILED`/`CONTRADICTION`/`INCOMPLETE` |
+| Legal expert review | not started | required before any pilot claim |
+| Real document ingestion | not started | PDF/DOCX/OCR/clause segmentation |
+| Private deployment/security | not started | required before private data |
+| Pilot evaluation | not started | 50–100 expert-labeled requirements |
+
+The demo is **synthetic only**: no client data, no legal advice, no expert
+review. It proves the architecture on a second schema; it is not a legal pilot.
 
 ---
 
@@ -28,6 +43,27 @@ Not:
 The first pilot should be **contract playbook compliance** for commercial
 contracts. Data-room completeness is the second candidate because it exercises
 closed-corpus absence with coverage receipts.
+
+### Synthetic proof of concept
+
+A minimal second-schema demo is implemented:
+
+```bash
+cd bench/formal
+.venv/bin/python -m formal.legal \
+  --contract legal/contract.md \
+  --playbook legal/playbook.json
+```
+
+It extracts six fields from a synthetic contract (governing law, liability cap
+months, notice days, renewal months, data protection presence, assignment
+consent) and checks six playbook rules. Each finding carries the clause heading,
+the quote, the rule, the observed value, a spec hash, and a route. A bad
+liability cap returns `CONTRADICTION`; a missing data-protection clause returns
+`INCOMPLETE`.
+
+This is a demo, not a legal pilot: no client data, no legal advice, no expert
+review, no PDF/DOCX ingestion, no private deployment.
 
 ---
 
@@ -423,4 +459,7 @@ go/no-go decision is documented.
 - `bench/formal/formal/coverage.py` — closed-corpus absence and receipts.
 - `bench/formal/formal/router.py` — verdict → product action.
 - `bench/formal/formal/nli.py` — NLI fallback adapter.
+- `bench/formal/formal/legal.py` — synthetic legal playbook demo.
+- `bench/formal/legal/` — synthetic contract and playbook.
+- `bench/formal/tests/test_legal.py` — 6 legal demo tests.
 - `kit/lib/cli/ask.mjs` — `ask --formal` bridge and gate integration.

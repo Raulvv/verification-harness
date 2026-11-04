@@ -1,0 +1,44 @@
+[
+  {
+    "id": "governing-law",
+    "description": "Governing law must be Delaware",
+    "field": "governing_law",
+    "op": "=",
+    "value": "Delaware"
+  },
+  {
+    "id": "liability-cap",
+    "description": "Liability cap must be at least 12 months of fees",
+    "field": "liability_cap_months",
+    "op": ">=",
+    "value": 12
+  },
+  {
+    "id": "notice-period",
+    "description": "Termination notice must be at least 30 days",
+    "field": "notice_days",
+    "op": ">=",
+    "value": 30
+  },
+  {
+    "id": "renewal-term",
+    "description": "Renewal term must be at most 12 months",
+    "field": "renewal_months",
+    "op": "<=",
+    "value": 12
+  },
+  {
+    "id": "data-protection",
+    "description": "Data protection clause must be present",
+    "field": "data_protection",
+    "op": "=",
+    "value": true
+  },
+  {
+    "id": "assignment-consent",
+    "description": "Assignment requires prior written consent",
+    "field": "assignment_consent",
+    "op": "=",
+    "value": true
+  }
+]

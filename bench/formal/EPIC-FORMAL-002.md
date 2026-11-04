@@ -57,12 +57,12 @@ specification receipts, and a measured fallback for the rest.
 | 5.5 — productionization | partial | workspace `formalCmd`, JSONL batch boundary; API/observability pending |
 | 6 — evaluation/report | not started | — |
 
-Current test evidence: **83 Python tests** (17 original + 21 spec-layer +
+Current test evidence: **89 Python tests** (17 original + 21 spec-layer +
 18 reader-first extraction + 5 closed-corpus absence + 6 competitive harness +
-6 router + 6 NLI fallback + 4 batch) and **213 kit tests** pass; the
-EPIC-FORMAL-001 100-question and dev-14 results are unchanged (59 `ENTAILED`,
-40 `ABSENT_CONFIRMED`, 1 `UNKNOWN`, 0 false `ENTAILED`). The default `ask` path
-is unchanged; the formal path is opt-in.
+6 router + 6 NLI fallback + 4 batch + 6 legal demo) and **213 kit tests** pass;
+the EPIC-FORMAL-001 100-question and dev-14 results are unchanged
+(59 `ENTAILED`, 40 `ABSENT_CONFIRMED`, 1 `UNKNOWN`, 0 false `ENTAILED`). The
+default `ask` path is unchanged; the formal path is opt-in.
 
 ---
 
