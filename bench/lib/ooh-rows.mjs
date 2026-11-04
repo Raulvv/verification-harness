@@ -88,11 +88,49 @@ export function loadRows({ source = 'table', dataPath = 'bench/ooh-data.json', c
 export const isGlobalItem = (item) => {
   const notes = String(item?.notes ?? '')
   const formula = String(item?.formula ?? '')
-  return item?.global === true || /global|aggregat/i.test(notes) || /^max\(|^filter\(/i.test(formula)
+  const question = String(item?.question ?? '')
+  const aggregateQuestion =
+    /how many of the 48 occupations/i.test(question) ||
+    /how many occupations with a reported median annual pay/i.test(question) ||
+    /among occupations projected to grow faster than/i.test(question) ||
+    /among occupations with a projected growth rate above/i.test(question)
+  return item?.global === true || aggregateQuestion || /global|aggregat/i.test(notes) || /^max\(|^filter\(/i.test(formula)
 }
 
 export const globalSpec = (question) => {
-  const m = String(question).match(/grow(?:th)?\s+faster\s+than\s+(\d+(?:\.\d+)?)\s*%/i)
+  const q = String(question)
+  const countGrowth = q.match(
+    /how many of the 48 occupations have a projected growth rate (?:greater than|above) (\d+(?:\.\d+)?)\s*%/i,
+  )
+  if (countGrowth) {
+    return {
+      candidateSet: 'all',
+      op: 'count',
+      field: 'outlook_pct',
+      filter: { field: 'outlook_pct', op: '>', value: Number(countGrowth[1]) },
+    }
+  }
+  const countPay = q.match(
+    /how many occupations with a reported median annual pay have a median annual pay above \$([\d,]+)/i,
+  )
+  if (countPay) {
+    return {
+      candidateSet: 'paid',
+      op: 'count',
+      field: 'annual',
+      filter: { field: 'annual', op: '>', value: Number(countPay[1].replace(/,/g, '')) },
+    }
+  }
+  if (/how many occupations with a reported median annual pay require a doctoral or professional degree/i.test(q)) {
+    return {
+      candidateSet: 'paid',
+      op: 'count',
+      field: 'education',
+      filter: { field: 'education', op: '=', value: 'Doctoral or professional degree' },
+    }
+  }
+  const m = q.match(/grow(?:th)?\s+faster\s+than\s+(\d+(?:\.\d+)?)\s*%/i) ||
+    q.match(/projected growth (?:rate )?above\s+(\d+(?:\.\d+)?)\s*%/i)
   return {
     candidateSet: 'paid',
     op: 'max',

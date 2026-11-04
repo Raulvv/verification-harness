@@ -5,7 +5,19 @@ export { leadAbstain }
 const hasAbstain = (t) => ABSTAIN_TERMS.some((m) => norm(t).includes(m)) || /\b(?:do|does) not (?:provide|state|list|report|include|contain|specify|give)\b/i.test(t)
 const valueIn = (text, v) => {
   if (typeof v === 'number') {
-    return numbersIn(text).includes(String(v)) || numbersIn(text).includes(String(v).replace(/(\d)(?=(\d{3})+$)/g, '$1'))
+    if (numbersIn(text).includes(String(v))) return true
+    if (numbersIn(text).includes(String(v).replace(/(\d)(?=(\d{3})+$)/g, '$1'))) return true
+    if (v < 0) {
+      const magnitude = String(Math.abs(v))
+      const compact = String(text).replace(/,/g, '')
+      const negative = new RegExp(
+        `(?:-|−|decline[sd]?|decrease[sd]?|drop[s]?|loss of|fell|fall)` +
+        `(?:\\s+of)?(?:\\s+by)?\\s*\\$?${magnitude}\\b`,
+        'i',
+      )
+      if (negative.test(compact)) return true
+    }
+    return false
   }
   const raw = String(v)
   if (norm(text).includes(norm(raw))) return true
