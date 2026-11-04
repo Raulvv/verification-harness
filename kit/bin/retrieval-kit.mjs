@@ -12,7 +12,7 @@ const rest = argv.slice(1)
 function parse(list) {
   const flags = {}
   const pos = []
-  const BOOLEAN = new Set(['json', 'aggregate'])
+  const BOOLEAN = new Set(['json', 'aggregate', 'formal', 'noDefaults'])
   for (let i = 0; i < list.length; i++) {
     const a = list[i]
     if (a === '--') { pos.push(...list.slice(i + 1)); break }
@@ -36,6 +36,7 @@ function usage() {
     '  retrieval-kit ask "<question>"',
     '  retrieval-kit ask <dir> "<question>"      # one-off, no workspace',
     '  retrieval-kit ask --aggregate --table <rows.json> --spec <spec.json> [question]',
+    '  retrieval-kit ask --formal --formal-cmd <cmd> "<question>"   # external deterministic verifier (JSON stdin/stdout)',
     '  retrieval-kit config --show | --reset',
     '',
     'options: --retriever dense|reference|router   --files a.md,b.md (corpus allowlist)   --quote (also print the full verbatim quote)   --tier source-v45|v45|full',

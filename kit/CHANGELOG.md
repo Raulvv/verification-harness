@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Added
+
+- Opt-in `ask --formal` / `--formal-cmd <cmd>` external deterministic verifier
+  bridge. The command reads JSON on stdin and writes JSON on stdout; the human
+  output shows the answer with its assumptions stated inline, the evidence
+  quotes, the formal verdict and the spec receipt. `--no-defaults` is forwarded.
+  The default `ask` path is unchanged, and the kit does not depend on a parent
+  repo package.
+
 ## 0.2.0 — DA default + GLM-5.3-Flash
 
 ### Changed

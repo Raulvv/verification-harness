@@ -1,6 +1,7 @@
 // `ask` — resolve the workspace, run the one-shot machine, and print the answer
 // with a machine-checked receipt (RN-G01/G04). Pure orchestration; the model
 // boundary stays injectable so the command is testable offline.
+import { spawnSync } from 'node:child_process'
 import { askOneShot } from '../answer/oneshot.mjs'
 import { askAggregate } from '../answer/aggregate.mjs'
 import { verify } from '../receipts/gate.mjs'
@@ -12,12 +13,47 @@ import { runAbsence, shouldRunAbsence } from '../answer/absence.mjs'
 import { resolveAsk } from './resolve.mjs'
 import { validateFlags, ASK_FLAGS, ASK_BOOLEAN } from '../cli.mjs'
 
-export async function runAsk({ question, flags = {}, env = process.env, cwd = process.cwd(), probe, chat, embed, judgeFn, gradeFn } = {}) {
+// Formal path: delegate to an external deterministic verifier. The kit stays
+// standalone — it never hardcodes the parent repo's Python package. The caller
+// supplies the command (or RETRIEVAL_FORMAL_CMD). Protocol: JSON on stdin,
+// JSON on stdout with {answer, verdict, assumptions, citations, ...}.
+async function runFormalAsk({ question, flags, env, cwd, formalFn }) {
+  const started = Date.now()
+  if (formalFn) {
+    const out = await formalFn({ question, flags, env, cwd })
+    return { ...out, question: out.question ?? question, ms: out.ms ?? (Date.now() - started) }
+  }
+  const cmd = flags.formalCmd ?? env.RETRIEVAL_FORMAL_CMD
+  if (!cmd) {
+    throw new Error('--formal needs --formal-cmd <cmd> or RETRIEVAL_FORMAL_CMD (the command must read JSON on stdin and write JSON on stdout)')
+  }
+  const payload = JSON.stringify({ question, no_defaults: flags.noDefaults === true })
+  const r = spawnSync('sh', ['-c', cmd], {
+    input: payload,
+    encoding: 'utf8',
+    cwd: flags.formalCwd ?? cwd,
+    maxBuffer: 1 << 20,
+  })
+  if (r.error) throw r.error
+  if (r.status !== 0) throw new Error(`formal command exited ${r.status}: ${r.stderr ?? ''}`)
+  let formal
+  try {
+    formal = JSON.parse(r.stdout)
+  } catch {
+    throw new Error('formal command did not emit JSON')
+  }
+  return { question, formal, ms: Date.now() - started }
+}
+
+export async function runAsk({ question, flags = {}, env = process.env, cwd = process.cwd(), probe, chat, embed, judgeFn, gradeFn, formalFn } = {}) {
   if (!question || !String(question).trim()) throw new Error('no question — usage: retrieval-kit ask "<question>"')
   validateFlags(flags, ASK_FLAGS, { booleans: ASK_BOOLEAN })
   if (flags.maxQuotesPerDoc != null) {
     const n = Number(flags.maxQuotesPerDoc)
     if (!Number.isInteger(n) || n < 1) throw new Error('--max-quotes-per-doc must be a positive integer')
+  }
+  if (flags.formal || flags.formalCmd) {
+    return runFormalAsk({ question, flags, env, cwd, formalFn })
   }
   const started = Date.now()
   const r = await resolveAsk({ flags, env, cwd, probe })
@@ -171,7 +207,38 @@ function formatEvidence(res) {
   return out.join('\n').trimEnd()
 }
 
+function formatFormal(res, { json = false } = {}) {
+  const f = res.formal
+  if (json) {
+    return JSON.stringify({ question: res.question, formal: f, ms: res.ms }, null, 2)
+  }
+  const lines = [`Q: ${res.question}`, `A: ${f.answer}`, '']
+  lines.push('Assumptions:')
+  const assumptions = f.assumptions ?? []
+  if (!assumptions.length) lines.push('  (none)')
+  else for (const a of assumptions) lines.push(`  - ${a.human} [${a.source}]`)
+  lines.push('', 'Evidence:')
+  const cites = f.citations ?? []
+  if (!cites.length) lines.push('  (no structured citations)')
+  else {
+    for (let i = 0; i < cites.length; i++) {
+      const c = cites[i]
+      lines.push(`  [${i + 1}] ${c.title} · ${c.slug} · ${c.field}`)
+      for (const line of String(c.quote ?? '').split('\n')) lines.push(`      ${line}`)
+    }
+  }
+  if (f.unresolved?.length) {
+    lines.push('', 'Unresolved:')
+    for (const u of f.unresolved) lines.push(`  - ${u.kind}:${u.symbol} allowed=${(u.allowed ?? []).join(', ')}`)
+  }
+  const spec = f.spec_version ? ` · spec ${f.spec_version}` : ''
+  const id = f.spec_id ? ` · ${f.spec_id}` : ''
+  lines.push('', `formal: ${f.verdict}${spec}${id}`)
+  return lines.join('\n')
+}
+
 export function formatAsk(res, { json = false } = {}) {
+  if (res.formal) return formatFormal(res, { json })
   if (json) {
     return JSON.stringify({
       question: res.question, receipt: res.receipt, state: res.state, fail_reason: res.fail_reason ?? null, reader_error: res.reader_error ?? null, parse_failures: res.parse_failures ?? [], retriever: res.retriever, tier: res.tier,

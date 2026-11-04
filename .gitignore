@@ -15,6 +15,7 @@ __pycache__/
 
 # local working drafts (article/email) — never published from this tree
 drafts/
+PLAN.md
 
 # local secrets
 .env

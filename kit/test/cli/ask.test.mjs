@@ -268,6 +268,68 @@ test('ask --quote: the human receipt groups evidence by source (no flat quote li
   })
 })
 
+test('ask --formal: deterministic answer with assumptions and quotes, no model call', async () => {
+  let called = false
+  const formal = {
+    question: 'best stability',
+    answer: 'The top-ranked occupation under the default definition `stability = 1×projected growth` is Software Developers.',
+    verdict: 'ENTAILED_UNDER_ASSUMPTIONS',
+    assumptions: [
+      { key: 'metric:stability', human: 'stability = 1×projected growth', source: 'default' },
+    ],
+    citations: [
+      { title: 'Software Developers', slug: 'computer__software', field: 'outlook_pct', quote: 'Job Outlook, 2023-33 | 17% (Much faster than average)' },
+    ],
+    spec_version: 'spec-v1',
+    spec_id: 'abc123',
+    unresolved: [],
+  }
+  const res = await runAsk({
+    question: 'best stability',
+    flags: { formal: true },
+    env: {},
+    cwd: process.cwd(),
+    chat: async () => { called = true },
+    formalFn: async ({ question }) => ({ question, formal, ms: 1 }),
+  })
+  assert.equal(called, false, 'the formal path never calls the reader')
+  assert.equal(res.formal.verdict, 'ENTAILED_UNDER_ASSUMPTIONS')
+  const out = formatAsk(res)
+  assert.match(out, /^A: The top-ranked occupation/m)
+  assert.match(out, /Assumptions:\n {2}- stability = 1×projected growth \[default\]/)
+  assert.match(out, /Evidence:\n {2}\[1\] Software Developers · computer__software · outlook_pct/)
+  assert.match(out, /Job Outlook, 2023-33 \| 17%/)
+  assert.match(out, /formal: ENTAILED_UNDER_ASSUMPTIONS · spec spec-v1 · abc123/)
+  const j = JSON.parse(formatAsk(res, { json: true }))
+  assert.equal(j.formal.spec_id, 'abc123')
+  assert.equal(j.formal.assumptions[0].human, 'stability = 1×projected growth')
+})
+
+test('ask --formal: a missing formal command fails loud', async () => {
+  await assert.rejects(
+    runAsk({ question: 'x', flags: { formal: true }, env: {}, cwd: process.cwd() }),
+    /--formal needs --formal-cmd/,
+  )
+})
+
+test('ask --formal: --no-defaults is forwarded to the formal command', async () => {
+  let seen = null
+  const formal = {
+    question: 'x', answer: 'I need a definition.', verdict: 'NEEDS_SPECIFICATION',
+    assumptions: [], citations: [], spec_version: null, spec_id: null,
+    unresolved: [{ kind: 'quantifier', symbol: 'most', allowed: ['majority'] }],
+  }
+  const res = await runAsk({
+    question: 'x',
+    flags: { formal: true, noDefaults: true },
+    env: {},
+    cwd: process.cwd(),
+    formalFn: async ({ flags }) => { seen = flags.noDefaults; return { formal, ms: 1 } },
+  })
+  assert.equal(seen, true)
+  assert.match(formatAsk(res), /Unresolved:\n {2}- quantifier:most allowed=majority/)
+})
+
 test('ask --max-quotes-per-doc: caps quotes per document and rejects non-positive values', async () => {
   await withCorpus(async (dir) => {
     // withCorpus writes one line; add a second quotable line for the cap

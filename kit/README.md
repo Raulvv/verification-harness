@@ -67,6 +67,36 @@ node kit/bin/retrieval-kit.mjs ask "What is the refund window?"
   `--max-quotes-per-doc <n>` caps quotes per source (opt-in). In this repo the
   command is `node kit/bin/retrieval-kit.mjs`.
 
+## External deterministic verifier (opt-in)
+
+`ask --formal` delegates to any command that reads a JSON object on stdin and
+writes a JSON object on stdout. The kit never hardcodes a verifier, so this stays
+standalone.
+
+```sh
+node kit/bin/retrieval-kit.mjs ask \
+  --formal-cmd "<your verifier command>" \
+  "your question"
+```
+
+The command receives `{"question": "...", "no_defaults": false}`. It must emit:
+
+```json
+{
+  "answer": "human answer with the assumption stated inline",
+  "verdict": "ENTAILED_UNDER_ASSUMPTIONS",
+  "assumptions": [{"human": "most = majority (>50%)", "source": "default"}],
+  "citations": [{"title": "...", "slug": "...", "field": "...", "quote": "..."}],
+  "spec_version": "spec-v1",
+  "spec_id": "..."
+}
+```
+
+The human output prints the answer, the assumptions, the evidence quotes, and
+the formal verdict. `--no-defaults` is forwarded to the verifier. If no command
+is configured, `ask --formal` fails loud instead of silently falling back. The
+default `ask` path is unchanged.
+
 ## Reader model setup — defaults, Ollama, non-Ollama
 
 The boundary is OpenAI-compatible (`/chat/completions`); Ollama is special-cased

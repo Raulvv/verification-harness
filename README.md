@@ -131,6 +131,50 @@ receipt and the absence check. The local fallback is the fast demo; the 4B is
 below the contract threshold. Point `ask` at your own folder instead, and it is
 your corpus.
 
+## Formal verification path (opt-in)
+
+`ask` can delegate to an external deterministic verifier. The default path is
+unchanged; the verifier is a JSON-in/JSON-out command you supply, so the kit
+stays standalone.
+
+```bash
+node kit/bin/retrieval-kit.mjs ask \
+  --formal-cmd "cd bench/formal && .venv/bin/python -m formal.cli --stdin-json" \
+  "This is the best career for someone who wants stability."
+```
+
+```text
+Q: This is the best career for someone who wants stability.
+A: Using the default definitions
+   `stability = 1×projected growth + 0.0001×employment change + 0.0001×annual openings`
+   and `best = highest stability score`, the top-ranked occupation is
+   Software Developers, Quality Assurance Analysts, and Testers (score 63.8).
+
+Assumptions:
+  - stability = 1×projected growth + 0.0001×employment change + 0.0001×annual openings [default]
+  - best = highest stability score [default]
+
+Evidence:
+  [1] Software Developers, Quality Assurance Analysts, and Testers · computer-and-information-technology__software-developers · outlook_pct
+      Job Outlook, 2023-33 | 17% (Much faster than average)
+  [2] Software Developers, Quality Assurance Analysts, and Testers · computer-and-information-technology__software-developers · change
+      Employment Change, 2023-33 | 327,900
+  [3] Software Developers, Quality Assurance Analysts, and Testers · computer-and-information-technology__software-developers · annual_openings
+      About 140,100 openings for software developers, quality assurance analysts, and testers are projected each year, on average, over the decade.
+
+formal: ENTAILED_UNDER_ASSUMPTIONS · spec spec-v1 · ded593b4...
+```
+
+`--no-defaults` requires explicit definitions instead of registry defaults. If a
+claim needs a definition that is not supplied, the output is
+`NEEDS_SPECIFICATION` and the answer asks for it; it is never guessed. This is
+the Phase 0/1 specification layer, not a general prose parser.
+
+Positioning: this is a deterministic verifier for **closed structured claims**,
+not a replacement for HHEM, MiniCheck, or LettuceDetect on general prose. The
+competitive assessment and the gaps are in
+`bench/formal/EPIC-FORMAL-002.md` §1.7.
+
 ## Use it on your own private corpus
 
 The benchmark is public; the same kit runs on a private folder. Do not put

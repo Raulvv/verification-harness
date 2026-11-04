@@ -31,11 +31,11 @@ export function validateFlags(flags, valid, { booleans = [] } = {}) {
 // list is refused instead of silently ignored.
 export const ASK_FLAGS = [
   'aggregate', 'apiKey', 'apiKeyEnv', 'baseUrl', 'corpus', 'embedModel', 'files',
-  'grounding', 'hi', 'judge', 'judgeBaseUrl', 'judgeCmd', 'judgeEvidence', 'json',
-  'lo', 'maxQuotesPerDoc', 'minimalReceipt', 'model', 'noAbsence', 'noGrounding', 'quote', 'retriever', 'source', 'spec',
+  'formal', 'formalCmd', 'formalCwd', 'grounding', 'hi', 'judge', 'judgeBaseUrl', 'judgeCmd', 'judgeEvidence', 'json',
+  'lo', 'maxQuotesPerDoc', 'minimalReceipt', 'model', 'noAbsence', 'noDefaults', 'noGrounding', 'quote', 'retriever', 'source', 'spec',
   'sufficient', 'table', 'tier', 'unverified',
 ]
-export const ASK_BOOLEAN = ['aggregate', 'json', 'minimalReceipt', 'noAbsence', 'noGrounding', 'quote', 'source', 'sufficient', 'unverified']
+export const ASK_BOOLEAN = ['aggregate', 'formal', 'json', 'minimalReceipt', 'noAbsence', 'noDefaults', 'noGrounding', 'quote', 'source', 'sufficient', 'unverified']
 
 // The config surface (runConfig).
 export const CONFIG_FLAGS = [
