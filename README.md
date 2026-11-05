@@ -117,7 +117,15 @@ H3 was human-approved and frozen before the reducer was implemented. The
 reducer reproduces all 68 answerable golds offline with no model call; the 17
 ambiguity items are outside the reader run and still need the specification
 layer. The top-k scorer bug found during this work is fixed (array golds
-previously scored vacuously). Details and commands:
+previously scored vacuously).
+
+**The 83/83 is phrasing-bound.** A follow-up paraphrase test routed only
+**18/30** reviewed paraphrases and **0/4** blind natural questions to the
+reducer. Everything that reached it was correct (18/18), so the reducer is
+sound and the rule-based spec extractor is the bottleneck. The 83/83 holds for
+the frozen H3 phrasings, not for natural language. Report:
+[`bench/formal/competitive/H3-PARAPHRASE-REPORT.md`](bench/formal/competitive/H3-PARAPHRASE-REPORT.md).
+Details and commands:
 [`bench/formal/competitive/README.md`](bench/formal/competitive/README.md);
 full tables: [`bench/ARM-COMPARE-REPORT.md`](bench/ARM-COMPARE-REPORT.md).
 

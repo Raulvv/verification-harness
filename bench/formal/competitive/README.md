@@ -74,6 +74,32 @@ items need the specification layer to return `NEEDS_SPECIFICATION`; they are not
 part of the reader-accuracy run. Results and caveats are in
 [`../../ARM-COMPARE-REPORT.md`](../../ARM-COMPARE-REPORT.md).
 
+### H3 paraphrase test
+
+The H3 parser is phrasing-bound. A frozen set of 30 reviewed paraphrases plus 5
+blind items (4 answerable, 1 ambiguity) measured whether the reducer can be
+reached from other wording:
+
+| Group | Routed | Missed |
+|---|---:|---:|
+| Reviewed 30 | 18 | 12 |
+| Blind answerable | 0 | 4 |
+
+Everything routed was correct (18/18). The reducer is sound; the rule-based
+spec extractor is the bottleneck. Do not fix this by adding regexes for the
+missed items — use a schema-validated spec extractor and a fresh test set.
+Full report: [`H3-PARAPHRASE-REPORT.md`](H3-PARAPHRASE-REPORT.md).
+
+```bash
+.venv/bin/python competitive/build_h3_paraphrase.py
+.venv/bin/python competitive/validate_h3_paraphrase.py \
+  --input competitive/private/hard-h3-paraphrase-30.jsonl \
+  --input competitive/private/hard-h3-paraphrase-blind.jsonl \
+  --out competitive/private/hard-h3-paraphrase-35.jsonl
+node competitive/verify_h3_aggregate.mjs \
+  competitive/private/hard-h3-paraphrase-35.jsonl
+```
+
 ## One-question gold form (recommended)
 
 Open [`GOLD-FORM.html`](GOLD-FORM.html) in a browser. It shows **one claim at a

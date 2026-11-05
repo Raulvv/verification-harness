@@ -922,6 +922,30 @@ Caveats:
   the specification layer to return `NEEDS_SPECIFICATION`.
 - One seed, one reader, one corpus.
 
+### H3 paraphrase follow-up
+
+The 83/83 result is bound to the H3 phrasings. A frozen set of 30 reviewed
+paraphrases plus 4 answerable blind questions (written by the reviewer) was
+routed through the same parser:
+
+| Group | Routed | Missed | Routed correct |
+|---|---:|---:|---:|
+| Reviewed 30 | 18 | 12 | 18/18 |
+| Blind answerable | 0 | 4 | — |
+| **Total** | **18** | **16** | **18/18** |
+
+The pre-registered threshold was 27/30; 18/30 falls in the “template demo”
+band. Nothing that reached the reducer was wrong. Misses are imperative verbs
+(“Rank”, “Name”, “Add up”), other comparatives (“more than”, “how much
+larger”), reordered clauses, plural agreement, and natural questions that use
+fields outside the seven H3 shapes (education equality, 2033 employment,
+employment-change filter).
+
+Verdict: the deterministic reducer is sound; the regex spec extractor is the
+bottleneck. The fix is a schema-validated spec extractor, not more regexes; it
+must be tested on a fresh set. Full report:
+`bench/formal/competitive/H3-PARAPHRASE-REPORT.md`.
+
 ### Scorer correction
 
 The first H3 pass scored array golds vacuously: `goldIn` iterated
