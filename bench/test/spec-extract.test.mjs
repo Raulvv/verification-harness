@@ -64,11 +64,17 @@ test('spec extract: prompt contains the schema but no row values', () => {
 })
 
 test('spec extract: model JSON is parsed and tagged', async () => {
-  const chat = async () => ({
-    content: '```json\n{"status":"answerable","candidateSet":"paid","op":"max","field":"annual","filters":[{"field":"outlook_pct","op":">","value":5}]}\n```',
-    usage: { total_tokens: 10 },
-  })
+  let seen = []
+  const chat = async (msgs) => {
+    seen = msgs
+    return {
+      content: '```json\n{"status":"answerable","candidateSet":"paid","op":"max","field":"annual","filters":[{"field":"outlook_pct","op":">","value":5}]}\n```',
+      usage: { total_tokens: 10 },
+    }
+  }
   const r = await extractSpec({ question: 'q', chat, titles: TITLES })
+  assert.equal(seen[0].role, 'system')
+  assert.match(seen[0].content, /never answer/i)
   assert.equal(r.status, 'answerable')
   assert.equal(r.source, 'extractor')
   assert.equal(r.field, 'annual')

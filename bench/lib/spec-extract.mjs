@@ -21,7 +21,22 @@ const FIELD_DOC = `Fields:
 - annual_openings: projected annual openings
 - education: typical entry-level education (string)`
 
-const RULES = `Rules:
+const RULES = `You are a router, not an answerer. Never answer the question and never
+compute a value. Every response must be one JSON object, including refusals.
+
+Rules:
+- A question about one occupation (or one or two facts) is "reader", even when
+  part of it is missing from the corpus. The reader reports the missing part.
+  Example: "What is the pay for X, and its pay in Florida?" -> reader.
+  Example: "What is X's growth, and how many X were employed in 2010?" -> reader.
+  Example: "What is X's education, and openings projected for 2033 only?" -> reader.
+- A specific fact the corpus may not state (2010 employment, state-level pay,
+  2033-only openings) is "reader", not a refusal.
+- Only aggregations over many rows get a spec.
+- "best", "worst", or "recommended" with no named measure is
+  needs_specification. An unsupported future aggregate (2026, "next year") is
+  needs_specification. An unsupported entity type (industry, when the table is
+  occupations) is needs_specification or reader, never a silent substitution.
 - "above", "more than", "faster than", "exceeds" -> ">"
 - "at least", "no less than" -> ">="; "below", "fewer than", "less than" -> "<"
 - "at most", "no more than" -> "<="; "exactly", "equal to" -> "="
@@ -34,7 +49,7 @@ const RULES = `Rules:
 - Candidate set: "paid" when pay is required (the default); "all" only when pay is irrelevant; "select" only for diff.
 - filters are ANDed. Use only fields above. Do not invent fields.
 - If a question is answerable from one or two documents (one occupation, one education level, one partial fact), return status "reader" instead of a spec.
-- If "best", "worst", or "recommended" has no named measure, or criteria conflict, or the time is outside the snapshot (e.g. 2026, "next year"), return "needs_specification" with a reason.
+- If "best", "worst", or "recommended" has no named measure, or criteria conflict, or an aggregate targets a future time outside the snapshot (e.g. 2026, "next year"), return "needs_specification" with a reason. Historical values like 2010 are reader absences, not future projections.
 - If the corpus has no measure at all (stress, prestige, work-life balance, personal advice), return "not_formalizable".
 - Never put an answer, a count, or a computed number in the JSON. Only the spec.`
 
@@ -131,7 +146,10 @@ const parseJson = (text) => {
 
 export async function extractSpec({ question, chat, titles = [] }) {
   const t0 = Date.now()
-  const messages = [{ role: 'user', content: buildPrompt({ question, titles }) }]
+  const messages = [
+    { role: 'system', content: 'You are a JSON-only router. You never answer the question. Every reply is exactly one JSON object.' },
+    { role: 'user', content: buildPrompt({ question, titles }) },
+  ]
   let raw = ''
   let lastError = ''
   for (let attempt = 0; attempt < 2; attempt++) {
@@ -150,7 +168,7 @@ export async function extractSpec({ question, chat, titles = [] }) {
     } catch (e) {
       lastError = String(e.message ?? e)
       messages.push({ role: 'assistant', content: raw })
-      messages.push({ role: 'user', content: `That was not valid JSON (${lastError}). Return only the JSON object.` })
+      messages.push({ role: 'user', content: `You answered instead of routing (${lastError}). Do not answer. Return only one JSON object, e.g. {"status":"reader","reason":"single-occupation fact"}.` })
     }
   }
   return { status: 'needs_specification', source: 'extractor', error: lastError, raw, usage: {}, ms: Date.now() - t0 }
