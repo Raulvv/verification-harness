@@ -38,6 +38,29 @@ abstention traps. One seed, DeepSeek V4.1 Flash, `--aggregate table
 - Five refusals; four of those came from JSON parse failure, not a deliberate
   classification.
 
+## Post-fix development re-run
+
+After the grounding, ordering, and JSON-budget fixes, the same ten were rerun.
+This is **development, not a clean result** — the failures drove the fixes.
+
+| Metric | Before | After |
+|---|---:|---:|
+| Correct | 6/10 | **8/10** |
+| Answerable | 3/5 | 3/5 |
+| Traps refused | 3/5 | **5/5** |
+| False accepts | 2 | **0** |
+| JSON parse failures | 4/10 | **0/10** |
+
+- “Beat inflation” now refuses: no vocabulary entry for inflation.
+- “2 worst” now sorts ascending and the rank-2 tie returns
+  `NEEDS_SPECIFICATION` from the reducer.
+- The two remaining answerable misses are the known schema gaps
+  (`work_experience`, compound max+min). They refuse safely.
+- Cost rose to $0.0144 because the router now gets 4,000 tokens; the old 700
+  budget was entirely consumed by hidden reasoning and returned empty content.
+
+The clean claim still requires a fresh v3 set written after these fixes.
+
 ## The two dangerous failures
 
 ### 1. Silent substitution of a measure

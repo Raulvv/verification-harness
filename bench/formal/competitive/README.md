@@ -102,8 +102,12 @@ A 10-question set was frozen after the extractor and run once. It scored
 **6/10, with two false accepts**: “beat inflation” was silently mapped to
 employment growth (25), and “2 worst by projected growth” returned the two best
 because top-k sorts descending. Two schema gaps refused safely; 4/10 router
-calls produced no JSON and fell back to a refusal. Do not patch against v2;
-fixes are validated on a fresh v3 set. Report:
+calls returned empty content because reasoning consumed the token budget.
+
+After grounding, `order: asc`, and a 4,000-token budget, the same set
+(development, not clean) is **8/10, 0 false accepts, 0 JSON failures**; the two
+misses are schema gaps. H3 remains 100/100. The clean claim needs a fresh v3
+set; do not patch against v2. Report:
 [`V2-REPORT.md`](V2-REPORT.md).
 Full paraphrase report: [`H3-PARAPHRASE-REPORT.md`](H3-PARAPHRASE-REPORT.md).
 

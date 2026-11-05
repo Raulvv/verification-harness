@@ -75,7 +75,9 @@ regression. The 3/4 blind result is the only semi-independent signal, and n=4.
 A fresh 10-question v2 was frozen after this work and run once: **6/10, with two
 false accepts** — a silent substitution (“beat inflation” → employment growth)
 and a polarity inversion (“2 worst” → the two best). Schema validation checks
-shape, not meaning. See [`V2-REPORT.md`](V2-REPORT.md).
+shape, not meaning. After grounding and ordering fixes, the same set is 8/10
+(development, 0 false accepts); the two misses are schema gaps. See
+[`V2-REPORT.md`](V2-REPORT.md).
 
 ## What the missed constructions have in common
 

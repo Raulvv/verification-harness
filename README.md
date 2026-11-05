@@ -135,10 +135,14 @@ false accepts**:
   sorts descending; the rank-2 tie was also ignored.
 
 Two schema gaps (work experience, compound max+min) refused safely, and 4/10
-router calls failed to return JSON, masked by the refusal fallback. Schema
-validation checks shape, not meaning. The fix is a declared field dictionary,
-ordering/bottom-k, compound queries, and a fresh v3 test — not regexes or
-patching v2. Reports:
+router calls returned empty content because hidden reasoning consumed the token
+budget. Schema validation checks shape, not meaning.
+
+After fixes — declared-field grounding, `order: asc`, and a 4,000-token router
+budget — the same v2 set (development, not clean) goes **8/10 with zero false
+accepts**: 3/5 answerable, 5/5 traps refused, 0/10 JSON failures. The two
+remaining misses are the schema gaps. H3 stays **100/100**. The clean claim
+still requires a fresh v3 set. Reports:
 [`V2-REPORT.md`](bench/formal/competitive/V2-REPORT.md),
 [`H3-PARAPHRASE-REPORT.md`](bench/formal/competitive/H3-PARAPHRASE-REPORT.md).
 Details and commands:

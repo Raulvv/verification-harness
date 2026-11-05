@@ -974,6 +974,11 @@ router calls produced no JSON and fell back to a refusal. Within the declared
 schema the system was correct: 2/2 aggregates and 1/1 reader point. Cost
 $0.0042. Report: `bench/formal/competitive/V2-REPORT.md`.
 
+After grounding, ascending order, and a 4,000-token router budget, the same set
+(development, not clean) is **8/10 with zero false accepts and zero JSON parse
+failures**: 3/5 answerable, 5/5 traps refused. The two misses are the schema
+gaps. H3 regression: 100/100. The clean claim still needs a fresh v3.
+
 ### Scorer correction
 
 The first H3 pass scored array golds vacuously: `goldIn` iterated
