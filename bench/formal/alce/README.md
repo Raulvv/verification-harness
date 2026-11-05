@@ -80,16 +80,23 @@ beyond OOH.
 - Quote validity uses exact case-sensitive, whitespace-normalized containment.
   The runtime gate is byte-exact; the two checks agreed on this sample.
 
-## Next
+## Pre-registered 200-question run
 
-150–200 questions with pre-registered metrics and a go/no-go:
+Written before the run: 200 sampled questions, seed 0, same reader, prompts,
+passages and judge as the smoke.
+
+Go/no-go:
 
 - DA quote validity ≥ 95%
 - citation recall within 5 points of B
 - coverage within 10 points of B
-- report F1, citation precision/recall, quote validity, coverage
 
-Only if that passes should we add ASQA/ELI5 or a stronger judge.
+Primary: paired difference in citation support (MiniCheck) and QAMPARI F1,
+with 95% confidence intervals. Secondary: answer precision/recall, answers per
+question, JSON errors, cost.
+
+Failing any gate means no cross-corpus claim. Only if it passes should we add
+ASQA/ELI5 or a stronger judge.
 
 ## Commands
 
