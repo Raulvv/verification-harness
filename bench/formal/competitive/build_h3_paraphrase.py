@@ -277,7 +277,8 @@ def compute_gold(ds, case):
         return {"winner": winner.title, "value": getattr(winner, spec["field"])}
     if op == "topk":
         key = "pay" if spec["field"] == "annual" else "openings"
-        top = sorted(matches, key=lambda r: getattr(r, spec["field"]), reverse=True)[: spec["k"]]
+        order = spec.get("order", "desc")
+        top = sorted(matches, key=lambda r: getattr(r, spec["field"]), reverse=(order != "asc"))[: spec["k"]]
         return [{"title": r.title, key: getattr(r, spec["field"])} for r in top]
     if op == "diff":
         a, b = matches
@@ -314,6 +315,7 @@ def spec_text(spec):
         parts.append(f"{f['field']} {f['op']} {f['value']}")
     if spec["op"] == "topk":
         parts.append(f"k={spec['k']}")
+        parts.append(f"order={spec.get('order', 'desc')}")
     return " | ".join(parts)
 
 
