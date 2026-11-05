@@ -164,6 +164,19 @@ experiment. The judge is local MiniCheck, not ALCE's GPT-4, so absolute numbers
 are not leaderboard-comparable. Details:
 [`bench/formal/alce/README.md`](bench/formal/alce/README.md).
 
+## Mixed absence (SQuAD 2.0)
+
+100 answerable + 100 unanswerable. B and DA both abstain on about **70%** of
+unanswerable questions (71 vs 69), false answers are **29 vs 31**, and overall
+exact is **72.0 vs 71.5**. Paired differences are within noise.
+
+The quote contract alone did **not** improve abstention. The gate checks that a
+quote exists and contains the answer; it cannot tell that a plausible span does
+not answer the question (“How is time *not* required …”). A real abstention
+gain needs a support/entailment check — the formal verifier — not the quote
+gate alone. Details:
+[`bench/formal/squad2/README.md`](bench/formal/squad2/README.md).
+
 ## Quickstart
 
 Requirements: `git`, Node 18+, and Python 3.10+ (Python only for the benchmark
