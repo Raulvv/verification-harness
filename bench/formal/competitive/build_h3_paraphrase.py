@@ -269,8 +269,9 @@ def compute_gold(ds, case):
         return len(matches)
     if op == "sum":
         return sum(r.jobs for r in matches)
-    if op == "max":
-        winner = max(matches, key=lambda r: getattr(r, spec["field"]))
+    if op in ("max", "min"):
+        pick = max if op == "max" else min
+        winner = pick(matches, key=lambda r: getattr(r, spec["field"]))
         if spec["field"] == "annual":
             return {"winner": winner.title, "pay": getattr(winner, spec["field"])}
         return {"winner": winner.title, "value": getattr(winner, spec["field"])}
