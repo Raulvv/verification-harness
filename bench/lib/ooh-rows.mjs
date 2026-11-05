@@ -139,6 +139,60 @@ export const globalSpec = (question) => {
   }
 }
 
+// H3 specs: multi-condition filters, top-k, negation, equality, signed diff.
+// Returns null for questions the reducer must not answer (partial/ambiguity).
+export const h3Spec = (question) => {
+  const q = String(question ?? '')
+  const diff = q.match(/how many more annual openings does (.+?) have than (.+?)\?/i)
+  if (diff) {
+    return { candidateSet: 'select', op: 'diff', field: 'annual_openings', select: [diff[1].trim(), diff[2].trim()] }
+  }
+  const neg = q.match(/projected growth rate above ([\d.]+)% that does not require an? (.+?) has/i)
+  if (neg) {
+    return {
+      candidateSet: 'paid', op: 'max', field: 'annual',
+      filters: [
+        { field: 'outlook_pct', op: '>', value: Number(neg[1]) },
+        { field: 'education', op: '!=', value: neg[2].trim() },
+      ],
+    }
+  }
+  const eq = q.match(/with exactly ([\d.]+)% projected growth, which has the highest/i)
+  if (eq) {
+    return {
+      candidateSet: 'paid', op: 'max', field: 'annual',
+      filters: [{ field: 'outlook_pct', op: '=', value: Number(eq[1]) }],
+    }
+  }
+  const top = q.match(/which three occupations have the (highest median annual pay|most annual openings) among those projected to grow faster than ([\d.]+)\s*%/i)
+  if (top) {
+    return {
+      candidateSet: 'paid', op: 'topk', k: 3,
+      field: /openings/i.test(top[1]) ? 'annual_openings' : 'annual',
+      filters: [{ field: 'outlook_pct', op: '>', value: Number(top[2]) }],
+    }
+  }
+  const growth = q.match(/projected growth rate above ([\d.]+)\s*%/i)
+  const pay = q.match(/median annual pay above \$([\d,]+)/i)
+  if (growth && pay) {
+    const filters = [
+      { field: 'outlook_pct', op: '>', value: Number(growth[1]) },
+      { field: 'annual', op: '>', value: Number(pay[1].replace(/,/g, '')) },
+    ]
+    if (/^how many occupations/i.test(q)) return { candidateSet: 'paid', op: 'count', field: 'annual', filters }
+    if (/^what is the combined 2023 employment/i.test(q)) return { candidateSet: 'paid', op: 'sum', field: 'jobs', filters }
+    const which = q.match(/which has the highest (.+?), and what is that value/i)
+    if (which) {
+      return {
+        candidateSet: 'paid', op: 'max',
+        field: /annual openings/i.test(which[1]) ? 'annual_openings' : 'annual',
+        filters,
+      }
+    }
+  }
+  return null
+}
+
 export const baseFor = ({ rows, paid }, spec) => {
   if (spec.candidateSet === 'all') return rows
   if (spec.candidateSet === 'paid') return paid

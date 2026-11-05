@@ -27,7 +27,7 @@ import { parseOneShot } from '../kit/lib/answer/parse.mjs'
 import { ONESHOT_SCHEMA } from '../kit/lib/answer/prompt.mjs'
 import { score, wilson, leadAbstain } from './lib/arm-score.mjs'
 import { citationStats, splitClaims, computedHolds } from './lib/cite-score.mjs'
-import { loadRows, isGlobalItem, globalSpec, baseFor, expectedFor, formatField, receiptLine, legsFor } from './lib/ooh-rows.mjs'
+import { loadRows, isGlobalItem, globalSpec, h3Spec, baseFor, expectedFor, formatField, receiptLine, legsFor } from './lib/ooh-rows.mjs'
 import { windowDocs } from './lib/doc-window.mjs'
 
 const argv = process.argv.slice(2)
@@ -117,7 +117,7 @@ const aggregateSource = () => aggregateSourceCache ??= loadRows({
 function runAggregate(item) {
   const t0 = Date.now()
   const source = aggregateSource()
-  const spec = globalSpec(item.question)
+  const spec = h3Spec(item.question) ?? globalSpec(item.question)
   const base = baseFor(source, spec)
   const result = askAggregate({
     expected: expectedFor(source, spec),
@@ -159,7 +159,7 @@ async function runArm(arm, item) {
     const r = await ask([{ role: 'user', content: 'Answer concisely. If you do not know, reply NOT FOUND.\nQuestion: ' + item.question }])
     return { text: r.content, usage: r.usage ?? {}, tokens: tok(r.usage), ms: Date.now() - t0 }
   }
-  if (arm === 'DA' && AGGREGATE !== 'off' && isGlobalItem(item)) return runAggregate(item)
+  if (arm === 'DA' && AGGREGATE !== 'off' && (h3Spec(item.question) || isGlobalItem(item))) return runAggregate(item)
   const docs = window_(item)
   if (arm === 'B' || arm === 'C') {
     const r = await ask([{ role: 'user', content: PROMPT_B(item.question, docs) }])

@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { askAggregate } from '../../kit/lib/answer/aggregate.mjs'
 import {
-  loadRows, isGlobalItem, globalSpec, baseFor, expectedFor,
+  loadRows, isGlobalItem, globalSpec, h3Spec, baseFor, expectedFor,
   formatField, receiptLine, legsFor,
 } from '../lib/ooh-rows.mjs'
 import { windowDocs } from '../lib/doc-window.mjs'
@@ -37,6 +37,52 @@ test('ooh rows: global questions are detected from labels and formula', () => {
   assert.deepEqual(globalSpec('Among occupations projected to grow faster than 4% from 2023 to 2033, which has the highest median annual pay, and what is that pay?'), {
     candidateSet: 'paid', op: 'max', field: 'annual', filter: { field: 'outlook_pct', op: '>', value: 4 },
   })
+})
+
+test('ooh rows: H3 specs cover multi-condition, top-k, negation, equality, diff', () => {
+  assert.deepEqual(
+    h3Spec('How many occupations with a reported median annual pay have a projected growth rate above 5% and a median annual pay above $80,000?'),
+    {
+      candidateSet: 'paid', op: 'count', field: 'annual',
+      filters: [{ field: 'outlook_pct', op: '>', value: 5 }, { field: 'annual', op: '>', value: 80000 }],
+    },
+  )
+  assert.deepEqual(
+    h3Spec('What is the combined 2023 employment of occupations with a projected growth rate above 5% and a median annual pay above $80,000?'),
+    {
+      candidateSet: 'paid', op: 'sum', field: 'jobs',
+      filters: [{ field: 'outlook_pct', op: '>', value: 5 }, { field: 'annual', op: '>', value: 80000 }],
+    },
+  )
+  assert.deepEqual(
+    h3Spec('Which three occupations have the most annual openings among those projected to grow faster than 4%?'),
+    {
+      candidateSet: 'paid', op: 'topk', k: 3, field: 'annual_openings',
+      filters: [{ field: 'outlook_pct', op: '>', value: 4 }],
+    },
+  )
+  assert.deepEqual(
+    h3Spec("Which occupation with a projected growth rate above 5% that does not require a Bachelor's degree has the highest median annual pay, and what is that pay?"),
+    {
+      candidateSet: 'paid', op: 'max', field: 'annual',
+      filters: [{ field: 'outlook_pct', op: '>', value: 5 }, { field: 'education', op: '!=', value: "Bachelor's degree" }],
+    },
+  )
+  assert.deepEqual(
+    h3Spec('Among occupations with exactly 6% projected growth, which has the highest median annual pay, and what is that pay?'),
+    {
+      candidateSet: 'paid', op: 'max', field: 'annual',
+      filters: [{ field: 'outlook_pct', op: '=', value: 6 }],
+    },
+  )
+  assert.deepEqual(
+    h3Spec('How many more annual openings does Graph Designers have than Waiters and Waitresses?'),
+    {
+      candidateSet: 'select', op: 'diff', field: 'annual_openings',
+      select: ['Graph Designers', 'Waiters and Waitresses'],
+    },
+  )
+  assert.equal(h3Spec('What is the median annual pay for X, and what is their median annual pay in California?'), null)
 })
 
 test('ooh aggregate: table and page contexts agree on both global answers', () => {
