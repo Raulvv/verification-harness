@@ -29,6 +29,7 @@ import { score, wilson, leadAbstain } from './lib/arm-score.mjs'
 import { citationStats, splitClaims, computedHolds } from './lib/cite-score.mjs'
 import { loadRows, isGlobalItem, globalSpec, h3Spec, baseFor, expectedFor, formatField, receiptLine, legsFor } from './lib/ooh-rows.mjs'
 import { windowDocs } from './lib/doc-window.mjs'
+import { extractSpec } from './lib/spec-extract.mjs'
 
 const argv = process.argv.slice(2)
 const flag = (n) => argv.includes('--' + n)
@@ -45,6 +46,8 @@ const DOC_MODE = opt('doc-mode', 'excerpt')
 if (!['head', 'full', 'excerpt'].includes(DOC_MODE)) throw new Error('--doc-mode must be head, full or excerpt')
 const AGGREGATE = opt('aggregate', 'off')
 if (!['off', 'table', 'pages'].includes(AGGREGATE)) throw new Error('--aggregate must be off, table or pages')
+const EXTRACT = opt('extract', 'off')
+if (!['off', 'on'].includes(EXTRACT)) throw new Error('--extract must be off or on')
 const AGGREGATE_DATA = opt('aggregate-data', 'bench/ooh-data.json')
 const IDS = opt('ids') ? new Set(opt('ids').split(',').filter(Boolean)) : null
 const corpus = resolve(opt('corpus', 'bench/corpus/ooh-v1'))
@@ -114,10 +117,9 @@ const aggregateSource = () => aggregateSourceCache ??= loadRows({
   dataPath: AGGREGATE_DATA,
   corpusRoot: corpus,
 })
-function runAggregate(item) {
+function runAggregateWithSpec(item, spec, meta = {}) {
   const t0 = Date.now()
   const source = aggregateSource()
-  const spec = h3Spec(item.question) ?? globalSpec(item.question)
   const base = baseFor(source, spec)
   const result = askAggregate({
     expected: expectedFor(source, spec),
@@ -145,7 +147,36 @@ function runAggregate(item) {
       citation_breadth: result.citation_breadth,
       receipt: result.final.text,
       legs: result.legs,
+      extractor: meta.extractor ?? null,
     },
+  }
+}
+
+// The model proposes a spec, the schema validates it, and only then does the
+// deterministic reducer run. status "reader" falls through to the normal
+// reader path; a refusal never shows a number.
+async function runExtracted(item) {
+  const source = aggregateSource()
+  const ex = await extractSpec({
+    question: item.question,
+    chat: chat(item),
+    titles: source.rows.map((r) => r.title),
+  })
+  const extractor = { status: ex.status, raw: ex.raw ?? '', error: ex.error ?? null, reason: ex.reason ?? null, ms: ex.ms ?? 0 }
+  if (ex.status === 'answerable') return runAggregateWithSpec(item, ex, { extractor })
+  if (ex.status === 'reader') return null
+  const text = `${ex.status === 'not_formalizable' ? 'NOT_FORMALIZABLE' : 'NEEDS_SPECIFICATION'} — ${ex.reason || ex.error || 'the question needs a defined measure'}`
+  return {
+    text,
+    rawAnswer: text,
+    rawQuotes: [],
+    receipt: text,
+    gate: null,
+    citations: [],
+    usage: ex.usage ?? {},
+    tokens: 0,
+    ms: ex.ms ?? 0,
+    aggregate: { status: ex.status, source: 'extractor', coverage: null, receipt: text, legs: [], spec: null, extractor },
   }
 }
 
@@ -159,7 +190,14 @@ async function runArm(arm, item) {
     const r = await ask([{ role: 'user', content: 'Answer concisely. If you do not know, reply NOT FOUND.\nQuestion: ' + item.question }])
     return { text: r.content, usage: r.usage ?? {}, tokens: tok(r.usage), ms: Date.now() - t0 }
   }
-  if (arm === 'DA' && AGGREGATE !== 'off' && (h3Spec(item.question) || isGlobalItem(item))) return runAggregate(item)
+  if (arm === 'DA' && AGGREGATE !== 'off') {
+    const spec = h3Spec(item.question) ?? (isGlobalItem(item) ? globalSpec(item.question) : null)
+    if (spec) return runAggregateWithSpec(item, spec)
+    if (EXTRACT === 'on') {
+      const routed = await runExtracted(item)
+      if (routed) return routed
+    }
+  }
   const docs = window_(item)
   if (arm === 'B' || arm === 'C') {
     const r = await ask([{ role: 'user', content: PROMPT_B(item.question, docs) }])

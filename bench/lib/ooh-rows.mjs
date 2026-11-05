@@ -129,6 +129,10 @@ export const globalSpec = (question) => {
       filter: { field: 'education', op: '=', value: 'Doctoral or professional degree' },
     }
   }
+  // Anything with a condition beyond the simple growth filter is not this
+  // legacy family: return null so the H3 parser or the extractor handles it.
+  if (/median annual pay above \$/i.test(q)) return null
+  if (/do(?:es)? not require|exactly .*projected growth|annual openings/i.test(q)) return null
   const m = q.match(/grow(?:th)?\s+faster\s+than\s+(\d+(?:\.\d+)?)\s*%/i) ||
     q.match(/projected growth (?:rate )?above\s+(\d+(?:\.\d+)?)\s*%/i)
   return {

@@ -1,5 +1,6 @@
 // Mechanical arm scoring. Handles scalar and object golds; no model calls.
 import { ABSTAIN_TERMS, norm, numbersIn, leadAbstain } from '../../kit/lib/receipts/text.mjs'
+import { isRefusal } from './spec-extract.mjs'
 export { leadAbstain }
 
 const hasAbstain = (t) => ABSTAIN_TERMS.some((m) => norm(t).includes(m)) || /\b(?:do|does) not (?:provide|state|list|report|include|contain|specify|give)\b/i.test(t)
@@ -48,6 +49,10 @@ const goldIn = (text, gold) => {
 export function score(item, text) {
   const abstained = leadAbstain(text) || (item.condition === 'unanswerable' && hasAbstain(text))
   if (item.condition === 'unanswerable') return { shown: !abstained, correct: abstained, falseAccept: !abstained }
+  if (item.condition === 'ambiguous') {
+    const refused = isRefusal(text) || abstained
+    return { shown: !refused, correct: refused, falseAccept: !refused }
+  }
   if (item.condition === 'partial') {
     const stated = (item.gold?.parts ?? []).filter((p) => p.status === 'stated')
     const gotStated = stated.every((p) => valueIn(text, p.value))

@@ -37,6 +37,9 @@ test('ooh rows: global questions are detected from labels and formula', () => {
   assert.deepEqual(globalSpec('Among occupations projected to grow faster than 4% from 2023 to 2033, which has the highest median annual pay, and what is that pay?'), {
     candidateSet: 'paid', op: 'max', field: 'annual', filter: { field: 'outlook_pct', op: '>', value: 4 },
   })
+  // Extra conditions belong to the H3 parser or the extractor, not the legacy default.
+  assert.equal(globalSpec('Among occupations with a projected growth rate above 4% and a median annual pay above $60,000, which has the highest median annual pay?'), null)
+  assert.equal(globalSpec('Among occupations with a projected growth rate above 5% that do not require a Master\'s degree, which has the highest median annual pay?'), null)
 })
 
 test('ooh rows: H3 specs cover multi-condition, top-k, negation, equality, diff', () => {

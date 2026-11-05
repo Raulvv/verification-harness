@@ -34,6 +34,13 @@ test('arm score: array gold requires every ranked element', () => {
   )
 })
 
+test('arm score: ambiguous needs a refusal, not a number', () => {
+  const item = { condition: 'ambiguous', expected_verdict: 'NEEDS_SPECIFICATION' }
+  assert.equal(score(item, 'NEEDS_SPECIFICATION — define “worst”').correct, true)
+  assert.equal(score(item, 'Childcare Workers, $30,370').correct, false)
+  assert.equal(score(item, 'Childcare Workers, $30,370').falseAccept, true)
+})
+
 test('arm score: do not give is a valid unanswerable abstention', () => {
   const item = { condition: 'unanswerable' }
   assert.equal(score(item, 'The documents do not give a 2033-only figure; they give an annual average.').correct, true)
