@@ -149,6 +149,19 @@ Details and commands:
 [`bench/formal/competitive/README.md`](bench/formal/competitive/README.md);
 full tables: [`bench/ARM-COMPARE-REPORT.md`](bench/ARM-COMPARE-REPORT.md).
 
+## Citation-quality pilot (QAMPARI)
+
+Outside OOH, the citation claim is being tested on ALCE's QAMPARI. A
+30-question smoke with oracle passages: answer F1 tied (19.6 vs 19.8),
+citation support 81 vs 94 under a local judge, quote validity **100%** (67/67
+exact), coverage tied at 73.3. DA trades breadth for precision (2.2 vs 3.2
+answers per question).
+
+n=30, one reader, one judge — a **smoke, not a claim**. The judge is not ALCE's
+GPT-4, so absolute numbers are not leaderboard-comparable; only the paired
+B-vs-DA result is meaningful. Details and limits:
+[`bench/formal/alce/README.md`](bench/formal/alce/README.md).
+
 ## Quickstart
 
 Requirements: `git`, Node 18+, and Python 3.10+ (Python only for the benchmark
