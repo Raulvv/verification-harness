@@ -93,9 +93,19 @@ model proposes a spec, the schema validates it, the reducer computes. With
 `--extract on`, 30/30 reviewed and 3/4 blind answerable items are answered, and
 H3 goes 100/100 (68 deterministic, 15 partials on the reader, 17 ambiguity
 refused). The one blind miss is a deliberate refusal because “next year” is
-outside the 2023 snapshot. These sets informed the prompt, so the clean test is
-a fresh v2 set. Full report:
-[`H3-PARAPHRASE-REPORT.md`](H3-PARAPHRASE-REPORT.md).
+outside the 2023 snapshot. These sets informed the prompt, so they are
+development sets.
+
+### Clean v2
+
+A 10-question set was frozen after the extractor and run once. It scored
+**6/10, with two false accepts**: “beat inflation” was silently mapped to
+employment growth (25), and “2 worst by projected growth” returned the two best
+because top-k sorts descending. Two schema gaps refused safely; 4/10 router
+calls produced no JSON and fell back to a refusal. Do not patch against v2;
+fixes are validated on a fresh v3 set. Report:
+[`V2-REPORT.md`](V2-REPORT.md).
+Full paraphrase report: [`H3-PARAPHRASE-REPORT.md`](H3-PARAPHRASE-REPORT.md).
 
 ```bash
 .venv/bin/python competitive/build_h3_paraphrase.py

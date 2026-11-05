@@ -960,6 +960,20 @@ extractor (the 30 were written with the parser failures visible; the prompt was
 adjusted after the partial regression); the clean test is a fresh v2 set. Full
 report: `bench/formal/competitive/H3-PARAPHRASE-REPORT.md`.
 
+### Clean v2 (10 questions)
+
+The v2 set was frozen after the extractor and run once: **6/10, two false
+accepts**. Both failures are semantic, not schema errors:
+
+- “beat inflation at 4%” became “employment growth > 4%” and returned 25.
+- “2 worst by projected growth” returned the two **best**, because top-k sorts
+  descending and the rank-2 tie was ignored.
+
+Two schema gaps (work experience, compound max+min) refused safely; 4/10
+router calls produced no JSON and fell back to a refusal. Within the declared
+schema the system was correct: 2/2 aggregates and 1/1 reader point. Cost
+$0.0042. Report: `bench/formal/competitive/V2-REPORT.md`.
+
 ### Scorer correction
 
 The first H3 pass scored array golds vacuously: `goldIn` iterated

@@ -119,21 +119,28 @@ ambiguity items are outside the reader run and still need the specification
 layer. The top-k scorer bug found during this work is fixed (array golds
 previously scored vacuously).
 
-**The rule-based parser is phrasing-bound; a validated extractor closes the
-gap on development sets.** The parser alone routed **18/30** reviewed
-paraphrases and **0/4** blind natural questions; everything routed was correct
-(18/18). With a schema-validated extractor — the model proposes a spec, the
-schema rejects unknown fields/ops/titles, the deterministic reducer computes —
-**30/30** reviewed paraphrases and **3/4** blind items are answered, and the
-frozen H3 set goes **100/100** (68 deterministic, 15 partial via the reader, 17
-ambiguity refused). The one blind miss is a deliberate `NEEDS_SPECIFICATION`
-refusal because “next year” is outside the 2023 snapshot.
+**The deterministic reducer is sound; the extractor is not yet safe on natural
+language.** The parser alone routed **18/30** reviewed paraphrases and **0/4**
+blind natural questions; everything routed was correct (18/18). A
+schema-validated extractor — model proposes a spec, schema rejects unknown
+fields/ops/titles, reducer computes — then reached **30/30** reviewed
+paraphrases, **3/4** blind items, and **H3 100/100**. Those are development
+sets.
 
-These are development sets for the extractor: the 30 were written with the
-parser’s failures in view, and the prompt was adjusted after the H3 partial
-regression. The clean test is a fresh v2 set. Until then, the 83/83 alone is
-phrasing-bound. Report:
-[`bench/formal/competitive/H3-PARAPHRASE-REPORT.md`](bench/formal/competitive/H3-PARAPHRASE-REPORT.md).
+The clean 10-question v2, frozen after the extractor, scored **6/10 with two
+false accepts**:
+
+- “beat inflation” was silently mapped to employment growth and answered **25**.
+- “2 worst by projected growth” returned the **two best**, because top-k only
+  sorts descending; the rank-2 tie was also ignored.
+
+Two schema gaps (work experience, compound max+min) refused safely, and 4/10
+router calls failed to return JSON, masked by the refusal fallback. Schema
+validation checks shape, not meaning. The fix is a declared field dictionary,
+ordering/bottom-k, compound queries, and a fresh v3 test — not regexes or
+patching v2. Reports:
+[`V2-REPORT.md`](bench/formal/competitive/V2-REPORT.md),
+[`H3-PARAPHRASE-REPORT.md`](bench/formal/competitive/H3-PARAPHRASE-REPORT.md).
 Details and commands:
 [`bench/formal/competitive/README.md`](bench/formal/competitive/README.md);
 full tables: [`bench/ARM-COMPARE-REPORT.md`](bench/ARM-COMPARE-REPORT.md).

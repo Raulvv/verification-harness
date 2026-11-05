@@ -71,7 +71,11 @@ refusal. That is a specification disagreement, not a wrong number.
 **These are development sets for the extractor.** The 30 were written with the
 parser’s failures visible, and the prompt was adjusted after the H3 partial
 regression. The 3/4 blind result is the only semi-independent signal, and n=4.
-A fresh v2 set, written after this report, is the clean test.
+
+A fresh 10-question v2 was frozen after this work and run once: **6/10, with two
+false accepts** — a silent substitution (“beat inflation” → employment growth)
+and a polarity inversion (“2 worst” → the two best). Schema validation checks
+shape, not meaning. See [`V2-REPORT.md`](V2-REPORT.md).
 
 ## What the missed constructions have in common
 
