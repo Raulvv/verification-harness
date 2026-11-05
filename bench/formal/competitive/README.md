@@ -86,9 +86,16 @@ reached from other wording:
 | Blind answerable | 0 | 4 |
 
 Everything routed was correct (18/18). The reducer is sound; the rule-based
-spec extractor is the bottleneck. Do not fix this by adding regexes for the
-missed items — use a schema-validated spec extractor and a fresh test set.
-Full report: [`H3-PARAPHRASE-REPORT.md`](H3-PARAPHRASE-REPORT.md).
+parser is the bottleneck.
+
+`bench/lib/spec-extract.mjs` closes the gap on these development sets: the
+model proposes a spec, the schema validates it, the reducer computes. With
+`--extract on`, 30/30 reviewed and 3/4 blind answerable items are answered, and
+H3 goes 100/100 (68 deterministic, 15 partials on the reader, 17 ambiguity
+refused). The one blind miss is a deliberate refusal because “next year” is
+outside the 2023 snapshot. These sets informed the prompt, so the clean test is
+a fresh v2 set. Full report:
+[`H3-PARAPHRASE-REPORT.md`](H3-PARAPHRASE-REPORT.md).
 
 ```bash
 .venv/bin/python competitive/build_h3_paraphrase.py
@@ -98,6 +105,14 @@ Full report: [`H3-PARAPHRASE-REPORT.md`](H3-PARAPHRASE-REPORT.md).
   --out competitive/private/hard-h3-paraphrase-35.jsonl
 node competitive/verify_h3_aggregate.mjs \
   competitive/private/hard-h3-paraphrase-35.jsonl
+
+# Full run with the schema-validated extractor
+node bench/arm-compare.mjs \
+  --questions bench/formal/competitive/private/hard-h3-paraphrase-35.jsonl \
+  --corpus bench/corpus/ooh-v1 --arms DA --seeds 1 --k 6 \
+  --max-tokens 1200 --doc-mode excerpt --no-support \
+  --aggregate table --extract on \
+  --out bench/results/hard-h3-paraphrase-35-extract.jsonl
 ```
 
 ## One-question gold form (recommended)

@@ -119,11 +119,20 @@ ambiguity items are outside the reader run and still need the specification
 layer. The top-k scorer bug found during this work is fixed (array golds
 previously scored vacuously).
 
-**The 83/83 is phrasing-bound.** A follow-up paraphrase test routed only
-**18/30** reviewed paraphrases and **0/4** blind natural questions to the
-reducer. Everything that reached it was correct (18/18), so the reducer is
-sound and the rule-based spec extractor is the bottleneck. The 83/83 holds for
-the frozen H3 phrasings, not for natural language. Report:
+**The rule-based parser is phrasing-bound; a validated extractor closes the
+gap on development sets.** The parser alone routed **18/30** reviewed
+paraphrases and **0/4** blind natural questions; everything routed was correct
+(18/18). With a schema-validated extractor — the model proposes a spec, the
+schema rejects unknown fields/ops/titles, the deterministic reducer computes —
+**30/30** reviewed paraphrases and **3/4** blind items are answered, and the
+frozen H3 set goes **100/100** (68 deterministic, 15 partial via the reader, 17
+ambiguity refused). The one blind miss is a deliberate `NEEDS_SPECIFICATION`
+refusal because “next year” is outside the 2023 snapshot.
+
+These are development sets for the extractor: the 30 were written with the
+parser’s failures in view, and the prompt was adjusted after the H3 partial
+regression. The clean test is a fresh v2 set. Until then, the 83/83 alone is
+phrasing-bound. Report:
 [`bench/formal/competitive/H3-PARAPHRASE-REPORT.md`](bench/formal/competitive/H3-PARAPHRASE-REPORT.md).
 Details and commands:
 [`bench/formal/competitive/README.md`](bench/formal/competitive/README.md);

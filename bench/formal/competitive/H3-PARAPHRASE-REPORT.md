@@ -1,7 +1,9 @@
 # H3 paraphrase test — report
 
 **Verdict: the rule-based H3 spec parser is phrase-locked. The reducer is not
-the problem.** The H3 83/83 result holds only for the frozen H3 phrasings.
+the problem.** The H3 83/83 result holds only for the frozen H3 phrasings. A
+schema-validated extractor closes the gap on these development sets (30/30
+reviewed, 3/4 blind, H3 100/100), but a clean v2 set is still required.
 
 ## Design
 
@@ -41,6 +43,36 @@ Every item that reached the reducer was answered correctly. There was no
 reducer error, no wrong gold, and no false routing. The entire loss is spec
 extraction.
 
+## Extractor follow-up
+
+The fix was not more regexes. `bench/lib/spec-extract.mjs` asks the model for a
+reducer spec, validates it against the declared schema (fields, ops, filter ops,
+`k`, exact occupation titles), and only then runs the deterministic reducer. A
+refusal never shows a number; a `reader` classification falls through to the
+normal reader path.
+
+| Set | Parser only | With extractor |
+|---|---:|---:|
+| Reviewed 30 | 18/30 | **30/30** |
+| Blind answerable 4 | 0/4 | **3/4** |
+| H3 100 | 83/100 | **100/100** |
+
+The H3 regression: 68/68 answerable from deterministic specs, 15/15 partials
+back on the reader, 17/17 ambiguity items refused (16 explicit
+`NEEDS_SPECIFICATION`/`NOT_FORMALIZABLE`, one reader `NOT FOUND` for
+state-level pay). Cost: $0.0764 for the 100-question run, including the 15
+reader answers. One seed, one reader (DeepSeek V4.1 Flash).
+
+The one blind miss is B1: “earn the most in the next year”. The extractor
+refused because “next year” is outside the 2023 snapshot. Under the frozen
+answerable label it counts as a miss; under a strict reading it is the correct
+refusal. That is a specification disagreement, not a wrong number.
+
+**These are development sets for the extractor.** The 30 were written with the
+parser’s failures visible, and the prompt was adjusted after the H3 partial
+regression. The 3/4 blind result is the only semi-independent signal, and n=4.
+A fresh v2 set, written after this report, is the clean test.
+
 ## What the missed constructions have in common
 
 | Item | Construction | Shape |
@@ -77,13 +109,18 @@ Two distinct gaps are mixed here:
 - The H3 **83/83** number must be stated as “on the frozen H3 phrasings”. It is
   not evidence of a general structured-claim capability.
 - Adding regexes for these 16 would overfit the test and prove nothing. The
-  next step is a spec extractor (model or grammar) that emits the existing
-  reducer spec, validated against a declared schema before the reducer runs.
+  extractor now emits the existing reducer spec, validated against a declared
+  schema before the reducer runs; the reducer stays authoritative.
+- The extractor is a router as well as a translator: it must send single-fact
+  and absence questions to the reader. Its first version refused 12/15
+  partials; explicit reader examples and a JSON-only system message fixed that.
+  This is a real failure mode to test in v2, not a one-off.
 
 ## What was not claimed
 
-- No reader-fallback run on this set. On full-table questions the fallback is a
-  six-document reader and would not recover the answer; this was not measured.
+- No reader-fallback run on the paraphrase set. On full-table questions the
+  fallback is a six-document reader and would not recover the answer; this was
+  not measured. The H3 partial regression is the only reader-path measurement.
 - The 5 blind items are a sanity check, not a statistical sample.
 - The reviewer confirmed each blind item’s reading, but B1 and B3 were revised
   during that confirmation, so they are not fully independent authoring.
@@ -98,4 +135,12 @@ Two distinct gaps are mixed here:
   --out competitive/private/hard-h3-paraphrase-35.jsonl
 node competitive/verify_h3_aggregate.mjs \
   competitive/private/hard-h3-paraphrase-35.jsonl
+
+# With the extractor (model call for non-template questions)
+node bench/arm-compare.mjs \
+  --questions bench/formal/competitive/private/hard-h3-paraphrase-35.jsonl \
+  --corpus bench/corpus/ooh-v1 --arms DA --seeds 1 --k 6 \
+  --max-tokens 1200 --doc-mode excerpt --no-support \
+  --aggregate table --extract on \
+  --out bench/results/hard-h3-paraphrase-35-extract.jsonl
 ```

@@ -941,10 +941,24 @@ larger”), reordered clauses, plural agreement, and natural questions that use
 fields outside the seven H3 shapes (education equality, 2033 employment,
 employment-change filter).
 
-Verdict: the deterministic reducer is sound; the regex spec extractor is the
-bottleneck. The fix is a schema-validated spec extractor, not more regexes; it
-must be tested on a fresh set. Full report:
-`bench/formal/competitive/H3-PARAPHRASE-REPORT.md`.
+Verdict: the deterministic reducer is sound; the regex spec parser is the
+bottleneck.
+
+A schema-validated extractor followed (model proposes a spec, schema validates
+fields/ops/`k`/titles, reducer computes):
+
+| Set | Parser only | With extractor |
+|---|---:|---:|
+| Reviewed 30 | 18/30 | **30/30** |
+| Blind answerable 4 | 0/4 | **3/4** |
+| H3 100 | 83/100 | **100/100** |
+
+The H3 regression is 68/68 answerable deterministic, 15/15 partials on the
+reader, 17/17 ambiguity refused. The single blind miss is a deliberate refusal:
+“next year” is outside the 2023 snapshot. These are development sets for the
+extractor (the 30 were written with the parser failures visible; the prompt was
+adjusted after the partial regression); the clean test is a fresh v2 set. Full
+report: `bench/formal/competitive/H3-PARAPHRASE-REPORT.md`.
 
 ### Scorer correction
 
