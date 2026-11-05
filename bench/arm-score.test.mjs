@@ -18,6 +18,22 @@ test('arm score: partial needs stated value plus missing-part disclosure', () =>
   assert.equal(score(item, 'The US median is $61,270.').correct, false)
 })
 
+test('arm score: array gold requires every ranked element', () => {
+  const item = {
+    condition: 'answerable',
+    gold: [
+      { title: 'Physicians and Surgeons', pay: 239200 },
+      { title: 'Airline and Commercial Pilots', pay: 171210 },
+    ],
+  }
+  assert.equal(score(item, '').correct, false)
+  assert.equal(score(item, 'Physicians and Surgeons — $239,200').correct, false)
+  assert.equal(
+    score(item, '1. Physicians and Surgeons — $239,200\n2. Airline and Commercial Pilots — $171,210').correct,
+    true,
+  )
+})
+
 test('arm score: do not give is a valid unanswerable abstention', () => {
   const item = { condition: 'unanswerable' }
   assert.equal(score(item, 'The documents do not give a 2033-only figure; they give an annual average.').correct, true)

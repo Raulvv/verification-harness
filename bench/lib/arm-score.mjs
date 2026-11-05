@@ -27,6 +27,12 @@ const valueIn = (text, v) => {
   return new RegExp(`(^|[^0-9.])${n}\\s*(?:%|percent)\\b`, 'i').test(text)
 }
 const goldIn = (text, gold) => {
+  // Ranked/compound golds (e.g. top-k) are arrays of objects. Every element
+  // must be present; an array is never satisfied by matching nothing.
+  if (Array.isArray(gold)) {
+    if (!gold.length) return false
+    return gold.every((g) => goldIn(text, g))
+  }
   if (gold && typeof gold === 'object') {
     if (gold.winner != null && !norm(text).includes(norm(String(gold.winner)))) return false
     for (const [k, v] of Object.entries(gold)) {
