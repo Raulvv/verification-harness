@@ -52,6 +52,23 @@ test('aggregate: topk returns ranked rows over the qualifying set', () => {
   assert.deepEqual(r.aggregate.ranked, [{ title: 'B', value: 200 }, { title: 'A', value: 100 }])
 })
 
+test('aggregate: topk asc returns the bottom rows', () => {
+  const r = askAggregate({ rows, spec: { op: 'topk', field: 'annual', k: 2, order: 'asc' }, formatField: money })
+  assert.equal(r.answer, '1. C — $50\n2. A — $100')
+  assert.equal(r.aggregate.order, 'asc')
+})
+
+test('aggregate: a tie at the bottom-k boundary is NEEDS_SPECIFICATION', () => {
+  const tied = [{ title: 'A', annual: 50 }, { title: 'B', annual: 50 }, { title: 'C', annual: 100 }]
+  const r = askAggregate({ rows: tied, spec: { op: 'topk', field: 'annual', k: 1, order: 'asc' }, formatField: money })
+  assert.equal(r.answer, 'NEEDS_SPECIFICATION')
+  assert.match(r.final.text, /tie at the bottom-1 boundary/)
+})
+
+test('aggregate: a bad order is loud', () => {
+  assert.throws(() => askAggregate({ rows, spec: { op: 'topk', field: 'annual', k: 1, order: 'sideways' } }), /bad order/)
+})
+
 test('aggregate: a tie at the top-k boundary is NEEDS_SPECIFICATION', () => {
   const tied = [
     { title: 'A', annual: 100, outlook_pct: 5 },

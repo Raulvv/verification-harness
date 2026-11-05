@@ -41,6 +41,8 @@ export function askAggregate({ rows, spec, question = '', expected, formatField,
   if (spec.op === 'topk' && !(Number.isInteger(spec.k) && spec.k > 0)) {
     throw new Error('aggregate: spec.k must be a positive integer for topk')
   }
+  const order = spec.order ?? 'desc'
+  if (!['asc', 'desc'].includes(order)) throw new Error(`aggregate: bad order ${order}`)
   if (spec.op === 'diff' && (!Array.isArray(spec.select) || spec.select.length !== 2)) {
     throw new Error('aggregate: diff needs exactly two selected titles')
   }
@@ -65,20 +67,21 @@ export function askAggregate({ rows, spec, question = '', expected, formatField,
     qualifies: filters.every((f) => CMP[f.op](r[f.field], f.value))
   }))
   const qualifying = filtered.filter((r) => r.qualifies)
+  const valued = qualifying.filter((r) => r[spec.field] != null && r[spec.field] !== '')
   let winner = null
   let value = null
   let ranked = null
   if (spec.op === 'max' || spec.op === 'min') {
-    if (!qualifying.length) {
+    if (!valued.length) {
       const text = `Q: ${question || 'aggregate'}\nA: NOT FOUND`
       return { question, answer: 'NOT FOUND', quote: '', legs: [], coverage: { candidates: filtered.length, expected: base.length, complete: filtered.length === base.length }, aggregate: { op: spec.op, field: spec.field, filter: spec.filter ?? null, filters, candidates: filtered.length, qualifying: 0, winner: null, value: null }, citation_breadth: { cited: filtered.length, expected: base.length }, final: { text } }
     }
-    winner = qualifying.reduce((a, b) => (spec.op === 'max' ? (b[spec.field] > a[spec.field] ? b : a) : (b[spec.field] < a[spec.field] ? b : a)))
+    winner = valued.reduce((a, b) => (spec.op === 'max' ? (b[spec.field] > a[spec.field] ? b : a) : (b[spec.field] < a[spec.field] ? b : a)))
     value = winner[spec.field]
   } else if (spec.op === 'topk') {
-    const ordered = [...qualifying].sort((a, b) => b[spec.field] - a[spec.field])
+    const ordered = [...valued].sort((a, b) => (order === 'asc' ? a[spec.field] - b[spec.field] : b[spec.field] - a[spec.field]))
     if (ordered.length > spec.k && ordered[spec.k - 1][spec.field] === ordered[spec.k][spec.field]) {
-      const text = `Q: ${question || 'aggregate'}\nA: NEEDS_SPECIFICATION — tie at the top-${spec.k} boundary (${fmt(ordered[spec.k - 1][spec.field])}); provide a tie-break rule`
+      const text = `Q: ${question || 'aggregate'}\nA: NEEDS_SPECIFICATION — tie at the ${order === 'asc' ? 'bottom' : 'top'}-${spec.k} boundary (${fmt(ordered[spec.k - 1][spec.field])}); provide a tie-break rule`
       return { question, answer: 'NEEDS_SPECIFICATION', quote: '', legs: [], coverage: { candidates: filtered.length, expected: expectedCount, complete: true }, aggregate: { op: spec.op, field: spec.field, filter: spec.filter ?? null, filters, candidates: filtered.length, qualifying: qualifying.length, winner: null, value: null, tie: fmt(ordered[spec.k - 1][spec.field]) }, citation_breadth: { cited: filtered.length, expected: expectedCount }, final: { text } }
     }
     ranked = ordered.slice(0, spec.k)
@@ -105,6 +108,7 @@ export function askAggregate({ rows, spec, question = '', expected, formatField,
     field: spec.field,
     filter: spec.filter ?? null,
     filters,
+    order,
     candidates: filtered.length,
     qualifying: qualifying.length,
     winner: winner?.title ?? null,

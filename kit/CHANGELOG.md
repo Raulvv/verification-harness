@@ -5,9 +5,10 @@
 ### Added
 
 - Aggregate reducer supports multi-condition filters (`spec.filters`, ANDed),
-  ranked `topk` (`spec.k`), and two-row `diff` (signed first-minus-second).
-  A tie at the top-k boundary returns `NEEDS_SPECIFICATION` instead of picking
-  an arbitrary row.
+  ranked `topk` (`spec.k`, `order: asc|desc`), and two-row `diff` (signed
+  first-minus-second). A tie at the top-k or bottom-k boundary returns
+  `NEEDS_SPECIFICATION` instead of picking an arbitrary row. Rows with a null
+  ranking field are excluded from rankings.
 - Opt-in `ask --formal` / `--formal-cmd <cmd>` external deterministic verifier
   bridge. The command reads JSON on stdin and writes JSON on stdout; the human
   output shows the answer with its assumptions stated inline, the evidence
