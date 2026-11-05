@@ -37,6 +37,45 @@ test('aggregate: count and sum use only qualifying rows', () => {
   assert.equal(s.coverage.expected, 2)
 })
 
+test('aggregate: multiple filters are ANDed', () => {
+  const c = askAggregate({
+    rows,
+    spec: { op: 'count', field: 'annual', filters: [{ field: 'annual', op: '>', value: 40 }, { field: 'outlook_pct', op: '>', value: 3 }] },
+  })
+  assert.equal(c.answer, '2')
+  assert.equal(c.aggregate.qualifying, 2)
+})
+
+test('aggregate: topk returns ranked rows over the qualifying set', () => {
+  const r = askAggregate({ rows, spec: { op: 'topk', field: 'annual', k: 2, filter: { field: 'outlook_pct', op: '>', value: 0 } }, formatField: money })
+  assert.equal(r.answer, '1. B — $200\n2. A — $100')
+  assert.deepEqual(r.aggregate.ranked, [{ title: 'B', value: 200 }, { title: 'A', value: 100 }])
+})
+
+test('aggregate: a tie at the top-k boundary is NEEDS_SPECIFICATION', () => {
+  const tied = [
+    { title: 'A', annual: 100, outlook_pct: 5 },
+    { title: 'B', annual: 100, outlook_pct: 5 },
+    { title: 'C', annual: 50, outlook_pct: 5 },
+  ]
+  const r = askAggregate({ rows: tied, spec: { op: 'topk', field: 'annual', k: 1 }, formatField: money })
+  assert.equal(r.answer, 'NEEDS_SPECIFICATION')
+  assert.match(r.final.text, /tie at the top-1 boundary/)
+})
+
+test('aggregate: diff is signed first minus second', () => {
+  const r = askAggregate({ rows, spec: { op: 'diff', field: 'annual', select: ['A', 'B'] }, formatField: money })
+  assert.equal(r.answer, '−$100')
+  assert.equal(r.aggregate.value, -100)
+  const negated = askAggregate({ rows, spec: { op: 'diff', field: 'annual', select: ['B', 'A'] }, formatField: money })
+  assert.equal(negated.answer, '$100')
+})
+
+test('aggregate: topk requires a positive integer k', () => {
+  assert.throws(() => askAggregate({ rows, spec: { op: 'topk', field: 'annual' } }), /positive integer/)
+  assert.throws(() => askAggregate({ rows, spec: { op: 'topk', field: 'annual', k: 0 } }), /positive integer/)
+})
+
 test('aggregate: explicit expected coverage is not tautological', () => {
   const ok = askAggregate({ rows, spec: { op: 'max', field: 'annual' }, expected: 4 })
   assert.equal(ok.coverage.complete, true)
