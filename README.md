@@ -96,6 +96,31 @@ Historical results, including the old 6k held-out, the one-seed post-correction
 matrix, and the pilot, are in [`HISTORY.md`](HISTORY.md). The full arm report is
 `bench/ARM-COMPARE-REPORT.md`.
 
+## Hard-set stress tests (separate from the 100)
+
+Two frozen, human-approved stress sets are kept apart from the main 100 and are
+not pooled with it.
+
+**H2 — 100 derived-2033 reader questions.** Three seeds, DeepSeek V4.1 Flash,
+no aggregate route. DA 71–75, B 15–20, A 0. DA beats B on 51–58 questions per
+seed and loses none; false accepts 10–12 vs 31–45 for B. This is a reader
+result: the 2033 figure has to be derived from the jobs and change lines.
+
+**H3 — 100 structured questions**: multi-condition count/sum/extremum, top-k,
+equality, negation, signed difference, 17 ambiguity, 15 partial. Reader-only,
+DA answers 21/83, plain RAG 17/83, bare 2/83. The gap is full-table
+aggregation, not reading. With the deterministic reducer enabled, DA answers
+83/83: 68 from the reducer over all 46 paid rows and 15 partial from the
+reader. That is a harness capability result, not a reader-skill result.
+
+H3 was human-approved and frozen before the reducer was implemented. The
+reducer reproduces all 68 answerable golds offline with no model call; the 17
+ambiguity items are outside the reader run and still need the specification
+layer. The top-k scorer bug found during this work is fixed (array golds
+previously scored vacuously). Details and commands:
+[`bench/formal/competitive/README.md`](bench/formal/competitive/README.md);
+full tables: [`bench/ARM-COMPARE-REPORT.md`](bench/ARM-COMPARE-REPORT.md).
+
 ## Quickstart
 
 Requirements: `git`, Node 18+, and Python 3.10+ (Python only for the benchmark

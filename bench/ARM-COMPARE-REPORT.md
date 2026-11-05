@@ -850,6 +850,87 @@ recorded.
   27B/hosted parity (the local probe has no matched 3-seed D). (The earlier Sonnet DA 75/81 was
   a raw-index reporting artifact; the assembled citations are 81/81.)
 
+## Appendix: hard sets H2 and H3
+
+Both sets are human-approved, frozen, and separate from the main 100. They test
+different things and are not pooled.
+
+### H2 — derived-2033 reader questions (100, 3 seeds)
+
+DeepSeek V4.1 Flash, reader arms only (aggregate off), k=6 excerpt window.
+
+| Seed | A bare | B plain RAG | DA harness |
+|---|---:|---:|---:|
+| 0 | 0 | 18 | 75 |
+| 1 | 0 | 15 | 73 |
+| 2 | 0 | 20 | 71 |
+
+| Seed | DA wins vs B | B wins vs DA | DA false accepts | B false accepts |
+|---|---:|---:|---:|---:|
+| 0 | 57 | 0 | 12 | 43 |
+| 1 | 58 | 0 | 10 | 45 |
+| 2 | 51 | 0 | 12 | 31 |
+
+DA coverage was 83–87% and B coverage 51–61%. The 2033 figure must be derived
+from the jobs and change lines, so this is a reader result.
+
+### H3 — structured questions (100, one seed)
+
+The set has 68 answerable, 17 ambiguity/specification, and 15 partial items.
+The reader run uses the 83 answerable + partial items.
+
+Reader-only, DeepSeek V4.1 Flash, one seed:
+
+| Arm | Correct | Shown | Abstain | False accepts |
+|---|---:|---:|---:|---:|
+| A bare | 2 | 83 | 0 | 81 |
+| B plain RAG | 17 | 74 | 9 | 57 |
+| DA harness | 21 | 65 | 18 | 44 |
+
+| Type | n | A | B | DA |
+|---|---:|---:|---:|---:|
+| multi-condition count | 20 | 0 | 0 | 2 |
+| multi-condition extremum | 10 | 0 | 0 | 0 |
+| multi-condition sum | 10 | 0 | 0 | 0 |
+| top-k / rank | 13 | 0 | 0 | 0 |
+| directional difference | 5 | 0 | 2 | 4 |
+| negation / education | 5 | 0 | 0 | 0 |
+| equality filter | 5 | 0 | 0 | 0 |
+| partial / absence | 15 | 2 | 15 | 15 |
+
+DA beat B on 4 questions and lost on none. Reader-only H3 is therefore close to
+B: the failure is retrieval scope (a 6-document window over a 46-row table),
+not reader quality.
+
+With the deterministic reducer enabled (`--aggregate table`): **83/83**, zero
+false accepts. 68 answers come from the reducer over all 46 paid rows and 15
+from the reader (partial items). The reducer reproduces 68/68 answerable golds
+offline:
+
+```
+node bench/formal/competitive/verify_h3_aggregate.mjs
+```
+
+Caveats:
+
+- 83/83 is a capability result. The reducer is authoritative over the declared
+  snapshot; it is not evidence that the reader improved.
+- The parser was written after the questions were frozen but with the question
+  phrasings visible. It generalizes to those phrasings, not to arbitrary
+  natural language.
+- The 17 ambiguity/specification items are not in this run. They still require
+  the specification layer to return `NEEDS_SPECIFICATION`.
+- One seed, one reader, one corpus.
+
+### Scorer correction
+
+The first H3 pass scored array golds vacuously: `goldIn` iterated
+`Object.entries` over an array, skipped the object values, and returned true.
+Empty answers also passed. This inflated top-k scores for every arm (A appeared
+to answer 13/13 top-k questions with empty text). The bug is fixed in
+`bench/lib/arm-score.mjs`, with a regression test; the reported H3 numbers above
+are the rescored values.
+
 ## Default, article, and ask
 
 The shipped default is the current harness **DA** (quote + gate + absence); the

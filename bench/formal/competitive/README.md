@@ -17,6 +17,63 @@ The frozen 50-claim public pilot and its results are in
 [`PILOT-160-REPORT.md`](PILOT-160-REPORT.md). The pre-registration is
 [`PRE-REGISTRATION.md`](PRE-REGISTRATION.md).
 
+## Hard sets H2 and H3
+
+Two frozen, human-approved question sets stress different parts of the harness.
+They are **not** pooled with the main 100. The JSONL files and manifests are
+private and gitignored; the builders and validators are public.
+
+| Set | Questions | Hashes (SHA-256) | Tests |
+|---|---:|---|---|
+| H2 | 100 | `5271ddbd3b39ea0088b4e12d91d0e3f030c9e4f67ad34f6df6d7a835057f7093` | derived-2033 reading |
+| H3 | 100 | `2420e06fce52b2a719f575a6502d2e70800f24818bca4d527582dbcd5c9ebaed` | multi-condition, top-k, filters, ambiguity |
+
+H2 has 100 answerable derived-2033 questions. It measures the reader: the 2033
+figure must be computed from the jobs and change lines. Three DeepSeek seeds
+gave DA 71–75, B 15–20, A 0, with DA beating B on 51–58 questions per seed and
+losing none.
+
+H3 has 68 answerable, 17 ambiguity/specification, and 15 partial items. It
+measures harness coverage, not reader quality: most questions need the full
+46-row paid table, while the reader sees six documents.
+
+```bash
+# Regenerate and validate (no model calls)
+.venv/bin/python competitive/build_hard_h2.py
+.venv/bin/python competitive/validate_hard_h2.py
+.venv/bin/python competitive/build_hard_h3.py
+.venv/bin/python competitive/validate_hard_h3.py
+
+# Prove the deterministic reducer reproduces the H3 gold (from bench/formal)
+node competitive/verify_h3_aggregate.mjs
+
+# Build the answerable + partial reader subset
+python3 - <<'PY'
+import json
+p = 'competitive/private/hard-h3-100.jsonl'
+rows = [json.loads(l) for l in open(p) if l.strip()]
+run = [r for r in rows if r['condition'] in ('answerable', 'partial')]
+open('competitive/private/hard-h3-83-run.jsonl', 'w').write(
+    ''.join(json.dumps(r) + '\n' for r in run))
+PY
+```
+
+Arm runs use `bench/arm-compare.mjs`. H3 needs the deterministic reducer:
+
+```bash
+node bench/arm-compare.mjs \
+  --questions bench/formal/competitive/private/hard-h3-83-run.jsonl \
+  --corpus bench/corpus/ooh-v1 --arms A,B,DA --seeds 1 --k 6 \
+  --max-tokens 1200 --doc-mode excerpt --no-support \
+  --aggregate table \
+  --out bench/results/hard-h3-deepseek-arms.jsonl
+```
+
+`verify_h3_aggregate.mjs` covers the 68 answerable items. The 17 ambiguity
+items need the specification layer to return `NEEDS_SPECIFICATION`; they are not
+part of the reader-accuracy run. Results and caveats are in
+[`../../ARM-COMPARE-REPORT.md`](../../ARM-COMPARE-REPORT.md).
+
 ## One-question gold form (recommended)
 
 Open [`GOLD-FORM.html`](GOLD-FORM.html) in a browser. It shows **one claim at a
