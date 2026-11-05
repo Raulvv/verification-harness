@@ -50,7 +50,8 @@ same JSON output schema.
 | QAMPARI F1 | 19.6 | 19.8 |
 | QAMPARI precision | 38.8 | **46.3** |
 | QAMPARI recall | **16.4** | 15.8 |
-| Citation support (MiniCheck) | 81.2 | **94.0** |
+| Citation support, pooled (MiniCheck) | 81.2 | **94.0** |
+| Citation support, paired per question | 63.7 | 68.4 (+4.7 [−0.3, +13.0]) |
 | Quote validity | — | **100%** (67/67 exact) |
 | Question coverage | 73.3 | 73.3 |
 | Answers per question | 3.20 | 2.23 |
@@ -97,6 +98,40 @@ question, JSON errors, cost.
 
 Failing any gate means no cross-corpus claim. Only if it passes should we add
 ASQA/ELI5 or a stronger judge.
+
+## Result (200 questions)
+
+| Metric | B | DA |
+|---|---:|---:|
+| QAMPARI F1 | 17.4 | 17.5 |
+| Precision | 39.8 | 41.7 |
+| Recall | 14.0 | 13.6 |
+| Recall-5 | 21.4 | 21.8 |
+| Alias-tolerant F1 | 23.8 | 22.6 |
+| Citation support, pooled | 85.8 | 84.9 |
+| Citation support, paired | 70.4 | 68.3 |
+| Coverage | 80.0 | 79.5 |
+| Answers/question | 2.19 | 1.85 |
+| Quote validity | — | 99.7% (371/372) |
+
+Paired DA−B, 95% bootstrap:
+
+| Metric | Δ | Interval |
+|---|---:|---|
+| F1 | +0.1 | [−2.5, +2.6] |
+| Citation support | −2.2 | [−6.0, +1.5] |
+| Coverage | −0.5 | [−4.0, +3.0] |
+| Recall-5 | +0.4 | [−2.8, +3.6] |
+
+**Verdict: non-inferior, no accuracy gain.** Quote validity, citation recall
+(within 5) and coverage (within 10) gates pass; the “+8 citation support”
+target fails. DA emits fewer, slightly more precise answers; the benchmark does
+not price audit cost. QAMPARI is all-answerable, so it cannot test the absence
+advantage. Cost $0.86, zero errors.
+
+The 30-question smoke’s apparent +13 citation advantage was a pooling artifact:
+paired per question it was +4.7 [−0.3, +13.0], and at 200 it is −2.2
+[−6.0, +1.5]. Use the paired number.
 
 ## Commands
 

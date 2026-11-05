@@ -149,17 +149,19 @@ Details and commands:
 [`bench/formal/competitive/README.md`](bench/formal/competitive/README.md);
 full tables: [`bench/ARM-COMPARE-REPORT.md`](bench/ARM-COMPARE-REPORT.md).
 
-## Citation-quality pilot (QAMPARI)
+## Citation-quality control (QAMPARI)
 
-Outside OOH, the citation claim is being tested on ALCE's QAMPARI. A
-30-question smoke with oracle passages: answer F1 tied (19.6 vs 19.8),
-citation support 81 vs 94 under a local judge, quote validity **100%** (67/67
-exact), coverage tied at 73.3. DA trades breadth for precision (2.2 vs 3.2
-answers per question).
+Outside OOH, ALCE's QAMPARI is the all-answerable control. On 200 questions DA
+matches B: F1 17.5 vs 17.4 (paired +0.1 [−2.5, +2.6]), citation support 68.3
+vs 70.4 paired (−2.2, interval includes zero), coverage 79.5 vs 80.0, quote
+validity **99.7%** (371/372). DA emits fewer, slightly more precise answers.
+**No accuracy gain, no harm.**
 
-n=30, one reader, one judge — a **smoke, not a claim**. The judge is not ALCE's
-GPT-4, so absolute numbers are not leaderboard-comparable; only the paired
-B-vs-DA result is meaningful. Details and limits:
+The earlier 30-question “+13 citation support” was a pooling artifact; paired
+per question it was +4.7 [−0.3, +13.0], and at 200 it is −2.2. This is why the
+absence test — SQuAD 2.0, 100 answerable + 100 unanswerable — is the next
+experiment. The judge is local MiniCheck, not ALCE's GPT-4, so absolute numbers
+are not leaderboard-comparable. Details:
 [`bench/formal/alce/README.md`](bench/formal/alce/README.md).
 
 ## Quickstart
