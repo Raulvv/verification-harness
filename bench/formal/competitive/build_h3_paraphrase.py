@@ -271,9 +271,9 @@ def compute_gold(ds, case):
         return sum(r.jobs for r in matches)
     if op == "max":
         winner = max(matches, key=lambda r: getattr(r, spec["field"]))
-        if case["type"] == "multi_extremum":
-            return {"winner": winner.title, "value": getattr(winner, spec["field"])}
-        return {"winner": winner.title, "pay": getattr(winner, spec["field"])}
+        if spec["field"] == "annual":
+            return {"winner": winner.title, "pay": getattr(winner, spec["field"])}
+        return {"winner": winner.title, "value": getattr(winner, spec["field"])}
     if op == "topk":
         key = "pay" if spec["field"] == "annual" else "openings"
         top = sorted(matches, key=lambda r: getattr(r, spec["field"]), reverse=True)[: spec["k"]]

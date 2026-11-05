@@ -69,6 +69,13 @@ def main(argv: list[str] | None = None) -> int:
         if not q or norm(q) in seen_q:
             errors.append((rid, "missing or duplicate question"))
         seen_q.add(norm(q))
+        if row.get("condition") != "answerable":
+            if not row.get("expected_verdict"):
+                errors.append((rid, "non-answerable row needs expected_verdict"))
+            row.setdefault("split", "hard-h3-paraphrase")
+            row.setdefault("level", "H3-P")
+            row.setdefault("validation", "candidate")
+            continue
         if row.get("type") not in TYPES:
             errors.append((rid, f"unknown type {row.get('type')}"))
             continue
