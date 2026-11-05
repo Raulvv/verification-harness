@@ -17,6 +17,7 @@ from formal.rows import build_dataset
 
 HERE = Path(__file__).resolve().parent
 INPUT = HERE / "private" / "hard-h2-100.jsonl"
+MANIFEST = HERE / "private" / "hard-h2-100-manifest.json"
 CORPUS = ROOT / "bench" / "corpus" / "ooh-v1"
 
 
@@ -64,6 +65,35 @@ def main() -> None:
         print(f"  {rid}: {reason}")
     if errors:
         raise SystemExit(1)
+    human_approved = all(
+        str(row.get("validation", "")) == "human-approved" for row in rows
+    )
+    MANIFEST.write_text(
+        json.dumps(
+            {
+                "path": str(INPUT),
+                "sha256": digest,
+                "count": len(rows),
+                "conditions": dict(
+                    (condition, sum(1 for row in rows if row["condition"] == condition))
+                    for condition in {row["condition"] for row in rows}
+                ),
+                "categories": dict(
+                    (kind, sum(1 for row in rows if parse_question(row["id"], row["question"], dataset).kind == kind))
+                    for kind in {parse_question(row["id"], row["question"], dataset).kind for row in rows}
+                ),
+                "validation": (
+                    "human-approved"
+                    if human_approved
+                    else "mechanically validated; human review required"
+                ),
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    print(f"wrote {MANIFEST}")
 
 
 if __name__ == "__main__":

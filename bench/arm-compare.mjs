@@ -37,6 +37,7 @@ const FAKE = flag('fake')
 const NO_SUPPORT = flag('no-support')
 const arms = opt('arms', 'A,Q,DA').split(',')
 const seeds = Number(opt('seeds', FAKE ? 1 : 3))
+const seedStart = Number(opt('seed-start', 0))
 const K = Number(opt('k', 3))
 const MAX_TOKENS = Number(opt('max-tokens', 400)) // reasoning readers need headroom; documented in the report
 const DOC_CHARS = Number(opt('doc-chars', 20000))
@@ -220,7 +221,7 @@ async function runArm(arm, item) {
 
 // ---------- run + report ----------
 const rows = []
-for (let s = 0; s < seeds; s++) for (const item of items) for (const arm of arms) {
+for (let s = seedStart; s < seedStart + seeds; s++) for (const item of items) for (const arm of arms) {
   let out
   try { out = await runArm(arm, item) } catch (e) { out = { text: '', error: String(e.message ?? e), ms: 0, tokens: 0 } }
   if (out.aggregate) {
