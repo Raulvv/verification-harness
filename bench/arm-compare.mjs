@@ -14,7 +14,7 @@
 //     --model qwen3.5:4b --judge-model bespoke-minicheck [--judge-cmd "<cmd>"] \
 //     [--arms A,B,C,D] [--seeds 3] [--k 3] [--max-tokens 400] [--out bench/results/arm-compare.jsonl]
 //   node bench/arm-compare.mjs --fake     # offline plumbing self-test, no models
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
+import { readFileSync, writeFileSync, appendFileSync, mkdirSync } from 'node:fs'
 import { join, resolve, dirname } from 'node:path'
 import { askOneShot } from '../kit/lib/answer/oneshot.mjs'
 import { askAggregate } from '../kit/lib/answer/aggregate.mjs'
@@ -221,6 +221,12 @@ async function runArm(arm, item) {
 
 // ---------- run + report ----------
 const rows = []
+const total = seeds * items.length * arms.length
+const startedAt = Date.now()
+let processed = 0
+mkdirSync(dirname(resolve(outPath)), { recursive: true })
+const partialPath = outPath + '.partial.jsonl'
+writeFileSync(partialPath, '')
 for (let s = seedStart; s < seedStart + seeds; s++) for (const item of items) for (const arm of arms) {
   let out
   try { out = await runArm(arm, item) } catch (e) { out = { text: '', error: String(e.message ?? e), ms: 0, tokens: 0 } }
@@ -246,9 +252,15 @@ for (let s = seedStart; s < seedStart + seeds; s++) for (const item of items) fo
       out.support = !NO_SUPPORT && shownQuotes.length ? await supportFor(item, out.text, shownQuotes.map((q) => q.quote).join(' | ')) : null
     }
   }
-  rows.push({ seed: s, arm, id: item.id, condition: item.condition, reader: reader.model, judge: judgeCmd ? 'cmd' : judge.model, ...out, cost: out.usage?.cost ?? null, ...score(item, out.text) })
+  const row = { seed: s, arm, id: item.id, condition: item.condition, reader: reader.model, judge: judgeCmd ? 'cmd' : judge.model, ...out, cost: out.usage?.cost ?? null, ...score(item, out.text) }
+  rows.push(row)
+  appendFileSync(partialPath, JSON.stringify(row) + '\n')
+  processed += 1
+  if (processed % 10 === 0 || processed === total) {
+    const elapsed = ((Date.now() - startedAt) / 1000).toFixed(0)
+    console.error(`[${processed}/${total}] seed=${s} arm=${arm} id=${item.id} elapsed=${elapsed}s`)
+  }
 }
-mkdirSync(dirname(resolve(outPath)), { recursive: true })
 writeFileSync(outPath, rows.map((r) => JSON.stringify(r)).join('\n') + '\n')
 
 const pct = (k, n) => n ? (100 * k / n).toFixed(0).padStart(3) + '%' : '  - '
