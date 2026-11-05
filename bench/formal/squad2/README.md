@@ -79,6 +79,29 @@ question? That is the formal verifier's job, not the quote gate's.
 
 Cost $0.11, zero errors.
 
+### Adjudication of the “false answers”
+
+The 29–31% raw false-answer rate is misleading: SQuAD 2.0’s unanswerable labels
+are contested. Two judges (local gpt-oss:20b and DeepSeek) saw the question,
+context and model answer — not the model’s quote — and decided whether the
+context actually answers it.
+
+| | DA | B |
+|---|---:|---:|
+| Answered “unanswerable” | 31 | 29 |
+| Genuine unsupported (both judges) | 6 | 3 |
+| Context-supported (label noise) | 15 | 15 |
+| Ambiguous / split | 10 | 11 |
+
+Paired on the 26 questions both arms answered: both genuine 2, B-only 0,
+DA-only 2, neither 22. The difference is not significant.
+
+So genuine hallucination is **3–6%**, not 29–31%. Most answered “unanswerable”
+questions are actually supported by the context (e.g. “Iran was which size oil
+exporter?” → second-largest; “What alternative to ARPANET was developed?” →
+CYCLADES). A runtime support check can address only a handful of cases, which
+is why the DA+support arm is not worth a full run on this benchmark.
+
 ## Why this is the right test
 
 QAMPARI is all-answerable: the harness has no absence to catch, and the

@@ -167,14 +167,20 @@ are not leaderboard-comparable. Details:
 ## Mixed absence (SQuAD 2.0)
 
 100 answerable + 100 unanswerable. B and DA both abstain on about **70%** of
-unanswerable questions (71 vs 69), false answers are **29 vs 31**, and overall
-exact is **72.0 vs 71.5**. Paired differences are within noise.
+unanswerable questions (71 vs 69); raw false answers are 29 vs 31; overall
+exact is 72.0 vs 71.5. Paired differences are within noise.
+
+Adjudication changes the reading: of the answered “unanswerable” items, only
+**3 (B) and 6 (DA)** are genuinely unsupported; **15 each** are actually
+supported by the context, and the rest are ambiguous. Genuine hallucination is
+**3–6%**, not 29–31% — SQuAD 2.0’s unanswerable labels are noisy for a capable
+reader. Paired on the 26 items both answered: 2 both genuine, 0 B-only,
+2 DA-only, 22 neither.
 
 The quote contract alone did **not** improve abstention. The gate checks that a
 quote exists and contains the answer; it cannot tell that a plausible span does
-not answer the question (“How is time *not* required …”). A real abstention
-gain needs a support/entailment check — the formal verifier — not the quote
-gate alone. Details:
+not answer the question (“How is time *not* required …”). A support check can
+address only a handful of cases here. Details:
 [`bench/formal/squad2/README.md`](bench/formal/squad2/README.md).
 
 ## Quickstart
