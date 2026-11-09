@@ -9,6 +9,7 @@
     "ooh:dev:pages": "DEV=1 PAGES=1 node bench/ooh-aggregate-spike.mjs",
     "ooh:test": "node --test kit/test/answer/aggregate.test.mjs kit/test/cli/aggregate.test.mjs && python3 bench/ooh-score.test.py",
     "kit:test": "node kit/bin/test.mjs",
+    "provenance:check": "node bench/recompute-claims.mjs",
     "ooh:smoke": "npm run ooh:test && npm run kit:test && npm run ooh:dev && npm run ooh:dev:pages",
     "arm:fake": "node bench/arm-compare.mjs --fake",
     "arm:test": "node --test bench/arm-score.test.mjs bench/test/*.test.mjs",
