@@ -33,9 +33,7 @@ from .z3check import Premises, check_answer
 ROOT = Path(__file__).resolve().parents[3]
 TEST_QUESTIONS = ROOT / "bench" / "ooh-test-questions.jsonl"
 DEV_QUESTIONS = ROOT / "bench" / "ooh-dev-aggregation.jsonl"
-DEFAULT_PRIVATE = Path(
-    "/Users/raulvegadelvalle/Documents/linea-cero-metro/bench/results/ooh-test-private-v2.jsonl"
-)
+DEFAULT_PRIVATE = Path(__file__).resolve().parents[1] / "ooh-test-private-v2.jsonl"  # private labels — not distributed
 OUT_DIR = Path(__file__).resolve().parents[1] / "out"
 
 VALUE_KINDS = {"lookup", "compare", "difference", "sum", "extremum", "count"}

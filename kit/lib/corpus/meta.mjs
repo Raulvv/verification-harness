@@ -4,7 +4,7 @@
 //   date:  <file>.meta.json {"updated"}  →  git last-touch  →  file mtime
 //   title: <file>.meta.json {"title"}    →  front-matter `title:`  →
 //          first `# H1` / `<h1>`  →  filename stem
-// The sidecar convention is what sync adapters (Confluence, Notion, …)
+// The sidecar convention is what sync adapters (wiki mirrors, Notion, …)
 // should write: `page.md.meta.json` carrying the SOURCE system's real
 // title and updated date — because a sync that overwrites files makes
 // mtime lie ("everything looks freshly modified").

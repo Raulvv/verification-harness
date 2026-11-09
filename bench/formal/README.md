@@ -23,7 +23,8 @@ python3 -m venv .venv
 ```
 
 The private v2 labels are read only for aggregate scoring when present at
-`/Users/raulvegadelvalle/Documents/linea-cero-metro/bench/results/ooh-test-private-v2.jsonl`.
+`bench/formal/ooh-test-private-v2.jsonl` (private labels — not distributed;
+point `DEFAULT_PRIVATE` at their location to use them).
 Use `--no-private` to run without them. Labels are never written to `out/`.
 
 ## Reader-first pipeline

@@ -51,7 +51,7 @@ test('evidenceMatches: exact, whitespace, emphasis, quotes, joins, segments, per
 })
 
 test('evidenceMatches: invisible orthography is not content (zero-width spaces)', () => {
-  // the artifact seen in Confluence dumps: U+200B glued to a line end
+  // the artifact seen in wiki exports: U+200B glued to a line end
   // (the fixture text here is synthetic)
   const content = 'Goal\n- provide stable & well-scoped capabilities for fixture onboarding\u200b\n\n- keep the demo path short and reviewable\n'
   assert.ok(evidenceMatches(content, 'provide stable & well-scoped capabilities for fixture onboarding'))

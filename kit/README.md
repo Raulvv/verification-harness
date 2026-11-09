@@ -264,7 +264,7 @@ domain (Naruto) where the whole-window version managed 4/8 (`judgeEvidence` in
 `kit/lib/receipts/evidence.mjs`; ledger B60).
 
 **It is not free, and it is not a default.** On a **synthesis** corpus (the
-Confluence battery: long pages, prose answers) the same gate over-refuses badly —
+private-wiki battery: long pages, prose answers) the same gate over-refuses badly —
 raw **18/23 correct → 10/23 gated**, with **10 false abstentions**: a strict
 grounding detector refuses a correct synthesized answer when the bounded evidence
 slice does not literally contain the support (ledger B61). And passing the
@@ -274,7 +274,7 @@ refused 8–9 of 17 correct answers (LettuceDetect 17→12, an entailment NLI mo
 lines — the judge's **granularity** (one quote vs the whole answer) is wrong for
 synthesis, whatever the judge family (ledger B62). So `--sufficient` stays
 **opt-in**: it helps extractive answers over small, well-shaped evidence (PokéAPI
-7/8) and hurts synthesized answers over long pages (Confluence 18→10). Decide per
+7/8) and hurts synthesized answers over long pages (private wiki 18→10). Decide per
 corpus/task; do not turn it on globally.
 
 ## The architecture
@@ -316,19 +316,14 @@ becomes files. That is the entire difference:
 "source": "https://naruto.fandom.com"   // an external site — mirrored locally
 "source": { "type": "url", "url": "…", "limit": 300,
             "include": ["Page A", "Page B"], "delayMs": 350 }
-"source": { "type": "confluence", "url": "https://<site>.atlassian.net",
-            "space": "DEMO", "limit": 50, "delayMs": 350 }
 ```
 
 Run `retrieval-sync` and the corpus materializes under
 `.retrieval-mirror/<host>/` as markdown + `.meta.json` sidecars carrying
 the **source's own title and last-edited date** (never regenerated ones).
-Adapters: `mediawiki` (fandom/wikia/wikipedia-shaped), `flat` (a list
-or index of files over HTTP, dates from `Last-Modified`), and
-`confluence` (one space, via the official `twg` CLI — dates from the
-page's own version history; auth lives in `twg`'s config, never here;
-`twg` must be on `PATH`). Same config shape throughout — nothing
-downstream changes.
+Adapters: `mediawiki` (fandom/wikia/wikipedia-shaped) and `flat` (a list
+or index of files over HTTP, dates from `Last-Modified`). Same config
+shape throughout — nothing downstream changes.
 
 ## Embeddings — the opt-in retriever's one local dependency
 
@@ -395,7 +390,7 @@ kit/
     retrieval/  window · dense · vet · locate · terms · embed
     answer/     prompt · parse · assemble · oneshot
     receipts/   text · cite · gate · score · results
-    corpus/     source · html · twg · meta
+    corpus/     source · html · meta
     text/       stopwords · morph · walk   (shared primitives)
   GOLDEN.md   how to author the ground truth
 ```
@@ -445,7 +440,7 @@ benchmark (`bench/ooh-README.md`).
 ## Tests — the whole safety net, one command
 
 ```sh
-node kit/bin/test.mjs         # 206 tests + the gate drill
+node kit/bin/test.mjs         # 205 tests + the gate drill
 node kit/bin/coverage.mjs     # the same suite under V8 coverage (npm run kit:coverage)
 ```
 

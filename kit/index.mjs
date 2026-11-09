@@ -41,7 +41,6 @@ export { norm, ABSTAIN_TERMS, liftEvidence, evidenceMatches, abstainLine, parseA
 
 // ── corpus: source materialization, metadata, embeddings ───────────────────
 export { normalizeSource, ADAPTERS, detectAdapter, syncSource } from './lib/corpus/source.mjs'
-export { runTwg, collectPages } from './lib/corpus/twg.mjs'
 export { htmlToText } from './lib/corpus/html.mjs'
 export { resolveTitle, resolveDate, resolveMeta } from './lib/corpus/meta.mjs'
 export { EMBED_MODEL, embedTexts, normalize, dot } from './lib/retrieval/embed.mjs'

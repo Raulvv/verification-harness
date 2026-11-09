@@ -148,7 +148,7 @@
 - README keeps kit usage and private-corpus guidance up front; the pre-OOH
   1.0/2.0 claims moved to `HISTORY.md` (shipped in the package), so the
   front page carries only OOH claims.
-- Confluence fixtures and test corpora sanitized for publication: the
+- Source-adapter fixtures and test corpora sanitized for publication: the
   space key, the CQL title term (including URL-encoded forms in
   `next`/`self` links), and every project/client codename and real
   process line carried in synthetic test fixtures were replaced with

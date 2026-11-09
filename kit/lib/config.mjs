@@ -13,7 +13,7 @@ export function loadConfig(explicit) {
   cfg.__path = path
   const root = dirname(path)
   // source selection: "local" | "<url>" | { type, ... } — the corpus root is
-  // the repo (local) or the sync mirror (url/confluence). See lib/source.mjs.
+  // the repo (local) or the sync mirror (url). See lib/source.mjs.
   const src = normalizeSource(cfg, root)
   cfg.source = src
   cfg.corpusRoot = src.corpusRoot

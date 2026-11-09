@@ -36,6 +36,6 @@ rules (third-party conduct, the commit cadence) stay in the root `AGENTS.md`.
   `kit/CHANGELOG.md` entry.
 - **Temp scripts** live in the OS temp dir, use absolute paths, and are deleted
   in the same command. Never leave a `.tmp-*` under `kit/`.
-- **Be a good citizen to any source** the adapters reach (MediaWiki, Confluence):
+- **Be a good citizen to any source** the adapters reach (MediaWiki):
   one query per real use case, bounded retries, cache what hasn't changed, fail
   silent — never block or slow the rest of the app.

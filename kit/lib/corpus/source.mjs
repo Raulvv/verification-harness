@@ -1,7 +1,7 @@
 // Source selection — how the corpus becomes files. The engine (runner,
 // gate, scorers, tools) only ever sees a directory of files with optional
 // `.meta.json` sidecars; this module is the whole difference between
-// "the repo I'm standing in" and "a wiki/URL/Confluence I don't own".
+// "the repo I'm standing in" and "a wiki/URL I don't own".
 //
 // Config ergonomics (the entire difference):
 //   "source": "local"                       → the current repo
@@ -12,11 +12,9 @@
 // `<slug>.md.meta.json` sidecars carrying the SOURCE's real title and
 // last-edited date (never regenerated ones — a sync that lies about dates
 // is worse than no sync). Adapters: `mediawiki` (fandom/wikia/Wikipedia-
-// shaped), `flat` (a list or index of files over HTTP). Confluence is the
-// next adapter and plugs in here without touching anything downstream.
+// shaped), `flat` (a list or index of files over HTTP).
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import { runTwg, collectPages } from './twg.mjs'
 import { htmlToText } from './html.mjs'
 
 const UA = process.env.RETRIEVAL_UA ?? 'retrieval-kit/0.1 (bounded one-time mirror; contact: set RETRIEVAL_UA)'
@@ -25,7 +23,7 @@ const UA = process.env.RETRIEVAL_UA ?? 'retrieval-kit/0.1 (bounded one-time mirr
 export function normalizeSource(cfg, configDir = '.') {
   const s = cfg.source ?? { type: 'local', root: cfg.corpusRoot ?? '.' }
   const src = typeof s === 'string' ? (/^https?:\/\//i.test(s) ? { type: 'url', url: s } : { type: 'local', root: s === 'local' ? '.' : s }) : { ...s }
-  if (src.type === 'url' || src.type === 'confluence') {
+  if (src.type === 'url') {
     src.url = (src.url ?? '').replace(/\/$/, '')
     // Most MediaWiki roots expose the API at /api.php; Wikimedia projects at
     // /w/api.php — allow an explicit override, default to /api.php.
@@ -34,7 +32,7 @@ export function normalizeSource(cfg, configDir = '.') {
     src.mirror ??= join('.retrieval-mirror', src.slug)
     src.limit ??= 300
     src.delayMs ??= 350
-    src.adapter ??= src.type === 'confluence' ? 'confluence' : 'auto'
+    src.adapter ??= 'auto'
     src.corpusRoot = resolve(configDir, src.mirror)
   } else {
     src.root ??= '.'
@@ -131,54 +129,9 @@ async function flatFetch(src, page) {
   }
 }
 
-// Confluence via the official `twg` CLI (the conduct rule lives in
-// twg.mjs): enumerate one space with CQL (complete — `content list` sees
-// only the space root's children), fetch html ("what a reader reads") and
-// carry the source's own version date into the sidecar. Pages whose
-// sidecar date matches the listing are never re-asked (the mirror is the
-// cache).
-function confluenceFresh(src, page) {
-  if (!page.updated) return false
-  const slug = slugify(page.title)
-  try {
-    const meta = JSON.parse(readFileSync(join(src.corpusRoot, `${slug}.md.meta.json`), 'utf8'))
-    return meta.updated === page.updated && existsSync(join(src.corpusRoot, `${slug}.md`))
-  } catch {
-    return false
-  }
-}
-
-async function confluenceList(src) {
-  if (!src.space) throw new Error('confluence adapter needs `space` (a space key or id)')
-  const cql = src.cql ?? `space = "${src.space}" AND type = page`
-  const items = await collectPages(
-    ['confluence', 'search', 'query', '--cql', cql, '--limit', String(src.limit)],
-    { site: src.site, limit: src.limit, delayMs: src.delayMs, timeoutMs: src.timeoutMs },
-  )
-  return items
-    .map((it) => ({ id: it.content.id, title: it.content.title, updated: String(it.lastModified ?? '').slice(0, 10) }))
-    .filter((p) => !confluenceFresh(src, p))
-}
-
-async function confluenceFetch(src, page) {
-  const res = await runTwg(
-    ['confluence', 'content', 'get', String(page.id), '--detail', 'full', '--format', 'html', '--include-metadata'],
-    { site: src.site, delayMs: src.delayMs, timeoutMs: src.timeoutMs },
-  )
-  const d = res.data ?? {}
-  const created = d.metadata?.version?.createdAt
-  return {
-    title: d.title || page.title,
-    updated: created ? String(created).slice(0, 10) : '',
-    url: `${src.url}/wiki/spaces/${src.space}/pages/${page.id}`,
-    text: htmlToText(d.body?.value ?? ''),
-  }
-}
-
 export const ADAPTERS = {
   mediawiki: { list: mediawikiList, fetch: mediawikiFetch },
   flat: { list: flatList, fetch: flatFetch },
-  confluence: { list: confluenceList, fetch: confluenceFetch },
 }
 
 export async function detectAdapter(src) {

@@ -164,7 +164,7 @@ export async function askOneShot(m, corpusRoot, question, opts = {}) {
   let vetted = { dropped: [] }
   const tSelect = Date.now() - t0
   // Speed gate (measured 2026-10-01, broadened 2026-10-01): the vet is a whole
-  // model call — ~1.8 s, 20% of the Confluence run — while selection is free
+  // model call — ~1.8 s, 20% of the wiki-mirror run — while selection is free
   // (0.8%). A window of ONE candidate is already as small as any prune could
   // make it; skip the call. Windows of 2+ keep the vet.
   const singleCandidate = loc.candidates?.length === 1

@@ -26,3 +26,7 @@ bench/formal/legal/cuad/out/
 .env
 .env.*
 !.env.example
+
+# local virtualenvs (embed absolute paths)
+.venv/
+.venv-*/

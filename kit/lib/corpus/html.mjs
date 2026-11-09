@@ -1,5 +1,5 @@
 // Rendered HTML → plain text (no deps): keep what a reader reads. Used by
-// the mediawiki, flat and confluence adapters.
+// the mediawiki and flat adapters.
 export function htmlToText(html) {
   let t = String(html ?? '')
   t = t.replace(/<(script|style|noscript)[\s\S]*?<\/\1>/gi, '')

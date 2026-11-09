@@ -16,6 +16,12 @@ is post-correction and development-informed, not held out; the clean 60-question
 set is deferred. The 100-item labels are private and must not be trained on or
 published. The old 6k/pilot rows are historical and not comparable.
 
+**Claims and reproduction.** Every figure quoted in `drafts/` — including *The
+Trust Postmortem* — is a row in [`PROVENANCE.md`](PROVENANCE.md), with its data
+under `provenance/` and a one-command check (`node bench/recompute-claims.mjs`).
+This repository is independently verifiable: no other repo is needed to check
+any number.
+
 ## The problem
 
 RAG answers are unauditable: a plausible wrong number looks exactly like a
