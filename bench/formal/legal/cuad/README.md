@@ -71,6 +71,34 @@ It writes n-best spans to `legal/cuad/out/cuad-qa-nbest.jsonl` and official
 metrics to `legal/cuad/out/cuad-qa-metrics.json`. Recompute metrics from a
 saved prediction file with `--from-jsonl`.
 
+The full test split takes ~49 minutes on Apple MPS for the base checkpoint.
+For a faster reader comparison, write a deterministic 20-contract subset and
+pass it to both checkpoints:
+
+```bash
+.venv/bin/python legal/cuad/make_subset.py --n 20 --seed 0 \
+  --output legal/cuad/out/subset-contracts.txt
+
+.venv-detectors/bin/python -m formal.cuad_qa \
+  --model legal/cuad/models/roberta-large \
+  --contracts-file legal/cuad/out/subset-contracts.txt \
+  --out legal/cuad/out/cuad-qa-large-subset-nbest.jsonl \
+  --metrics-out legal/cuad/out/cuad-qa-large-subset-metrics.json
+```
+
+`--contracts-file` accepts one contract title per line. Use the same file for
+every checkpoint; the resulting numbers are a subset comparison, not the full
+official split.
+
+Compare two metrics files:
+
+```bash
+.venv/bin/python legal/cuad/compare_qa.py \
+  --a legal/cuad/out/cuad-qa-subset-metrics.json \
+  --b legal/cuad/out/cuad-qa-large-subset-metrics.json \
+  --label-a roberta-base --label-b roberta-large
+```
+
 This is the reader layer. It is separate from the verifier, which checks the
 quote and the closed-corpus absence receipt.
 

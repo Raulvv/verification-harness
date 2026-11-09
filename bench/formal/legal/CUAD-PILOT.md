@@ -1,8 +1,8 @@
 # CUAD benchmark pilot
 
-**Status:** public-benchmark pilot: deterministic presence baseline + fine-tuned
-span model (span results pending). Not legal advice, not a SOTA clause
-extractor.
+**Status:** public-benchmark pilot: deterministic presence baseline, official
+span harness, and a fine-tuned reader range. Not legal advice, not a SOTA clause
+extractor. Reader numbers: [`CUAD-QA-REPORT.md`](CUAD-QA-REPORT.md).
 **Dataset:** CUAD v1 — 510 commercial contracts, 41 clause categories,
 expert-labeled spans.  
 **Split:** official CUAD split — 408 train contracts, 102 test contracts.  

@@ -1,6 +1,7 @@
 # CUAD fine-tuned span model — reader and harness
 
-**Status:** public checkpoint evaluated on the official CUAD test split.  
+**Status:** public checkpoints evaluated on the official CUAD test split and a
+fixed 20-contract subset.  
 **Model:** `akdeniz27/roberta-base-cuad` — a public CUAD fine-tuned RoBERTa-base
 checkpoint, not a model trained in this repository.  
 **Split:** 102 test contracts, 41 categories, 4,182 questions.  
@@ -20,6 +21,23 @@ Paper: <https://arxiv.org/abs/2103.06268>
 
 Matching follows CUAD's Jaccard ≥ 0.5 rule. AUPR is macro-averaged across the
 41 categories.
+
+## Reader range
+
+Full-set result for the base checkpoint. The larger checkpoints use a fixed
+20-contract subset (seed 0) so the comparison finishes in a practical window.
+
+| Checkpoint | AUPR | P@80 | P@90 | Set | Status |
+|---|---:|---:|---:|---|---|
+| `akdeniz27/roberta-base-cuad` | 0.531 | 0.308 | 0.129 | full 102 contracts | complete |
+| `akdeniz27/roberta-base-cuad` | 0.522 | 0.389 | 0.311 | 20-contract subset (820 questions) | complete |
+| official RoBERTa-large (Zenodo) | **0.573** | **0.445** | **0.338** | 20-contract subset (820 questions) | complete |
+| official DeBERTa-v2-xlarge | — | — | — | 20-contract subset | downloaded, not run |
+
+On the same 20-contract subset, RoBERTa-large improves AUPR by **+0.051**,
+P@80 by **+0.056**, and P@90 by **+0.027** over the base checkpoint. Those
+deltas are subset comparisons; the full-set DeBERTa-xlarge comparison is not
+run.
 
 ## Public comparison
 
@@ -101,8 +119,10 @@ Recompute metrics from saved predictions:
 
 ## Next
 
-1. Run the official RoBERTa-large checkpoint for a reader range.
-2. Run DeBERTa-xlarge if memory permits.
-3. Add a same-checkpoint reader-only vs verifier-wrapped ablation table to the
+1. Run DeBERTa-v2-xlarge if memory permits. The 3.1 GB checkpoint is already
+   downloaded under `legal/cuad/models/`, but it has not been run.
+2. Add a same-checkpoint reader-only vs verifier-wrapped ablation table to the
    report (the presence table above is the first half).
-4. Human-audit a sample of predicted spans and absence claims.
+3. Human-audit a sample of predicted spans and absence claims.
+4. Extend the reader range to the full 102-contract split if the subset ordering
+   holds.
