@@ -3,7 +3,8 @@
 // Same reader, same oracle passages, same output schema; DA adds the gate.
 //
 //   OPENCODE_API_KEY=... node alce/run_qampari_pilot.mjs --questions 30
-import { readFileSync, writeFileSync } from 'node:fs'
+import { readFileSync, writeFileSync, appendFileSync, mkdirSync } from 'node:fs'
+import { dirname } from 'node:path'
 import { resolve } from 'node:path'
 import { chatWithUsage } from '../../../kit/lib/model.mjs'
 
@@ -16,7 +17,8 @@ const SEED = Number(opt('seed', 0))
 const MODEL = opt('model', 'deepseek-v4.1-flash')
 const BASE = opt('base-url', 'https://opencode.ai/inference/openai/v1')
 const OUT = resolve(opt('out', resolve(HERE, '../competitive/private/alce/runs/qampari-pilot.jsonl')))
-const MAX_TOKENS = Number(opt('max-tokens', 8000))
+const MAX_TOKENS = Number(opt('max-tokens', 16000))
+const RETRY_TOKENS = Number(opt('retry-tokens', 24000))
 const reader = { label: 'reader', baseUrl: BASE, model: MODEL, apiKeyEnv: 'OPENCODE_API_KEY' }
 
 const norm = (s) => String(s ?? '').replace(/\s+/g, ' ').trim().toLowerCase()
@@ -63,13 +65,24 @@ const sample = (rows, n, seed) => {
 const rows = JSON.parse(readFileSync(DATA, 'utf8'))
 const questions = sample(rows, N, SEED)
 const out = []
+mkdirSync(dirname(OUT), { recursive: true })
+const partial = OUT + '.partial.jsonl'
+writeFileSync(partial, '')
+const started = Date.now()
 
 for (const [qi, item] of questions.entries()) {
   const docs = item.docs.slice(0, 5)
   for (const arm of ['B', 'DA']) {
     const t0 = Date.now()
     const messages = [{ role: 'user', content: PROMPT(item.question, docs, arm === 'DA') }]
-    const r = await chatWithUsage(reader, messages, { maxTokens: MAX_TOKENS, temperature: 0, think: false, format: 'json' })
+    let r = await chatWithUsage(reader, messages, { maxTokens: MAX_TOKENS, temperature: 0, think: false, format: 'json' })
+    if (!r.content || !/\{/.test(String(r.content))) {
+      r = await chatWithUsage(reader, [
+        ...messages,
+        { role: 'assistant', content: r.content || '(empty)' },
+        { role: 'user', content: 'Return the JSON object now. Do not reason further.' },
+      ], { maxTokens: RETRY_TOKENS, temperature: 0, think: false, format: 'json' })
+    }
     let parsed = null
     let error = null
     try {
@@ -91,7 +104,7 @@ for (const [qi, item] of questions.entries()) {
     }
     const valid = answers.filter((a) => docs[Number(a.doc) - 1] && typeof a.text === 'string' && a.text.trim())
     const formatted = valid.length ? valid.map((a) => `${a.text.trim()} [${a.doc}]`).join(', ') : 'NOT FOUND'
-    out.push({
+    const row = {
       id: item.id,
       arm,
       question: item.question,
@@ -104,8 +117,10 @@ for (const [qi, item] of questions.entries()) {
       error,
       usage: r.usage ?? {},
       ms: Date.now() - t0,
-    })
-    console.error(`[${qi + 1}/${questions.length}] ${arm} answers=${valid.length} rejected=${rejected} ${Date.now() - t0}ms`)
+    }
+    out.push(row)
+    appendFileSync(partial, JSON.stringify(row) + '\n')
+    console.error(`[${qi + 1}/${questions.length}] ${arm} answers=${valid.length} rejected=${rejected} ${Date.now() - t0}ms elapsed=${((Date.now() - started) / 1000).toFixed(0)}s`)
   }
 }
 

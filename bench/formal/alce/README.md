@@ -149,3 +149,7 @@ OPENCODE_API_KEY=... node alce/run_qampari_pilot.mjs --questions 30
 ```
 
 Outputs go to `competitive/private/alce/runs/` (gitignored).
+
+The runner defaults to a 16,000-token budget and retries an empty or non-JSON
+response once at 24,000 tokens. Each completed row is appended to
+`<out>.partial.jsonl`, so an interrupted run can be scored or resumed.
