@@ -3,7 +3,7 @@
 **Status:** in progress; Phase 0/1 complete, Phase 2 partial  
 **Prepared:** 2026-11-04  
 **Predecessor:** EPIC-FORMAL-001 (the `bench/formal/` Z3 spike)  
-**Related:** `bench/formal/REPORT.md`, `bench/formal/README.md`, `PLAN.md` (read-only; separate 300-question plan)
+**Related:** `bench/formal/REPORT.md`, `bench/formal/README.md`, separate local 300-question plan (not tracked)
 
 ---
 
@@ -89,8 +89,8 @@ default `ask` path is unchanged; the formal path is opt-in.
   - 0 false `ENTAILED` on 17 known-row cases and 91 mutations.
   - Deterministic rerun; ~0.9 ms per structured question.
   - Caveat: the current 100 is post-correction and development-informed, not
-    held out. The 300-question clean set is a separate plan (`PLAN.md`) and is
-    out of scope for this epic.
+    held out. The 300-question clean set is a separate local plan (not tracked)
+    and is out of scope for this epic.
 - Key semantic findings:
   - The benchmark’s `difference` is **symmetric** (`|a − b|`); a directional
     reading is a separate claim and can be contradicted.
@@ -931,7 +931,7 @@ Exit criteria:
 - Existing gate behavior unchanged.
 - The formal path reuses the existing gate rather than inventing a parallel
   citation check.
-- `PLAN.md` untouched; no 300-question run in this epic.
+- The separate 300-question plan untouched; no 300-question run in this epic.
 - No private labels or per-question private outputs published.
 
 ### Quality targets (provisional; calibrate in Phase 0)
@@ -1015,7 +1015,7 @@ Success: 0 false `ENTAILED`; every failure has the expected typed verdict.
 - Preserve: 100/100 compile, 0 false `ENTAILED`, 1 deliberate `UNKNOWN`,
   deterministic rerun.
 - Confirm no default behavior change when the feature flag is off.
-- Confirm `PLAN.md` untouched and no 300-question run.
+- Confirm the separate 300-question plan untouched and no 300-question run.
 
 ### 7.7 Human audit
 
@@ -1090,7 +1090,7 @@ Success: 0 false `ENTAILED`; every failure has the expected typed verdict.
 - General NLI replacement.
 - Automatic resolution of normative or causal claims without a stipulated model.
 - Changing the default reader or default judge.
-- Running the 300-question clean set (separate `PLAN.md`).
+- Running the 300-question clean set (separate local plan, not tracked).
 - Committing or integrating without explicit approval.
 
 ---
@@ -1213,8 +1213,8 @@ and the gate integration — not on the 100-question development set alone.
 - `bench/formal/tests/test_batch.py` — 4 batch tests.
 - `bench/formal/tests/test_server.py` — 5 HTTP API tests.
 - `bench/formal/EPIC-FORMAL-003.md` — proposed legal/private-corpus pilot.
-- `PLAN.md` — separate 300-question clean-set plan; read-only, not part of this
-  epic.
+- Separate 300-question clean-set plan (local, not tracked); read-only, not part
+  of this epic.
 
 Market and research sources:
 

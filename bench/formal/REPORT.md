@@ -194,7 +194,7 @@ correct architecture is:
 ## 7. Not done (by instruction)
 
 - No commit, no integration, no default reader/judge change.
-- `PLAN.md` untouched and unstaged.
+- The separate 300-question plan untouched and unstaged.
 - No 300-question clean-set run.
 - No private labels or per-question private outputs published.
 
