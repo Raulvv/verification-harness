@@ -18,7 +18,8 @@ published. The old 6k/pilot rows are historical and not comparable.
 
 **Claims and reproduction.** Every figure quoted in `drafts/` — including *The
 Trust Postmortem* — is a row in [`PROVENANCE.md`](PROVENANCE.md), with its data
-under `provenance/` and a one-command check (`node bench/recompute-claims.mjs`).
+under `provenance/`. Verify everything with one command: **`npm run verify`**
+(claim recomputation, manifest integrity, and the full test batteries).
 This repository is independently verifiable: no other repo is needed to check
 any number.
 

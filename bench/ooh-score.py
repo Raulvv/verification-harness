@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """OOH scorer — helpful-abstention rule.
 
+**Legacy (v1).** Superseded by ``bench/ooh-score-v2.py``; kept because
+historical rows in ``bench/ooh-*.md`` cite it as the scorer of record for
+earlier runs. New scoring runs use v2. Nothing in the toolchain imports it.
+
 A response to an unanswerable item is correct when it does not assert the
 requested state/city/employer/year value and explicitly says that value is
 absent from the table/corpus/snapshot. National context is allowed. External

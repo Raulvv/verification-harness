@@ -91,8 +91,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 31144,
-      "sha256": "f46f9f365be87c94a85508bc2cbf3f3e4b29c5533ed54333f33c67f2e2c8331d"
+      "bytes": 31213,
+      "sha256": "77c9272f25d2daf1dda20197a4eb2e6875402c0944a4f94ecded4019026d0fdc"
     },
     {
       "path": "bench/ARM-COMPARE-REPORT.md",
@@ -426,13 +426,13 @@
     },
     {
       "path": "bench/ooh-BENCHMARK.md",
-      "bytes": 9637,
-      "sha256": "a51532312a5ef77827d2e0048e8780ca94d58646403a1e52e0312d4c9e7b3f9d"
+      "bytes": 9625,
+      "sha256": "6635429998f0f6b4b74ffbad5d47beb358b7b81220a7c4a27f023bde5d6a9534"
     },
     {
       "path": "bench/ooh-README.md",
-      "bytes": 14626,
-      "sha256": "a0c77850f2184a7865f8c144ecec57562929add64ce4045076430bca97342c33"
+      "bytes": 14608,
+      "sha256": "48a9513dc4575d6416ca9c1341ca6fa0fb0126773fa5ade672e356c9bc84898c"
     },
     {
       "path": "bench/ooh-SUBMISSION.md",
@@ -440,7 +440,7 @@
       "sha256": "eb0cbc44d1b8dc66fb319a6f87c56c7a9de78264a2ab3c7104b21da4d5899241"
     },
     {
-      "path": "bench/ooh-aggregate-spike.mjs",
+      "path": "bench/ooh-aggregate.mjs",
       "bytes": 3702,
       "sha256": "ff2442ceefcce4953364b7f225decd8c321eeecbbf0b5bce45e76c72b2c0e666"
     },
@@ -506,8 +506,8 @@
     },
     {
       "path": "bench/ooh-score.py",
-      "bytes": 7391,
-      "sha256": "d731ae6baaa7b5fff358db63c52a9cd39f9b004598523eb447362e5c3a9d7f36"
+      "bytes": 7613,
+      "sha256": "03cefdcfb35e94988bfe2ce90f1fbb2a3e2e4043d8ed90192b6dec0115a7afaf"
     },
     {
       "path": "bench/ooh-score.test.py",
@@ -596,8 +596,8 @@
     },
     {
       "path": "kit/package.json",
-      "bytes": 888,
-      "sha256": "4f470f74e1afc46705921629884fa090a53898f3657b55618327e400ed36aa8f"
+      "bytes": 882,
+      "sha256": "899d547c5a3126be379c3a53ee28be44e1ac4fe7f3ce00d789a9e99be431b84f"
     },
     {
       "path": "kit/retrieval.config.example.json",
@@ -641,8 +641,8 @@
     },
     {
       "path": "package.json",
-      "bytes": 1069,
-      "sha256": "2df6bba022d8308b1516cbdea667e2e55a7f90ac171f50072f8d51dc385c1061"
+      "bytes": 1209,
+      "sha256": "4d82390bc18dd4507ea411495300fcf532ca2761aea2baa82483af7e6a3dacf9"
     }
   ],
   "license": {
@@ -651,8 +651,8 @@
     "content": "LICENSE-CONTENT"
   },
   "reproduction": [
-    "DEV=1 node bench/ooh-aggregate-spike.mjs",
-    "DEV=1 PAGES=1 node bench/ooh-aggregate-spike.mjs"
+    "DEV=1 node bench/ooh-aggregate.mjs",
+    "DEV=1 PAGES=1 node bench/ooh-aggregate.mjs"
   ],
   "submission": "bench/ooh-SUBMISSION.md"
 }

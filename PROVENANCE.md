@@ -13,6 +13,7 @@ in [§ Non-replicables](#non-replicables--disclosures) below.
 
 ```bash
 node bench/recompute-claims.mjs     # 44 checks: every tier-1/2 value, one command
+npm run verify                      # the full battery: claims + manifest + all tests
 ```
 
 No network, no model calls. Covers the spend ledger (A1–A7), the Naruto result

@@ -5,12 +5,13 @@
   "type": "module",
   "description": "OOH citation-first benchmark: public corpus, public dev, private test questions and labels separated.",
   "scripts": {
-    "ooh:dev": "DEV=1 node bench/ooh-aggregate-spike.mjs",
-    "ooh:dev:pages": "DEV=1 PAGES=1 node bench/ooh-aggregate-spike.mjs",
+    "ooh:aggregate": "DEV=1 node bench/ooh-aggregate.mjs",
+    "ooh:aggregate:pages": "DEV=1 PAGES=1 node bench/ooh-aggregate.mjs",
     "ooh:test": "node --test kit/test/answer/aggregate.test.mjs kit/test/cli/aggregate.test.mjs && python3 bench/ooh-score.test.py",
     "kit:test": "node kit/bin/test.mjs",
     "provenance:check": "node bench/recompute-claims.mjs",
-    "ooh:smoke": "npm run ooh:test && npm run kit:test && npm run ooh:dev && npm run ooh:dev:pages",
+    "verify": "npm run provenance:check && npm run manifest:check && npm run kit:test && npm run arm:test && npm run ooh:test",
+    "ooh:smoke": "npm run ooh:test && npm run kit:test && npm run ooh:aggregate && npm run ooh:aggregate:pages",
     "arm:fake": "node bench/arm-compare.mjs --fake",
     "arm:test": "node --test bench/arm-score.test.mjs bench/test/*.test.mjs",
     "manifest:check": "node bench/manifest-check.mjs"

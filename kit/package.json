@@ -7,7 +7,7 @@
     "retrieval-kit": "bin/retrieval-kit.mjs",
     "retrieval-ask": "bin/ask.mjs",
     "retrieval-bootstrap": "bin/bootstrap.mjs",
-    "retrieval-manifest-check": "bin/manifest-check.mjs",
+    "retrieval-manifest-check": "bin/doc-lint.mjs",
     "retrieval-score": "bin/score.mjs",
     "retrieval-sync": "bin/sync.mjs",
     "retrieval-verify": "bin/verify.mjs",

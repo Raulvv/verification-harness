@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Manifest check — the self-enforcement for the retrieval substrate.
 //
-//   node kit/bin/manifest-check.mjs [--config <file>]     (exit 1 on violation)
+//   node kit/bin/doc-lint.mjs [--config <file>]     (exit 1 on violation)
 //
 // Three invariants, each printed with its own fix when broken:
 //   1. Every work doc carries Status:/Since:/Answers: after its H1, with

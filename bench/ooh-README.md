@@ -133,10 +133,10 @@ Published OOH numbers use the default tolerant mode.
 
 ```bash
 # 14 aggregate dev items, table
-DEV=1 node bench/ooh-aggregate-spike.mjs
+DEV=1 node bench/ooh-aggregate.mjs
 
 # 14 aggregate dev items, all 48 pages
-DEV=1 PAGES=1 node bench/ooh-aggregate-spike.mjs
+DEV=1 PAGES=1 node bench/ooh-aggregate.mjs
 ```
 
 Both runs self-check the gold and the public dev coverage: 46/46 paid,
@@ -260,7 +260,7 @@ validated by the public package.
 
 - Library: `kit/lib/answer/aggregate.mjs` (`askAggregate`).
 - CLI: `retrieval-kit ask --aggregate --table <rows.json> --spec <spec.json> "question"`.
-- OOH aggregate runner: `bench/ooh-aggregate-spike.mjs`.
+- OOH aggregate runner: `bench/ooh-aggregate.mjs`.
 - Strong-baseline protocol: `bench/ARM-COMPARE.md`; held-out report:
   `bench/ARM-COMPARE-REPORT.md`; offline plumbing check:
   `node bench/arm-compare.mjs --fake`.

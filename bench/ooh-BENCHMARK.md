@@ -158,8 +158,8 @@ not part of the corrected matrix.
 ## 10. Reproducibility
 
 ```bash
-DEV=1 node bench/ooh-aggregate-spike.mjs
-DEV=1 PAGES=1 node bench/ooh-aggregate-spike.mjs
+DEV=1 node bench/ooh-aggregate.mjs
+DEV=1 PAGES=1 node bench/ooh-aggregate.mjs
 ```
 
 The public dev run self-checks gold and coverage. The 100-item test is
