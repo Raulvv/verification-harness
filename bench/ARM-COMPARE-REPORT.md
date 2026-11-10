@@ -69,36 +69,42 @@ The 100 is the system with the aggregate; B does not get it.
 
 Arm **A** (bare reader: question only, no documents, no harness, no citation
 prompt) was run on the same post-correction 100, same v2 labels, three seeds,
-scored with the current scorer. Two readers were run; **the Sonnet bare arm is
-not yet run** and its row is omitted rather than estimated.
+scored with the current scorer — all three readers.
 
 | Reader | A local | Ans correct | Unans abstain | Partial correct | A false | A $/100 |
 |---|---:|---:|---:|---:|---:|---:|
 | DeepSeek V4.1 Flash | 27.9 | 19.3% | 43.3% | 13.3% | **69.0** | $0.18 |
+| Sonnet 5.5 | **40.1** | 16.7% | 70.0% | **25.0%** | **41.8** | $0.29 |
 | GLM-5.3-Flash (default) | 37.4 | 15.8% | 69.2% | 15.0% | **53.1** | $0.03 |
 
 `A local` is the per-100 mean across 3 seeds over the 98 local questions (the 2
 globals excluded) — the same ×100/98 normalization as the headline table. The
-per-seed counts are 25/29/28 correct with 72/65/66 false accepts (DeepSeek) and
-35/35/40 with 54/53/49 (GLM); the ×100/98 step takes those to 27.9/69.0 and
-37.4/53.1. The per-condition shares are over 3 seeds. False accepts are per 100
-local questions.
+per-seed counts are 25/29/28 correct with 72/65/66 false accepts (DeepSeek),
+38/39/41 with 42/42/39 (Sonnet), and 35/35/40 with 54/53/49 (GLM); the ×100/98
+step takes those to 27.9/69.0, 40.1/41.8, and 37.4/53.1. The per-condition
+shares are over 3 seeds. False accepts are per 100 local questions.
 
 Readings:
 
-- **The corpus is doing the work.** Bare readers answer 16–19% of answerable
-  questions; B (plain RAG) answers 86–94% on the same items. The OOH corpus is
-  public, but it is not memorized: retrieval, not recall, produces the headline.
-- **The failure mode differs by family.** DeepSeek fabricates (69 false accepts
-  per 100, 43% abstain); GLM is more cautious (53 false accepts, 69% abstain).
-  Both fail answerables at nearly the same rate (16–19%).
+- **The corpus is doing the work.** Bare readers answer 15.8–19.3% of
+  answerable questions; B (plain RAG) answers 86–94% on the same items. The OOH
+  corpus is public, but it is not memorized: retrieval, not recall, produces the
+  headline. The answerable rate is nearly flat across the three families
+  (15.8–19.3%), while "local correct" is not (27.9–40.1) — the higher totals are
+  earned mostly by correct abstentions, not by answering more.
+- **The failure mode is a family gradient.** DeepSeek fabricates (69.0 false
+  accepts per 100, 43.3% abstain); GLM is more cautious (53.1, 69.2%); Sonnet
+  is the abstainer (41.8, 70.0%, and the only reader that handles partials at
+  25.0%). They fail answerables at the same rate and unanswerables in opposite
+  styles — which is why a single "bare accuracy" number hides the thing that
+  matters.
 - **Bare is a bracket, not the comparison.** B remains the status quo baseline;
   DA-vs-B is the claim under test, and it is suggestive, not separated. A exists
   to show what no-documents, no-contract answers look like on this set.
 
 **Answer budget (disclosed).** Arm A ran with a 3,000-token answer budget
-(DeepSeek) and 8,000 (GLM); truncated rows were re-run at 16,000 and are never
-scored as false accepts. B/DA answer calls ran at 1,200 tokens. Reasoning
+(DeepSeek) and 8,000 (Sonnet, GLM); truncated rows were re-run at 16,000 and are
+never scored as false accepts. B/DA answer calls ran at 1,200 tokens. Reasoning
 consumes the budget before content on these readers — at 3,000 tokens, 18% of
 DeepSeek's rows returned empty. Without the retry rule an empty answer scores as
 a shown false accept and would inflate A's error rate with truncation artifacts.
@@ -107,8 +113,8 @@ a shown false accept and would inflate A's error rate with truncation artifacts.
 content even at 16,000 tokens (a bare reader has no aggregate route). Those
 cells are excluded with the globals, not scored as false accepts.
 
-Cost, including discarded truncation attempts: **≈$0.91 DeepSeek · ≈$0.09 GLM**
-for 300 scored calls each.
+Cost, including discarded truncation attempts: **≈$0.91 DeepSeek · ≈$0.88
+Sonnet · ≈$0.09 GLM** for 300 scored calls each.
 
 ### Previous held-out — pre-correction (do not compare)
 

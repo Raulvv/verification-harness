@@ -21,25 +21,27 @@ post-correction 100, v2 labels, 3 seeds, current scorer, per-100 means over the
 | Reader | A local | Ans correct | Unans abstain | Partial correct | A false /100 |
 |---|---:|---:|---:|---:|---:|
 | DeepSeek V4.1 Flash | 27.9 | 19.3% | 43.3% | 13.3% | **69.0** |
+| Sonnet 5.5 | **40.1** | 16.7% | 70.0% | **25.0%** | **41.8** |
 | GLM-5.3-Flash (default) | 37.4 | 15.8% | 69.2% | 15.0% | **53.1** |
 
-The Sonnet bare arm is not yet run; its row is omitted rather than estimated.
-
-- **The corpus is doing the work.** Bare readers answer 19.3% (DeepSeek) and
-  15.8% (GLM) of answerable questions; B answers 86–94% on the same items. The
-  OOH is public, but it is not memorized.
-- **Failure mode differs by family.** DeepSeek fabricates (69.0 false accepts,
-  43% abstain); GLM is more cautious (53.1, 69% abstain). Both fail answerables
-  at nearly the same rate.
+- **The corpus is doing the work.** Bare readers answer 15.8–19.3% of answerable
+  questions; B answers 86–94% on the same items. The OOH is public, but it is
+  not memorized. The answerable rate is nearly flat across families while "local
+  correct" is not — the higher totals come mostly from correct abstentions.
+- **Failure mode is a family gradient.** DeepSeek fabricates (69.0 false
+  accepts, 43.3% abstain); GLM is cautious (53.1, 69.2%); Sonnet abstains most
+  (41.8, 70.0%) and is the only reader that handles partials (25.0%). Same
+  answerable collapse, opposite unanswerable styles.
 - **A is a bracket, not the comparison.** B stays the status quo baseline; the
   DA-vs-B claim remains suggestive, not separated.
 
-**Answer budget (disclosed).** A ran at 3,000 tokens (DeepSeek) and 8,000 (GLM),
-with truncated rows re-run at 16,000 and never scored as false accepts; B/DA
-ran at 1,200. At 3,000, 18% of DeepSeek's rows were empty — an empty answer
-scores as a shown false accept, so the retry rule exists to keep truncation out
-of the error rate. Bare GLM returned no content on the two global items even at
-16,000 (no aggregate route); those cells are excluded with the globals.
+**Answer budget (disclosed).** A ran at 3,000 tokens (DeepSeek) and 8,000
+(Sonnet, GLM), with truncated rows re-run at 16,000 and never scored as false
+accepts; B/DA ran at 1,200. At 3,000, 18% of DeepSeek's rows were empty — an
+empty answer scores as a shown false accept, so the retry rule exists to keep
+truncation out of the error rate. Bare GLM returned no content on the two global
+items even at 16,000 (no aggregate route); those cells are excluded with the
+globals.
 
 ## Hard-set stress tests (separate from the 100)
 

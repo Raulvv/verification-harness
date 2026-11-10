@@ -91,13 +91,13 @@
     },
     {
       "path": "README.md",
-      "bytes": 15581,
-      "sha256": "4f60069230b2cbd410ee383557b77245126dc7185d0757986e0e7f809cc94d26"
+      "bytes": 15702,
+      "sha256": "e7a7c1a75ce901bf462530fb87559ac70c297d144f460755abb8bce39c2a1717"
     },
     {
       "path": "bench/ARM-COMPARE-REPORT.md",
-      "bytes": 59263,
-      "sha256": "9e1ff1bf1dbf8d973d674c6cc791809ac344bca8c935ec22ed027e2787e54162"
+      "bytes": 59724,
+      "sha256": "2491e5eb30f660b260977e678a49649147c1a1c1a5f93a71e7df876561262244"
     },
     {
       "path": "bench/ARM-COMPARE.md",
@@ -646,8 +646,8 @@
     },
     {
       "path": "docs/EVIDENCE.md",
-      "bytes": 20093,
-      "sha256": "417f7db24da112d53b46b22bb93ebb52accd40310efb965941a085c200e5e6f4"
+      "bytes": 20303,
+      "sha256": "79fce1a265886509bffcc6c49aa2e8e0b7018623552214d0a33cded10eec8c4a"
     }
   ],
   "license": {

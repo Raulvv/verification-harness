@@ -99,7 +99,7 @@ adjusted `bench/results/` → `data/`).
 | C14 | CUAD: 34.5% → 7.5% → 3.0% at 21% coverage; AUPR 0.531 (base, full split) / 0.573 (large, 20-contract subset) | `bench/formal/legal/CUAD-QA-REPORT.md` | `bench/formal/legal/cuad/out/*.json` | 2/3 |
 | C15 | Extractor narrow rule-based (8 ops incl. `quantified`); Z3 3-valued entailment; "the interface is the point" | `bench/formal/README.md`, `bench/formal/formal/extract.py` (this repo) | — | 2 |
 | C16 | 26 natural contradicted < pre-registered 40; one auditor | `bench/formal/competitive/PRE-REGISTRATION.md` | — | 2 |
-| C17 | Bare-reader control (arm A, 3 seeds, post-correction 100, local 98): DeepSeek local **27.9** / **69.0** false accepts per 100 / 19.3% answerable; GLM local **37.4** / **53.1** / 15.8%; Sonnet arm not yet run; answer budget 3k–8k with 16k retries for truncated rows, never scored as false accepts | `bench/ARM-COMPARE-REPORT.md` § Bare-reader control; run files `bench/results/arm-compare-bare-*.jsonl` (private, not distributed) | — | 3 |
+| C17 | Bare-reader control (arm A, 3 seeds, post-correction 100, per-100 means over local 98): DeepSeek **27.9** local / **69.0** false accepts / 19.3% answerable; Sonnet **40.1** / **41.8** / 16.7%; GLM **37.4** / **53.1** / 15.8%. Answerable rates nearly flat across families; failure mode is a gradient (fabricator → abstainer). Answer budget 3k–8k with 16k retries for truncated rows, never scored as false accepts | `bench/ARM-COMPARE-REPORT.md` § Bare-reader control; run files `bench/results/arm-compare-bare-*.jsonl` (private, not distributed) | — | 3 |
 
 ### D. Lessons
 
