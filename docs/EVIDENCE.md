@@ -14,8 +14,9 @@ documents at all?** If A scored near B, the "retrieval" result would be model
 memory wearing a corpus. It does not.
 
 Arm A: question only — no documents, no harness, no citation prompt. Same
-post-correction 100, v2 labels, 3 seeds, current scorer, local-98 means (the 2
-globals excluded, as in the headline table).
+post-correction 100, v2 labels, 3 seeds, current scorer, per-100 means over the
+98 local questions (the 2 globals excluded, as in the headline table; the same
+×100/98 normalization).
 
 | Reader | A local | Ans correct | Unans abstain | Partial correct | A false /100 |
 |---|---:|---:|---:|---:|---:|
@@ -24,9 +25,9 @@ globals excluded, as in the headline table).
 
 The Sonnet bare arm is not yet run; its row is omitted rather than estimated.
 
-- **The corpus is doing the work.** Bare readers answer 16–19% of answerable
-  questions; B answers 86–94% on the same items. The OOH is public, but it is
-  not memorized.
+- **The corpus is doing the work.** Bare readers answer 19.3% (DeepSeek) and
+  15.8% (GLM) of answerable questions; B answers 86–94% on the same items. The
+  OOH is public, but it is not memorized.
 - **Failure mode differs by family.** DeepSeek fabricates (69.0 false accepts,
   43% abstain); GLM is more cautious (53.1, 69% abstain). Both fail answerables
   at nearly the same rate.

@@ -77,10 +77,12 @@ not yet run** and its row is omitted rather than estimated.
 | DeepSeek V4.1 Flash | 27.9 | 19.3% | 43.3% | 13.3% | **69.0** | $0.18 |
 | GLM-5.3-Flash (default) | 37.4 | 15.8% | 69.2% | 15.0% | **53.1** | $0.03 |
 
-`A local` is the per-98 mean across seeds (the 2 globals excluded, consistent
-with the table above); the per-condition shares are over 3 seeds. False accepts
-are per 100 local questions. The DeepSeek row is 25/29/28 correct per seed with
-72/65/66 false accepts; GLM is 35/35/40 with 54/53/49.
+`A local` is the per-100 mean across 3 seeds over the 98 local questions (the 2
+globals excluded) — the same ×100/98 normalization as the headline table. The
+per-seed counts are 25/29/28 correct with 72/65/66 false accepts (DeepSeek) and
+35/35/40 with 54/53/49 (GLM); the ×100/98 step takes those to 27.9/69.0 and
+37.4/53.1. The per-condition shares are over 3 seeds. False accepts are per 100
+local questions.
 
 Readings:
 
