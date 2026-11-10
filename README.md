@@ -16,12 +16,12 @@ is post-correction and development-informed, not held out; the clean 60-question
 set is deferred. The 100-item labels are private and must not be trained on or
 published. The old 6k/pilot rows are historical and not comparable.
 
-**Claims and reproduction.** Every figure quoted in `drafts/` — including *The
-Trust Postmortem* — is a row in [`PROVENANCE.md`](PROVENANCE.md), with its data
-under `provenance/`. Verify everything with one command: **`npm run verify`**
-(claim recomputation, manifest integrity, and the full test batteries).
-This repository is independently verifiable: no other repo is needed to check
-any number.
+**Claims and reproduction.** Every figure quoted in the companion article *The
+Trust Postmortem* — distributed separately — is a row in
+[`PROVENANCE.md`](PROVENANCE.md), with its data under `provenance/`. Verify
+everything with one command: **`npm run verify`** (claim recomputation,
+manifest integrity, and the full test batteries). This repository is
+independently verifiable: no other repo is needed to check any number.
 
 ## The problem
 
@@ -564,9 +564,7 @@ harness fits best (governance/audit on a real corpus, with CTO and
 mid-management tech leads), plus allocated working time. The trial has a kill
 rule written down first: proceed only if wrong-shown is no worse than the
 current RAG **and** coverage is at least 80% of the reachable ceiling **and**
-cost is within the current setup. Miss any one and we stop. See
-`drafts/receipts-not-confidence.md` and `drafts/email-cto-quotes-not-accuracy.md`
-(local, gitignored).
+cost is within the current setup. Miss any one and we stop.
 
 ## Repository layout
 
@@ -577,12 +575,12 @@ cost is within the current setup. Miss any one and we stop. See
 - `bench/formal/` — the opt-in deterministic verification layer: reader-first
   extraction, Z3 entailment, specification receipts, coverage, router, and the
   competitive pilot. See `bench/formal/README.md`.
-- `drafts/` — local article/email working copies (gitignored; never published).
+- **Not shipped:** `drafts/` — local article/email working copies, gitignored by design.
 - `kit/retrieval.config.example.json`, `.env.example` — the default corpus +
   GLM-Flash/DA configuration example; `bench/arm-table.mjs` regenerates the
   ranked tables.
-- `package.json` — benchmark scripts (`ooh:test`, `ooh:dev`, `ooh:smoke`,
-  `kit:test`, `arm:fake`, …).
+- `package.json` — benchmark scripts (`npm run verify`, `ooh:test`, `ooh:aggregate`,
+  `ooh:smoke`, `kit:test`, `arm:fake`, …).
 
 ## License and provenance
 

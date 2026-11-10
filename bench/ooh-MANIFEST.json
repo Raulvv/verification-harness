@@ -91,13 +91,13 @@
     },
     {
       "path": "README.md",
-      "bytes": 31213,
-      "sha256": "77c9272f25d2daf1dda20197a4eb2e6875402c0944a4f94ecded4019026d0fdc"
+      "bytes": 31164,
+      "sha256": "a3c7d65b15c202d3afc9fcab31b5caadbd92c3c22d057cf06db7ef99804c4f57"
     },
     {
       "path": "bench/ARM-COMPARE-REPORT.md",
-      "bytes": 56819,
-      "sha256": "10dd204777790aeca7e045292b364511c87c274907158ad49778d44f30fde48f"
+      "bytes": 56720,
+      "sha256": "9e71dae9389e0d236b9a57915b1fb1fb1b4ca621e3bc089eb0dd06fd0bb360eb"
     },
     {
       "path": "bench/ARM-COMPARE.md",
@@ -431,8 +431,8 @@
     },
     {
       "path": "bench/ooh-README.md",
-      "bytes": 14608,
-      "sha256": "48a9513dc4575d6416ca9c1341ca6fa0fb0126773fa5ade672e356c9bc84898c"
+      "bytes": 14620,
+      "sha256": "09339efdd21228da1d9bac44d4f0ba44a0ceff6f61c464ddeefceb74a6517bd8"
     },
     {
       "path": "bench/ooh-SUBMISSION.md",
@@ -441,8 +441,8 @@
     },
     {
       "path": "bench/ooh-aggregate.mjs",
-      "bytes": 3702,
-      "sha256": "ff2442ceefcce4953364b7f225decd8c321eeecbbf0b5bce45e76c72b2c0e666"
+      "bytes": 3678,
+      "sha256": "ffbe7a691798e34854eae73ecbbc095e43253c301fef4b30500ec1f3b71e26f6"
     },
     {
       "path": "bench/ooh-build.py",

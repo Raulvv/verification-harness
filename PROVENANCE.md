@@ -1,6 +1,7 @@
 # PROVENANCE — claims baseline
 
-Every number quoted in `drafts/` — above all *The Trust Postmortem* — is a row
+Every number quoted in the companion article *The Trust Postmortem*
+(distributed separately) is a row
 in this registry, with its evidence **inside this repository**. Anyone who
 clones `verification-harness` can verify the claims without access to any other
 repo. Migrated from a private development repository on 2026-11-09;
@@ -111,7 +112,7 @@ article's "What remains open" and non-claims sections (rows C1–C5, B18/B11).
 | ID | Claim | Source |
 |---|---|---|
 | E1 | ALCE verifies citation support with the NLI **TRUE**, documented at **80.0%** vs human labels (120 hand-labelled pairs over 40 outputs) | ALCE (Gao, Yen, Yu, Chen — EMNLP 2023) §3.3 + Figure 3 + Appendix A; TRUE = Honovich et al. 2022 |
-| E2 | Industry cost-shift cases cited in lesson 2: Revolut ~90%/10× (2,000 engineers, self-hosted GLM); Notion router ~90% lower cost at similar quality (20+ use cases); AT&T −56% cost with measured −2% production quality; Character.AI ≥33×; Sword Health 94%; Ramp ~30%; Uber −34%/−52%; Factory Router — 99% of Opus 4.7 pass rate at −20% cost, **19–50% fewer tasks finished** when pushed toward cheap models (benchmark quality; source of the "What remains open" figure) | `drafts/research/llm-cost-case-studies.md` — graded evidence file with per-case sources and disclaimers. All company-reported and unaudited except where the source published method/eval detail |
+| E2 | Industry cost-shift cases cited in lesson 2: Revolut ~90%/10× (2,000 engineers, self-hosted GLM); Notion router ~90% lower cost at similar quality (20+ use cases); AT&T −56% cost with measured −2% production quality; Character.AI ≥33×; Sword Health 94%; Ramp ~30%; Uber −34%/−52%; Factory Router — 99% of Opus 4.7 pass rate at −20% cost, **19–50% fewer tasks finished** when pushed toward cheap models (benchmark quality; source of the "What remains open" figure) | `provenance/sources/industry-case-studies.md` — graded evidence file with per-case sources and disclaimers. All company-reported and unaudited except where the source published method/eval detail |
 
 ## Non-replicables & disclosures
 

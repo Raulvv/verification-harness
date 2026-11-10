@@ -21,8 +21,8 @@ Ollama is optional and only for running a local model. For `ask`, see
 git clone https://github.com/Raulvv/verification-harness.git
 cd verification-harness
 npm run ooh:smoke
-npm run ooh:dev
-npm run ooh:dev:pages
+npm run ooh:aggregate
+npm run ooh:aggregate:pages
 ```
 
 `ooh:smoke` runs the public tests plus both dev runs. The dev runs are

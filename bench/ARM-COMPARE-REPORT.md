@@ -997,5 +997,4 @@ local. `--source` and `--no-absence` are the opt-outs. The ranked pilot is the
 best consolidation of the current post-correction development set; the clean
 held-out set is deferred, and the labels are private. The governance/CTO article and the CTO/mid-management email ask for
 the funded experiment, a consultancy pilot, and allocated working time; the
-trial has a kill rule. See `drafts/receipts-not-confidence.md` and
-`drafts/email-cto-quotes-not-accuracy.md` (gitignored).
+trial has a kill rule..

@@ -3,10 +3,10 @@
 // Table mode uses ooh-data.json; PAGES=1 parses all 48 corpus pages.
 // DEV=1 runs the public dev aggregation set; otherwise the two private globals.
 //
-//   node bench/ooh-aggregate-spike.mjs
-//   PAGES=1 node bench/ooh-aggregate-spike.mjs
-//   DEV=1 node bench/ooh-aggregate-spike.mjs
-//   DEV=1 PAGES=1 node bench/ooh-aggregate-spike.mjs
+//   node bench/ooh-aggregate.mjs
+//   PAGES=1 node bench/ooh-aggregate.mjs
+//   DEV=1 node bench/ooh-aggregate.mjs
+//   DEV=1 PAGES=1 node bench/ooh-aggregate.mjs
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { askAggregate } from '../kit/lib/answer/aggregate.mjs'
 import { loadRows, globalSpec, baseFor, expectedFor, formatField, receiptLine, legsFor, isGlobalItem } from './lib/ooh-rows.mjs'
