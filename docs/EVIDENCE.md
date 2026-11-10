@@ -30,7 +30,7 @@ post-correction 100, v2 labels, 3 seeds, current scorer, per-100 means over the
   correct" is not — the higher totals come mostly from correct abstentions.
 - **Failure mode is a family gradient.** DeepSeek fabricates (69.0 false
   accepts, 43.3% abstain); GLM is cautious (53.1, 69.2%); Sonnet abstains most
-  (41.8, 70.0%) and is the only reader that handles partials (25.0%). Same
+  (41.8, 70.0%) and leads on partials (25.0% vs 13.3% and 15.0%). Same
   answerable collapse, opposite unanswerable styles.
 - **A is a bracket, not the comparison.** B stays the status quo baseline; the
   DA-vs-B claim remains suggestive, not separated.

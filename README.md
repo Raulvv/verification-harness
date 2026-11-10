@@ -107,8 +107,8 @@ the same post-correction 100, 3 seeds, all three readers. Per-100 means over the
 correct with **69.0** false accepts; Sonnet **40.1** with **41.8**; GLM **37.4**
 with **53.1**. Bare readers answer 15.8–19.3% of answerable questions — B
 answers 86–94% on the same items — so the corpus, not recall, produces the
-headline. The bare failure mode is a family gradient: DeepSeek fabricates,
-Sonnet abstains (and is the only one handling partials, 25%). Method, budget
+headline. The bare failure mode is a family gradient: DeepSeek fabricates, GLM
+is cautious, Sonnet abstains (and leads on partials, 25%). Method, budget
 disclosure, and the truncation rule: `bench/ARM-COMPARE-REPORT.md`
 § Bare-reader control.
 

@@ -94,10 +94,15 @@ Readings:
   earned mostly by correct abstentions, not by answering more.
 - **The failure mode is a family gradient.** DeepSeek fabricates (69.0 false
   accepts per 100, 43.3% abstain); GLM is more cautious (53.1, 69.2%); Sonnet
-  is the abstainer (41.8, 70.0%, and the only reader that handles partials at
-  25.0%). They fail answerables at the same rate and unanswerables in opposite
+  is the abstainer (41.8, 70.0%) and leads on partials (25.0% vs 13.3% and
+  15.0%). They fail answerables at the same rate and unanswerables in opposite
   styles — which is why a single "bare accuracy" number hides the thing that
   matters.
+
+Raw per-condition counts, 3 seeds pooled (DeepSeek / Sonnet / GLM): answerable
+correct 22/114, 19/114, 18/114; unanswerable abstentions 52/120, 84/120,
+83/120; partial correct 8/60, 15/60, 9/60. Those fractions produce the shares
+above; they are published so the shares are re-derivable rather than asserted.
 - **Bare is a bracket, not the comparison.** B remains the status quo baseline;
   DA-vs-B is the claim under test, and it is suggestive, not separated. A exists
   to show what no-documents, no-contract answers look like on this set.
