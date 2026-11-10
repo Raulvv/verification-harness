@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-// Recompute every tier-1 claim of PROVENANCE.md from provenance/data/.
+// Recompute every tier-1 claim of docs/PROVENANCE.md from provenance/data/.
 // Read-only, no network, no model calls, no dependencies:
 //
 //   node bench/recompute-claims.mjs
 //
 // Prints each claim ID with its computed and expected value. Exit code 1 if
-// any claim differs. Expected values are the canonical ones in PROVENANCE.md;
+// any claim differs. Expected values are the canonical ones in docs/PROVENANCE.md;
 // the point of this script is that a reader can regenerate them from the data.
 
 import { readFileSync } from 'node:fs'

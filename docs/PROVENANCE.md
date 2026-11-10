@@ -5,7 +5,7 @@ Every number quoted in the companion article *The Trust Postmortem*
 in this registry, with its evidence **inside this repository**. Anyone who
 clones `verification-harness` can verify the claims without access to any other
 repo. Migrated from a private development repository on 2026-11-09;
-chain of custody (source paths + SHA-256) is in [`provenance/MANIFEST.md`](provenance/MANIFEST.md).
+chain of custody (source paths + SHA-256) is in [`provenance/MANIFEST.md`](../provenance/MANIFEST.md).
 
 The only claims that cannot be replicated are the author's self-reports, fenced
 in [§ Non-replicables](#non-replicables--disclosures) below.
@@ -93,7 +93,7 @@ adjusted `bench/results/` → `data/`).
 | C8 | 4B on OOH: 24/24 answerable, **15/60 false accepts**, 0/12 partials | `bench/ARM-COMPARE-REPORT.md` L110/182-183 (this repo) | — | 3 |
 | C9 | OOH 3-seed table (93.7/98.0, 86.3/95.3, false 4.7→1.0 etc.) | `README.md` § Current result (this repo) | recorded; `bench/results/` run files not distributed | 3 |
 | C10 | McNemar 4–5 discordant vs 0, **p = 0.0625–0.125**; post-correction, development-informed | same | — | 3 |
-| C11 | Formal vs detectors table (1.00/0.99/0/0/1.00; MiniCheck 0.72/0.24/13/75; LettuceDetect 0.21/0.21/186/66; HHEM 0.76/0.25/4/73) | `README.md` § Current formal pilot; `bench/formal/README.md` | `python -m formal.evaluate` re-runnable; detector-comparison run files under the private tree, not distributed | 2/3 |
+| C11 | Formal vs detectors table (1.00/0.99/0/0/1.00; MiniCheck 0.72/0.24/13/75; LettuceDetect 0.21/0.21/186/66; HHEM 0.76/0.25/4/73) | `docs/EVIDENCE.md` § Current formal pilot; `bench/formal/README.md` | `python -m formal.evaluate` re-runnable; detector-comparison run files under the private tree, not distributed | 2/3 |
 | C12 | 0.99 exact = four partials judged `CONTRADICTION`; binary correct | `bench/formal/README.md` L115 | — | 2 |
 | C13 | 160 synthetic: 80 contradicted, 0 FA, 1 FR, coverage 0.74, UB 3.7% | `bench/formal/competitive/PILOT-160-REPORT.md` | `pilot-160.jsonl` | 2 |
 | C14 | CUAD: 34.5% → 7.5% → 3.0% at 21% coverage; AUPR 0.531 (base, full split) / 0.573 (large, 20-contract subset) | `bench/formal/legal/CUAD-QA-REPORT.md` | `bench/formal/legal/cuad/out/*.json` | 2/3 |
@@ -133,7 +133,7 @@ halves are in the registry (the real corpora are B3/B4).
 ## Migration
 
 22 artifacts migrated 2026-11-09 from the private origin repository; sources,
-hashes and transforms in [`provenance/MANIFEST.md`](provenance/MANIFEST.md). The two
+hashes and transforms in [`provenance/MANIFEST.md`](../provenance/MANIFEST.md). The two
 migrated audit scripts (`provenance/tools/`) differ from their sources only in
 input paths (`bench/results/` → `data/`). `spend.csv` is a sanitized copy
 (commit hash and subject columns blanked); all numeric values are identical to

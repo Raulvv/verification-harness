@@ -7,7 +7,7 @@ against the origin. Two redaction passes were applied to the migrated copies:
 (1) identity scrub — commit hash/subject columns blanked in `spend.csv`,
 origin names removed; (2) private-corpus redaction — the private corpus's
 name appears as “private wiki” in the extracts. Nothing outside this
-repository is needed to verify any claim in `PROVENANCE.md`.
+repository is needed to verify any claim in `docs/PROVENANCE.md`.
 
 | Migrated artifact | Source artifact (private origin) | Source SHA-256 | Migrated SHA-256 | Transform |
 |---|---|---|---|---|

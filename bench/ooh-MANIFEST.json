@@ -91,8 +91,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 31164,
-      "sha256": "a3c7d65b15c202d3afc9fcab31b5caadbd92c3c22d057cf06db7ef99804c4f57"
+      "bytes": 14698,
+      "sha256": "8e8d41100da048692c0f5007e6190f328ff82e6ac4a542db9d6e1a97d8e09090"
     },
     {
       "path": "bench/ARM-COMPARE-REPORT.md",
@@ -643,6 +643,11 @@
       "path": "package.json",
       "bytes": 1209,
       "sha256": "4d82390bc18dd4507ea411495300fcf532ca2761aea2baa82483af7e6a3dacf9"
+    },
+    {
+      "path": "docs/EVIDENCE.md",
+      "bytes": 17653,
+      "sha256": "f95e53e1d8eec1bbd91e70fc9d779161b56066d50602f9b94f8195ad1cd8cf63"
     }
   ],
   "license": {
