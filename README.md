@@ -101,6 +101,14 @@ wrong-shown must be no worse than B, and coverage at least 80% of the reachable
 ceiling. DeepSeek and GLM pass the cost rule; **Sonnet DA fails** (3.84×,
 $1.96). The default reader remains **GLM-5.3-Flash**.
 
+**Bare control.** Arm **A** (question only, no documents, no harness) was run on
+the same post-correction 100, 3 seeds. Local-98 means: DeepSeek **27.9** correct
+with **69.0** false accepts per 100; GLM **37.4** with **53.1**. Bare readers
+answer 16–19% of answerable questions (B: 86–94%) — the corpus, not recall,
+produces the headline. The Sonnet bare arm is not yet run. Method, budget
+disclosure, and the truncation rule: `bench/ARM-COMPARE-REPORT.md`
+§ Bare-reader control.
+
 Historical results, including the old 6k held-out, the one-seed post-correction
 matrix, and the pilot, are in [`HISTORY.md`](HISTORY.md). The full arm report is
 `bench/ARM-COMPARE-REPORT.md`. The analytical backing — stress tests, the

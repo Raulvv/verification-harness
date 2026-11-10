@@ -65,6 +65,49 @@ The 100 is the system with the aggregate; B does not get it.
    `askAggregate` path runs on the complete table or page map, with a
    completeness guard and full candidate receipt.
 
+### Bare-reader control (3 seeds, 2026-11-10)
+
+Arm **A** (bare reader: question only, no documents, no harness, no citation
+prompt) was run on the same post-correction 100, same v2 labels, three seeds,
+scored with the current scorer. Two readers were run; **the Sonnet bare arm is
+not yet run** and its row is omitted rather than estimated.
+
+| Reader | A local | Ans correct | Unans abstain | Partial correct | A false | A $/100 |
+|---|---:|---:|---:|---:|---:|---:|
+| DeepSeek V4.1 Flash | 27.9 | 19.3% | 43.3% | 13.3% | **69.0** | $0.18 |
+| GLM-5.3-Flash (default) | 37.4 | 15.8% | 69.2% | 15.0% | **53.1** | $0.03 |
+
+`A local` is the per-98 mean across seeds (the 2 globals excluded, consistent
+with the table above); the per-condition shares are over 3 seeds. False accepts
+are per 100 local questions. The DeepSeek row is 25/29/28 correct per seed with
+72/65/66 false accepts; GLM is 35/35/40 with 54/53/49.
+
+Readings:
+
+- **The corpus is doing the work.** Bare readers answer 16–19% of answerable
+  questions; B (plain RAG) answers 86–94% on the same items. The OOH corpus is
+  public, but it is not memorized: retrieval, not recall, produces the headline.
+- **The failure mode differs by family.** DeepSeek fabricates (69 false accepts
+  per 100, 43% abstain); GLM is more cautious (53 false accepts, 69% abstain).
+  Both fail answerables at nearly the same rate (16–19%).
+- **Bare is a bracket, not the comparison.** B remains the status quo baseline;
+  DA-vs-B is the claim under test, and it is suggestive, not separated. A exists
+  to show what no-documents, no-contract answers look like on this set.
+
+**Answer budget (disclosed).** Arm A ran with a 3,000-token answer budget
+(DeepSeek) and 8,000 (GLM); truncated rows were re-run at 16,000 and are never
+scored as false accepts. B/DA answer calls ran at 1,200 tokens. Reasoning
+consumes the budget before content on these readers — at 3,000 tokens, 18% of
+DeepSeek's rows returned empty. Without the retry rule an empty answer scores as
+a shown false accept and would inflate A's error rate with truncation artifacts.
+
+**Non-answers.** On the two 46-candidate global items, bare GLM returned no
+content even at 16,000 tokens (a bare reader has no aggregate route). Those
+cells are excluded with the globals, not scored as false accepts.
+
+Cost, including discarded truncation attempts: **≈$0.91 DeepSeek · ≈$0.09 GLM**
+for 300 scored calls each.
+
 ### Previous held-out — pre-correction (do not compare)
 
 GLM-5.3-Flash, one seed, old 6k/page context. This is a historical record, not
