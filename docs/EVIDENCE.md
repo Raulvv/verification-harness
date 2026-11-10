@@ -12,7 +12,10 @@ Two frozen, human-approved stress sets are kept apart from the main 100 and are
 not pooled with it.
 
 **H2 — 100 derived-2033 reader questions.** Three seeds, DeepSeek V4.1 Flash,
-no aggregate route. DA 71–75, B 15–20, A 0. DA beats B on 51–58 questions per
+no aggregate route. Arms: **A** bare reader, **B** plain RAG (status quo), **Q**
+retrieval + "quote every claim" prompt (ungated), **D** gate only, **DA** quote
+contract + mechanical gate + absence check (the current harness). DA 71–75,
+B 15–20, A 0. DA beats B on 51–58 questions per
 seed and loses none; false accepts 10–12 vs 31–45 for B. This is a reader
 result: the 2033 figure has to be derived from the jobs and change lines.
 
@@ -206,7 +209,11 @@ and [`bench/formal/EPIC-FORMAL-003.md`](../bench/formal/EPIC-FORMAL-003.md).
 The formal layer also has a public legal-benchmark adapter for **CUAD v1**:
 510 commercial contracts, 41 clause categories, official 408/102 split. It is a
 deterministic clause-presence baseline with a quote and a closed-corpus coverage
-receipt, not a legal-advice system.
+receipt, not a legal-advice system — a test of whether the presence-plus-quote
+pattern transfers to a second domain. The harness result is the
+absence/threshold tradeoff: no-answer false accepts fall from **34.5% at the
+zero threshold** to **7.5% at best F1** and **3.0% at a precision-first
+threshold**, at **21% coverage**.
 
 | Operating point | Precision | Recall | Micro F1 | False accepts | False rejects | Quote support |
 |---|---:|---:|---:|---:|---:|---:|
@@ -227,16 +234,16 @@ reader comparison: **macro AUPR 0.531, P@80 0.308, P@90 0.129** on the official
 test split. That is in the published RoBERTa-base/RoBERTa-large range, below
 DeBERTa-xlarge at P@80/P@90. On a fixed 20-contract subset, the official
 RoBERTa-large checkpoint reaches **0.573 / 0.445 / 0.338**, a subset comparison
-not the full split. The harness result is the absence/threshold tradeoff: no-answer
-false accepts fall from **34.5% at the zero threshold** to **7.5% at best F1**
-and **3.0% at a precision-first threshold**, at **21% coverage**. Details:
+not the full split. Details:
 [`bench/formal/legal/CUAD-QA-REPORT.md`](../bench/formal/legal/CUAD-QA-REPORT.md)
 and [`bench/formal/legal/CUAD-PILOT.md`](../bench/formal/legal/CUAD-PILOT.md).
 
 ## Historical results
 
-See [`HISTORY.md`](../HISTORY.md) for the pre-correction 6k result, the one-seed
-post-correction matrix, and the pilot-v2 ranked tables.
+The superseded rows — the pre-correction 6k result, the one-seed
+post-correction matrix, and the pilot-v2 ranked tables — are kept in
+[`HISTORY.md`](../HISTORY.md). They are not comparable to the current numbers
+and are the record behind the limitations below.
 
 ## Known limitations
 
@@ -255,14 +262,14 @@ numbers.
   clean held-out set is deferred.
 - **Underpowered historical headline.** The old 6k B/C/D headline was 2 versus 8
   wrong-shown rows; p=0.070; the Wilson intervals overlap. The corrected
-  post-correction matrix is at the top; the pilot is a consolidation, not a
-  separation proof.
+  3-seed matrix is in the root [`README.md`](../README.md) § Current result;
+  the pilot is a consolidation, not a separation proof.
 - **Coverage and partials.** On the pre-fix held-out, D covers less on the
   shown count (46 vs 55) and handles partials worse (17/20 vs 20/20). The
   ranked pilot is the current measurement: DA is 100% coverage on Sonnet/GLM,
   97% on GLM-Flash, 94% on DeepSeek, 100% on the 27B, 69% on the 4B; the 27B
-  and 4B lose partials (6/12 and 0/12). The held-out D row is the historical pre-correction record; the corrected
-  post-correction matrix is at the top. The gate buys verification, not a large
+  and 4B lose partials (6/12 and 0/12). The held-out D row is the historical
+  pre-correction record. The gate buys verification, not a large
   coverage gain.
 - **Not pre-registered.** Four partial labels and two scorer phrasings were
   corrected post-hoc — all disclosed.
@@ -281,10 +288,9 @@ numbers.
   public pilot, not the post-correction 100. Built for extractive answers over stable
   corpora; synthesized prose over long documents over-refuses.
 - **Citation completeness is model-enforced.** The gate verifies the quotes
-  that are shown, not that every operand a calculation used was quoted. In the
-  ranked pilot, DA coverage is 100% on Sonnet/GLM, 97% GLM-Flash, 94%
-  DeepSeek, 100% 27B, 69% 4B; Q is 53–88% on the hosted readers and 82% on the
-  27B. B carries no quotes. Support is a manual claim-level audit (AI
+  that are shown, not that every operand a calculation used was quoted. Q
+  coverage in the ranked pilot is 53–88% on the hosted readers and 82% on the
+  27B (DA's coverage figures: see *Coverage and partials* above). B carries no quotes. Support is a manual claim-level audit (AI
   adjudication, not human); the automated MiniCheck over-refused.
 - **Author-defined ceiling.** "88% of the reachable ceiling" uses a 52-item
   ceiling we defined. A descriptive denominator, not a law.
@@ -312,7 +318,9 @@ wrong answers, and a requirement to re-check the receipt later.
 **Ask.** A funded experiment (clean held-out set, independent replication,
 human second rater, API/compute, local GPU) and a consultancy pilot where the
 harness fits best (governance/audit on a real corpus, with CTO and
-mid-management tech leads), plus allocated working time. The trial has a kill
-rule written down first: proceed only if wrong-shown is no worse than the
+mid-management tech leads), with working time to run it. The trial has a kill
+rule written down first — the same shape as the benchmark kill rule in the
+root [`README.md`](../README.md) § Current result (≤2.5× same-reader baseline
+per 100, ≤$0.50/100): proceed only if wrong-shown is no worse than the
 current RAG **and** coverage is at least 80% of the reachable ceiling **and**
-cost is within the current setup. Miss any one and we stop.
+cost stays within the current setup. Miss any one and we stop.

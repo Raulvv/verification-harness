@@ -44,8 +44,8 @@ error.
 
 Hardening (2026-10-29): the gate now verifies each structured citation leg,
 and the string fallback no longer lets one leg borrow another leg's quote
-fragments. An earlier Sonnet DA 75/81 was a raw-index reporting artifact; the
-assembled citations are 81/81 exact. No benchmark result changes.
+fragments. An earlier Sonnet run scored 75/81 through a raw-index reporting
+artifact; the assembled citations are 81/81 exact. No benchmark result changes.
 
 What you get is a property: **every shown answer can be independently
 re-verified by a human or a script in seconds**, today and after the corpus,
@@ -58,7 +58,9 @@ The excerpt builder, scorer fixes, and aggregate route were chosen after seeing
 this set. The clean held-out set is deferred. **3 seeds**, v2 labels, page
 aggregate primary, table control.
 
-The local column is 98 questions (the 2 globals excluded). The system columns
+Arm **B** is plain RAG (status quo); **DA** adds the verbatim-quote contract,
+the mechanical gate, and the absence check. The local column is 98 questions
+(the 2 globals excluded). The system columns
 add the 2 deterministic aggregate answers. Values are per-100 means across 3
 seeds; B has no aggregate.
 
@@ -101,7 +103,9 @@ $1.96). The default reader remains **GLM-5.3-Flash**.
 
 Historical results, including the old 6k held-out, the one-seed post-correction
 matrix, and the pilot, are in [`HISTORY.md`](HISTORY.md). The full arm report is
-`bench/ARM-COMPARE-REPORT.md`.
+`bench/ARM-COMPARE-REPORT.md`. The analytical backing — stress tests, the
+absence study, the formal pilot, and the limitations — is in
+[`docs/EVIDENCE.md`](docs/EVIDENCE.md).
 
 ## Quickstart
 
